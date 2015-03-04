@@ -72,6 +72,7 @@ public class MenuManager implements ActionListener {
     fileMenu.add(newDiagramMenu);
     createMenuItem(newDiagramMenu, "newstructurediagram");
     createMenuItem(newDiagramMenu, "newsequencediagram");
+    createMenuItem(newDiagramMenu, "newusecasediagram");
     createMenuItem(fileMenu, "open");
     createMenuItem(fileMenu, "saveas");
     createMenuItem(fileMenu, "save");

@@ -42,7 +42,7 @@ public final class IconLoader {
     MOUSE_POINTER,
     CLASS, PACKAGE, COMPONENT, DEPENDENCY, ASSOCIATION, AGGREGATION,
     COMPOSITION, INHERITANCE, INTERFACE_REALIZATION, NOTE, NOTE_CONNECTOR,
-    LIFELINE, MESSAGE
+    LIFELINE, MESSAGE, ACTOR, USE_CASE
   }
 
   private Map<IconType, String> urlMap = new HashMap<IconType, String>();
@@ -74,6 +74,8 @@ public final class IconLoader {
       "org/tinyuml/ui/interface-realization.png");
     urlMap.put(IconType.LIFELINE, "org/tinyuml/ui/lifeline.png");
     urlMap.put(IconType.MESSAGE, "org/tinyuml/ui/message.png");
+    urlMap.put(IconType.ACTOR, "org/tinyuml/ui/actor.png");
+    urlMap.put(IconType.USE_CASE, "org/tinyuml/ui/usecase.png");
 
     urlMap.put(IconType.NEW, "org/fife/plaf/Office2003/new.gif");
     urlMap.put(IconType.OPEN, "org/fife/plaf/Office2003/open.gif");

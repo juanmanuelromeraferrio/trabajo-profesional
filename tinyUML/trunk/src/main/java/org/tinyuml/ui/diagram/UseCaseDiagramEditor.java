@@ -1,28 +1,8 @@
-/**
- * Copyright 2007 Wei-ju Wu
- *
- * This file is part of TinyUML.
- *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
 package org.tinyuml.ui.diagram;
 
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.tinyuml.draw.DiagramElement;
 import org.tinyuml.model.ElementType;
 import org.tinyuml.model.RelationType;
@@ -30,18 +10,18 @@ import org.tinyuml.umldraw.shared.GeneralDiagram;
 import org.tinyuml.util.MethodCall;
 
 /**
- * This class is a specialized version of a DiagramEditor editing sequence
+ * This class is a specialized version of a DiagramEditor editing use case
  * diagrams.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class SequenceDiagramEditor extends DiagramEditor {
+public class UseCaseDiagramEditor extends DiagramEditor {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5192396551407056080L;
+	private static final long serialVersionUID = 133830961841442513L;
 	private static Map<String, MethodCall> selectorMap = new HashMap<String, MethodCall>();
 
 	static {
@@ -55,12 +35,12 @@ public class SequenceDiagramEditor extends DiagramEditor {
 		try {
 			selectorMap.put(
 					"CREATE_LIFELINE",
-					new MethodCall(SequenceDiagramEditor.class.getMethod(
+					new MethodCall(UseCaseDiagramEditor.class.getMethod(
 							"setCreationMode", ElementType.class),
 							ElementType.LIFE_LINE));
 			selectorMap.put(
 					"CREATE_MESSAGE",
-					new MethodCall(SequenceDiagramEditor.class.getMethod(
+					new MethodCall(UseCaseDiagramEditor.class.getMethod(
 							"setCreateConnectionMode", RelationType.class),
 							RelationType.MESSAGE));
 		} catch (NoSuchMethodException ex) {
@@ -76,7 +56,7 @@ public class SequenceDiagramEditor extends DiagramEditor {
 	 * @param aDiagram
 	 *            the diagram
 	 */
-	public SequenceDiagramEditor(Component aWindow, GeneralDiagram aDiagram) {
+	public UseCaseDiagramEditor(Component aWindow, GeneralDiagram aDiagram) {
 		super(aWindow, aDiagram);
 	}
 

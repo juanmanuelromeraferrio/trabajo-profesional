@@ -20,7 +20,9 @@
 package org.tinyuml.ui;
 
 import java.awt.Component;
+
 import javax.swing.JTabbedPane;
+
 import org.tinyuml.model.NameChangeListener;
 import org.tinyuml.model.NamedElement;
 import org.tinyuml.model.UmlModel;
@@ -30,6 +32,7 @@ import org.tinyuml.ui.diagram.StructureDiagramEditor;
 import org.tinyuml.umldraw.sequence.SequenceDiagram;
 import org.tinyuml.umldraw.shared.GeneralDiagram;
 import org.tinyuml.umldraw.structure.StructureDiagram;
+import org.tinyuml.umldraw.usecase.UseCaseDiagram;
 import org.tinyuml.util.ApplicationResources;
 
 /**
@@ -134,4 +137,21 @@ public class EditorFactory {
       shell.getShellComponent(), diagram),
       new SequenceEditorToolbarManager());
   }
+  
+  /**
+   * Creates a new Use Case editor.
+   * @param umlModel the UmlModel
+   * @return the editor panel
+   */
+  public EditorPanel openNewUseCaseEditor(UmlModel umlModel) {
+    GeneralDiagram diagram = new UseCaseDiagram(umlModel);
+    diagram.setLabelText(ApplicationResources.getInstance().getString(
+      "stdcaption.usecasediagram") + " " + (sequenceCounter++));
+    umlModel.addDiagram(diagram);
+    return createEditorPanel(new SequenceDiagramEditor(
+      shell.getShellComponent(), diagram),
+      new UseCaseEditorToolbarManager());
+  }
+  
+  
 }

@@ -25,5 +25,5 @@ package org.tinyuml.model;
  * @version 1.0
  */
 public enum ElementType {
-  CLASS, COMPONENT, PACKAGE, NOTE, LIFE_LINE
+  CLASS, COMPONENT, PACKAGE, NOTE, LIFE_LINE, ACTOR, USE_CASE
 }

@@ -27,10 +27,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.tinyuml.model.UmlDiagram;
 import org.tinyuml.ui.commands.DeleteDiagramCommand;
 import org.tinyuml.ui.commands.ModelReader;
@@ -74,6 +76,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
         getClass().getMethod("openNewStructureEditor")));
       selectorMap.put("NEW_SEQUENCE_DIAGRAM", new MethodCall(
         getClass().getMethod("openNewSequenceEditor")));
+      selectorMap.put("NEW_USE_CASE_DIAGRAM", new MethodCall(
+    	        getClass().getMethod("openNewUseCaseEditor")));
       selectorMap.put("OPEN_MODEL", new MethodCall(
         getClass().getMethod("openModel")));
       selectorMap.put("SAVE_AS", new MethodCall(
@@ -143,6 +147,11 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
    * Opens a new sequence editor.
    */
   public void openNewSequenceEditor() { appState.openNewSequenceEditor(); }
+  
+  /**
+   * Opens a new use case editor.
+   */
+  public void openNewUseCaseEditor() { appState.openNewUseCaseEditor(); }
 
   /**
    * Undo operation.

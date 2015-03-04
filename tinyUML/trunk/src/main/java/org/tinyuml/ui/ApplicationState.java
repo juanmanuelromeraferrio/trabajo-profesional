@@ -397,6 +397,15 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
     currentEditor = editorPanel.getDiagramEditor();
     addDiagramEditorEvents(editorPanel);
   }
+  
+  /**
+   * Opens a new use case editor.
+   */
+  protected void openNewUseCaseEditor() {
+    EditorPanel editorPanel = editorFactory.openNewUseCaseEditor(umlModel);
+    currentEditor = editorPanel.getDiagramEditor();
+    addDiagramEditorEvents(editorPanel);
+  }
 
   /**
    * Opens an existing structure editor.
