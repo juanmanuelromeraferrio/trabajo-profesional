@@ -3,19 +3,17 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package org.tinyuml.draw;
 
@@ -30,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.tinyuml.umldraw.shared.NoteElement;
+
 /**
  * This class implements an abstract Node class.
  *
@@ -43,13 +43,13 @@ public abstract class AbstractNode implements Node {
   private Dimension2D size = new DoubleDimension(40, 20);
   private Dimension2D minimumSize = new DoubleDimension(40, 20);
   private CompositeNode parent;
-  private Collection<NodeChangeListener> changeListeners =
-    new ArrayList<NodeChangeListener>();
+  private Collection<NodeChangeListener> changeListeners = new ArrayList<NodeChangeListener>();
   private List<Connection> connections = new ArrayList<Connection>();
   private transient NodeSelection selection;
 
   /**
    * Writes the instance variables to the stream.
+   * 
    * @param stream an ObjectOutputStream
    * @throws IOException if I/O error occured
    */
@@ -58,20 +58,22 @@ public abstract class AbstractNode implements Node {
     stream.writeObject(size);
     stream.writeObject(minimumSize);
     stream.writeObject(parent);
-    if (selection != null) changeListeners.remove(selection);
+    if (selection != null)
+      changeListeners.remove(selection);
     stream.writeObject(changeListeners);
-    if (selection != null) changeListeners.add(selection);
+    if (selection != null)
+      changeListeners.add(selection);
     stream.writeObject(connections);
   }
 
   /**
    * Reset the transient values for serialization.
+   * 
    * @param stream an ObjectInputStream
    * @throws IOException if I/O error occured
    * @throws ClassNotFoundException if class was not found
    */
-  private void readObject(ObjectInputStream stream)
-    throws IOException, ClassNotFoundException {
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     origin = (Point2D) stream.readObject();
     size = (Dimension2D) stream.readObject();
     minimumSize = (Dimension2D) stream.readObject();
@@ -105,12 +107,20 @@ public abstract class AbstractNode implements Node {
   /**
    * {@inheritDoc}
    */
-  public CompositeNode getParent() { return parent; }
+  public CompositeNode getParent() {
+    return parent;
+  }
 
   /**
    * {@inheritDoc}
    */
-  public void setParent(CompositeNode aParent) { parent = aParent; }
+  public void setParent(CompositeNode aParent) {
+    if(this.getClass().equals(NoteElement.class))
+    {
+      System.out.println("OK");
+    }
+    parent = aParent;
+  }
 
   /**
    * {@inheritDoc}
@@ -118,7 +128,8 @@ public abstract class AbstractNode implements Node {
   public boolean isAncestor(DiagramElement element) {
     CompositeNode tmp = getParent();
     while (tmp != null) {
-      if (tmp == element) return true;
+      if (tmp == element)
+        return true;
       tmp = tmp.getParent();
     }
     return false;
@@ -127,7 +138,9 @@ public abstract class AbstractNode implements Node {
   /**
    * {@inheritDoc}
    */
-  public Point2D getOrigin() { return origin; }
+  public Point2D getOrigin() {
+    return origin;
+  }
 
   /**
    * {@inheritDoc}
@@ -167,7 +180,9 @@ public abstract class AbstractNode implements Node {
   /**
    * {@inheritDoc}
    */
-  public Dimension2D getSize() { return size; }
+  public Dimension2D getSize() {
+    return size;
+  }
 
   /**
    * {@inheritDoc}
@@ -193,8 +208,8 @@ public abstract class AbstractNode implements Node {
   }
 
   /**
-   * Sets the internal size, without notification and without invalidating
-   * the object.
+   * Sets the internal size, without notification and without invalidating the object.
+   * 
    * @param width the width the width
    * @param height the height the height
    */
@@ -207,8 +222,8 @@ public abstract class AbstractNode implements Node {
    */
   public boolean contains(double xcoord, double ycoord) {
     double absx = getAbsoluteX1(), absy = getAbsoluteY1();
-    return xcoord >= absx && xcoord <= absx + getSize().getWidth() &&
-           ycoord >= absy && ycoord <= absy + getSize().getHeight();
+    return xcoord >= absx && xcoord <= absx + getSize().getWidth() && ycoord >= absy
+        && ycoord <= absy + getSize().getHeight();
   }
 
   /**
@@ -216,10 +231,9 @@ public abstract class AbstractNode implements Node {
    */
   public void setAbsolutePos(double xpos, double ypos) {
     // Only change the values if position was changed
-    if (!GeometryUtil.getInstance().equals(xpos, getAbsoluteX1()) ||
-        !GeometryUtil.getInstance().equals(ypos, getAbsoluteY1())) {
-      origin.setLocation(xpos - parent.getAbsoluteX1(),
-                         ypos - parent.getAbsoluteY1());
+    if (!GeometryUtil.getInstance().equals(xpos, getAbsoluteX1())
+        || !GeometryUtil.getInstance().equals(ypos, getAbsoluteY1())) {
+      origin.setLocation(xpos - parent.getAbsoluteX1(), ypos - parent.getAbsoluteY1());
       notifyNodeMoved();
     }
   }
@@ -242,9 +256,8 @@ public abstract class AbstractNode implements Node {
    * {@inheritDoc}
    */
   public boolean isVisible(Rectangle2D clipBounds) {
-    return clipBounds.intersects(DrawingShapeFactory.getInstance().createRect2d(
-      getAbsoluteX1(), getAbsoluteY1(), getSize().getWidth(),
-      getSize().getHeight()));
+    return clipBounds.intersects(DrawingShapeFactory.getInstance().createRect2d(getAbsoluteX1(),
+        getAbsoluteY1(), getSize().getWidth(), getSize().getHeight()));
   }
 
   /**
@@ -263,11 +276,12 @@ public abstract class AbstractNode implements Node {
 
   /**
    * Returns the absolute bounding box for this node.
+   * 
    * @return the absolute bounds for this node
    */
   public Rectangle2D getAbsoluteBounds() {
-    return new Rectangle2D.Double(getAbsoluteX1(), getAbsoluteY1(),
-      getSize().getWidth(), getSize().getHeight());
+    return new Rectangle2D.Double(getAbsoluteX1(), getAbsoluteY1(), getSize().getWidth(), getSize()
+        .getHeight());
   }
 
   /**
@@ -279,37 +293,31 @@ public abstract class AbstractNode implements Node {
     Line2D side = new Line2D.Double();
 
     // top line
-    side.setLine(getAbsoluteX1(), getAbsoluteY1(),
-      getAbsoluteX1() + getSize().getWidth(), getAbsoluteY1());
+    side.setLine(getAbsoluteX1(), getAbsoluteY1(), getAbsoluteX1() + getSize().getWidth(),
+        getAbsoluteY1());
     if (line.intersectsLine(side)) {
-      GeometryUtil.getInstance().computeLineIntersection(line, side,
-        intersectionPoint);
+      GeometryUtil.getInstance().computeLineIntersection(line, side, intersectionPoint);
       return;
     }
     // right line
-    side.setLine(getAbsoluteX1() + getSize().getWidth(), getAbsoluteY1(),
-      getAbsoluteX1() + getSize().getWidth(),
-      getAbsoluteY1() + getSize().getHeight());
+    side.setLine(getAbsoluteX1() + getSize().getWidth(), getAbsoluteY1(), getAbsoluteX1()
+        + getSize().getWidth(), getAbsoluteY1() + getSize().getHeight());
     if (line.intersectsLine(side)) {
-      GeometryUtil.getInstance().computeLineIntersection(line, side,
-        intersectionPoint);
+      GeometryUtil.getInstance().computeLineIntersection(line, side, intersectionPoint);
       return;
     }
     // bottom line
-    side.setLine(getAbsoluteX1(), getAbsoluteY1() + getSize().getHeight(),
-      getAbsoluteX1() + getSize().getWidth(),
-      getAbsoluteY1() + getSize().getHeight());
+    side.setLine(getAbsoluteX1(), getAbsoluteY1() + getSize().getHeight(), getAbsoluteX1()
+        + getSize().getWidth(), getAbsoluteY1() + getSize().getHeight());
     if (line.intersectsLine(side)) {
-      GeometryUtil.getInstance().computeLineIntersection(line, side,
-        intersectionPoint);
+      GeometryUtil.getInstance().computeLineIntersection(line, side, intersectionPoint);
       return;
     }
     // left line
-    side.setLine(getAbsoluteX1(), getAbsoluteY1(), getAbsoluteX1(),
-      getAbsoluteY1() + getSize().getHeight());
+    side.setLine(getAbsoluteX1(), getAbsoluteY1(), getAbsoluteX1(), getAbsoluteY1()
+        + getSize().getHeight());
     if (line.intersectsLine(side)) {
-      GeometryUtil.getInstance().computeLineIntersection(line, side,
-        intersectionPoint);
+      GeometryUtil.getInstance().computeLineIntersection(line, side, intersectionPoint);
     }
   }
 
@@ -326,8 +334,8 @@ public abstract class AbstractNode implements Node {
   }
 
   /**
-   * A method for testing purposes only. Invocations to the Selection can then
-   * be registered.
+   * A method for testing purposes only. Invocations to the Selection can then be registered.
+   * 
    * @param aSelection the testing selection
    */
   protected void setSelection(NodeSelection aSelection) {
@@ -364,6 +372,7 @@ public abstract class AbstractNode implements Node {
 
   /**
    * Returns this object's NodeChangeListeners. Can be overridden.
+   * 
    * @return the change listeners
    */
   protected Collection<NodeChangeListener> getNodeChangeListeners() {
@@ -373,12 +382,14 @@ public abstract class AbstractNode implements Node {
   /**
    * {@inheritDoc}
    */
-  public void invalidate() { }
+  public void invalidate() {}
 
   /**
    * {@inheritDoc}
    */
-  public boolean isValid() { return true; }
+  public boolean isValid() {
+    return true;
+  }
 
   /**
    * Notifies the listeners that this node has moved.
@@ -412,12 +423,16 @@ public abstract class AbstractNode implements Node {
   /**
    * {@inheritDoc}
    */
-  public void addConnection(Connection conn) { connections.add(conn); }
+  public void addConnection(Connection conn) {
+    connections.add(conn);
+  }
 
   /**
    * {@inheritDoc}
    */
-  public void removeConnection(Connection conn) { connections.remove(conn); }
+  public void removeConnection(Connection conn) {
+    connections.remove(conn);
+  }
 
   // *************************************************************************
   // ***** Nesting
@@ -426,10 +441,14 @@ public abstract class AbstractNode implements Node {
   /**
    * {@inheritDoc}
    */
-  public boolean isNestable() { return false; }
+  public boolean isNestable() {
+    return false;
+  }
 
   /**
    * {@inheritDoc}
    */
-  public boolean canNestElements() { return false; }
+  public boolean canNestElements() {
+    return false;
+  }
 }

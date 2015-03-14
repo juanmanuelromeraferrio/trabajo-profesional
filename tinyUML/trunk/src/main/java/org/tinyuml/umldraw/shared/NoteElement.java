@@ -63,7 +63,6 @@ implements UmlNode, LabelSource {
    */
   private NoteElement() {
     setSize(180, 60);
-    setLabelText("");
     label.setSource(this);
     label.setParent(this);
     label.setOrigin(Defaults.getInstance().getMarginLeft(), MARGIN_TOP);
