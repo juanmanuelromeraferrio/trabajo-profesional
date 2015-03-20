@@ -3,19 +3,17 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package org.tinyuml.draw;
 
@@ -25,13 +23,15 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Dimension2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * This class provides a very thin abstraction on Java2D and groups it together
- * with the global drawing settings.
- * Serialization note: DrawingContext should not be serialized.
+ * This class provides a very thin abstraction on Java2D and groups it together with the global
+ * drawing settings. Serialization note: DrawingContext should not be serialized.
  *
  * @author Wei-ju Wu
  * @version 1.0
@@ -40,10 +40,8 @@ public class DrawingContextImpl implements DrawingContext {
 
   // This is the standard font for the component.
   private static final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 12);
-  private static final Font ELEMENT_NAME_FONT =
-    new Font("Arial", Font.BOLD, 12);
-  private static final Font ABSTRACT_ELEMENT_FONT =
-    new Font("Arial", Font.BOLD | Font.ITALIC, 12);
+  private static final Font ELEMENT_NAME_FONT = new Font("Arial", Font.BOLD, 12);
+  private static final Font ABSTRACT_ELEMENT_FONT = new Font("Arial", Font.BOLD | Font.ITALIC, 12);
 
   private Graphics2D g2d;
   private DrawingShapeFactory shapeFactory = DrawingShapeFactory.getInstance();
@@ -87,6 +85,23 @@ public class DrawingContextImpl implements DrawingContext {
     g2d.draw(line);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public void drawLine(Point2D p0, Point2D p1) {
+    drawLine(p0, p1, Color.BLACK);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void drawLine(Point2D p0, Point2D p1, Color color) {
+    g2d.setStroke(shapeFactory.getStandardStroke());
+    g2d.setColor(color);
+    Line2D line = shapeFactory.createLine2d(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+    g2d.draw(line);
+  }
+
   // *************************************************************************
   // ****** Rectangles
   // **********************************
@@ -94,16 +109,15 @@ public class DrawingContextImpl implements DrawingContext {
   /**
    * {@inheritDoc}
    */
-  public void drawRectangle(double x, double y, double width, double height,
-    Color fillColor) {
+  public void drawRectangle(double x, double y, double width, double height, Color fillColor) {
     drawRectangle(x, y, width, height, null, fillColor);
   }
 
   /**
    * {@inheritDoc}
    */
-  public void drawRectangle(double x, double y, double width, double height,
-    Color strokeColor, Color fillColor) {
+  public void drawRectangle(double x, double y, double width, double height, Color strokeColor,
+      Color fillColor) {
     g2d.setStroke(shapeFactory.getStandardStroke());
     Rectangle2D rect = shapeFactory.createRect2d(x, y, width, height);
     if (fillColor != null) {
@@ -117,8 +131,7 @@ public class DrawingContextImpl implements DrawingContext {
   /**
    * {@inheritDoc}
    */
-  public void fillRectangle(double x, double y, double width, double height,
-    Color fillColor) {
+  public void fillRectangle(double x, double y, double width, double height, Color fillColor) {
     g2d.setColor(fillColor);
     g2d.fill(shapeFactory.createRect2d(x, y, width, height));
   }
@@ -150,6 +163,34 @@ public class DrawingContextImpl implements DrawingContext {
     g2d.draw(shape);
   }
 
+
+  // *************************************************************************
+  // ****** Ellipse
+  // **********************************
+
+  /**
+   * {@inheritDoc}
+   */
+  public void drawEllipse(Point2D p0, Dimension2D d0, Color fillColor) {
+    drawEllipse(p0, d0, null, fillColor);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void drawEllipse(Point2D p0, Dimension2D d0, Color strokeColor, Color fillColor) {
+    g2d.setStroke(shapeFactory.getStandardStroke());
+    Ellipse2D ellipse = shapeFactory.createEllipse2d(p0, d0);
+    if (fillColor != null) {
+      g2d.setColor(fillColor);
+      g2d.fill(ellipse);
+    }
+    g2d.setColor(strokeColor == null ? Color.BLACK : strokeColor);
+    g2d.draw(ellipse);
+  }
+
+
+
   // ***********************************************************************
   // ***** Drawing text
   // ******************************************
@@ -167,9 +208,13 @@ public class DrawingContextImpl implements DrawingContext {
    */
   public Font getFont(FontType fontType) {
     switch (fontType) {
-      case ELEMENT_NAME: return ELEMENT_NAME_FONT;
-      case ABSTRACT_ELEMENT: return ABSTRACT_ELEMENT_FONT;
-      case DEFAULT: default: return DEFAULT_FONT;
+      case ELEMENT_NAME:
+        return ELEMENT_NAME_FONT;
+      case ABSTRACT_ELEMENT:
+        return ABSTRACT_ELEMENT_FONT;
+      case DEFAULT:
+      default:
+        return DEFAULT_FONT;
     }
   }
 
@@ -183,5 +228,7 @@ public class DrawingContextImpl implements DrawingContext {
   /**
    * {@inheritDoc}
    */
-  public Graphics2D getGraphics2D() { return g2d; }
+  public Graphics2D getGraphics2D() {
+    return g2d;
+  }
 }

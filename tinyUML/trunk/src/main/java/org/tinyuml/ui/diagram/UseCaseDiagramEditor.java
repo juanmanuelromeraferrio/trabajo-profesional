@@ -3,9 +3,9 @@ package org.tinyuml.ui.diagram;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.tinyuml.draw.DiagramElement;
 import org.tinyuml.model.ElementType;
-import org.tinyuml.model.RelationType;
 import org.tinyuml.umldraw.shared.GeneralDiagram;
 import org.tinyuml.util.MethodCall;
 
@@ -36,6 +36,11 @@ public class UseCaseDiagramEditor extends DiagramEditor {
           new MethodCall(
               UseCaseDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
               ElementType.ACTOR));
+
+      selectorMap.put("CREATE_USE_CASE",
+          new MethodCall(
+              UseCaseDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+              ElementType.USE_CASE));
     } catch (NoSuchMethodException ex) {
       ex.printStackTrace();
     }

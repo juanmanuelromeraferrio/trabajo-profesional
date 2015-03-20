@@ -3,34 +3,32 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package org.tinyuml.draw;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 import java.awt.geom.Dimension2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * A factory class for creating drawing Shapes for the Java2D system. It relies
- * on the fact that rendering is done in a single thread. We can reduce creation
- * of unnecessary Shape objects by reusing them in the Factory and
- * reinitializing them.
+ * A factory class for creating drawing Shapes for the Java2D system. It relies on the fact that
+ * rendering is done in a single thread. We can reduce creation of unnecessary Shape objects by
+ * reusing them in the Factory and reinitializing them.
  *
  * @author Wei-ju Wu
  * @version 1.0
@@ -39,11 +37,12 @@ public final class DrawingShapeFactory {
 
   private Rectangle2D rect2d = new Rectangle2D.Double(0, 0, 10, 10);
   private Line2D line2d = new Line2D.Double(0, 0, 10, 10);
+  private Ellipse2D ellipse2d = new Ellipse2D.Double(0, 0, 10, 10);
   private Stroke borderStroke = new BasicStroke(1);
   private float[] dashes = {4.0f, 6.0f};
   private Stroke gridStroke = new BasicStroke(1);
-  private Stroke dashedStroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
-    BasicStroke.JOIN_MITER, 3.0f, dashes, 0.0f);
+  private Stroke dashedStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+      3.0f, dashes, 0.0f);
   private Stroke stdStroke = new BasicStroke(1);
 
   private static DrawingShapeFactory instance = new DrawingShapeFactory();
@@ -51,10 +50,11 @@ public final class DrawingShapeFactory {
   /**
    * Constructor.
    */
-  private DrawingShapeFactory() { }
+  private DrawingShapeFactory() {}
 
   /**
    * Returns the singleton instance.
+   * 
    * @return the factory instance
    */
   public static DrawingShapeFactory getInstance() {
@@ -66,6 +66,7 @@ public final class DrawingShapeFactory {
   // ****************************
   /**
    * Returns a Rectangle2D object with the specified dimensions.
+   * 
    * @param origin the origin
    * @param size the size
    * @return a Rectangle2D object
@@ -77,6 +78,7 @@ public final class DrawingShapeFactory {
 
   /**
    * Returns a Rectangle2D object with the specified dimensions.
+   * 
    * @param origin the origin
    * @param width the width
    * @param height the height
@@ -89,20 +91,21 @@ public final class DrawingShapeFactory {
 
   /**
    * Returns a Rectangle2D object with the specified dimensions.
+   * 
    * @param x the x coordinate
    * @param y the y coordinate
    * @param width the width
    * @param height the height
    * @return a Rectangle2D object
    */
-  public Rectangle2D createRect2d(double x, double y, double width,
-    double height) {
+  public Rectangle2D createRect2d(double x, double y, double width, double height) {
     rect2d.setFrame(x, y, width, height);
     return rect2d;
   }
 
   /**
    * Returns a Line2D object as specified.
+   * 
    * @param p0 the first point
    * @param p1 the second point
    * @return a Line2D object
@@ -114,6 +117,7 @@ public final class DrawingShapeFactory {
 
   /**
    * Returns a Line2D object as specified.
+   * 
    * @param x0 x0 coordinate
    * @param y0 y0 coordinate
    * @param x1 x1 coordinate
@@ -125,11 +129,25 @@ public final class DrawingShapeFactory {
     return line2d;
   }
 
+
+  /**
+   * Returns a Ellipse2D object as specified.
+   * 
+   * @param p0 the specific point
+   * @param d0 the specific dimension
+   * @return a Ellipse2D object
+   */
+  public Ellipse2D createEllipse2d(Point2D p0, Dimension2D d0) {
+    ellipse2d.setFrame(p0, d0);
+    return ellipse2d;
+  }
+
   // *************************************************************************
   // **** Strokes
   // *****************************************************
   /**
    * Returns the Stroke object to draw the diagram border.
+   * 
    * @return the diagram border stroke
    */
   public Stroke createDiagramBorderStroke() {
@@ -138,6 +156,7 @@ public final class DrawingShapeFactory {
 
   /**
    * Returns the Stroke used to draw grid lines.
+   * 
    * @return the grid Stroke
    */
   public Stroke createGridStroke() {
@@ -146,6 +165,7 @@ public final class DrawingShapeFactory {
 
   /**
    * Returns the standard drawing stroke.
+   * 
    * @return the standard drawing stroke
    */
   public Stroke getStandardStroke() {
@@ -154,6 +174,7 @@ public final class DrawingShapeFactory {
 
   /**
    * Return the standard dashed stroke.
+   * 
    * @return the standard dashed stroke
    */
   public Stroke getDashedStroke() {
