@@ -8,28 +8,27 @@ package org.tinyuml.model;
  */
 public class UmlActor extends AbstractUmlModelElement {
 
-	/**
+  /**
 	 * 
 	 */
-	private static final long serialVersionUID = 5066199446764326666L;
+  private static final long serialVersionUID = 5066199446764326666L;
 
-	private static UmlActor prototype;
+  private static UmlActor prototype;
 
-	/**
-	 * Returns the prototype instance.
-	 * 
-	 * @return the prototype instance
-	 */
-	public static UmlActor getPrototype() {
-		if (prototype == null)
-			prototype = new UmlActor();
-		return prototype;
-	}
+  /**
+   * Returns the prototype instance.
+   * 
+   * @return the prototype instance
+   */
+  public static UmlActor getPrototype() {
+    if (prototype == null)
+      prototype = new UmlActor();
+    return prototype;
+  }
 
-	/**
-	 * Constructor.
-	 */
-	private UmlActor() {
-	}
+  /**
+   * Constructor.
+   */
+  private UmlActor() {}
 
 }
