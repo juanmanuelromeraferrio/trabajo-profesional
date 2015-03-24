@@ -173,7 +173,7 @@ public interface DrawingContext {
    * @param d0 the specific dimension
    * @param fillColor the fill color
    */
-  void drawEllipse(Point2D headOrigin, Dimension2D headDimension, Color fillColor);
+  void drawEllipse(Point2D origin, Dimension2D dimension, Color fillColor);
 
   /**
    * @param p0 the specific point

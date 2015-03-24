@@ -115,10 +115,6 @@ public abstract class AbstractNode implements Node {
    * {@inheritDoc}
    */
   public void setParent(CompositeNode aParent) {
-    if(this.getClass().equals(NoteElement.class))
-    {
-      System.out.println("OK");
-    }
     parent = aParent;
   }
 
