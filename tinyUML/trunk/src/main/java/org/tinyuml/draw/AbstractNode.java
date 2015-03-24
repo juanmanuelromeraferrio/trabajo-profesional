@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.tinyuml.umldraw.shared.NoteElement;
-
 /**
  * This class implements an abstract Node class.
  *

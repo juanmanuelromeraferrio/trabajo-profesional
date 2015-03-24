@@ -1,13 +1,12 @@
 package org.tinyuml.umldraw.usecase;
 
 import java.awt.Color;
-import java.awt.geom.Dimension2D;
-import java.awt.geom.Point2D;
 
 import org.tinyuml.draw.AbstractCompositeNode;
-import org.tinyuml.draw.DoubleDimension;
+import org.tinyuml.draw.Compartment;
 import org.tinyuml.draw.DrawingContext;
 import org.tinyuml.draw.DrawingContext.FontType;
+import org.tinyuml.draw.EllipseCompartment;
 import org.tinyuml.draw.Label;
 import org.tinyuml.draw.LabelSource;
 import org.tinyuml.draw.SimpleLabel;
@@ -36,6 +35,7 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
 
   private UmlUseCase useCase;
   private Label label;
+  private Compartment mainCompartment;
 
   private static UseCaseElement prototype;
 
@@ -54,12 +54,18 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
    * Private constructor.
    */
   private UseCaseElement() {
-    setSize(DEFAULT_WIDHT, DEFAULT_HEIGHT);
+    mainCompartment = new EllipseCompartment();
+    mainCompartment.setParent(this);
+    mainCompartment.setBackground(BACKGROUND);
     label = new SimpleLabel();
     label.setParent(this);
-    label.setFontType(FontType.ELEMENT_NAME);
     label.setSource(this);
-    this.addChild(label);
+    label.setFontType(FontType.ELEMENT_NAME);
+    mainCompartment.addLabel(label);
+
+    setSize(DEFAULT_WIDHT, DEFAULT_HEIGHT);
+    mainCompartment.setSize(getSize().getWidth(), getSize().getHeight());
+
   }
 
   /**
@@ -68,11 +74,15 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
   @Override
   public Object clone() {
     UseCaseElement cloned = (UseCaseElement) super.clone();
+    cloned.label = (Label) label.clone();
+    cloned.label.setSource(cloned);
+    cloned.label.setParent(cloned);
 
-    if (!cloned.getChildren().isEmpty()) {
-      cloned.label = (Label) cloned.getChildren().get(0);
-      cloned.label.setSource(cloned);
-    }
+    cloned.mainCompartment = (Compartment) mainCompartment.clone();
+    cloned.mainCompartment.setParent(cloned);
+    cloned.mainCompartment.removeAllLabels();
+    cloned.mainCompartment.addLabel(cloned.label);
+
 
     if (useCase != null) {
       cloned.useCase = (UmlUseCase) useCase.clone();
@@ -127,15 +137,9 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
   @Override
   public void draw(DrawingContext drawingContext) {
     if (!isValid()) {
-      label.setFontType(getMainLabelFontType());
       recalculateSize(drawingContext);
     }
-
-//    Point2D origin = new Point2D.Double(getAbsoluteX1(), getAbsoluteY1());
-//    Dimension2D dimension = new DoubleDimension(getSize().getWidth(), getSize().getHeight());
-//    drawingContext.drawEllipse(origin, dimension, Color.WHITE);
-    label.centerHorizontally();
-    label.draw(drawingContext);
+    mainCompartment.draw(drawingContext);
 
   }
 
@@ -145,16 +149,25 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
    */
   @Override
   public boolean isValid() {
-    return label.isValid();
+    return mainCompartment.isValid();
   }
 
   /**
-   * Returns the main label font type. Dependent whether the class is abstract or not.
-   * 
-   * @return the FontType for the main label
+   * {@inheritDoc}
    */
-  private FontType getMainLabelFontType() {
-    return FontType.ELEMENT_NAME;
+  @Override
+  public void invalidate() {
+    mainCompartment.invalidate();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setSize(double width, double height) {
+    super.setSize(width, height);
+    mainCompartment.setSize(width, height);
+    invalidate();
   }
 
   @Override
