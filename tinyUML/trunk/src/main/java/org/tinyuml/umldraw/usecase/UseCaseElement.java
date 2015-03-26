@@ -1,6 +1,7 @@
 package org.tinyuml.umldraw.usecase;
 
 import java.awt.Color;
+import java.awt.geom.Dimension2D;
 
 import org.tinyuml.draw.AbstractCompositeNode;
 import org.tinyuml.draw.Compartment;
@@ -135,12 +136,48 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
    * {@inheritDoc}
    */
   @Override
+  public void recalculateSize(DrawingContext drawingContext) {
+    mainCompartment.recalculateSize(drawingContext);
+    notifyNodeResized();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public void draw(DrawingContext drawingContext) {
     if (!isValid()) {
       recalculateSize(drawingContext);
     }
     mainCompartment.draw(drawingContext);
 
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Dimension2D getMinimumSize() {
+    Dimension2D minMainSize = mainCompartment.getMinimumSize();
+    return minMainSize;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Dimension2D getSize() {
+    Dimension2D mainSize = mainCompartment.getSize();
+    return mainSize;
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setMinimumSize(double width, double height) {
+    throw new UnsupportedOperationException("setMinimumSize() not supported");
   }
 
 
@@ -165,7 +202,6 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
    */
   @Override
   public void setSize(double width, double height) {
-    super.setSize(width, height);
     mainCompartment.setSize(width, height);
     invalidate();
   }
