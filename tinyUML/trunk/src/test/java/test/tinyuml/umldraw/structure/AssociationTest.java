@@ -23,12 +23,15 @@ import java.awt.FontMetrics;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.tinyuml.draw.DrawingContext;
 import org.tinyuml.model.UmlRelation;
 import org.tinyuml.umldraw.structure.Association;
 import org.tinyuml.umldraw.structure.Association.AssociationType;
+import org.tinyuml.umldraw.structure.RectilinearAssociation;
+
 import test.tinyuml.draw.MyAbsoluteParent;
 import test.tinyuml.draw.MyCompositeNode;
 
@@ -39,7 +42,7 @@ import test.tinyuml.draw.MyCompositeNode;
  */
 public class AssociationTest extends MockObjectTestCase {
   private Association prototype = (Association)
-    Association.getPrototype().clone();
+      RectilinearAssociation.getPrototype().clone();
   private MyAbsoluteParent parent = new MyAbsoluteParent();
   private MyCompositeNode node1 = new MyCompositeNode();
   private MyCompositeNode node2 = new MyCompositeNode();

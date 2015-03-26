@@ -45,10 +45,9 @@ import org.tinyuml.draw.SimpleLabel;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class Association extends BaseConnection {
+public abstract class Association extends BaseConnection {
 
   private static final long serialVersionUID = 1866495594812659939L;
-  private static Association prototype;
 
   /**
    * The possible association types.
@@ -60,23 +59,6 @@ public final class Association extends BaseConnection {
   private AssociationNameLabel nameLabel;
   private boolean showMultiplicities, showName;
 
-  /**
-   * Returns the prototype instance.
-   * @return the prototype instance
-   */
-  public static Association getPrototype() {
-    if (prototype == null) prototype = new Association();
-    return prototype;
-  }
-
-  /**
-   * Constructor.
-   */
-  private Association() {
-    setConnection(new RectilinearConnection());
-    setupMultiplicityLabels();
-    setupNameLabel();
-  }
 
   /**
    * Returns the value of the showName property.
@@ -129,7 +111,7 @@ public final class Association extends BaseConnection {
   /**
    * Sets the multiplicity label sources.
    */
-  private void setupMultiplicityLabels() {
+  protected void setupMultiplicityLabels() {
     multiplicity1Label = new SimpleLabel();
     multiplicity1Label.setSource(new LabelSource() {
       /**

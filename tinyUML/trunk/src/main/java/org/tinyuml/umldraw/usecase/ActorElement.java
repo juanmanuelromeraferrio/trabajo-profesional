@@ -234,7 +234,6 @@ public final class ActorElement extends AbstractCompositeNode implements LabelSo
 
   @Override
   public boolean acceptsConnection(RelationType associationType, RelationEndType as, UmlNode with) {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 }

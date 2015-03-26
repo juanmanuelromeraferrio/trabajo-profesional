@@ -21,6 +21,7 @@ package org.tinyuml.umldraw.structure;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.tinyuml.model.ElementType;
 import org.tinyuml.model.Relation;
 import org.tinyuml.model.RelationType;
@@ -114,18 +115,18 @@ public class StructureDiagram extends GeneralDiagram {
     connectionPrototypes.put(RelationType.DEPENDENCY, depPrototype);
 
     Association assocPrototype = (Association)
-      Association.getPrototype().clone();
+        RectilinearAssociation.getPrototype().clone();
     assocPrototype.setRelation((Relation) fullnavigable.clone());
     connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
 
     Association compPrototype = (Association)
-      Association.getPrototype().clone();
+        RectilinearAssociation.getPrototype().clone();
     compPrototype.setAssociationType(AssociationType.COMPOSITION);
     compPrototype.setRelation((Relation) targetnavigable.clone());
     connectionPrototypes.put(RelationType.COMPOSITION, compPrototype);
 
     Association aggrPrototype = (Association)
-      Association.getPrototype().clone();
+        RectilinearAssociation.getPrototype().clone();
     aggrPrototype.setAssociationType(AssociationType.AGGREGATION);
     aggrPrototype.setRelation((Relation) targetnavigable.clone());
     connectionPrototypes.put(RelationType.AGGREGATION, aggrPrototype);

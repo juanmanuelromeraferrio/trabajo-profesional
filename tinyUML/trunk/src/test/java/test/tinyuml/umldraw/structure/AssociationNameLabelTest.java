@@ -30,6 +30,8 @@ import org.tinyuml.model.Relation.ReadingDirection;
 import org.tinyuml.model.UmlRelation;
 import org.tinyuml.umldraw.structure.Association;
 import org.tinyuml.umldraw.structure.AssociationNameLabel;
+import org.tinyuml.umldraw.structure.RectilinearAssociation;
+
 import test.tinyuml.draw.MyAbsoluteParent;
 
 /**
@@ -41,7 +43,7 @@ public class AssociationNameLabelTest extends MockObjectTestCase {
   
   private AssociationNameLabel label = new AssociationNameLabel();
   private Association association = (Association)
-    Association.getPrototype().clone();
+    RectilinearAssociation.getPrototype().clone();
   private UmlRelation relation = new UmlRelation();
   private MyAbsoluteParent parent = new MyAbsoluteParent();
   private Mock mockDrawingContext = mock(DrawingContext.class);

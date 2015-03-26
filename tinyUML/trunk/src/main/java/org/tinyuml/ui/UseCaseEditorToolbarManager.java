@@ -23,8 +23,9 @@ public class UseCaseEditorToolbarManager extends AbstractToolbarManager {
     JToolBar toolbar = getToolbar();
     toolbar.add(createToggleButtonWithName(buttongroup, "select"));
     toolbar.add(createToggleButtonWithName(buttongroup, "actor"));
-    toolbar.addSeparator(new Dimension(10, 10));
     toolbar.add(createToggleButtonWithName(buttongroup, "usecase"));
+    toolbar.addSeparator(new Dimension(10, 10));
+    toolbar.add(createToggleButtonWithName(buttongroup, "association"));
     doClick("SELECT_MODE");
   }
 

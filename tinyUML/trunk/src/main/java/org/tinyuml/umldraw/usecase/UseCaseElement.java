@@ -226,7 +226,6 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
 
   @Override
   public boolean acceptsConnection(RelationType associationType, RelationEndType as, UmlNode with) {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 }

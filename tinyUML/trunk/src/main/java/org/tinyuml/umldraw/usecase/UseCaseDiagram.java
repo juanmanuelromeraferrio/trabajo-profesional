@@ -4,14 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.tinyuml.model.ElementType;
+import org.tinyuml.model.Relation;
 import org.tinyuml.model.RelationType;
 import org.tinyuml.model.UmlActor;
 import org.tinyuml.model.UmlModel;
+import org.tinyuml.model.UmlRelation;
 import org.tinyuml.model.UmlUseCase;
 import org.tinyuml.umldraw.shared.GeneralDiagram;
-import org.tinyuml.umldraw.shared.NoteConnection;
 import org.tinyuml.umldraw.shared.UmlConnection;
 import org.tinyuml.umldraw.shared.UmlDiagramElement;
+import org.tinyuml.umldraw.structure.Association;
+import org.tinyuml.umldraw.structure.SimpleAssociation;
 
 /**
  * This class specializes on GeneralDiagram, providing the elements available in a use case diagram.
@@ -62,7 +65,15 @@ public class UseCaseDiagram extends GeneralDiagram {
   protected Map<RelationType, UmlConnection> setupConnectionPrototypeMap() {
     Map<RelationType, UmlConnection> connectionPrototypes =
         new HashMap<RelationType, UmlConnection>();
-    connectionPrototypes.put(RelationType.NOTE_CONNECTOR, NoteConnection.getPrototype());
+
+    UmlRelation fullnavigable = new UmlRelation();
+    fullnavigable.setCanSetElement1Navigability(true);
+    fullnavigable.setCanSetElement2Navigability(true);
+
+    Association assocPrototype = (Association) SimpleAssociation.getPrototype().clone();
+    assocPrototype.setRelation((Relation) fullnavigable.clone());
+    connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
+
     return connectionPrototypes;
   }
 }

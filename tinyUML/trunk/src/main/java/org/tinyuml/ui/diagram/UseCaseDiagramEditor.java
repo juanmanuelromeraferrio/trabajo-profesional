@@ -1,12 +1,17 @@
 package org.tinyuml.ui.diagram;
 
 import java.awt.Component;
+import java.awt.Window;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.tinyuml.draw.DiagramElement;
 import org.tinyuml.model.ElementType;
+import org.tinyuml.model.RelationType;
+import org.tinyuml.model.UmlClass;
 import org.tinyuml.umldraw.shared.GeneralDiagram;
+import org.tinyuml.umldraw.structure.Association;
+import org.tinyuml.umldraw.structure.ClassElement;
 import org.tinyuml.util.MethodCall;
 
 /**
@@ -41,6 +46,12 @@ public class UseCaseDiagramEditor extends DiagramEditor {
           new MethodCall(
               UseCaseDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
               ElementType.USE_CASE));
+
+      selectorMap.put(
+          "CREATE_ASSOCIATION",
+          new MethodCall(StructureDiagramEditor.class.getMethod("setCreateConnectionMode",
+              RelationType.class), RelationType.ASSOCIATION));
+
     } catch (NoSuchMethodException ex) {
       ex.printStackTrace();
     }
@@ -59,7 +70,16 @@ public class UseCaseDiagramEditor extends DiagramEditor {
   /**
    * {@inheritDoc}
    */
-  public void editProperties(DiagramElement element) {}
+  public void editProperties(DiagramElement element) {
+    Window window = (mainWindow instanceof Window) ? ((Window) mainWindow) : null;
+    if (element instanceof Association) {
+      Association association = (Association) element;
+      EditAssociationDialog dialog = new EditAssociationDialog(window, association, true);
+      dialog.setLocationRelativeTo(mainWindow);
+      dialog.setVisible(true);
+      redraw();
+    }
+  }
 
   /**
    * {@inheritDoc}
