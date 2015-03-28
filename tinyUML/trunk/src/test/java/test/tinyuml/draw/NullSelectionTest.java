@@ -53,7 +53,8 @@ public class NullSelectionTest extends MockObjectTestCase {
       selection.getCursorForPosition(x, y));
     // These methods have no effect, just check they don't throw
     // exceptions
-    selection.startDragging(x, y);
+    selection.startPressing(x, y);
+    selection.startDragging();
     selection.stopDragging(x, y);
     selection.cancelDragging();
     selection.updatePosition(x, y);

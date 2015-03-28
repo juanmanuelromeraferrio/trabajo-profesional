@@ -65,7 +65,8 @@ public class UmlConnectionSelectionTest extends MockObjectTestCase {
     assertTrue(connselection.isDragging());
     mockSelection.expects(once()).method("startDragging")
       .with(eq(1.0), eq(3.0));
-    connselection.startDragging(1.0, 3.0);
+    connselection.startPressing(1.0, 3.0);
+    connselection.startDragging();
     mockSelection.expects(once()).method("stopDragging")
       .with(eq(70.0), eq(92.0));
     connselection.stopDragging(70.0, 92.0);

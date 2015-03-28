@@ -67,7 +67,7 @@ public final class NullSelection implements Selection {
   /**
    * {@inheritDoc}
    */
-  public void startDragging(double xcoord, double ycoord) { }
+  public void startDragging() { }
 
   /**
    * {@inheritDoc}
@@ -105,4 +105,9 @@ public final class NullSelection implements Selection {
    * {@inheritDoc}
    */
   public void updateDimensions() { }
+
+  @Override
+  public void startPressing(double xcoord, double ycoord) { }
+
+
 }

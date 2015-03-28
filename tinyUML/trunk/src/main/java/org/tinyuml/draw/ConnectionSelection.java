@@ -40,7 +40,7 @@ public abstract class ConnectionSelection implements Selection {
 
   private DiagramOperations editor;
   private Connection connection;
-  private boolean isDragControlPoint = false, isDragSegment = false;
+  private boolean isDragControlPoint = false, isDragSegment = false, isDragging=false;
   private static final double EPS_CONTROLPOINT = 3.0;
 
   /**
@@ -111,17 +111,20 @@ public abstract class ConnectionSelection implements Selection {
   /**
    * {@inheritDoc}
    */
-  public boolean isDragging() { return isDragControlPoint || isDragSegment; }
+  public boolean isDragging() { return isDragging; }
 
   /**
    * {@inheritDoc}
    */
-  public void startDragging(double xcoord, double ycoord) {
+  public void startPressing(double xcoord, double ycoord) {
     if (getControlPoint(xcoord, ycoord) != null) {
       startDragControlPoint(xcoord, ycoord);
     } else {
       startDragSegment(xcoord, ycoord);
     }
+  }
+  public void startDragging(){
+    isDragging=true;
   }
 
   /**

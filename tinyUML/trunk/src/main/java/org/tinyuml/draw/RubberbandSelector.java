@@ -66,9 +66,9 @@ public class RubberbandSelector implements Selection {
   /**
    * {@inheritDoc}
    */
-  public void startDragging(double xcoord, double ycoord) {
+  public void startPressing(double xcoord, double ycoord) {
     anchor.setLocation(xcoord, ycoord);
-    isDragging = true;
+    
   }
 
   /**
@@ -139,5 +139,10 @@ public class RubberbandSelector implements Selection {
       double y = diffy > 0 ? anchor.getY() : current.getY();
       drawingContext.drawRubberband(x, y, Math.abs(diffx), Math.abs(diffy));
     }
+  }
+
+  @Override
+  public void startDragging() {
+    isDragging = true;    
   }
 }

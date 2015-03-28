@@ -130,7 +130,8 @@ public class MultiSelectionTest extends MockObjectTestCase {
     mockConn.expects(atLeastOnce()).method("getAbsoluteBounds")
       .will(returnValue(new Rectangle2D.Double(10.0, 20.0, 20.0, 50.0)));
     
-    selection.startDragging(1.0, 2.0);    
+    selection.startPressing(1.0, 2.0); 
+    selection.startDragging();
     Mock mockDiagram = mock(Diagram.class);
     mockOperations.expects(atLeastOnce()).method("getDiagram")
       .will(returnValue(mockDiagram.proxy()));
@@ -181,7 +182,8 @@ public class MultiSelectionTest extends MockObjectTestCase {
     mockConn.expects(atLeastOnce()).method("getAbsoluteBounds")
       .will(returnValue(new Rectangle2D.Double(120.0, 150.0, 20.0, 20.0)));
 
-    selection.startDragging(1.0, 2.0);
+    selection.startPressing(1.0, 2.0);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     selection.cancelDragging();
     assertFalse(selection.isDragging());

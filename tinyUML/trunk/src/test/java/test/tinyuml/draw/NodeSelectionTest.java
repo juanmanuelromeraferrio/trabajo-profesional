@@ -136,7 +136,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
   private void setStandardDragFixture() {
     Point2D origin = new Point2D.Double(0, 0);
     // start dragging somewhere in the selection
-    selection.startDragging(100.0, 100.0);
+    selection.startPressing(100.0, 100.0);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // move it a little
     mockOperations.expects(atLeastOnce()).method("getDiagram").
@@ -234,7 +235,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
   public void testDragMoveLeftBounds() {
     Point2D origin = new Point2D.Double(0, 0);
     // start dragging somewhere in the selection
-    selection.startDragging(20.0, 10.0);
+    selection.startPressing(20.0, 10.0);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // move it a little too far to the left
     Mock mockDiagram = mock(Diagram.class);
@@ -300,7 +302,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
   public void testDragResizeSe() {
     Dimension2D minimumSize = new DoubleDimension(10, 10);
     // start dragging somewhere in the SE handle (322+, 425+)
-    selection.startDragging(324.0, 427.0);
+    selection.startPressing(324.0, 427.0);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little bigger
     setFullResizeExpectations(minimumSize);
@@ -327,7 +330,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     // At SE resize, the position is < 22 and 25
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the SE handle (322+, 425+)
-    selection.startDragging(324.0, 427.0);
+    selection.startPressing(324.0, 427.0);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little smaller
     setResizeExpectations(minimumSize);
@@ -350,7 +354,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     Point2D origin = new Point2D.Double(0, 0);
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the NW handle (2-, 5-)
-    selection.startDragging(1, 3);
+    selection.startPressing(1, 3);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little bigger
     setFullResizeExpectations(minimumSize);
@@ -377,7 +382,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     // At NW resize, the position is > (322 - 20) and (425 - 20)
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the NW handle (2-, 5-)
-    selection.startDragging(1.0, 3.0);
+    selection.startPressing(1.0, 3.0);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little smaller, dragging it to the lower right
     setResizeExpectations(minimumSize);
@@ -400,7 +406,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     Point2D origin = new Point2D.Double(0, 0);
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the NW handle (322+, 5-)
-    selection.startDragging(324, 3);
+    selection.startPressing(324, 3);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little bigger
     setFullResizeExpectations(minimumSize);
@@ -429,7 +436,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     // At NE resize, the position is < 22 and > (425 - 20)
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the NW handle (2-, 5-)
-    selection.startDragging(324, 3);
+    selection.startPressing(324, 3);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little smaller, dragging it to the lower left
     setResizeExpectations(minimumSize);
@@ -453,7 +461,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     Point2D origin = new Point2D.Double(0, 0);
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the SW handle (2-, 425+)
-    selection.startDragging(1, 427);
+    selection.startPressing(1, 427);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little bigger
     setFullResizeExpectations(minimumSize);
@@ -480,7 +489,8 @@ public class NodeSelectionTest extends MockObjectTestCase {
     // At SW resize, the position is x > (322 - 20) and y < 22
     Dimension2D minimumSize = new DoubleDimension(20, 20);
     // start dragging somewhere in the SW handle (2-, 425+)
-    selection.startDragging(1, 427);
+    selection.startPressing(1, 427);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     // make it a little smaller, dragging it to the lower left
     setResizeExpectations(minimumSize);

@@ -78,8 +78,8 @@ public class UmlConnectionSelection implements Selection {
   /**
    * {@inheritDoc}
    */
-  public void startDragging(double xcoord, double ycoord) {
-    selection.startDragging(xcoord, ycoord);
+  public void startPressing(double xcoord, double ycoord) {
+    selection.startPressing(xcoord, ycoord);
   }
 
   /**
@@ -126,4 +126,10 @@ public class UmlConnectionSelection implements Selection {
    * {@inheritDoc}
    */
   public void updateDimensions() { selection.updateDimensions(); }
+
+  @Override
+  public void startDragging() {
+    selection.startDragging();
+    
+  }
 }

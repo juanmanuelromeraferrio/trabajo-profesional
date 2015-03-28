@@ -81,8 +81,8 @@ public class MultiSelection implements Selection {
   /**
    * {@inheritDoc}
    */
-  public void startDragging(double xcoord, double ycoord) {
-    isDragging = true;
+  public void startPressing(double xcoord, double ycoord) {
+   
     anchor.setLocation(xcoord, ycoord);
     double minx = Double.MAX_VALUE, miny = Double.MAX_VALUE;
     double maxy = Double.MIN_VALUE, maxx = Double.MIN_VALUE;
@@ -206,5 +206,11 @@ public class MultiSelection implements Selection {
     for (Selection selection : selections) {
       selection.updateDimensions();
     }
+  }
+
+  @Override
+  public void startDragging() {
+    isDragging = true;
+    
   }
 }

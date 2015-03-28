@@ -53,25 +53,8 @@ public class NodeSelection implements Selection, NodeChangeListener {
   private Point2D tmpPos = new Point2D.Double();
   private Dimension2D tmpSize = new DoubleDimension();
   private int resizeDirection = -1;
+  private boolean isDragging;
 
-  /**
-   * A boolean holder class. We avoid to use the CORBA package.
-   */
-  static class BooleanHolder {
-    private boolean value;
-
-    /**
-     * Return the value.
-     * @return the value
-     */
-    public boolean getValue() { return value; }
-
-    /**
-     * Sets the value.
-     * @param aValue the value
-     */
-    public void setValue(boolean aValue) { value = aValue; }
-  }
 
   /**
    * Constructor.
@@ -151,23 +134,32 @@ public class NodeSelection implements Selection, NodeChangeListener {
    * {@inheritDoc}
    */
   public boolean isDragging() {
-    return isMoving || isResizing;
+    return isDragging;
   }
 
   /**
    * {@inheritDoc}
    */
-  public void startDragging(double x, double y) {
+  public void startPressing(double x, double y) {
     resizeDirection = getResizeHandle(x, y);
     isResizing = (resizeDirection >= 0);
     isMoving = !isResizing;
     anchor.setLocation(x, y);
+  }
+  /**
+   * {@inheritDoc}
+   */
+  public void startDragging() {
+    isDragging=true;
   }
 
   /**
    * {@inheritDoc}
    */
   public void stopDragging(double x, double y) {
+    if(!isDragging)
+      return;
+    
     if (isMoving) {
       moveSelectedNode(x, y);
     } else if (isResizing) {
@@ -175,6 +167,7 @@ public class NodeSelection implements Selection, NodeChangeListener {
     }
     isMoving = false;
     isResizing = false;
+    isDragging = false;
     updateDimensions();
   }
 
@@ -288,10 +281,6 @@ public class NodeSelection implements Selection, NodeChangeListener {
    * @param diffy the difference to the selection anchor y coordinate
    */
   private void resizeSelection(double diffx, double diffy) {
-    BooleanHolder xFlagHolder = new BooleanHolder();
-    BooleanHolder yFlagHolder = new BooleanHolder();
-    xFlagHolder.setValue(false);
-    yFlagHolder.setValue(false);
 
     diffx = truncateToMinimumWidth(diffx);
     diffx = truncateToParentX(diffx);

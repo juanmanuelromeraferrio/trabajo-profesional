@@ -47,14 +47,15 @@ public class SelectionHandler implements EditorMode {
 
   private DiagramEditor editor;
   private Selection currentSelection = NullSelection.getInstance();
+  private Selection currentDragged = NullSelection.getInstance();
   private Set<SelectionListener> listeners =
     new HashSet<SelectionListener>();
   private ContextMenuBuilder menubuilder = new ContextMenuBuilder();
 
   /**
-   * The selector for rubber band selection.
+   * The rubberBandSelector for rubber band selection.
    */
-  private RubberbandSelector selector = new RubberbandSelector();
+  private RubberbandSelector rubberBandSelector = new RubberbandSelector();
 
   /**
    * Constructor.
@@ -62,7 +63,7 @@ public class SelectionHandler implements EditorMode {
    */
   public SelectionHandler(DiagramEditor anEditor) {
     editor = anEditor;
-    selector.setDiagram(editor.getDiagram());
+    rubberBandSelector.setDiagram(editor.getDiagram());
   }
 
   /**
@@ -138,13 +139,14 @@ public class SelectionHandler implements EditorMode {
    */
   private void handleSelectionOnMousePress(EditorMouseEvent e) {
     double mx = e.getX(), my = e.getY();
-    currentSelection = getSelection(mx, my);
+    currentDragged = getSelection(mx, my);
     // Dragging only if left mouse button was pressed
     if (e.isMainButton()) {
-      if (nothingSelected() && editor.getDiagram().contains(mx, my)) {
-        currentSelection = selector;
+      if(nothingDragged()&& editor.getDiagram().contains(mx, my)) {
+        currentDragged = rubberBandSelector;
       }
-      currentSelection.startDragging(mx, my);
+
+      currentDragged.startPressing(mx, my);
     }
   }
 
@@ -155,6 +157,14 @@ public class SelectionHandler implements EditorMode {
   private boolean nothingSelected() {
     return currentSelection == NullSelection.getInstance() ||
       currentSelection.getElement() == editor.getDiagram();
+  }
+  /**
+   * Returns true if no element is been dragged.
+   * @return true if no element is been dragged.
+   */
+  private boolean nothingDragged() {
+    return currentDragged == NullSelection.getInstance() ||
+        currentDragged.getElement() == editor.getDiagram();
   }
 
   /**
@@ -192,13 +202,17 @@ public class SelectionHandler implements EditorMode {
    */
   private void handleSelectionOnMouseReleased(EditorMouseEvent e) {
     double mx = e.getX(), my = e.getY();
-    if (currentSelection.isDragging()) {
-      currentSelection.stopDragging(mx, my);
-      if (currentSelection instanceof RubberbandSelector) {
-        setRubberbandSelection((RubberbandSelector) currentSelection);
+    
+    if (currentDragged.isDragging()) {
+        currentDragged.stopDragging(mx, my);
+      if (currentDragged instanceof RubberbandSelector) {
+        setRubberbandSelection((RubberbandSelector) currentDragged);
+      }else{
+        currentSelection=currentDragged;
       }
       editor.redraw();
     }
+    currentDragged=NullSelection.getInstance();
     // notify selection listeners
     notifyListeners();
   }
@@ -235,9 +249,10 @@ public class SelectionHandler implements EditorMode {
    * {@inheritDoc}
    */
   public void mouseDragged(EditorMouseEvent e) {
+    currentDragged.startDragging();
     double mx = e.getX(), my = e.getY();
-    if (currentSelection.isDragging()) {
-      currentSelection.updatePosition(mx, my);
+    if (currentDragged.isDragging()) {
+      currentDragged.updatePosition(mx, my);
       editor.repaint();
     }
   }
@@ -247,7 +262,8 @@ public class SelectionHandler implements EditorMode {
    */
   public void draw(DrawingContext drawingContext) {
     currentSelection.draw(drawingContext);
-    selector.draw(drawingContext);
+    currentDragged.draw(drawingContext);
+    rubberBandSelector.draw(drawingContext);
   }
 
   /**
@@ -272,7 +288,7 @@ public class SelectionHandler implements EditorMode {
    * {@inheritDoc}
    */
   public void cancel() {
-    currentSelection.cancelDragging();
+    currentDragged.cancelDragging();
   }
 
   /**

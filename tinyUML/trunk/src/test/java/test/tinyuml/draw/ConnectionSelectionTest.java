@@ -121,7 +121,8 @@ public class ConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragControlPoint() {
     expectGetPointsThreeControlPoints();
-    selection.startDragging(2.0, 3.0);
+    selection.startPressing(2.0, 3.0);
+    selection.startDragging();
     assertEquals("startDragControlPoint", log.toString());
     expectDrawWhileDragging(3);
     selection.draw((DrawingContext) mockDrawingContext.proxy());
@@ -136,7 +137,8 @@ public class ConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragControlPointCancelled() {
     expectGetPointsThreeControlPoints();
-    selection.startDragging(2.0, 3.0);
+    selection.startPressing(2.0, 3.0);
+    selection.startDragging();
     assertEquals("startDragControlPoint", log.toString());
     selection.cancelDragging();
     assertFalse(selection.isDragging());
@@ -148,7 +150,8 @@ public class ConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragSegment() {
     expectGetPoints();
-    selection.startDragging(5.0, 1.0);
+    selection.startPressing(5.0, 1.0);
+    selection.startDragging();
     assertEquals("startDragSegment", log.toString());
     expectDrawWhileDragging(2);
     selection.draw((DrawingContext) mockDrawingContext.proxy());
@@ -163,7 +166,8 @@ public class ConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragSegmentCancelled() {
     expectGetPoints();
-    selection.startDragging(5.0, 1.0);
+    selection.startPressing(5.0, 1.0);
+    selection.startDragging();
     assertEquals("startDragSegment", log.toString());
     selection.cancelDragging();
     assertFalse(selection.isDragging());

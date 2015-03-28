@@ -149,7 +149,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragHorizontalSegmentJustALittleUp() {
     // the connection is on 119
-    horizSelection.startDragging(110.0, 120.0);
+    horizSelection.startPressing(110.0, 120.0);
+    horizSelection.startDragging();
     assertTrue(horizSelection.isDragging());
     horizSelection.updatePosition(110.0, 110.0);
     horizSelection.stopDragging(110.0, 110.0);
@@ -174,7 +175,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragHorizontalSegmentUpDisconnectFromNodes() {
     // the connection is on 119
-    horizSelection.startDragging(110.0, 120.0);
+    horizSelection.startPressing(110.0, 120.0);
+    horizSelection.startDragging();
     dragUp(horizSelection, 110.0, 120.0, 80.0);
     horizSelection.stopDragging(110.0, 80.0);
     
@@ -202,7 +204,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragHorizontalSegmentDownDisconnectFromNodes() {
     // the connection is on 119
-    horizSelection.startDragging(110.0, 120.0);
+    horizSelection.startPressing(110.0, 120.0);
+    horizSelection.startDragging();
     dragDown(horizSelection, 110.0, 120.0, 160.0);
     horizSelection.stopDragging(110.0, 160.0);
     
@@ -230,7 +233,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragHorizontalSegmentDownDisconnectFromNodesAndJoinAgain() {
     // the connection is on 119
-    horizSelection.startDragging(110.0, 120.0);
+    horizSelection.startPressing(110.0, 120.0);
+    horizSelection.startDragging();
     dragDown(horizSelection, 110.0, 120.0, 170.0);
     dragUp(horizSelection, 110.0, 170.0, 120.0);
     horizSelection.stopDragging(110.0, 120.0);
@@ -247,12 +251,14 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
     
     // Do it differently, first drag, stop then drag back and stop
     // the connection is on 119
-    horizSelection.startDragging(110.0, 120.0);
+    horizSelection.startPressing(110.0, 120.0);
+    horizSelection.startDragging();
     dragDown(horizSelection, 110.0, 120.0, 170.0);
     horizSelection.stopDragging(110.0, 170.0);
     assertEquals(4, horizSelection.getEditPoints().size());
     
-    horizSelection.startDragging(110.0, 170.0);
+    horizSelection.startPressing(110.0, 170.0);
+    horizSelection.startDragging();
     dragUp(horizSelection, 110.0, 170.0, 120.0);
     horizSelection.stopDragging(110.0, 120.0);
 
@@ -290,7 +296,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragVerticalSegmentJustALittleRight() {
     // the connection is on (51, 140) -> (51, 180.0)
-    vertSelection.startDragging(51.0, 160.0);
+    vertSelection.startPressing(51.0, 160.0);
+    vertSelection.startDragging();
     assertTrue(vertSelection.isDragging());
     vertSelection.updatePosition(70.0, 160.0);
     vertSelection.stopDragging(70.0, 160.0);
@@ -315,7 +322,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragVerticalSegmentLeftDisconnectFromNodes() {
     // the connection is on (51, 140) -> (51, 180.0)
-    vertSelection.startDragging(51.0, 160.0);
+    vertSelection.startPressing(51.0, 160.0);
+    vertSelection.startDragging();
     dragLeft(vertSelection, 51.0, -20.0, 170.0);
     vertSelection.stopDragging(-20.0, 170.0);
     
@@ -343,7 +351,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    */
   public void testDragVerticalSegmentRightDisconnectFromNodes() {
     // the connection is on (51, 140) -> (51, 180.0)
-    vertSelection.startDragging(51.0, 160.0);
+    vertSelection.startPressing(51.0, 160.0);
+    vertSelection.startDragging();
     dragRight(vertSelection, 51.0, 120.0, 170.0);
     vertSelection.stopDragging(120.0, 170.0);
     
@@ -388,7 +397,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    * intersection point.
    */
   public void testDragHorizontalSegmentToNode2MiddleRectConnection() {
-    rectSelection.startDragging(120.0, 120.0);
+    rectSelection.startPressing(120.0, 120.0);
+    rectSelection.startDragging();
     dragDown(rectSelection, 120.0, 120.0, 190.0);
     rectSelection.stopDragging(120.0, 190.0);    
     assertEquals(3, rectConn.getPoints().size());
@@ -413,7 +423,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
   public void testDragPointConnectedToNodeOnlyInYDirection() {
     Point2D point0 = rectConn.getPoints().get(0);
     double p0x = point0.getX(), p0y = point0.getY();
-    rectSelection.startDragging(p0x, p0y);
+    rectSelection.startPressing(p0x, p0y);
+    rectSelection.startDragging();
     rectSelection.updatePosition(p0x + 5, p0y + 5);
     rectSelection.updatePosition(p0x + 10, p0y + 10);
     rectSelection.updatePosition(p0x + 15, p0y + 15);
@@ -431,7 +442,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
   public void testDragPointConnectedToNodeOnlyInxDirection() {
     Point2D pointn = rectConn.getPoints().get(rectConn.getPoints().size() - 1);
     double pnx = pointn.getX(), pny = pointn.getY();
-    rectSelection.startDragging(pnx, pny);
+    rectSelection.startPressing(pnx, pny);
+    rectSelection.startDragging();
     // drag up and left
     rectSelection.updatePosition(pnx - 5, pny - 5);
     rectSelection.updatePosition(pnx - 10, pny - 10);
@@ -450,7 +462,8 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
   public void testDragUnconstrainedControlPoint() {
     Point2D pointn = rectConn.getPoints().get(1);
     double pnx = pointn.getX(), pny = pointn.getY();
-    rectSelection.startDragging(pnx, pny);
+    rectSelection.startPressing(pnx, pny);
+    rectSelection.startDragging();
     // drag up and left
     rectSelection.updatePosition(pnx - 5, pny - 5);
     rectSelection.updatePosition(pnx - 10, pny - 10);

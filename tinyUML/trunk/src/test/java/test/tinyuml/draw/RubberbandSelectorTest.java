@@ -61,7 +61,8 @@ public class RubberbandSelectorTest extends MockObjectTestCase {
    */
   public void testCompleteDrag() {
     selector.setDiagram((CompositeNode) mockCompositeNode.proxy());
-    selector.startDragging(10.0, 20.0);
+    selector.startPressing(10.0, 20.0);
+    selector.startDragging();
     assertTrue(selector.isDragging());
     selector.updatePosition(30.0, 50.0);
     mockDrawingContext.expects(once()).method("drawRubberband")
@@ -80,7 +81,8 @@ public class RubberbandSelectorTest extends MockObjectTestCase {
    * Tests a cancelled drag.
    */
   public void testCancelDrag() {
-    selector.startDragging(10.0, 20.0);
+    selector.startPressing(10.0, 20.0);
+    selector.startDragging();
     assertTrue(selector.isDragging());
     selector.cancelDragging();
     assertFalse(selector.isDragging());

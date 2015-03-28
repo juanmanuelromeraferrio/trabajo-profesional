@@ -52,13 +52,20 @@ public interface Selection {
    * @return true if the user is dragging this object, false otherwise
    */
   boolean isDragging();
+  
+  /**
+   * Initiates the pressing state.
+   * @param xcoord the x coordinate
+   * @param ycoord the y coordinate
+   */
+  void startPressing(double xcoord, double ycoord);
 
   /**
    * Initiates the dragging process.
    * @param xcoord the x coordinate
    * @param ycoord the y coordinate
    */
-  void startDragging(double xcoord, double ycoord);
+  void startDragging();
 
   /**
    * Stops the dragging process.

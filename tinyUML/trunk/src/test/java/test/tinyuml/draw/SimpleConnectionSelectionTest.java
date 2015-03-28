@@ -101,7 +101,8 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();
-    selection.startDragging(105, 30);
+    selection.startPressing(105, 30);
+    selection.startDragging();
     Point2D oldp1 = conn.getEndPoint1();
     Point2D oldp2 = conn.getEndPoint2();
     assertEquals(3, selection.getEditPoints().size());
@@ -123,7 +124,8 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();
-    selection.startDragging(105, 30);
+    selection.startPressing(105, 30);
+    selection.startDragging();
     assertEquals(3, selection.getEditPoints().size());
     assertTrue(selection.isDragging());
     selection.updatePosition(120, 50);
@@ -146,7 +148,8 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
     SimpleConnectionSelection selection = setupConnection();
     Point2D oldp1 = conn.getEndPoint1();
     Point2D oldp2 = conn.getEndPoint2();
-    selection.startDragging(105, 30);
+    selection.startPressing(105, 30);
+    selection.startDragging();
     assertEquals(3, selection.getEditPoints().size());
     assertTrue(selection.isDragging());
     selection.updatePosition(120, 50);
@@ -172,7 +175,8 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
     SimpleConnectionSelection selection = setupConnection();
     // insert a new control point to make a total of three
     conn.getPoints().add(1, new Point2D.Double(105, 90));
-    selection.startDragging(105, 90);
+    selection.startPressing(105, 90);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     selection.updatePosition(120, 50);
     selection.updatePosition(130, 70);
@@ -193,7 +197,8 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
     SimpleConnectionSelection selection = setupConnection();
     // insert a new control point to make a total of three
     conn.getPoints().add(1, new Point2D.Double(105, 90));
-    selection.startDragging(105, 90);
+    selection.startPressing(105, 90);
+    selection.startDragging();
     assertTrue(selection.isDragging());
     selection.updatePosition(120, 50);
     selection.updatePosition(110, 40);
