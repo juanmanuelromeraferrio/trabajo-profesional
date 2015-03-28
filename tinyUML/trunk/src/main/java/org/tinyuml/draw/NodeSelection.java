@@ -292,17 +292,13 @@ public class NodeSelection implements Selection, NodeChangeListener {
     BooleanHolder yFlagHolder = new BooleanHolder();
     xFlagHolder.setValue(false);
     yFlagHolder.setValue(false);
-    // parent truncation and minimum size truncation have to be mutual
-    // exclusive
-    diffx = truncateToMinimumWidth(diffx, xFlagHolder);
-    if (!xFlagHolder.getValue()) diffx = truncateToParentX(diffx, xFlagHolder);
-    if (!xFlagHolder.getValue())
-      diffx = truncateToParentWidth(diffx, xFlagHolder);
 
-    diffy = truncateToMinimumHeight(diffy, yFlagHolder);
-    if (!yFlagHolder.getValue()) diffy = truncateToParentY(diffy, yFlagHolder);
-    if (!yFlagHolder.getValue())
-      diffy = truncateToParentHeight(diffy, yFlagHolder);
+    diffx = truncateToMinimumWidth(diffx);
+    diffx = truncateToParentX(diffx);
+
+    diffy = truncateToMinimumHeight(diffy);
+    diffy = truncateToParentY(diffy);
+
 
     switch (resizeDirection) {
       case HANDLE_SE:
@@ -376,14 +372,12 @@ public class NodeSelection implements Selection, NodeChangeListener {
    * Truncate the specified diffx, depending on the resizing direction.
    * A selection can not be made smaller than the Node's minimum size
    * @param diffx the diffx value
-   * @param success a BooleanHolder to store the success result
    * @return the diffx value truncated to the minimum size if necessary
    */
-  private double truncateToMinimumWidth(double diffx, BooleanHolder success) {
+  private double truncateToMinimumWidth(double diffx ) {
     double dx = westernSwap(diffx);
     if (node.getSize().getWidth() + dx < node.getMinimumSize().getWidth()) {
       dx = node.getMinimumSize().getWidth() - node.getSize().getWidth();
-      success.setValue(true);
     }
     return westernSwap(dx);
   }
@@ -413,14 +407,12 @@ public class NodeSelection implements Selection, NodeChangeListener {
    * Truncate the specified diffy, depending on the resizing direction.
    * A selection can not be made smaller than the Node's minimum size
    * @param diffy the diffy value
-   * @param success a BooleanHolder to store the success result
    * @return the diffy value truncated to the minimum size if necessary
    */
-  private double truncateToMinimumHeight(double diffy, BooleanHolder success) {
+  private double truncateToMinimumHeight(double diffy) {
     double dy = northernSwap(diffy);
     if (node.getSize().getHeight() + dy < node.getMinimumSize().getHeight()) {
       dy = node.getMinimumSize().getHeight() - node.getSize().getHeight();
-      success.setValue(true);
     }
     return northernSwap(dy);
   }
@@ -428,15 +420,13 @@ public class NodeSelection implements Selection, NodeChangeListener {
   /**
    * Truncates the drag position to the parent's absolute x position.
    * @param diffx the diffx value
-   * @param success a BooleanHolder to store the success result
    * @return the truncated value
    */
-  private double truncateToParentX(double diffx, BooleanHolder success) {
+  private double truncateToParentX(double diffx) {
     double dx = diffx;
-    if (node.getParent() != null &&
+    if (node.getParent() != null && (resizeDirection == HANDLE_NW || resizeDirection == HANDLE_SW) &&
         node.getAbsoluteX1() + diffx < node.getParent().getAbsoluteX1()) {
       dx -= ((node.getAbsoluteX1() + diffx) - node.getParent().getAbsoluteX1());
-      success.setValue(true);
     }
     return dx;
   }
@@ -444,52 +434,17 @@ public class NodeSelection implements Selection, NodeChangeListener {
   /**
    * Truncates the drag position to the parent's absolute y position.
    * @param diffy the diffy value
-   * @param success a BooleanHolder to store the success result
    * @return the truncated value
    */
-  private double truncateToParentY(double diffy, BooleanHolder success) {
+  private double truncateToParentY(double diffy ) {
     double dy = diffy;
-    if (node.getParent() != null &&
+    if (node.getParent() != null && (resizeDirection == HANDLE_NW || resizeDirection == HANDLE_NE) &&
         node.getAbsoluteY1() + diffy < node.getParent().getAbsoluteY1()) {
       dy -= ((node.getAbsoluteY1() + diffy) - node.getParent().getAbsoluteY1());
-      success.setValue(true);
     }
     return dy;
   }
 
-  /**
-   * Truncates the specified diffx to the parent's width to prevent that
-   * it is drawn outside of the parent's bounds.
-   * @param diffx the diffx value
-   * @param success a BooleanHolder to store the success result
-   * @return the truncated diffx value
-   */
-  private double truncateToParentWidth(double diffx, BooleanHolder success) {
-    double dx = diffx;
-    if (node.getParent() != null &&
-        node.getAbsoluteX2() + diffx > node.getParent().getAbsoluteX2()) {
-      dx -= (node.getAbsoluteX2() + diffx) - node.getParent().getAbsoluteX2();
-      success.setValue(true);
-    }
-    return dx;
-  }
-
-  /**
-   * Truncates the specified diffy to the parents height to prevent that the
-   * selection is drawn outside of it's parent's bounds.
-   * @param diffy the diffy value
-   * @param success a BooleanHolder to store the success result
-   * @return the truncated diffy value
-   */
-  private double truncateToParentHeight(double diffy, BooleanHolder success) {
-    double dy = diffy;
-    if (node.getParent() != null &&
-        node.getAbsoluteY2() + diffy > node.getParent().getAbsoluteY2())  {
-      dy -= (node.getAbsoluteY2() + diffy) - node.getParent().getAbsoluteY2();
-      success.setValue(true);
-    }
-    return dy;
-  }
 
   /**
    * {@inheritDoc}
