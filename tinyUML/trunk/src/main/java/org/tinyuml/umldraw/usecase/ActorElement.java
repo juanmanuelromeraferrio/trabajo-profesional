@@ -29,11 +29,16 @@ public final class ActorElement extends AbstractCompositeNode implements LabelSo
 
   private static final long serialVersionUID = 8767029215902619069L;
 
-  private static final double DEFAULT_HEIGHT = 70;
+  
   private static final double DEFAULT_WIDHT = 40;
-  private static final double LABEL_HEIGHT = 16;
+  private static final double DEFAULT_HEIGHT = 70;
+  
+  private static final double LABEL_MARGIN_TOP = 5;
 
   private static final Color BACKGROUND = Color.WHITE;
+
+  private static final double MIN_WIDTH = 30;
+  private static final double MIN_HEIGHT = 50;
 
   private UmlActor actor;
   private Label label;
@@ -56,6 +61,7 @@ public final class ActorElement extends AbstractCompositeNode implements LabelSo
    */
   private ActorElement() {
     setSize(DEFAULT_WIDHT, DEFAULT_HEIGHT);
+    setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
     label = new SimpleLabel();
     label.setSource(this);
     label.setParent(this);
@@ -136,12 +142,12 @@ public final class ActorElement extends AbstractCompositeNode implements LabelSo
 
     double width = getSize().getWidth(), height = getSize().getHeight();
     double x = getAbsoluteX1(), y = getAbsoluteY1();
-    double figureHeight = height - LABEL_HEIGHT;
+    double figureHeight = height - label.getSize().getHeight() - LABEL_MARGIN_TOP;
 
     label.recalculateSize(drawingContext);
 
     double xLabelOrigin = (width / 2) - (label.getSize().getWidth() / 2);
-    double yLabelOrigin = figureHeight;
+    double yLabelOrigin = figureHeight + LABEL_MARGIN_TOP ;
 
     label.setOrigin(xLabelOrigin, yLabelOrigin);
     label.draw(drawingContext);
@@ -212,7 +218,7 @@ public final class ActorElement extends AbstractCompositeNode implements LabelSo
   }
 
   /**
-   * Returns true if the specified point is in the inner Note area. It keeps the margins from
+   * Returns true if the specified point is in the inner Actor area. It keeps the margins from
    * reacting to mouse clicks in order to improve usability.
    * 
    * @param mx the mapped mouse x position
@@ -220,11 +226,13 @@ public final class ActorElement extends AbstractCompositeNode implements LabelSo
    * @return true if in label area, false otherwise
    */
   private boolean inInnerArea(double mx, double my) {
-    double figureHeight = getSize().getHeight() - LABEL_HEIGHT;
+    double figureHeight = getSize().getHeight() - label.getSize().getHeight() - LABEL_MARGIN_TOP;
 
     return mx >= (getAbsoluteX1()) && mx <= (getAbsoluteX2())
         && my >= (getAbsoluteY1() + figureHeight) && my <= (getAbsoluteY2());
   }
+  
+
 
   @Override
   public void elementChanged(UmlModelElement element) {
