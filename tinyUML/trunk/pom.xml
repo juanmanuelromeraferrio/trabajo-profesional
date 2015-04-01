@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.tinyuml</groupId>
-  <artifactId>tinyuml</artifactId>
+  <groupId>ar.fiuba.trabajoprofesional</groupId>
+  <artifactId>mdauml</artifactId>
   <packaging>jar</packaging>
   <version>0.25</version>
 
@@ -80,7 +80,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.tinyuml.Main</mainClass>
+              <mainClass>ar.fiuba.trabajoprofesional.mdauml.Main</mainClass>
               <addClasspath>true</addClasspath>
             </manifest>
           </archive>
@@ -104,7 +104,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.tinyuml.Main</mainClass>
+              <mainClass>ar.fiuba.trabajoprofesional.mdauml.Main</mainClass>
               <addClasspath>true</addClasspath>
             </manifest>
           </archive>
@@ -174,12 +174,11 @@
   </reporting>
   
   <!-- Additional project information -->
-  <name>TinyUML</name>
+  <name>MDAUml</name>
   <description>
-    TinyUML is a UML 2 sketching tool. The current release is 0.25.
+      MDAUml is a UML 2 sketching tool that features Use Case to Class Diagram generation.
   </description>
-  <url>http://www.tinyuml.org</url>
-  <inceptionYear>2007</inceptionYear>
+  <inceptionYear>2015</inceptionYear>
   <licenses>
     <license>
       <name>GNU General Public License V2</name>
@@ -187,32 +186,10 @@
       <distribution>manual</distribution>
     </license>
   </licenses>
-  <organization>
-    <name>TinyUML.org</name>
-    <url>http://www.tinyuml.org</url>
-  </organization>
-  <developers>
-    <developer>
-      <id>weiju</id>
-      <name>Wei-ju Wu</name>
-      <url>http://www.tinyuml.org</url>
-      <organization>TinyUML.org</organization>
-      <organizationUrl>http://www.tinyuml.org</organizationUrl>
-      <roles>
-        <role>Architect</role>
-        <role>Developer</role>
-      </roles>
-      <timezone>-8</timezone>
-    </developer>
-  </developers>
-  <issueManagement>
-    <system>Mantis Issue Tracker</system>
-    <url>http://www.tinyuml.org/mantis</url>
-  </issueManagement>  
   <scm>
-    <connection>scm:svn:https://tinyuml.svn.sourceforge.net/svnroot/tinyuml</connection>
-    <developerConnection>scm:svn:https://tinyuml.svn.sourceforge.net/svnroot/tinyuml</developerConnection>
+    <connection>scm:git:git://github.com/juanmanuelromeraferrio/trabajo-profesional.git</connection>
+    <developerConnection>scm:git:https://github.com/juanmanuelromeraferrio/trabajo-profesional.git</developerConnection>
     <tag>HEAD</tag>
-    <url>http://tinyuml.svn.sourceforge.net/viewvc/tinyuml/</url>
+    <url>https://github.com/juanmanuelromeraferrio/trabajo-profesional.git</url>
   </scm>    
 </project>
