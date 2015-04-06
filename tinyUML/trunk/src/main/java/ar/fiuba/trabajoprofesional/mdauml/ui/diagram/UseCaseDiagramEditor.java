@@ -3,8 +3,14 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 
 import java.awt.*;
@@ -64,6 +70,7 @@ public class UseCaseDiagramEditor extends DiagramEditor {
     super(aWindow, aDiagram);
   }
 
+  
   /**
    * {@inheritDoc}
    */
@@ -75,6 +82,34 @@ public class UseCaseDiagramEditor extends DiagramEditor {
       dialog.setLocationRelativeTo(mainWindow);
       dialog.setVisible(true);
       redraw();
+    }else if(element instanceof ActorElement){
+      ActorElement actorElement = (ActorElement) element;
+      UmlActor umlActor = (UmlActor) actorElement.getModelElement();
+      EditActorDialog dialog = new EditActorDialog(window, actorElement,true);
+      dialog.setLocationRelativeTo(mainWindow);
+      dialog.setVisible(true);
+      if (dialog.isOk()) {
+        umlActor.setName(dialog.getName());
+        umlActor.setDescription(dialog.getDescription());
+        redraw();
+      }
+      
+    }else if(element instanceof UseCaseElement){
+      UseCaseElement useCaseElement = (UseCaseElement) element;
+      UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
+      EditUseCaseDialog dialog = new EditUseCaseDialog(window, useCaseElement, true);
+      dialog.setLocationRelativeTo(mainWindow);
+      dialog.setVisible(true);
+      if (dialog.isOk()) {
+        umlUseCase.setName(dialog.getName());
+        umlUseCase.setDescription(dialog.getDescription());
+        umlUseCase.setMainActors(dialog.getMainActors());
+        umlUseCase.setSecondaryActors(dialog.getSecondaryActors());
+        umlUseCase.setPreconditions(dialog.getPreconditions());
+        redraw();
+        
+      }
+      
     }
   }
 

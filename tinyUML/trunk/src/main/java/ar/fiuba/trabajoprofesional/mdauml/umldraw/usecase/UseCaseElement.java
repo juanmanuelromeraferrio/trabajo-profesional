@@ -199,15 +199,24 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
 
   @Override
   public Label getLabelAt(double mx, double my) {
-    if (inInnerArea(mx, my))
+    if (inLabelArea(mx, my))
       return label;
     return null;
   }
 
-  private boolean inInnerArea(double mx, double my) {
-    return mx >= (getAbsoluteX1()) && mx <= (getAbsoluteX2()) && my >= (getAbsoluteY1())
-        && my <= (getAbsoluteY2());
+  private boolean inLabelArea(double mx, double my) {
+    double horizontalMargin = (getSize().getWidth() - label.getSize().getWidth())/2;
+    double verticalMargin = (getSize().getHeight() - label.getSize().getHeight())/2;
+    
+    double labelX1 = getAbsoluteX1() + horizontalMargin;
+    double labelX2 = getAbsoluteX2() - horizontalMargin;
+    double labelY1 = getAbsoluteY1() + verticalMargin;
+    double labelY2 = getAbsoluteY2() - verticalMargin;    
+    
+    return mx >= labelX1 && mx <= labelX2 && my >= labelY1
+        && my <= labelY2;
   }
+
 
   @Override
   public void elementChanged(UmlModelElement element) {
