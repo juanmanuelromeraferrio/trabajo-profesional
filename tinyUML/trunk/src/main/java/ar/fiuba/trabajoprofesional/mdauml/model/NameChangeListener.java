@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
+
 /**
  * An interface to listen to changes made to NamedElements.
  * @author Wei-ju Wu
@@ -29,5 +31,5 @@ public interface NameChangeListener {
    * Notifies the listener the named element's name was changed.
    * @param element the named element
    */
-  void nameChanged(NamedElement element);
+  void nameChanged(NamedElement element) throws ElementNameAlreadyExist;
 }

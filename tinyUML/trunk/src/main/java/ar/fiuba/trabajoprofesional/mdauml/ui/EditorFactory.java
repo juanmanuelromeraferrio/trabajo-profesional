@@ -45,7 +45,7 @@ public class EditorFactory {
   private ApplicationShell shell;
   private ApplicationState appState;
   private JTabbedPane tabbedPane;
-  private int structureCounter = 1, sequenceCounter = 1;
+  private int structureCounter = 1, sequenceCounter = 1, useCaseCounter = 1;
 
   /**
    * Constructor.
@@ -144,7 +144,7 @@ public class EditorFactory {
   public EditorPanel openNewUseCaseEditor(UmlModel umlModel) {
     GeneralDiagram diagram = new UseCaseDiagram(umlModel);
     diagram.setLabelText(ApplicationResources.getInstance().getString("stdcaption.usecasediagram")
-        + " " + (sequenceCounter++));
+        + " " + (useCaseCounter++));
     umlModel.addDiagram(diagram);
     return createEditorPanel(new UseCaseDiagramEditor(shell.getShellComponent(), diagram),
         new UseCaseEditorToolbarManager());

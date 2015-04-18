@@ -3,45 +3,65 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.*;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import ar.fiuba.trabajoprofesional.mdauml.draw.AbstractCompositeNode;
+import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Diagram;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramOperations;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
+import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
+import ar.fiuba.trabajoprofesional.mdauml.draw.NodeChangeListener;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Selection;
+import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleLabel;
+import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
+import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
+import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
+import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
 
 /**
- * This class implements the effective layout area. It shows the boundaries
- * of the diagram and also the grid lines.
+ * This class implements the effective layout area. It shows the boundaries of the diagram and also
+ * the grid lines.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public abstract class GeneralDiagram extends AbstractCompositeNode
-implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
+public abstract class GeneralDiagram extends AbstractCompositeNode implements NodeChangeListener,
+    LabelSource, Diagram, DiagramElementFactory {
 
   private static final long serialVersionUID = -874538211438595440L;
   private static final int ADDITIONAL_SPACE_RIGHT = 30;
@@ -51,13 +71,12 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   private String name;
   private List<Connection> connections = new ArrayList<Connection>();
   private Label nameLabel = new SimpleLabel();
-  private UmlModel umlmodel;
+  protected UmlModel umlmodel;
 
   private transient boolean gridVisible = true, snapToGrid = true;
   private transient Collection<NameChangeListener> nameChangeListeners =
-    new HashSet<NameChangeListener>();
-  private transient Set<NodeChangeListener> nodeChangeListeners =
-    new HashSet<NodeChangeListener>();
+      new HashSet<NameChangeListener>();
+  private transient Set<NodeChangeListener> nodeChangeListeners = new HashSet<NodeChangeListener>();
 
   // the prototype maps
   private transient Map<ElementType, UmlDiagramElement> elementPrototypes;
@@ -65,6 +84,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Writes the instance variables to the stream.
+   * 
    * @param stream an ObjectOutputStream
    * @throws java.io.IOException if I/O error occured
    */
@@ -78,12 +98,12 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Reads the instance variables from the specified stream.
+   * 
    * @param stream an ObjectInputStream
    * @throws java.io.IOException if I/O error occured
    * @throws ClassNotFoundException if class was not found
    */
-  private void readObject(ObjectInputStream stream)
-    throws IOException, ClassNotFoundException {
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     gridSize = stream.readInt();
     name = stream.readUTF();
     connections = (List<Connection>) stream.readObject();
@@ -100,11 +120,12 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Constructor.
+   * 
    * @param aModel the UmlModel
    */
   public GeneralDiagram(UmlModel aModel) {
     initializeNameLabel();
-    //setSize(20000, 26000);
+    // setSize(20000, 26000);
     setSize(600, 400);
     umlmodel = aModel;
     elementPrototypes = setupElementPrototypeMap();
@@ -112,16 +133,18 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   }
 
   /**
-   * A constructor added for mocking only. Think about making UmlDiagram an
-   * interface.
+   * A constructor added for mocking only. Think about making UmlDiagram an interface.
    */
-  public GeneralDiagram() { }
+  public GeneralDiagram() {}
 
   /**
    * Returns the element factory.
+   * 
    * @return the element factory
    */
-  public DiagramElementFactory getElementFactory() { return this; }
+  public DiagramElementFactory getElementFactory() {
+    return this;
+  }
 
   /**
    * {@inheritDoc}
@@ -145,13 +168,17 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   /**
    * {@inheritDoc}
    */
-  public String getName() { return name; }
+  public String getName() {
+    return name;
+  }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public String toString() { return getName(); }
+  public String toString() {
+    return getName();
+  }
 
   /**
    * {@inheritDoc}
@@ -166,7 +193,9 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   /**
    * {@inheritDoc}
    */
-  public String getLabelText() { return getName(); }
+  public String getLabelText() {
+    return getName();
+  }
 
   /**
    * {@inheritDoc}
@@ -177,63 +206,87 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Sets the visibility flag of the grid.
+   * 
    * @param flag true if grid should be visible, false otherwise
    */
-  public void setGridVisible(boolean flag) { gridVisible = flag; }
+  public void setGridVisible(boolean flag) {
+    gridVisible = flag;
+  }
 
   /**
    * Returns the state of the gridVisible flag.
+   * 
    * @return true if grid visible, false otherwise
    */
-  public boolean isGridVisible() { return gridVisible; }
+  public boolean isGridVisible() {
+    return gridVisible;
+  }
 
   /**
    * Returns the grid size.
+   * 
    * @return the grid size
    */
-  public int getGridSize() { return gridSize; }
+  public int getGridSize() {
+    return gridSize;
+  }
 
   /**
    * Sets the grid size.
+   * 
    * @param size the new grid size
    */
-  public void setGridSize(int size) { gridSize = size; }
+  public void setGridSize(int size) {
+    gridSize = size;
+  }
 
   /**
    * Returns the status of the snapToGrid property.
+   * 
    * @return the status of the snapToGrid property
    */
-  public boolean isSnapToGrid() { return snapToGrid; }
+  public boolean isSnapToGrid() {
+    return snapToGrid;
+  }
 
   /**
    * Sets the snapping flag.
+   * 
    * @param flag true to snap, false to ignore snapping
    */
-  public void setSnapToGrid(boolean flag) { snapToGrid = flag; }
+  public void setSnapToGrid(boolean flag) {
+    snapToGrid = flag;
+  }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public CompositeNode getParent() { return null; }
+  public CompositeNode getParent() {
+    return null;
+  }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setParent(CompositeNode parent) { }
+  public void setParent(CompositeNode parent) {}
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public double getAbsoluteX1() { return getOrigin().getX(); }
+  public double getAbsoluteX1() {
+    return getOrigin().getX();
+  }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public double getAbsoluteY1() { return getOrigin().getY(); }
+  public double getAbsoluteY1() {
+    return getOrigin().getY();
+  }
 
   /**
    * {@inheritDoc}
@@ -249,7 +302,8 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   public void draw(DrawingContext drawingContext) {
     Rectangle bounds = drawingContext.getClipBounds();
     drawBackground(drawingContext, bounds);
-    if (gridVisible) drawGrid(drawingContext);
+    if (gridVisible)
+      drawGrid(drawingContext);
     drawBorder(drawingContext);
     drawNameLabel(drawingContext);
 
@@ -264,37 +318,42 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Returns the drawing grid size.
+   * 
    * @return the drawing grid size
    */
-  private double getDrawGridSize() { return gridSize * 5; }
+  private double getDrawGridSize() {
+    return gridSize * 5;
+  }
 
   /**
    * Draws the background of the diagram.
+   * 
    * @param drawingContext the DrawingContext
    * @param bounds the bounding Rectangle
    */
   private void drawBackground(DrawingContext drawingContext, Rectangle bounds) {
-    //System.out.println("drawBackground(), clipBounds: " + bounds);
+    // System.out.println("drawBackground(), clipBounds: " + bounds);
     double x1 = Math.max(getAbsoluteX1(), bounds.getX());
     double y1 = Math.max(getAbsoluteY1(), bounds.getY());
-    double x2 = Math.min(bounds.getX() + bounds.getWidth(),
-      getAbsoluteX1() + getSize().getWidth());
-    double y2 = Math.min(bounds.getY() + bounds.getHeight(),
-      getAbsoluteY1() + getSize().getHeight());
+    double x2 = Math.min(bounds.getX() + bounds.getWidth(), getAbsoluteX1() + getSize().getWidth());
+    double y2 =
+        Math.min(bounds.getY() + bounds.getHeight(), getAbsoluteY1() + getSize().getHeight());
     drawingContext.fillRectangle(x1, y1, x2 - x1, y2 - y1, Color.WHITE);
   }
 
   /**
    * Draws the diagram border.
+   * 
    * @param drawingContext the DrawingContext
    */
   private void drawBorder(DrawingContext drawingContext) {
-    drawingContext.drawRectangle(getOrigin().getX(), getOrigin().getY(),
-      getSize().getWidth(), getSize().getHeight(), null);
+    drawingContext.drawRectangle(getOrigin().getX(), getOrigin().getY(), getSize().getWidth(),
+        getSize().getHeight(), null);
   }
 
   /**
    * Draws the grid lines.
+   * 
    * @param drawingContext the DrawingContext
    */
   private void drawGrid(DrawingContext drawingContext) {
@@ -323,6 +382,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Draws the name label in the left upper corner.
+   * 
    * @param drawingContext the DrawingContext
    */
   private void drawNameLabel(DrawingContext drawingContext) {
@@ -345,6 +405,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Returns the grid position which is nearest to the specified position.
+   * 
    * @param pos the position
    * @return the nearest grid point
    */
@@ -357,8 +418,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
    */
   public void snap(Point2D point) {
     if (snapToGrid) {
-      point.setLocation(getNearestGridPos(point.getX()),
-        getNearestGridPos(point.getY()));
+      point.setLocation(getNearestGridPos(point.getX()), getNearestGridPos(point.getY()));
     }
   }
 
@@ -399,6 +459,11 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
       super.addChild(child);
       resizeToNode((Node) child);
     }
+
+    if (child instanceof UmlNode) {
+      UmlNode umlnode = (UmlNode) child;
+      umlmodel.addElement(umlnode.getModelElement(), this);
+    }
   }
 
   /**
@@ -411,6 +476,11 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
     } else {
       super.removeChild(child);
     }
+
+    if (child instanceof UmlNode) {
+      UmlNode umlnode = (UmlNode) child;
+      umlmodel.removeElement(umlnode.getModelElement(), this);
+    }
   }
 
   /**
@@ -419,14 +489,16 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   @Override
   public DiagramElement getChildAt(double x, double y) {
     for (Connection conn : connections) {
-      if (conn.contains(x, y)) return conn;
+      if (conn.contains(x, y))
+        return conn;
     }
     return super.getChildAt(x, y);
   }
 
   /**
-   * Updates this element's bounds according to the specified node. This will
-   * happen if the node exceeds the diagram's bounds.
+   * Updates this element's bounds according to the specified node. This will happen if the node
+   * exceeds the diagram's bounds.
+   * 
    * @param node the Node to check against
    */
   private void resizeToNode(Node node) {
@@ -434,10 +506,8 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
     double diffx = node.getAbsoluteX2() - getAbsoluteX2();
     double diffy = node.getAbsoluteY2() - getAbsoluteY2();
     if (diffx > 0 || diffy > 0) {
-      setSize(getSize().getWidth() +
-              (diffx > 0 ? (diffx + ADDITIONAL_SPACE_RIGHT) : 0),
-              getSize().getHeight() +
-              (diffy > 0 ? (diffy + ADDITIONAL_SPACE_BOTTOM) : 0));
+      setSize(getSize().getWidth() + (diffx > 0 ? (diffx + ADDITIONAL_SPACE_RIGHT) : 0), getSize()
+          .getHeight() + (diffy > 0 ? (diffy + ADDITIONAL_SPACE_BOTTOM) : 0));
     }
   }
 
@@ -445,12 +515,14 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
    * {@inheritDoc}
    */
   public Label getLabelAt(double mx, double my) {
-    if (nameLabel.contains(mx, my)) return nameLabel;
+    if (nameLabel.contains(mx, my))
+      return nameLabel;
     return null;
   }
 
   /**
    * Adds a label change listener that listens to changes to the name label.
+   * 
    * @param l the listener to add
    */
   public void addNameChangeListener(NameChangeListener l) {
@@ -459,6 +531,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Removes a label change listener from the name label.
+   * 
    * @param l the listener to remove
    */
   public void removeNameChangeListener(NameChangeListener l) {
@@ -469,7 +542,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   // ****** NodeChangeListeners of diagrams are usually user interface
   // ****** elements. User interfaces are not part of the persistence model
   // ****** so the listeners are redefined as transient list.
-  //**************************************************************************
+  // **************************************************************************
   /**
    * {@inheritDoc}
    */
@@ -500,23 +573,25 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Initializes the element map with the element prototypes.
+   * 
    * @return the initialized map
    */
-  protected abstract Map<ElementType, UmlDiagramElement>
-    setupElementPrototypeMap();
+  protected abstract Map<ElementType, UmlDiagramElement> setupElementPrototypeMap();
 
   /**
    * Initializes the map with the connection prototypes.
+   * 
    * @return the initialized map
    */
-  protected abstract Map<RelationType, UmlConnection>
-    setupConnectionPrototypeMap();
+  protected abstract Map<RelationType, UmlConnection> setupConnectionPrototypeMap();
 
   /**
    * {@inheritDoc}
    */
   public UmlNode createNode(ElementType elementType) {
     UmlNode umlnode = (UmlNode) elementPrototypes.get(elementType).clone();
+    String name = ElementNameGenerator.getName(elementType);
+    umlnode.getModelElement().setName(name);
     umlnode.addNodeChangeListener(this);
     return umlnode;
   }
@@ -524,8 +599,7 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
   /**
    * {@inheritDoc}
    */
-  public UmlConnection createConnection(RelationType relationType,
-    UmlNode node1, UmlNode node2) {
+  public UmlConnection createConnection(RelationType relationType, UmlNode node1, UmlNode node2) {
     UmlConnection prototype = connectionPrototypes.get(relationType);
     UmlConnection conn = null;
     if (prototype != null) {
@@ -545,12 +619,12 @@ implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
   /**
    * Binds the UmlConnection to the nodes.
+   * 
    * @param conn the Connection
    * @param node1 the Node 1
    * @param node2 the Node 2
    */
-  private void bindConnection(UmlConnection conn, UmlNode node1,
-    UmlNode node2) {
+  private void bindConnection(UmlConnection conn, UmlNode node1, UmlNode node2) {
     conn.setNode1(node1);
     conn.setNode2(node2);
     node1.addConnection(conn);

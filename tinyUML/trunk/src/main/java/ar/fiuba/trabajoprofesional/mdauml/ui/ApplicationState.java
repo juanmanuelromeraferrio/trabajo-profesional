@@ -3,24 +3,48 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.undo.UndoManager;
+
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelImpl;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
@@ -32,27 +56,14 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.model.TinyUmlProject;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.undo.UndoManager;
-import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
- * This class holds the common elements that the TinyUML default application
- * consists of.
+ * This class holds the common elements that the TinyUML default application consists of.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class ApplicationState implements EditorStateListener, SelectionListener,
-ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
+public class ApplicationState implements EditorStateListener, SelectionListener, ChangeListener,
+    FocusListener, TreeSelectionListener, UmlModelListener {
 
   private JTabbedPane tabbedPane;
   private JLabel coordLabel = new JLabel("    ");
@@ -75,6 +86,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Constructor.
+   * 
    * @param aShell the application shell
    */
   public ApplicationState(ApplicationShell aShell) {
@@ -92,30 +104,43 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Returns the UML model.
+   * 
    * @return the UML model
    */
-  public UmlModel getUmlModel() { return umlModel; }
+  public UmlModel getUmlModel() {
+    return umlModel;
+  }
 
   /**
    * Returns the application shell.
+   * 
    * @return the shell
    */
-  public ApplicationShell getShell() { return shell; }
+  public ApplicationShell getShell() {
+    return shell;
+  }
 
   /**
    * Returns the MenuManager.
+   * 
    * @return the MenuManager
    */
-  public MenuManager getMenuManager() { return menumanager; }
+  public MenuManager getMenuManager() {
+    return menumanager;
+  }
 
   /**
    * Returns the UndoManager.
+   * 
    * @return the UndoManager
    */
-  public UndoManager getUndoManager() { return undoManager; }
+  public UndoManager getUndoManager() {
+    return undoManager;
+  }
 
   /**
    * Returns the currently focused component.
+   * 
    * @return the currently focused component
    */
   public Component getCurrentFocusedComponent() {
@@ -125,10 +150,13 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
   /**
    * {@inheritDoc}
    */
-  public DiagramEditor getCurrentEditor() { return currentEditor; }
+  public DiagramEditor getCurrentEditor() {
+    return currentEditor;
+  }
 
   /**
    * Creates the tabbed pane for the editor area.
+   * 
    * @return the tabbed pane
    */
   private JComponent createEditorArea() {
@@ -206,6 +234,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Sets the current file.
+   * 
    * @param file the current file
    */
   public void setCurrentFile(File file) {
@@ -215,9 +244,12 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Returns the current file.
+   * 
    * @return the current file
    */
-  public File getCurrentFile() { return currentFile; }
+  public File getCurrentFile() {
+    return currentFile;
+  }
 
   /**
    * Creates a new project.
@@ -227,13 +259,15 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
     tabbedPane.removeAll();
     umlModel = new UmlModelImpl();
     editorFactory.reset();
-    openNewStructureEditor();
+    ElementNameGenerator.setModel(umlModel);
+    openNewUseCaseEditor();
     treeModel.setModel(umlModel);
     umlModel.addModelListener(this);
   }
 
   /**
    * Restores the state from the specified project.
+   * 
    * @param project the project
    */
   protected void restoreFromProject(TinyUmlProject project) {
@@ -249,6 +283,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Prepares and creates a project object for writing.
+   * 
    * @return the project object
    */
   protected TinyUmlProject createProjectForWrite() {
@@ -265,6 +300,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
   // **************************************
   /**
    * Creates the memory information string.
+   * 
    * @return the memory status string
    */
   private String getMemString() {
@@ -277,8 +313,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
   }
 
   /**
-   * Query the specified editor state and set the menu and the toolbars
-   * accordingly.
+   * Query the specified editor state and set the menu and the toolbars accordingly.
    */
   protected void updateMenuAndToolbars() {
     menumanager.enableMenuItem("UNDO", canUndo());
@@ -299,8 +334,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
    * {@inheritDoc}
    */
   public void mouseMoved(EditorMouseEvent event) {
-    coordLabel.setText(String.format("(%.1f, %.1f)", event.getX(),
-      event.getY()));
+    coordLabel.setText(String.format("(%.1f, %.1f)", event.getX(), event.getY()));
   }
 
   /**
@@ -337,28 +371,27 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
       DiagramTree tree = (DiagramTree) currentFocusedComponent;
       TreePath path = tree.getSelectionPath();
       if (path != null) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-          path.getLastPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         hasSelection = tree.getModel().isLeaf(node);
       }
     } else {
-      hasSelection = getCurrentEditor() != null &&
-        getCurrentEditor().canDelete();
+      hasSelection = getCurrentEditor() != null && getCurrentEditor().canDelete();
     }
     /*
-    menumanager.enableMenuItem("CUT", hasSelection);
-    menumanager.enableMenuItem("COPY", hasSelection);
+     * menumanager.enableMenuItem("CUT", hasSelection); menumanager.enableMenuItem("COPY",
+     * hasSelection);
      */
     menumanager.enableMenuItem("DELETE", hasSelection);
     /*
-    toolbarmanager.enableButton("CUT", hasSelection);
-    toolbarmanager.enableButton("COPY", hasSelection);
+     * toolbarmanager.enableButton("CUT", hasSelection); toolbarmanager.enableButton("COPY",
+     * hasSelection);
      */
     toolbarmanager.setEnabled("DELETE", hasSelection);
   }
 
   /**
    * Returns the modification state.
+   * 
    * @return the modification state
    */
   protected boolean isModified() {
@@ -398,33 +431,35 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Opens an existing structure editor.
+   * 
    * @param diagram the diagram
    */
   protected void openExistingStructureEditor(GeneralDiagram diagram) {
     if (!isAlreadyOpen(diagram)) {
-      EditorPanel editorPanel =
-        editorFactory.openStructureEditor(diagram);
+      EditorPanel editorPanel = editorFactory.openStructureEditor(diagram);
       currentEditor = editorPanel.getDiagramEditor();
       addDiagramEditorEvents(editorPanel);
     }
   }
 
   /**
-   * Determines whether the specified diagram is already opened in the
-   * editor.
+   * Determines whether the specified diagram is already opened in the editor.
+   * 
    * @param diagram the diagram
    * @return true if already openend, false otherwise
    */
   private boolean isAlreadyOpen(GeneralDiagram diagram) {
     for (int i = 0; i < tabbedPane.getTabCount(); i++) {
       EditorPanel editorPanel = (EditorPanel) tabbedPane.getComponentAt(i);
-      if (editorPanel.getDiagramEditor().getDiagram() == diagram) return true;
+      if (editorPanel.getDiagramEditor().getDiagram() == diagram)
+        return true;
     }
     return false;
   }
 
   /**
    * Associates the events to the specified editor.
+   * 
    * @param editorPanel the editor panel
    */
   private void addDiagramEditorEvents(EditorPanel editorPanel) {
@@ -438,8 +473,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
    * {@inheritDoc}
    */
   public void stateChanged(ChangeEvent e) {
-    EditorPanel editorPanel = (EditorPanel)
-      tabbedPane.getSelectedComponent();
+    EditorPanel editorPanel = (EditorPanel) tabbedPane.getSelectedComponent();
     currentEditor = editorPanel == null ? null : editorPanel.getDiagramEditor();
     if (currentEditor != null) {
       currentEditor.requestFocusInWindow();
@@ -449,15 +483,21 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
 
   /**
    * Returns the canUndo status.
+   * 
    * @return true if can undo, false otherwise
    */
-  private boolean canUndo() { return undoManager.canUndo(); }
+  private boolean canUndo() {
+    return undoManager.canUndo();
+  }
 
   /**
    * Returns the canRedo status.
+   * 
    * @return true if can redo, false otherwise
    */
-  private boolean canRedo() { return undoManager.canRedo(); }
+  private boolean canRedo() {
+    return undoManager.canRedo();
+  }
 
   /**
    * {@inheritDoc}
@@ -470,16 +510,19 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
   /**
    * {@inheritDoc}
    */
-  public void focusLost(FocusEvent e) { }
+  public void focusLost(FocusEvent e) {}
 
   /**
    * {@inheritDoc}
    */
-  public void valueChanged(TreeSelectionEvent e) { selectionStateChanged(); }
+  public void valueChanged(TreeSelectionEvent e) {
+    selectionStateChanged();
+  }
 
   /**
-   * Runs the specified command by this editor's CommandProcessor, which makes
-   * the operation reversible.
+   * Runs the specified command by this editor's CommandProcessor, which makes the operation
+   * reversible.
+   * 
    * @param command the command to run
    */
   public void execute(Command command) {
@@ -493,7 +536,7 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
   /**
    * {@inheritDoc}
    */
-  public void diagramAdded(UmlDiagram diagram) { }
+  public void diagramAdded(UmlDiagram diagram) {}
 
   /**
    * {@inheritDoc}
@@ -506,4 +549,10 @@ ChangeListener, FocusListener, TreeSelectionListener, UmlModelListener {
       }
     }
   }
+
+  @Override
+  public void elementAdded(UmlModelElement element, UmlDiagram diagram) {}
+
+  @Override
+  public void elementRemoved(UmlModelElement element, UmlDiagram diagram) {}
 }
