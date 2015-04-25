@@ -71,7 +71,7 @@ public class DefaultNamedElement implements NamedElement {
       }
     } catch (ElementNameAlreadyExist e) {
       name = oldName;
-      //throw e;
+      throw e;
     }
 
 

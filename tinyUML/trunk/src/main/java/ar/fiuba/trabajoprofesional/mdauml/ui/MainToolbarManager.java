@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 
 /**
@@ -72,5 +74,10 @@ public class MainToolbarManager extends AbstractToolbarManager {
    */
   private JButton createButtonWithName(String name) {
     return createButton("maintoolbar." + name);
+  }
+
+  public void addMouseListener(MouseListener l) {
+    this.getToolbar().addMouseListener(l);
+    
   }
 }

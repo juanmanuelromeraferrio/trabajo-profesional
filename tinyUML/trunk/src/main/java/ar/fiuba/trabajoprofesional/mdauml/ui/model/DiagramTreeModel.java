@@ -19,6 +19,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.model;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
@@ -56,9 +57,9 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
     structureFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.structurediagrams"));
     useCaseFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.usecasediagrams"));
     modelFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.modelfolder"));
-
-    insertNodeInto(structureFolder, (DefaultMutableTreeNode) getRoot(), 0);
-    insertNodeInto(useCaseFolder, (DefaultMutableTreeNode) getRoot(), 1);
+    
+    insertNodeInto(useCaseFolder, (DefaultMutableTreeNode) getRoot(), 0);
+    insertNodeInto(structureFolder, (DefaultMutableTreeNode) getRoot(), 1);
     insertNodeInto(modelFolder, (DefaultMutableTreeNode) getRoot(), 2);
   }
 
@@ -199,7 +200,7 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
     }
 
     removeFromDiagram(diagramNode, element);
-    removeFromFolder(modelFolder,element);
+    removeFromFolder(modelFolder, element);
 
   }
 
@@ -242,7 +243,7 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
       }
     }
   }
-  
+
   /**
    * Removes the specified diagram from the folder if it is found.
    * 
@@ -293,5 +294,9 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
       return false;
     }
     return super.isLeaf(node);
+  }
+
+  public TreePath getModelPath() {
+    return new TreePath(this.modelFolder.getPath());
   }
 }

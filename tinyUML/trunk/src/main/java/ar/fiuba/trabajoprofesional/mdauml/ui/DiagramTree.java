@@ -3,32 +3,35 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Collection;
+import java.util.HashSet;
+
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 /**
  * A specialized tree component to display diagrams.
@@ -36,7 +39,7 @@ import java.io.ObjectInputStream;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class DiagramTree extends JTree implements MouseListener {
+public class DiagramTree extends JTree implements MouseListener{
 
   /**
    * Do not worry about serializing this component, we won't.
@@ -44,20 +47,24 @@ public class DiagramTree extends JTree implements MouseListener {
   private static final long serialVersionUID = 1L;
   private transient ApplicationState appState;
 
+  private transient Collection<TreeDraggerListener> treeDraggerListener =
+      new HashSet<TreeDraggerListener>();
+
   /**
    * Reset the transient values for serialization.
+   * 
    * @param stream an ObjectInputStream
    * @throws java.io.IOException if I/O error occured
    * @throws ClassNotFoundException if class was not found
    */
   @SuppressWarnings("PMD.UnusedFormalParameter")
-  private void readObject(ObjectInputStream stream)
-    throws IOException, ClassNotFoundException {
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     appState = null;
   }
 
   /**
    * Constructor.
+   * 
    * @param anAppState the ApplicationState
    * @param treeModel the tree model
    */
@@ -75,11 +82,11 @@ public class DiagramTree extends JTree implements MouseListener {
   public void mouseClicked(MouseEvent e) {
     if (e.getClickCount() == 2) {
       TreePath path = getPathForLocation(e.getX(), e.getY());
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-      path.getLastPathComponent();
-      if (node.getUserObject() instanceof GeneralDiagram) {
-        appState.openExistingStructureEditor((GeneralDiagram)
-          node.getUserObject());
+      if (path != null) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+        if (node.getUserObject() instanceof GeneralDiagram) {
+          appState.openExistingStructureEditor((GeneralDiagram) node.getUserObject());
+        }
       }
     }
   }
@@ -87,20 +94,51 @@ public class DiagramTree extends JTree implements MouseListener {
   /**
    * {@inheritDoc}
    */
-  public void mousePressed(MouseEvent e) { }
+  public void mousePressed(MouseEvent e) {
+
+    TreePath path = getPathForLocation(e.getX(), e.getY());
+    if (path != null) {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      if (e.getButton() == MouseEvent.BUTTON1) {
+        if (node.isLeaf() && node.getUserObject() instanceof UmlModelElement) {
+          for (TreeDraggerListener l : treeDraggerListener) {
+            l.setDraggerElement((UmlModelElement) node.getUserObject());
+          }
+        }
+      }
+    }
+
+  }
 
   /**
    * {@inheritDoc}
    */
-  public void mouseReleased(MouseEvent e) { }
+  public void mouseReleased(MouseEvent e) {
+    for (TreeDraggerListener l : treeDraggerListener) {
+      l.setReleasePoint(e.getX(), e.getY());
+    }
+  }
 
   /**
    * {@inheritDoc}
    */
-  public void mouseEntered(MouseEvent e) { }
+  public void mouseEntered(MouseEvent e) {}
 
   /**
    * {@inheritDoc}
    */
-  public void mouseExited(MouseEvent e) { }
+  public void mouseExited(MouseEvent e) {}
+
+
+
+  public void addTreeDraggerListener(TreeDraggerListener l) {
+    treeDraggerListener.add(l);
+  }
+
+  public void removeTreeDraggerListener(TreeDraggerListener l) {
+    treeDraggerListener.remove(l);
+  }
+
+  
+
 }

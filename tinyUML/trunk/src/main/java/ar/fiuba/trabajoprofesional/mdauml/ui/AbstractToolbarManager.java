@@ -141,4 +141,6 @@ implements ToolbarManager, ActionListener {
   private String getResourceString(String property) {
     return ApplicationResources.getInstance().getString(property);
   }
+  
+  
 }

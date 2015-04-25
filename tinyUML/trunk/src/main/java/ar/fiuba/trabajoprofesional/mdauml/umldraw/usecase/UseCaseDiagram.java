@@ -14,7 +14,7 @@ import java.util.Map;
  * This class specializes on GeneralDiagram, providing the elements available in a use case diagram.
  *
  * @author Juan Manuel Romera
- * @version 1.0
+ * @version 2.0
  */
 public class UseCaseDiagram extends GeneralDiagram {
 

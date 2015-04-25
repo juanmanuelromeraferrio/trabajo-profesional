@@ -3,39 +3,40 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.draw.MultiLineLabel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.SetLabelTextCommand;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
 
+import javax.swing.JOptionPane;
 import javax.swing.event.UndoableEditListener;
+
 import java.awt.event.*;
 
 /**
- * This class relieves the DiagramEditor class of some responsibilities
- * in order to keep it at reasonable size.
+ * This class relieves the DiagramEditor class of some responsibilities in order to keep it at
+ * reasonable size.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class DiagramEditorEditHelper
-implements ActionListener, MouseListener, MouseMotionListener {
+public class DiagramEditorEditHelper implements ActionListener, MouseListener, MouseMotionListener {
 
   // MouseEvent wrapper
   private transient EditorMouseEvent mouseEvent = new EditorMouseEvent();
@@ -48,6 +49,7 @@ implements ActionListener, MouseListener, MouseMotionListener {
 
   /**
    * Constructor.
+   * 
    * @param editor the DiagramEditor this helper object belongs to
    */
   public DiagramEditorEditHelper(DiagramEditor editor) {
@@ -65,6 +67,7 @@ implements ActionListener, MouseListener, MouseMotionListener {
 
   /**
    * Adds the specified UndoableEditListener.
+   * 
    * @param l the UndoableEditListener to add
    */
   public void addUndoableEditListener(UndoableEditListener l) {
@@ -74,13 +77,13 @@ implements ActionListener, MouseListener, MouseMotionListener {
 
   /**
    * Open an editor for the specified Label object.
+   * 
    * @param label the Label object
    */
   public void editLabel(Label label) {
     if (label != null) {
       if (label instanceof MultiLineLabel) {
-        multilineEditor.setFont(diagramEditor.getDrawingContext().getFont(
-          FontType.DEFAULT));
+        multilineEditor.setFont(diagramEditor.getDrawingContext().getFont(FontType.DEFAULT));
         multilineEditor.showEditor(label, diagramEditor.getGraphics());
       } else {
         captionEditor.showEditor(label, diagramEditor.getGraphics());
@@ -97,6 +100,7 @@ implements ActionListener, MouseListener, MouseMotionListener {
 
   /**
    * Stops the editing process if one was active.
+   * 
    * @return true if editor was closed, false if nothing happened
    */
   private boolean stopEditing() {
@@ -111,9 +115,19 @@ implements ActionListener, MouseListener, MouseMotionListener {
       String text = currentEditor.getText();
       Label label = currentEditor.getLabel();
       SetLabelTextCommand command = new SetLabelTextCommand(label, text);
-      diagramEditor.execute(command);
-      currentEditor.hideEditor();
-      diagramEditor.repaint();
+      
+      try {
+        diagramEditor.execute(command);
+        currentEditor.hideEditor();
+        diagramEditor.repaint();
+      } catch (ElementNameAlreadyExist e) {
+        JOptionPane.showMessageDialog(diagramEditor,
+            ApplicationResources.getInstance().getString("error.elementnamealreadyexist.message"),
+            ApplicationResources.getInstance().getString("error.elementnamealreadyexist.title"),
+            JOptionPane.ERROR_MESSAGE);
+        diagramEditor.editLabel(label);
+      }
+
       return true;
     }
     return false;
@@ -136,7 +150,7 @@ implements ActionListener, MouseListener, MouseMotionListener {
    * {@inheritDoc}
    */
   public void mousePressed(MouseEvent e) {
-   diagramEditor.requestFocusInWindow();
+    diagramEditor.requestFocusInWindow();
     if (!stopEditing()) {
       diagramEditor.getEditorMode().mousePressed(convertMouseEvent(e));
     }
@@ -167,12 +181,12 @@ implements ActionListener, MouseListener, MouseMotionListener {
   /**
    * {@inheritDoc}
    */
-  public void mouseExited(MouseEvent e) { }
+  public void mouseExited(MouseEvent e) {}
 
   /**
    * {@inheritDoc}
    */
-  public void mouseEntered(MouseEvent e) { }
+  public void mouseEntered(MouseEvent e) {}
 
   /**
    * {@inheritDoc}
@@ -193,8 +207,8 @@ implements ActionListener, MouseListener, MouseMotionListener {
   }
 
   /**
-   * Notifies the coordinate listeners.
-   * Precondition: Mouse coordinates have been previously transformed.
+   * Notifies the coordinate listeners. Precondition: Mouse coordinates have been previously
+   * transformed.
    */
   private void notifyCoordinateListeners() {
     for (EditorStateListener l : diagramEditor.getEditorListeners()) {
@@ -204,6 +218,7 @@ implements ActionListener, MouseListener, MouseMotionListener {
 
   /**
    * Converts the java.awt.MouseEvent into an EditorMouseEvent.
+   * 
    * @param e the MouseEvent
    * @return the converted event
    */

@@ -21,7 +21,7 @@ import java.util.Map;
  * This class is a specialized version of a DiagramEditor editing use case diagrams.
  *
  * @author Juan Manuel Romera
- * @version 1.0
+ * @version 2.0
  */
 public class UseCaseDiagramEditor extends DiagramEditor {
 

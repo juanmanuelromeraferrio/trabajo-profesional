@@ -7,7 +7,7 @@ import java.awt.*;
  * A toolbar manager for the use case diagram editor.
  *
  * @author Juan Manuel Romera
- * @version 1.0
+ * @version 2.0
  */
 public class UseCaseEditorToolbarManager extends AbstractToolbarManager {
 

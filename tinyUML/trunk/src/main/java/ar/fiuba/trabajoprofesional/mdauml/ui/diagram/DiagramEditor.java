@@ -3,59 +3,74 @@
  *
  * This file is part of TinyUML.
  *
- * TinyUML is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * TinyUML is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with TinyUML; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the GNU General Public License along with TinyUML; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.*;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.*;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
-import ar.fiuba.trabajoprofesional.mdauml.util.Command;
-import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
-
-import javax.swing.*;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+
+import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramOperations;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
+import ar.fiuba.trabajoprofesional.mdauml.draw.NodeChangeListener;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Scaling;
+import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DiagramEditorNotification;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.EditConnectionPointsCommand;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.MoveElementCommand;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ResetConnectionPointsCommand;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ResizeElementCommand;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
+import ar.fiuba.trabajoprofesional.mdauml.util.Command;
+import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 
 /**
- * This class represents the diagram editor. It mainly acts as the
- * component to draw the diagram and to handle the events from the input
- * system. The actual drawing is handled by the Diagram class and its sub
- * elements.
+ * This class represents the diagram editor. It mainly acts as the component to draw the diagram and
+ * to handle the events from the input system. The actual drawing is handled by the Diagram class
+ * and its sub elements.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public abstract class DiagramEditor extends JComponent
-implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
-        AppCommandListener {
+public abstract class DiagramEditor extends JComponent implements DiagramEditorNotification,
+    DiagramOperations, NodeChangeListener, AppCommandListener {
 
-  private static Map<String, MethodCall> selectorMap =
-    new HashMap<String, MethodCall>();
+  private static Map<String, MethodCall> selectorMap = new HashMap<String, MethodCall>();
 
   // For now, we define the margins of the diagram as constants
   private static final double MARGIN_TOP = 25;
@@ -65,7 +80,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   private transient EditorMode editorMode;
   protected transient SelectionHandler selectionHandler;
   private transient List<UndoableEditListener> editListeners =
-    new ArrayList<UndoableEditListener>();
+      new ArrayList<UndoableEditListener>();
   private transient DiagramEditorEditHelper editHelper;
   private transient DiagramEditorRenderHelper renderHelper;
 
@@ -74,11 +89,9 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   }
 
   /**
-   * It is nice to report the mapped coordinates to listeners, so it can be
-   * used for debug output.
+   * It is nice to report the mapped coordinates to listeners, so it can be used for debug output.
    */
-  private List<EditorStateListener> editorListeners =
-    new ArrayList<EditorStateListener>();
+  private List<EditorStateListener> editorListeners = new ArrayList<EditorStateListener>();
 
   /**
    * This is the root of the shape hierarchy.
@@ -96,34 +109,33 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
    */
   private static void initSelectorMap() {
     try {
-      selectorMap.put("SELECT_MODE", new MethodCall(
-        DiagramEditor.class.getMethod("setSelectionMode")));
-      selectorMap.put("REDRAW", new MethodCall(
-        DiagramEditor.class.getMethod("redraw")));
-      selectorMap.put("ZOOM_50", new MethodCall(
-        DiagramEditor.class.getMethod("setScaling", Scaling.class),
-          Scaling.SCALING_50));
-      selectorMap.put("ZOOM_75", new MethodCall(
-        DiagramEditor.class.getMethod("setScaling", Scaling.class),
-          Scaling.SCALING_75));
-      selectorMap.put("ZOOM_100", new MethodCall(
-        DiagramEditor.class.getMethod("setScaling", Scaling.class),
-          Scaling.SCALING_100));
-      selectorMap.put("ZOOM_150", new MethodCall(
-        DiagramEditor.class.getMethod("setScaling", Scaling.class),
-          Scaling.SCALING_150));
-      selectorMap.put("BRING_TO_FRONT", new MethodCall(
-        DiagramEditor.class.getMethod("bringToFront")));
-      selectorMap.put("PUT_TO_BACK", new MethodCall(
-        DiagramEditor.class.getMethod("putToBack")));
-      selectorMap.put("EDIT_PROPERTIES", new MethodCall(
-        DiagramEditor.class.getMethod("editProperties")));
-      selectorMap.put("CREATE_NOTE", new MethodCall(
-        DiagramEditor.class.getMethod("setCreationMode",
-        ElementType.class), ElementType.NOTE));
-      selectorMap.put("CREATE_NOTE_CONNECTION", new MethodCall(
-        DiagramEditor.class.getMethod("setCreateConnectionMode",
-        RelationType.class), RelationType.NOTE_CONNECTOR));
+      selectorMap.put("SELECT_MODE",
+          new MethodCall(DiagramEditor.class.getMethod("setSelectionMode")));
+      selectorMap.put("REDRAW", new MethodCall(DiagramEditor.class.getMethod("redraw")));
+      selectorMap.put("ZOOM_50",
+          new MethodCall(DiagramEditor.class.getMethod("setScaling", Scaling.class),
+              Scaling.SCALING_50));
+      selectorMap.put("ZOOM_75",
+          new MethodCall(DiagramEditor.class.getMethod("setScaling", Scaling.class),
+              Scaling.SCALING_75));
+      selectorMap.put("ZOOM_100",
+          new MethodCall(DiagramEditor.class.getMethod("setScaling", Scaling.class),
+              Scaling.SCALING_100));
+      selectorMap.put("ZOOM_150",
+          new MethodCall(DiagramEditor.class.getMethod("setScaling", Scaling.class),
+              Scaling.SCALING_150));
+      selectorMap.put("BRING_TO_FRONT",
+          new MethodCall(DiagramEditor.class.getMethod("bringToFront")));
+      selectorMap.put("PUT_TO_BACK", new MethodCall(DiagramEditor.class.getMethod("putToBack")));
+      selectorMap.put("EDIT_PROPERTIES",
+          new MethodCall(DiagramEditor.class.getMethod("editProperties")));
+      selectorMap.put("CREATE_NOTE",
+          new MethodCall(DiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+              ElementType.NOTE));
+      selectorMap.put(
+          "CREATE_NOTE_CONNECTION",
+          new MethodCall(DiagramEditor.class.getMethod("setCreateConnectionMode",
+              RelationType.class), RelationType.NOTE_CONNECTOR));
     } catch (NoSuchMethodException ex) {
       ex.printStackTrace();
     }
@@ -131,13 +143,13 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Reset the transient values for serialization.
+   * 
    * @param stream an ObjectInputStream
    * @throws java.io.IOException if I/O error occured
    * @throws ClassNotFoundException if class was not found
    */
   @SuppressWarnings("PMD.UnusedFormalParameter")
-  private void readObject(ObjectInputStream stream)
-    throws IOException, ClassNotFoundException {
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     initEditorMembers();
   }
 
@@ -153,6 +165,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Creates the selection handler.
+   * 
    * @return the selection handler
    */
   private SelectionHandler createSelectionHandler() {
@@ -161,6 +174,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Creates the render helper.
+   * 
    * @return the render helper
    */
   private DiagramEditorRenderHelper createRenderHelper() {
@@ -169,6 +183,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Creates the edit helper.
+   * 
    * @return the edit helper
    */
   private DiagramEditorEditHelper createEditHelper() {
@@ -178,10 +193,11 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   /**
    * Empty constructor for testing. Do not use !
    */
-  public DiagramEditor() { }
+  public DiagramEditor() {}
 
   /**
    * Constructor. Basic setup of the layout area.
+   * 
    * @param aWindow the main window
    * @param aDiagram the diagram
    */
@@ -205,18 +221,25 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Returns the current editor mode.
+   * 
    * @return the current editor mode
    */
-  protected EditorMode getEditorMode() { return editorMode; }
+  protected EditorMode getEditorMode() {
+    return editorMode;
+  }
 
   /**
    * Returns this editor's scaling.
+   * 
    * @return the scaling
    */
-  protected Scaling getScaling() { return renderHelper.getScaling(); }
+  protected Scaling getScaling() {
+    return renderHelper.getScaling();
+  }
 
   /**
    * Returns this component's DrawingContext.
+   * 
    * @return the DrawingContext
    */
   protected DrawingContext getDrawingContext() {
@@ -225,6 +248,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Returns this object's editor state listeners.
+   * 
    * @return the editor state listeners
    */
   protected Collection<EditorStateListener> getEditorListeners() {
@@ -233,6 +257,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Adds the specified UndoableEditListener.
+   * 
    * @param l the UndoableEditListener to add
    */
   public void addUndoableEditListener(UndoableEditListener l) {
@@ -242,6 +267,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Adds an EditorStateListener.
+   * 
    * @param l a listener
    */
   public void addEditorStateListener(EditorStateListener l) {
@@ -249,13 +275,13 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   }
 
   /**
-   * Adjusts this component's preferredSize attribute to the diagram's size.
-   * This also influences the scroll pane which the component is contained in.
+   * Adjusts this component's preferredSize attribute to the diagram's size. This also influences
+   * the scroll pane which the component is contained in.
    */
   private void setToDiagramSize() {
     setPreferredSize(new Dimension(
-      (int) (diagram.getSize().getWidth() + MARGIN_RIGHT + MARGIN_LEFT),
-      (int) (diagram.getSize().getHeight() + MARGIN_BOTTOM + MARGIN_TOP)));
+        (int) (diagram.getSize().getWidth() + MARGIN_RIGHT + MARGIN_LEFT), (int) (diagram.getSize()
+            .getHeight() + MARGIN_BOTTOM + MARGIN_TOP)));
     invalidate();
   }
 
@@ -267,11 +293,12 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
     addMouseMotionListener(editHelper);
 
     // install Escape KeyBinding
-    getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"),
-      "cancelEditing");
+    getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "cancelEditing");
     getActionMap().put("cancelEditing", new AbstractAction() {
       /** {@inheritDoc} */
-      public void actionPerformed(ActionEvent e) { cancelEditing(); }
+      public void actionPerformed(ActionEvent e) {
+        cancelEditing();
+      }
     });
   }
 
@@ -294,14 +321,13 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   }
 
   /**
-   * Determines whether there are selected elements in the diagram that can
-   * be deleted.
+   * Determines whether there are selected elements in the diagram that can be deleted.
+   * 
    * @return true if elements can be delete, false otherwise
    */
   public boolean canDelete() {
     Collection<DiagramElement> elements = getSelectedElements();
-    return !(elements.size() == 0 ||
-             elements.size() == 1 && elements.contains(diagram));
+    return !(elements.size() == 0 || elements.size() == 1 && elements.contains(diagram));
   }
 
   // *************************************************************************
@@ -320,12 +346,12 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Paints the component into a non-screen Graphics object.
+   * 
    * @param g the Graphics object
    */
   public void paintComponentNonScreen(Graphics g) {
     Dimension canvasSize = getTotalCanvasSize();
-    Rectangle clipBounds = new Rectangle(0, 0, canvasSize.width,
-      canvasSize.height);
+    Rectangle clipBounds = new Rectangle(0, 0, canvasSize.width, canvasSize.height);
     g.setClip(clipBounds);
     renderHelper.paintComponent(g, clipBounds, false);
   }
@@ -336,12 +362,16 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Returns the diagram.
+   * 
    * @return the diagram
    */
-  public GeneralDiagram getDiagram() { return diagram; }
+  public GeneralDiagram getDiagram() {
+    return diagram;
+  }
 
   /**
    * Returns the current selection.
+   * 
    * @return the selected element
    */
   public List<DiagramElement> getSelectedElements() {
@@ -349,16 +379,15 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   }
 
   /**
-   * Returns the total canvas size for export functions. The total size
-   * includes the margins
+   * Returns the total canvas size for export functions. The total size includes the margins
+   * 
    * @return the total canvas size
    */
   public Dimension getTotalCanvasSize() {
     Dimension2D diagramSize = diagram.getSize();
     Dimension result = new Dimension();
     result.width = (int) (diagramSize.getWidth() + MARGIN_LEFT + MARGIN_RIGHT);
-    result.height = (int) (diagramSize.getHeight() + MARGIN_TOP +
-      MARGIN_BOTTOM);
+    result.height = (int) (diagramSize.getHeight() + MARGIN_TOP + MARGIN_BOTTOM);
     return result;
   }
 
@@ -370,6 +399,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Rescales the view.
+   * 
    * @param aScaling a Scaling object
    */
   public void setScaling(Scaling aScaling) {
@@ -386,6 +416,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Switches the editor into creation mode.
+   * 
    * @param elementType the ElementType that indicates what to create
    */
   public void setCreationMode(ElementType elementType) {
@@ -394,6 +425,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Creates the CreationHandler for Element types.
+   * 
    * @param elementType the element type to create
    * @return the CreationHandler
    */
@@ -405,6 +437,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Switches the editor into connection creation mode.
+   * 
    * @param relationType the RelationType to create
    */
   public void setCreateConnectionMode(RelationType relationType) {
@@ -413,13 +446,14 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Creates the LineHandler object to create connections.
+   * 
    * @param relationType the RelationType
    * @return the LineHandler object
    */
   private LineHandler createLineHandler(RelationType relationType) {
     LineHandler result = new LineHandler(this);
     result.setRelationType(relationType,
-      getDiagram().getElementFactory().getConnectMethod(relationType));
+        getDiagram().getElementFactory().getConnectMethod(relationType));
     return result;
   }
 
@@ -432,6 +466,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Sets the grid to visible.
+   * 
    * @param flag true for visible grid, false otherwise
    */
   public void showGrid(boolean flag) {
@@ -441,6 +476,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Activates grid snapping.
+   * 
    * @param flag true if snapping should be supported, false otherwise
    */
   public void snapToGrid(boolean flag) {
@@ -487,8 +523,9 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   }
 
   /**
-   * Runs the specified command by this editor's CommandProcessor, which makes
-   * the operation reversible.
+   * Runs the specified command by this editor's CommandProcessor, which makes the operation
+   * reversible.
+   * 
    * @param command the command to run
    */
   public void execute(Command command) {
@@ -498,7 +535,9 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
     }
     // We need to run() after notifying the UndoManager in order to ensure
     // correct menu behaviour
+
     command.run();
+
   }
 
   /**
@@ -516,6 +555,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Adds the specified SelectionListener.
+   * 
    * @param l the SelectionListener to add
    */
   public void addSelectionListener(SelectionListener l) {
@@ -524,6 +564,7 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
 
   /**
    * Adds the specified AppCommandListener.
+   * 
    * @param l the AppCommandListener to add
    */
   public void addAppCommandListener(AppCommandListener l) {
@@ -534,8 +575,8 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
   // ***** DiagramEditorNotification
   // *********************************
   /**
-   * Update method called after a state change from a Command. Such state
-   * changes include move operations.
+   * Update method called after a state change from a Command. Such state changes include move
+   * operations.
    */
   public void notifyElementsMoved() {
     editorMode.stateChanged();
@@ -601,32 +642,37 @@ implements DiagramEditorNotification, DiagramOperations, NodeChangeListener,
    * {@inheritDoc}
    */
   public void resizeElement(Node element, Point2D newpos, Dimension2D size) {
-    ResizeElementCommand cmd = new ResizeElementCommand(this, element, newpos,
-      size);
+    ResizeElementCommand cmd = new ResizeElementCommand(this, element, newpos, size);
     execute(cmd);
   }
 
   /**
    * Open an editor for the specified Label object.
+   * 
    * @param label the Label object
    */
-  public void editLabel(Label label) { editHelper.editLabel(label); }
+  public void editLabel(Label label) {
+    editHelper.editLabel(label);
+  }
 
   /**
    * {@inheritDoc}
    */
-  public void nodeResized(Node node) { setToDiagramSize(); }
+  public void nodeResized(Node node) {
+    setToDiagramSize();
+  }
 
   /**
    * {@inheritDoc}
    */
-  public void nodeMoved(Node node) { }
+  public void nodeMoved(Node node) {}
 
   /**
    * {@inheritDoc}
    */
   public void handleCommand(String command) {
     MethodCall methodcall = selectorMap.get(command);
-    if (methodcall != null) methodcall.call(this);
+    if (methodcall != null)
+      methodcall.call(this);
   }
 }

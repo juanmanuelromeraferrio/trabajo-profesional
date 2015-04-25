@@ -27,6 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -77,8 +78,11 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
   private MenuManager menumanager;
   private File currentFile;
   private EditorFactory editorFactory;
+  private TreeDragger treeDragger = new TreeDragger();
   private DiagramTreeModel treeModel = new DiagramTreeModel();
+  private DiagramTree tree;
   private Component currentFocusedComponent;
+
 
   private ApplicationShell shell;
   // The command processor to hold this application's operations.
@@ -96,10 +100,15 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
     editorDispatcher = new EditorCommandDispatcher(shell);
     shell.getContentPane().add(createEditorArea(), BorderLayout.CENTER);
     editorFactory = new EditorFactory(shell, this, tabbedPane);
+    tree.addTreeDraggerListener(treeDragger);
     installMainToolbar();
     installMenubar();
     installStatusbar();
     newProject();
+   
+    
+    
+   
   }
 
   /**
@@ -167,11 +176,12 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
     tabbedPane.addChangeListener(this);
     splitpane.setRightComponent(tabbedPane);
 
-    DiagramTree tree = new DiagramTree(this, treeModel);
+    tree = new DiagramTree(this, treeModel);
     tree.addFocusListener(this);
     tree.getSelectionModel().addTreeSelectionListener(this);
+
     JScrollPane spane = new JScrollPane(tree);
-    spane.setPreferredSize(new Dimension(150, 300));
+    spane.setPreferredSize(new Dimension(200, 300));
     splitpane.setLeftComponent(spane);
     splitpane.setOneTouchExpandable(true);
     return splitpane;
@@ -262,6 +272,7 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
     ElementNameGenerator.setModel(umlModel);
     openNewUseCaseEditor();
     treeModel.setModel(umlModel);
+    tree.expandPath(treeModel.getModelPath());
     umlModel.addModelListener(this);
   }
 
