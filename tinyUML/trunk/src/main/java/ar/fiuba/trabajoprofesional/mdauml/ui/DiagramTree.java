@@ -39,7 +39,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class DiagramTree extends JTree implements MouseListener{
+public class DiagramTree extends JTree implements MouseListener,MouseMotionListener{
 
   /**
    * Do not worry about serializing this component, we won't.
@@ -72,6 +72,7 @@ public class DiagramTree extends JTree implements MouseListener{
     super(treeModel);
     appState = anAppState;
     addMouseListener(this);
+    addMouseMotionListener(this);
     setRootVisible(false);
     setShowsRootHandles(true);
   }
@@ -115,7 +116,7 @@ public class DiagramTree extends JTree implements MouseListener{
    */
   public void mouseReleased(MouseEvent e) {
     for (TreeDraggerListener l : treeDraggerListener) {
-      l.setReleasePoint(e.getX(), e.getY());
+      l.setReleasePoint(e.getX()+this.getLocationOnScreen().getX(), e.getY()+this.getLocationOnScreen().getY());
     }
   }
 
@@ -137,6 +138,18 @@ public class DiagramTree extends JTree implements MouseListener{
 
   public void removeTreeDraggerListener(TreeDraggerListener l) {
     treeDraggerListener.remove(l);
+  }
+
+  @Override
+  public void mouseDragged(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void mouseMoved(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
   }
 
   

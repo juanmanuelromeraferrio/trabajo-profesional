@@ -100,6 +100,7 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
     editorDispatcher = new EditorCommandDispatcher(shell);
     shell.getContentPane().add(createEditorArea(), BorderLayout.CENTER);
     editorFactory = new EditorFactory(shell, this, tabbedPane);
+    treeDragger.setShell(shell);
     tree.addTreeDraggerListener(treeDragger);
     installMainToolbar();
     installMenubar();
