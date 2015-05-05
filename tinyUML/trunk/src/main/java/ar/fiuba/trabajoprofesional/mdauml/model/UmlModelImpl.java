@@ -83,7 +83,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
    * {@inheritDoc}
    */
   public void addElement(UmlModelElement anElement, UmlDiagram diagram) {
-    anElement.addNameChangeListener(this);
+    anElement.addNameChangeListener(this);  
     mainElements.add(anElement);
     for (UmlModelListener l : modelListeners) {
       l.elementAdded(anElement, diagram);

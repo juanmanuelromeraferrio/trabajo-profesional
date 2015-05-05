@@ -52,7 +52,7 @@ public class PackageElementTest extends MockObjectTestCase {
    */
   @Override
   protected void setUp() {
-    pkgElem.setUmlPackage(pkg);
+    pkgElem.setModelElement(pkg);
     pkgElem.setParent(parent);
     pkgElem.setOrigin(0, 0);
     pkgElem.setSize(100, 80);
@@ -131,7 +131,7 @@ public class PackageElementTest extends MockObjectTestCase {
    */
   public void testClone() {
     pkg.setName("mypackage");
-    pkgElem.setUmlPackage(pkg);
+    pkgElem.setModelElement(pkg);
     PackageElement cloned = (PackageElement) pkgElem.clone();
 
     assertTrue(pkgElem != cloned);

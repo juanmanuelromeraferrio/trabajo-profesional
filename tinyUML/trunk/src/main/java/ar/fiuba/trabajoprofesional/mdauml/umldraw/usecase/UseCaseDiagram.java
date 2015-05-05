@@ -1,6 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
@@ -39,14 +40,12 @@ public class UseCaseDiagram extends GeneralDiagram {
     // Add actor prototype
     UmlActor actor = (UmlActor) UmlActor.getPrototype().clone();
     ActorElement actorPrototype = (ActorElement) ActorElement.getPrototype().clone();
-    actor.setName("Actor 1");
     actorPrototype.setModelElement(actor);
     elementPrototypes.put(ElementType.ACTOR, actorPrototype);
 
     // Add useCase prototype
     UmlUseCase useCase = (UmlUseCase) UmlUseCase.getPrototype().clone();
     UseCaseElement useCasePrototype = (UseCaseElement) UseCaseElement.getPrototype().clone();
-    useCase.setName("Use Case 1");
     useCasePrototype.setModelElement(useCase);
     elementPrototypes.put(ElementType.USE_CASE, useCasePrototype);
 

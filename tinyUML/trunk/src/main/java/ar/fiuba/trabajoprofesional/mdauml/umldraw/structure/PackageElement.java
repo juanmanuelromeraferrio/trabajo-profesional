@@ -128,7 +128,7 @@ implements LabelSource, UmlNode {
    * Sets the model element.
    * @param aPackage the model package element
    */
-  public void setUmlPackage(UmlPackage aPackage) { pkg = aPackage; }
+  public void setModelElement(UmlPackage aPackage) { pkg = aPackage; }
 
   /**
    * {@inheritDoc}

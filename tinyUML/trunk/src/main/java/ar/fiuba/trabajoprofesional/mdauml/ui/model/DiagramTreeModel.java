@@ -17,6 +17,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.model;
 
+import java.util.Enumeration;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -125,24 +127,40 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
   }
 
   private void insertToModelFolder(UmlModelElement element) {
-    DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
-    insertNodeInto(child, modelFolder, modelFolder.getChildCount());
+    if(! folderContainsElement(modelFolder,element)){
+      DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);  
+      insertNodeInto(child, modelFolder, modelFolder.getChildCount());
+    }
   }
 
-  private void addNameChangeListener(NamedElement element) {
+  private void addNameChangeListener(NamedElement element) {    
     element.addNameChangeListener(this);
   }
 
   private void insertToFolder(UmlModelElement element, UmlDiagram diagram) {
-    DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
+    
     DefaultMutableTreeNode diagramNode = null;
     if (diagram instanceof StructureDiagram) {
       diagramNode = getDiagramNode(structureFolder, diagram);
     } else if (diagram instanceof UseCaseDiagram) {
       diagramNode = getDiagramNode(useCaseFolder, diagram);
     }
+    if(! folderContainsElement(diagramNode,element)){
+      DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
+      insertNodeInto(child, diagramNode, diagramNode.getChildCount());      
+    }
+      
+  }
 
-    insertNodeInto(child, diagramNode, diagramNode.getChildCount());
+  private boolean folderContainsElement(DefaultMutableTreeNode folder, UmlModelElement element) {
+    Enumeration e = folder.children();
+    while ( e.hasMoreElements() ) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+        if (node.getUserObject().equals(element)) {
+            return true;
+        }
+    }
+    return false;
   }
 
   private DefaultMutableTreeNode getDiagramNode(DefaultMutableTreeNode folder, UmlDiagram diagram) {

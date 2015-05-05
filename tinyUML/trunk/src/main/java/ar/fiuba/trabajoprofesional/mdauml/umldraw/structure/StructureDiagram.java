@@ -67,13 +67,11 @@ public class StructureDiagram extends GeneralDiagram {
     // Add package prototype
     UmlPackage pkg = (UmlPackage) UmlPackage.getPrototype().clone();
     PackageElement pkgPrototype = (PackageElement) PackageElement.getPrototype().clone();
-    pkg.setName("Package 1");
-    pkgPrototype.setUmlPackage(pkg);
+    pkgPrototype.setModelElement(pkg);
     elementPrototypes.put(ElementType.PACKAGE, pkgPrototype);
 
     // add component prototype
     UmlComponent comp = (UmlComponent) UmlComponent.getPrototype().clone();
-    comp.setName("Component 1");
     ComponentElement compElem = (ComponentElement) ComponentElement.getPrototype().clone();
     compElem.setModelElement(comp);
     compElem.addNodeChangeListener(this);
@@ -81,7 +79,6 @@ public class StructureDiagram extends GeneralDiagram {
 
     // Add class prototype
     UmlClass clss = (UmlClass) UmlClass.getPrototype().clone();
-    clss.setName("Class 1");
     ClassElement classElem = (ClassElement) ClassElement.getPrototype().clone();
     classElem.setModelElement(clss);
     classElem.addNodeChangeListener(this);
