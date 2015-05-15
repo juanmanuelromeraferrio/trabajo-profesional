@@ -33,7 +33,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class TinyUmlProject implements Serializable {
+public class Project implements Serializable {
 
   private static final long serialVersionUID = -7416279147552646801L;
   private UmlModel model;
@@ -43,7 +43,7 @@ public class TinyUmlProject implements Serializable {
    * Constructor.
    * @param aModel the UmlModel object
    */
-  public TinyUmlProject(UmlModel aModel) {
+  public Project(UmlModel aModel) {
     model = aModel;
     openDiagrams = new LinkedList<UmlDiagram>();
   }

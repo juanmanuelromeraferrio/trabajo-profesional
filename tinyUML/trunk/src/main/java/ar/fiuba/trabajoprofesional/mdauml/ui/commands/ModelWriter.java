@@ -19,7 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.commands;
 
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.TinyUmlProject;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 
 import java.awt.*;
 import java.io.*;
@@ -48,7 +48,7 @@ public final class ModelWriter extends FileWriter {
    * @return the file that was actually written
    * @throws java.io.IOException if error occurred
    */
-  public File writeProject(Component comp, File file, TinyUmlProject project)
+  public File writeProject(Component comp, File file, Project project)
     throws IOException {
     FileOutputStream fos = null;
     BufferedOutputStream bos = null;

@@ -23,7 +23,7 @@ import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.TinyUmlProject;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 
 /**
  *
@@ -37,7 +37,7 @@ public class TinyUmlProjectTest extends MockObjectTestCase {
    */
   public void testSetters() {
     Mock mockModel = mock(UmlModel.class);
-    TinyUmlProject project = new TinyUmlProject((UmlModel) mockModel.proxy());
+    Project project = new Project((UmlModel) mockModel.proxy());
     assertEquals(mockModel.proxy(), project.getModel());
     assertEquals(0, project.getOpenDiagrams().size());
     Mock mockDiagram0 = mock(UmlDiagram.class);

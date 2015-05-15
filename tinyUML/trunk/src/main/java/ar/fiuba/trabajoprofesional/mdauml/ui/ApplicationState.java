@@ -53,7 +53,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorMouseEvent;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorStateListener;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.SelectionListener;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.TinyUmlProject;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
@@ -282,7 +282,7 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
    * 
    * @param project the project
    */
-  protected void restoreFromProject(TinyUmlProject project) {
+  protected void restoreFromProject(Project project) {
     undoManager.discardAllEdits();
     umlModel = project.getModel();
     umlModel.addModelListener(this);
@@ -298,8 +298,8 @@ public class ApplicationState implements EditorStateListener, SelectionListener,
    * 
    * @return the project object
    */
-  protected TinyUmlProject createProjectForWrite() {
-    TinyUmlProject result = new TinyUmlProject(umlModel);
+  protected Project createProjectForWrite() {
+    Project result = new Project(umlModel);
     for (int i = 0; i < tabbedPane.getTabCount(); i++) {
       EditorPanel editorPanel = (EditorPanel) tabbedPane.getComponentAt(i);
       result.addOpenDiagram(editorPanel.getDiagramEditor().getDiagram());

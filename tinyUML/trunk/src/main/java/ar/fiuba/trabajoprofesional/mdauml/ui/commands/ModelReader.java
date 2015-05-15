@@ -19,7 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.commands;
 
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.TinyUmlProject;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.io.*;
@@ -42,12 +42,12 @@ public final class ModelReader extends FileHandler {
   public static ModelReader getInstance() { return instance; }
 
   /**
-   * Reads a TinyUmlProject object from a file.
+   * Reads a Project object from a file.
    * @param file the file
-   * @return the TinyUmlProject object
+   * @return the Project object
    * @throws java.io.IOException if I/O error occurred
    */
-  public TinyUmlProject readModel(File file) throws IOException {
+  public Project readModel(File file) throws IOException {
     FileInputStream fis = null;
     BufferedInputStream bis = null;
     ObjectInputStream in = null;
@@ -55,7 +55,7 @@ public final class ModelReader extends FileHandler {
       fis = new FileInputStream(file);
       bis = new BufferedInputStream(fis);
       in = new ObjectInputStream(bis);
-      return (TinyUmlProject) in.readObject();
+      return (Project) in.readObject();
     } catch (ClassNotFoundException ex) {
       throw new IOException(ApplicationResources.getInstance()
         .getString("error.readfile.message"));
