@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
@@ -38,7 +40,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
   private static final long serialVersionUID = -3440413376365267032L;
   // The list of main elements. Top-level elements go here. A top-level element
   // is an element without a parent namespace (package).
-  private Set<UmlModelElement> mainElements = new HashSet<UmlModelElement>();
+  private Map<UmlModelElement, Long> mapMainElementsCounts = new HashMap<UmlModelElement, Long>();
   private List<UmlDiagram> diagrams = new ArrayList<UmlDiagram>();
   private transient Set<UmlModelListener> modelListeners = new HashSet<UmlModelListener>();
 
@@ -55,7 +57,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
    */
   private void writeObject(ObjectOutputStream stream) throws IOException {
     // listeners should not be written
-    stream.writeObject(mainElements);
+    stream.writeObject(mapMainElementsCounts);
     stream.writeObject(diagrams);
   }
 
@@ -68,7 +70,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
    */
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     modelListeners = new HashSet<UmlModelListener>();
-    mainElements = (Set<UmlModelElement>) stream.readObject();
+    mapMainElementsCounts = (Map<UmlModelElement, Long>) stream.readObject();
     diagrams = (List<UmlDiagram>) stream.readObject();
   }
 
@@ -76,25 +78,50 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
    * {@inheritDoc}
    */
   public void addElement(UmlModelElement anElement) {
-    mainElements.add(anElement);
+    addElementToMap(anElement);
   }
 
   /**
    * {@inheritDoc}
    */
   public void addElement(UmlModelElement anElement, UmlDiagram diagram) {
-    anElement.addNameChangeListener(this);  
-    mainElements.add(anElement);
+    anElement.addNameChangeListener(this);
+    addElementToMap(anElement);
     for (UmlModelListener l : modelListeners) {
       l.elementAdded(anElement, diagram);
     }
   }
 
+  private void addElementToMap(UmlModelElement anElement) {
+    Long count = mapMainElementsCounts.get(anElement);
+    if (count == null) {
+      mapMainElementsCounts.put(anElement, 1L);
+    } else {
+      Long newCount = count + 1;
+      mapMainElementsCounts.put(anElement, newCount);
+    }
+  }
+
   @Override
   public void removeElement(UmlModelElement anElement, UmlDiagram diagram) {
-    mainElements.remove(anElement);
-    for (UmlModelListener l : modelListeners) {
-      l.elementRemoved(anElement, diagram);
+    removeElementToMap(anElement);
+    if (!contains(anElement)) {
+      for (UmlModelListener l : modelListeners) {
+        l.elementRemoved(anElement, diagram);
+      }
+    }
+  }
+
+  private void removeElementToMap(UmlModelElement anElement) {
+
+    if (mapMainElementsCounts.containsKey(anElement)) {
+      Long count = mapMainElementsCounts.get(anElement);
+      if (count.compareTo(1L) == 0) {
+        mapMainElementsCounts.remove(anElement);
+      } else {
+        Long newCount = count - 1;
+        mapMainElementsCounts.put(anElement, newCount);
+      }
     }
   }
 
@@ -102,14 +129,14 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
    * {@inheritDoc}
    */
   public boolean contains(UmlModelElement anElement) {
-    return mainElements.contains(anElement);
+    return mapMainElementsCounts.containsKey(anElement);
   }
 
   /**
    * {@inheritDoc}
    */
   public Set<? extends NamedElement> getElements() {
-    return mainElements;
+    return mapMainElementsCounts.keySet();
   }
 
   /**
@@ -163,6 +190,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
 
   @Override
   public boolean exist(String name) {
+    Set<UmlModelElement> mainElements = mapMainElementsCounts.keySet();
     for (UmlModelElement element : mainElements) {
       if (element.getName().equals(name))
         return true;
@@ -172,6 +200,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
 
   @Override
   public void nameChanged(NamedElement element) throws ElementNameAlreadyExist {
+    Set<UmlModelElement> mainElements = mapMainElementsCounts.keySet();
     for (UmlModelElement modelElement : mainElements) {
       if (modelElement.getClass().equals(element.getClass()) && modelElement != element
           && modelElement.getName().equals(element.getName())) {

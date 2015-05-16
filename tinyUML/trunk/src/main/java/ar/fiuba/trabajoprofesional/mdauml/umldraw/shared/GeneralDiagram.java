@@ -462,7 +462,9 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
 
     if (child instanceof UmlNode) {
       UmlNode umlnode = (UmlNode) child;
-      umlmodel.addElement(umlnode.getModelElement(), this);
+      if (umlnode.getModelElement() != null) {
+        umlmodel.addElement(umlnode.getModelElement(), this);
+      }
     }
   }
 
@@ -479,7 +481,9 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
 
     if (child instanceof UmlNode) {
       UmlNode umlnode = (UmlNode) child;
-      umlmodel.removeElement(umlnode.getModelElement(), this);
+      if (umlnode.getModelElement() != null) {
+        umlmodel.removeElement(umlnode.getModelElement(), this);
+      }
     }
   }
 
@@ -590,8 +594,10 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
    */
   public UmlNode createNode(ElementType elementType) {
     UmlNode umlnode = (UmlNode) elementPrototypes.get(elementType).clone();
-    String name = ElementNameGenerator.getName(elementType);
-    umlnode.getModelElement().setName(name);
+    if (umlnode.getModelElement() != null) {
+      String name = ElementNameGenerator.getName(elementType);
+      umlnode.getModelElement().setName(name);
+    }
     umlnode.addNodeChangeListener(this);
     return umlnode;
   }
