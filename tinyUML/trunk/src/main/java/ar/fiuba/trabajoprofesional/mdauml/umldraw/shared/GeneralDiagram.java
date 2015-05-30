@@ -633,12 +633,13 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
   private void bindConnection(UmlConnection conn, UmlNode node1, UmlNode node2) {
     conn.setNode1(node1);
     conn.setNode2(node2);
-    node1.addConnection(conn);
-    node2.addConnection(conn);
+    
     Relation relation = (Relation) conn.getModelElement();
     if (relation != null) {
       relation.setElement1(node1.getModelElement());
       relation.setElement2(node2.getModelElement());
     }
+    node1.addConnection(conn);
+    node2.addConnection(conn);
   }
 }

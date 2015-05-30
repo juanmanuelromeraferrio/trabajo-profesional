@@ -1,13 +1,26 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.*;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
-
-import java.awt.*;
+import java.awt.Color;
 import java.awt.geom.Dimension2D;
+
+import ar.fiuba.trabajoprofesional.mdauml.draw.AbstractCompositeNode;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Compartment;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
+import ar.fiuba.trabajoprofesional.mdauml.draw.EllipseCompartment;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
+import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleLabel;
+import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElementListener;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 
 /**
  * This class represents a UseCase element in the editor. It is responsible for rendering the
@@ -17,7 +30,7 @@ import java.awt.geom.Dimension2D;
  * @version 1.0
  */
 public final class UseCaseElement extends AbstractCompositeNode implements LabelSource, UmlNode,
-        UmlModelElementListener {
+    UmlModelElementListener {
 
   private static final long serialVersionUID = 8767029215902619069L;
 
@@ -162,7 +175,7 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
     Dimension2D mainSize = mainCompartment.getSize();
     return mainSize;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -205,16 +218,15 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
   }
 
   private boolean inLabelArea(double mx, double my) {
-    double horizontalMargin = (getSize().getWidth() - label.getSize().getWidth())/2;
-    double verticalMargin = (getSize().getHeight() - label.getSize().getHeight())/2;
-    
+    double horizontalMargin = (getSize().getWidth() - label.getSize().getWidth()) / 2;
+    double verticalMargin = (getSize().getHeight() - label.getSize().getHeight()) / 2;
+
     double labelX1 = getAbsoluteX1() + horizontalMargin;
     double labelX2 = getAbsoluteX2() - horizontalMargin;
     double labelY1 = getAbsoluteY1() + verticalMargin;
-    double labelY2 = getAbsoluteY2() - verticalMargin;    
-    
-    return mx >= labelX1 && mx <= labelX2 && my >= labelY1
-        && my <= labelY2;
+    double labelY2 = getAbsoluteY2() - verticalMargin;
+
+    return mx >= labelX1 && mx <= labelX2 && my >= labelY1 && my <= labelY2;
   }
 
 
@@ -227,5 +239,27 @@ public final class UseCaseElement extends AbstractCompositeNode implements Label
   @Override
   public boolean acceptsConnection(RelationType associationType, RelationEndType as, UmlNode with) {
     return true;
+  }
+
+  @Override
+  public void addConnection(Connection conn) {
+    super.addConnection(conn);
+
+    if (conn instanceof UmlConnection) {
+      UmlConnection umlConn = (UmlConnection) conn;
+      Relation relation = (Relation) umlConn.getModelElement();
+
+      UmlModelElement element1 = relation.getElement1();
+      UmlModelElement element2 = relation.getElement2();
+
+      if (element1 != this.useCase && element1 instanceof UmlActor) {
+        this.useCase.addUmlActor((UmlActor) element1);
+      } else if (element2 != this.useCase && element2 instanceof UmlActor) {
+        this.useCase.addUmlActor((UmlActor) element2);
+      }
+    }
+
+
+
   }
 }

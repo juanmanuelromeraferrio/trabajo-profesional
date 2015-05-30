@@ -1,21 +1,20 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
+import java.awt.Component;
+import java.awt.Window;
+import java.util.HashMap;
+import java.util.Map;
+
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
-
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class is a specialized version of a DiagramEditor editing use case diagrams.
@@ -70,7 +69,7 @@ public class UseCaseDiagramEditor extends DiagramEditor {
     super(aWindow, aDiagram);
   }
 
-  
+
   /**
    * {@inheritDoc}
    */
@@ -82,10 +81,10 @@ public class UseCaseDiagramEditor extends DiagramEditor {
       dialog.setLocationRelativeTo(mainWindow);
       dialog.setVisible(true);
       redraw();
-    }else if(element instanceof ActorElement){
+    } else if (element instanceof ActorElement) {
       ActorElement actorElement = (ActorElement) element;
       UmlActor umlActor = (UmlActor) actorElement.getModelElement();
-      EditActorDialog dialog = new EditActorDialog(window, actorElement,true);
+      EditActorDialog dialog = new EditActorDialog(window, actorElement, true);
       dialog.setLocationRelativeTo(mainWindow);
       dialog.setVisible(true);
       if (dialog.isOk()) {
@@ -93,8 +92,8 @@ public class UseCaseDiagramEditor extends DiagramEditor {
         umlActor.setDescription(dialog.getDescription());
         redraw();
       }
-      
-    }else if(element instanceof UseCaseElement){
+
+    } else if (element instanceof UseCaseElement) {
       UseCaseElement useCaseElement = (UseCaseElement) element;
       UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
       EditUseCaseDialog dialog = new EditUseCaseDialog(window, useCaseElement, true);
@@ -106,10 +105,11 @@ public class UseCaseDiagramEditor extends DiagramEditor {
         umlUseCase.setMainActors(dialog.getMainActors());
         umlUseCase.setSecondaryActors(dialog.getSecondaryActors());
         umlUseCase.setPreconditions(dialog.getPreconditions());
+        umlUseCase.setPostconditions(dialog.getPostconditions());
         redraw();
-        
+
       }
-      
+
     }
   }
 
