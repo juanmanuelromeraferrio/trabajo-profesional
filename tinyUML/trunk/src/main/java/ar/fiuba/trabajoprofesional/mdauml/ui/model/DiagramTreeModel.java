@@ -59,7 +59,7 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
     structureFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.structurediagrams"));
     useCaseFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.usecasediagrams"));
     modelFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.modelfolder"));
-    
+
     insertNodeInto(useCaseFolder, (DefaultMutableTreeNode) getRoot(), 0);
     insertNodeInto(structureFolder, (DefaultMutableTreeNode) getRoot(), 1);
     insertNodeInto(modelFolder, (DefaultMutableTreeNode) getRoot(), 2);
@@ -120,45 +120,45 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
 
   @Override
   public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
-    insertToFolder(element, diagram);
+    //insertToFolder(element, diagram);
     insertToModelFolder(element);
     addNameChangeListener((NamedElement) element);
 
   }
 
   private void insertToModelFolder(UmlModelElement element) {
-    if(! folderContainsElement(modelFolder,element)){
-      DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);  
+    if (!folderContainsElement(modelFolder, element)) {
+      DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
       insertNodeInto(child, modelFolder, modelFolder.getChildCount());
     }
   }
 
-  private void addNameChangeListener(NamedElement element) {    
+  private void addNameChangeListener(NamedElement element) {
     element.addNameChangeListener(this);
   }
 
   private void insertToFolder(UmlModelElement element, UmlDiagram diagram) {
-    
+
     DefaultMutableTreeNode diagramNode = null;
     if (diagram instanceof StructureDiagram) {
       diagramNode = getDiagramNode(structureFolder, diagram);
     } else if (diagram instanceof UseCaseDiagram) {
       diagramNode = getDiagramNode(useCaseFolder, diagram);
     }
-    if(! folderContainsElement(diagramNode,element)){
+    if (!folderContainsElement(diagramNode, element)) {
       DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
-      insertNodeInto(child, diagramNode, diagramNode.getChildCount());      
+      insertNodeInto(child, diagramNode, diagramNode.getChildCount());
     }
-      
+
   }
 
   private boolean folderContainsElement(DefaultMutableTreeNode folder, UmlModelElement element) {
     Enumeration e = folder.children();
-    while ( e.hasMoreElements() ) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
-        if (node.getUserObject().equals(element)) {
-            return true;
-        }
+    while (e.hasMoreElements()) {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+      if (node.getUserObject().equals(element)) {
+        return true;
+      }
     }
     return false;
   }
@@ -308,9 +308,10 @@ public class DiagramTreeModel extends DefaultTreeModel implements UmlModelListen
   @Override
   public boolean isLeaf(Object object) {
     DefaultMutableTreeNode node = (DefaultMutableTreeNode) object;
-    if (!(node.getUserObject() instanceof UmlModelElement)) {
+    if (!(node.getUserObject() instanceof UmlModelElement || node.getUserObject() instanceof UmlDiagram)) {
       return false;
     }
+
     return super.isLeaf(node);
   }
 

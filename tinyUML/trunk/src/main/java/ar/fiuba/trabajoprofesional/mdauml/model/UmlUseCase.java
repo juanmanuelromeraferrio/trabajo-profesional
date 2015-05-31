@@ -1,7 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,9 +26,9 @@ public class UmlUseCase extends AbstractUmlModelElement {
 
       public void setDescription(String description) {
         this.description = description;
-      }    
+      }
     }
-    
+
     private List<Step> flow = new ArrayList<Step>();
 
     public List<Step> getFlow() {
@@ -37,16 +36,17 @@ public class UmlUseCase extends AbstractUmlModelElement {
     }
 
     public void setFlow(List<Step> flow) {
-      this.flow = new ArrayList<Step>(flow) ;
+      this.flow = new ArrayList<Step>(flow);
     }
-    
-    public void addStep(Step step){
+
+    public void addStep(Step step) {
       flow.add(step);
     }
-    public void removeStep(Step step){
+
+    public void removeStep(Step step) {
       flow.remove(step);
     }
-    
+
   }
 
   /**
@@ -55,16 +55,18 @@ public class UmlUseCase extends AbstractUmlModelElement {
   private static final long serialVersionUID = -8599134739003834715L;
   private static UmlUseCase prototype;
 
-  private String description="";
+  private String description = "";
 
   private Set<UmlActor> mainActors = new HashSet<UmlActor>();
   private Set<UmlActor> secondaryActors = new HashSet<UmlActor>();
 
+  private Set<UmlActor> umlActors = new HashSet<UmlActor>();
+
   private Flow mainFLow = new Flow();
   private List<Flow> alternativeFlows = new ArrayList<Flow>();
-  
-  private List<String> preconditions=new ArrayList<String>();
-  private List<String> postconditions=new ArrayList<String>();;
+
+  private List<String> preconditions = new ArrayList<String>();
+  private List<String> postconditions = new ArrayList<String>();;
 
 
   /**
@@ -90,11 +92,12 @@ public class UmlUseCase extends AbstractUmlModelElement {
   public void setMainFLow(Flow mainFLow) {
     this.mainFLow = mainFLow;
   }
-  
-  public void addMainFlowStep(Step step){
+
+  public void addMainFlowStep(Step step) {
     this.mainFLow.addStep(step);
   }
-  public void removeMainFlowStep(Step step){
+
+  public void removeMainFlowStep(Step step) {
     this.mainFLow.removeStep(step);
   }
 
@@ -103,12 +106,14 @@ public class UmlUseCase extends AbstractUmlModelElement {
   }
 
   public void setAlternativeFlows(List<Flow> alternativeFlows) {
-    this.alternativeFlows = new ArrayList<Flow>(alternativeFlows) ;
+    this.alternativeFlows = new ArrayList<Flow>(alternativeFlows);
   }
-  public void addAlternativeFlow(Flow alternativeFlow){
+
+  public void addAlternativeFlow(Flow alternativeFlow) {
     this.alternativeFlows.add(alternativeFlow);
   }
-  public void removeAlternativeFlow(Flow alternativeFlow){
+
+  public void removeAlternativeFlow(Flow alternativeFlow) {
     this.alternativeFlows.remove(alternativeFlow);
   }
 
@@ -119,28 +124,28 @@ public class UmlUseCase extends AbstractUmlModelElement {
   public void setPreconditions(List<String> preconditions) {
     this.preconditions = new ArrayList<String>(preconditions);
   }
-  
-  public void addPrecondition(String precondition){
+
+  public void addPrecondition(String precondition) {
     this.preconditions.add(precondition);
   }
-  
-  public void removePrecondition(String precondition){
+
+  public void removePrecondition(String precondition) {
     this.preconditions.remove(precondition);
   }
 
   public List<String> getPostconditions() {
     return postconditions;
-  }  
+  }
 
   public void setPostconditions(List<String> postconditions) {
     this.postconditions = new ArrayList<String>(postconditions);
   }
-  
-  public void addPostcondition(String postcondition){
+
+  public void addPostcondition(String postcondition) {
     this.postconditions.add(postcondition);
   }
-  
-  public void removePostcondition(String postcondition){
+
+  public void removePostcondition(String postcondition) {
     this.postconditions.remove(postcondition);
   }
 
@@ -151,12 +156,14 @@ public class UmlUseCase extends AbstractUmlModelElement {
   public void setMainActors(Set<UmlActor> mainActors) {
     this.mainActors = new HashSet<UmlActor>(mainActors);
   }
-  
-  public void addMainActor(UmlActor actor){
+
+  public void addMainActor(UmlActor actor) {
     this.mainActors.add(actor);
+    this.umlActors.add(actor);
+    this.secondaryActors.remove(actor);
   }
-  
-  public void removeMainActor(UmlActor actor){
+
+  public void removeMainActor(UmlActor actor) {
     this.mainActors.remove(actor);
   }
 
@@ -165,14 +172,16 @@ public class UmlUseCase extends AbstractUmlModelElement {
   }
 
   public void setSecondaryActors(Set<UmlActor> secondaryActors) {
-    this.secondaryActors = new HashSet<UmlActor>(secondaryActors) ;
+    this.secondaryActors = new HashSet<UmlActor>(secondaryActors);
   }
-  
-  public void addSecondaryActor(UmlActor actor){
+
+  public void addSecondaryActor(UmlActor actor) {
     this.secondaryActors.add(actor);
+    this.umlActors.add(actor);
+    this.mainActors.remove(actor);
   }
-  
-  public void removeSecondaryActor(UmlActor actor){
+
+  public void removeSecondaryActor(UmlActor actor) {
     this.secondaryActors.remove(actor);
   }
 
@@ -182,6 +191,22 @@ public class UmlUseCase extends AbstractUmlModelElement {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Set<UmlActor> getUmlActors() {
+    return umlActors;
+  }
+
+  public void setUmlActors(Set<UmlActor> umlActors) {
+    this.umlActors = umlActors;
+  }
+
+  public void addUmlActor(UmlActor actor) {
+    this.umlActors.add(actor);
+  }
+
+  public void removeUmlActor(UmlActor actor) {
+    this.umlActors.remove(actor);
   }
 
 }

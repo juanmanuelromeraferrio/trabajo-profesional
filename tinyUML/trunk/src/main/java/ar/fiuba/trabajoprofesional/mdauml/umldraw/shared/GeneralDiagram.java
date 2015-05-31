@@ -462,7 +462,9 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
 
     if (child instanceof UmlNode) {
       UmlNode umlnode = (UmlNode) child;
-      umlmodel.addElement(umlnode.getModelElement(), this);
+      if (umlnode.getModelElement() != null) {
+        umlmodel.addElement(umlnode.getModelElement(), this);
+      }
     }
   }
 
@@ -479,7 +481,9 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
 
     if (child instanceof UmlNode) {
       UmlNode umlnode = (UmlNode) child;
-      umlmodel.removeElement(umlnode.getModelElement(), this);
+      if (umlnode.getModelElement() != null) {
+        umlmodel.removeElement(umlnode.getModelElement(), this);
+      }
     }
   }
 
@@ -590,8 +594,10 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
    */
   public UmlNode createNode(ElementType elementType) {
     UmlNode umlnode = (UmlNode) elementPrototypes.get(elementType).clone();
-    String name = ElementNameGenerator.getName(elementType);
-    umlnode.getModelElement().setName(name);
+    if (umlnode.getModelElement() != null) {
+      String name = ElementNameGenerator.getName(elementType);
+      umlnode.getModelElement().setName(name);
+    }
     umlnode.addNodeChangeListener(this);
     return umlnode;
   }
@@ -627,12 +633,13 @@ public abstract class GeneralDiagram extends AbstractCompositeNode implements No
   private void bindConnection(UmlConnection conn, UmlNode node1, UmlNode node2) {
     conn.setNode1(node1);
     conn.setNode2(node2);
-    node1.addConnection(conn);
-    node2.addConnection(conn);
+    
     Relation relation = (Relation) conn.getModelElement();
     if (relation != null) {
       relation.setElement1(node1.getModelElement());
       relation.setElement2(node2.getModelElement());
     }
+    node1.addConnection(conn);
+    node2.addConnection(conn);
   }
 }
