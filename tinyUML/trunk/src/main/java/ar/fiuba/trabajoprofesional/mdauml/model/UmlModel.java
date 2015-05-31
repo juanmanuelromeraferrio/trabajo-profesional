@@ -67,7 +67,7 @@ public interface UmlModel extends Serializable {
    * 
    * @return the list of all elements
    */
-  Set<? extends NamedElement> getElements();
+  Set<UmlModelElement> getElements();
 
   /**
    * Adds the specified diagram.

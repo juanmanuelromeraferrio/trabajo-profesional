@@ -17,8 +17,12 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectPersisterException;
+import ar.fiuba.trabajoprofesional.mdauml.exception.XmlPersisterException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlPersister;
 import ar.fiuba.trabajoprofesional.mdauml.ui.commands.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
@@ -26,6 +30,7 @@ import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -209,7 +214,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
   }
 
   /**
-   * Opens a TinyUML model.
+   * Opens a MdaUML model.
    */
   public void openModel() {
     if (canOpen()) {
@@ -219,11 +224,12 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
       if (fileChooser.showOpenDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
         try {
           File currentFile = fileChooser.getSelectedFile();
-          appState.restoreFromProject(ModelReader.getInstance().readModel(currentFile));
+          Project openProject = XmlPersister.getInstace().load(currentFile.getAbsolutePath());
+          appState.restoreFromProject(openProject);
           appState.setCurrentFile(currentFile);
-        } catch (IOException ex) {
-          JOptionPane.showMessageDialog(getShellComponent(), ex.getMessage(),
-              getResourceString("error.readfile.title"), JOptionPane.ERROR_MESSAGE);
+        } catch (ProjectPersisterException e) {
+          JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
+              getResourceString("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
         }
       }
     }
@@ -252,7 +258,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     fileChooser.setDialogTitle(getResourceString("dialog.saveas.title"));
     fileChooser.addChoosableFileFilter(createModelFileFilter());
     if (fileChooser.showSaveDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
-      File currentFile = saveModelFile(fileChooser.getSelectedFile());
+      File selectedFile = fileChooser.getSelectedFile();
+      File currentFile = saveModelFile(selectedFile);
       appState.setCurrentFile(currentFile);
     }
   }
@@ -270,25 +277,23 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
 
   /**
    * Writes the current model file. The returned file is different if the input file does not have
-   * the tsm extension.
+   * the proper extension.
    * 
    * @param file the file to write
    * @return the file that was written
    */
   private File saveModelFile(File file) {
-    File result = null;
-    try {
-      result =
-          ModelWriter.getInstance().writeProject(getShellComponent(), file,
-              appState.createProjectForWrite());
+    try {      
+      XmlPersister.getInstace().save(appState.createProjectForWrite(), file.getAbsolutePath());
       appState.getUndoManager().discardAllEdits();
       appState.updateMenuAndToolbars();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-      JOptionPane.showMessageDialog(getShellComponent(), ex.getMessage(),
-          getResourceString("error.savefile.title"), JOptionPane.ERROR_MESSAGE);
+    } catch (ProjectPersisterException e) {
+      JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
+          getResourceString("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
+      return null;
     }
-    return result;
+    String projectPath = XmlPersister.getInstace().getProjectPath(file.getAbsolutePath());
+    return new File(projectPath);
   }
 
   /**

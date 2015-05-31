@@ -108,7 +108,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
   /**
    * {@inheritDoc}
    */
-  public Set<? extends NamedElement> getElements() {
+  public Set<UmlModelElement> getElements() {
     return mainElements;
   }
 

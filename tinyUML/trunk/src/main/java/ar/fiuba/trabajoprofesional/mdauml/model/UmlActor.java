@@ -30,7 +30,8 @@ public class UmlActor extends AbstractUmlModelElement {
   /**
    * Constructor.
    */
-  private UmlActor() {}
+  protected UmlActor() {}
+
 
   public String getDescription() {
     return description;
