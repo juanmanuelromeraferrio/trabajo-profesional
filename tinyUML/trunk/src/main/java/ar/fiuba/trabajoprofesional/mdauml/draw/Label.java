@@ -1,16 +1,16 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License along with TinyUML; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
  * USA
@@ -29,48 +29,48 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
  */
 public interface Label extends Node {
 
-  /**
-   * Sets the label source.
-   * 
-   * @param aSource the label source
-   */
-  void setSource(LabelSource aSource);
+    /**
+     * Returns the LabelSource.
+     *
+     * @return the LabelSource
+     */
+    LabelSource getSource();
 
-  /**
-   * Returns the LabelSource.
-   *
-   * @return the LabelSource
-   */
-  LabelSource getSource();
+    /**
+     * Sets the label source.
+     *
+     * @param aSource the label source
+     */
+    void setSource(LabelSource aSource);
 
-  /**
-   * Returns the Label text.
-   * 
-   * @return the text
-   */
-  String getText();
+    /**
+     * Returns the Label text.
+     *
+     * @return the text
+     */
+    String getText();
 
-  /**
-   * Sets the Label's text.
-   * 
-   * @param text the text to set
-   */
-  void setText(String text);
+    /**
+     * Sets the Label's text.
+     *
+     * @param text the text to set
+     */
+    void setText(String text);
 
-  /**
-   * Sets the Label font type.
-   * 
-   * @param aFontType the FontType
-   */
-  void setFontType(FontType aFontType);
+    /**
+     * Sets the Label font type.
+     *
+     * @param aFontType the FontType
+     */
+    void setFontType(FontType aFontType);
 
-  /**
-   * Centers this Label horizontally in its parent.
-   */
-  void centerHorizontally();
+    /**
+     * Centers this Label horizontally in its parent.
+     */
+    void centerHorizontally();
 
-  /**
-   * Centers this Label vertically in its parent.
-   */
-  void centerVertically();
+    /**
+     * Centers this Label vertically in its parent.
+     */
+    void centerVertically();
 }

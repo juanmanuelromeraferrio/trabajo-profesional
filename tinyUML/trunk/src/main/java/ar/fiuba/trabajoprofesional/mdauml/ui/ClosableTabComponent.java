@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -34,78 +34,79 @@ import java.awt.event.*;
  */
 public class ClosableTabComponent extends JPanel {
 
-  private JTabbedPane tabbedPane;
+    private static MouseListener buttonMouseListener = new MouseAdapter() {
+        /**
+         * {@inheritDoc}
+         */
+        public void mouseEntered(MouseEvent e) {
+            if (e.getComponent() instanceof AbstractButton) {
+                ((AbstractButton) e.getComponent()).setBorderPainted(true);
+            }
+        }
 
-  /**
-   * A close button for the tab.
-   */
-  private class CloseButton extends JButton implements ActionListener {
+        /**
+         * {@inheritDoc}
+         */
+        public void mouseExited(MouseEvent e) {
+            if (e.getComponent() instanceof AbstractButton) {
+                ((AbstractButton) e.getComponent()).setBorderPainted(false);
+            }
+        }
+    };
+    private JTabbedPane tabbedPane;
+
 
     /**
      * Constructor.
+     *
+     * @param aTabbedPane the TabbedPane
      */
-    public CloseButton() {
-      setIcon(IconLoader.getInstance().getIcon(IconType.CLOSE_TAB));
-      setPreferredSize(new Dimension(17, 17));
-      setContentAreaFilled(false);
-      setRolloverEnabled(true);
-      setBorder(BorderFactory.createEtchedBorder());
-      setBorderPainted(false);
-      addMouseListener(buttonMouseListener);
-      setFocusable(false);
-      addActionListener(this);
+    public ClosableTabComponent(JTabbedPane aTabbedPane) {
+        super(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        tabbedPane = aTabbedPane;
+        JLabel label = new JLabel() {
+            /**
+             * {@inheritDoc}
+             */
+            @Override public String getText() {
+                int index = tabbedPane.indexOfTabComponent(ClosableTabComponent.this);
+                return index >= 0 ? tabbedPane.getTitleAt(index) : null;
+            }
+        };
+        setBorder(null);
+        label.setBorder(null);
+        setOpaque(false);
+        add(label);
+        JButton closeButton = new CloseButton();
+        add(closeButton);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void actionPerformed(ActionEvent e) {
-      tabbedPane.remove(
-        tabbedPane.indexOfTabComponent(ClosableTabComponent.this));
-    }
-  }
 
-  private static MouseListener buttonMouseListener = new MouseAdapter() {
     /**
-     * {@inheritDoc}
+     * A close button for the tab.
      */
-    public void mouseEntered(MouseEvent e) {
-      if (e.getComponent() instanceof AbstractButton) {
-        ((AbstractButton) e.getComponent()).setBorderPainted(true);
-      }
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public void mouseExited(MouseEvent e) {
-      if (e.getComponent() instanceof AbstractButton) {
-        ((AbstractButton) e.getComponent()).setBorderPainted(false);
-      }
-    }
-  };
+    private class CloseButton extends JButton implements ActionListener {
 
-  /**
-   * Constructor.
-   * @param aTabbedPane the TabbedPane
-   */
-  public ClosableTabComponent(JTabbedPane aTabbedPane) {
-    super(new FlowLayout(FlowLayout.LEFT, 10, 0));
-    tabbedPane = aTabbedPane;
-    JLabel label = new JLabel() {
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public String getText() {
-        int index = tabbedPane.indexOfTabComponent(ClosableTabComponent.this);
-        return index >= 0 ? tabbedPane.getTitleAt(index) : null;
-      }
-    };
-    setBorder(null);
-    label.setBorder(null);
-    setOpaque(false);
-    add(label);
-    JButton closeButton = new CloseButton();
-    add(closeButton);
-  }
+        /**
+         * Constructor.
+         */
+        public CloseButton() {
+            setIcon(IconLoader.getInstance().getIcon(IconType.CLOSE_TAB));
+            setPreferredSize(new Dimension(17, 17));
+            setContentAreaFilled(false);
+            setRolloverEnabled(true);
+            setBorder(BorderFactory.createEtchedBorder());
+            setBorderPainted(false);
+            addMouseListener(buttonMouseListener);
+            setFocusable(false);
+            addActionListener(this);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void actionPerformed(ActionEvent e) {
+            tabbedPane.remove(tabbedPane.indexOfTabComponent(ClosableTabComponent.this));
+        }
+    }
 }

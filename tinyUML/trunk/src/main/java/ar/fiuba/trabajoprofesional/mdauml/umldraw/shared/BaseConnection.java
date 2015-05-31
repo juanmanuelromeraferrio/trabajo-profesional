@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -39,268 +39,316 @@ import java.util.List;
  */
 public class BaseConnection implements UmlConnection {
 
-  private static final long serialVersionUID = 4796693000723361980L;
-  private Relation relation;
-  private Connection connection;
+    private static final long serialVersionUID = 4796693000723361980L;
+    private Relation relation;
+    private Connection connection;
 
-  /**
-   * Makes the Constructor protected to prevent direct instantiation.
-   */
-  protected BaseConnection() { }
-
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isRectilinear() { return connection.isRectilinear(); }
-
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isDashed() { return connection.isDashed(); }
-
-  /**
-   * {@inheritDoc}
-   */
-  public LineConnectMethod getConnectMethod() {
-    return connection.getConnectMethod();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Object clone() {
-    BaseConnection cloned = null;
-    try {
-      cloned = (BaseConnection) super.clone();
-      if (relation != null) {
-        cloned.relation = (Relation) relation.clone();
-      }
-      if (connection != null) {
-        cloned.connection = (Connection) connection.clone();
-      }
-    } catch (CloneNotSupportedException ignore) {
-      ignore.printStackTrace();
+    /**
+     * Makes the Constructor protected to prevent direct instantiation.
+     */
+    protected BaseConnection() {
     }
-    return cloned;
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setRelation(Relation aRelation) { relation = aRelation; }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isRectilinear() {
+        return connection.isRectilinear();
+    }
 
-  /**
-   * Sets the Connection object.
-   * @param aConnection the Connection object
-   */
-  public void setConnection(Connection aConnection) {
-    connection = aConnection;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDashed() {
+        return connection.isDashed();
+    }
 
-  /**
-   * Returns the wrapped connection object.
-   * @return the connection
-   */
-  public Connection getConnection() { return connection; }
+    /**
+     * {@inheritDoc}
+     */
+    public LineConnectMethod getConnectMethod() {
+        return connection.getConnectMethod();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public UmlModelElement getModelElement() { return relation; }
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Object clone() {
+        BaseConnection cloned = null;
+        try {
+            cloned = (BaseConnection) super.clone();
+            if (relation != null) {
+                cloned.relation = (Relation) relation.clone();
+            }
+            if (connection != null) {
+                cloned.connection = (Connection) connection.clone();
+            }
+        } catch (CloneNotSupportedException ignore) {
+            ignore.printStackTrace();
+        }
+        return cloned;
+    }
 
-  /**
-   * Returns the Node 0 element.
-   * @return node 0
-   */
-  public Node getNode1() { return connection.getNode1(); }
+    /**
+     * {@inheritDoc}
+     */
+    public void setRelation(Relation aRelation) {
+        relation = aRelation;
+    }
 
-  /**
-   * Sets the node 0 element.
-   * @param aNode the node 0 element
-   */
-  public void setNode1(Node aNode) { connection.setNode1(aNode); }
+    /**
+     * Returns the wrapped connection object.
+     *
+     * @return the connection
+     */
+    public Connection getConnection() {
+        return connection;
+    }
 
-  /**
-   * Returns the Node 1 element.
-   * @return node 1
-   */
-  public Node getNode2() { return connection.getNode2(); }
+    /**
+     * Sets the Connection object.
+     *
+     * @param aConnection the Connection object
+     */
+    public void setConnection(Connection aConnection) {
+        connection = aConnection;
+    }
 
-  /**
-   * Sets the node 1 element of the connection.
-   * @param aNode the node 1 element
-   */
-  public void setNode2(Node aNode) { connection.setNode2(aNode); }
+    /**
+     * {@inheritDoc}
+     */
+    public UmlModelElement getModelElement() {
+        return relation;
+    }
 
-  /**
-   * Draws the connection.
-   * @param drawingContext the DrawingContext
-   */
-  public void draw(DrawingContext drawingContext) {
-    connection.draw(drawingContext);
-  }
+    /**
+     * Returns the Node 0 element.
+     *
+     * @return node 0
+     */
+    public Node getNode1() {
+        return connection.getNode1();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public List<Point2D> getPoints() { return connection.getPoints(); }
+    /**
+     * Sets the node 0 element.
+     *
+     * @param aNode the node 0 element
+     */
+    public void setNode1(Node aNode) {
+        connection.setNode1(aNode);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void resetPoints() { connection.resetPoints(); }
+    /**
+     * Returns the Node 1 element.
+     *
+     * @return node 1
+     */
+    public Node getNode2() {
+        return connection.getNode2();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public List<Line2D> getSegments() { return connection.getSegments(); }
+    /**
+     * Sets the node 1 element of the connection.
+     *
+     * @param aNode the node 1 element
+     */
+    public void setNode2(Node aNode) {
+        connection.setNode2(aNode);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Line2D getSegmentAtPoint(double xcoord, double ycoord) {
-    return connection.getSegmentAtPoint(xcoord, ycoord);
-  }
+    /**
+     * Draws the connection.
+     *
+     * @param drawingContext the DrawingContext
+     */
+    public void draw(DrawingContext drawingContext) {
+        connection.draw(drawingContext);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean contains(double x, double y) {
-    return connection.contains(x, y);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public List<Point2D> getPoints() {
+        return connection.getPoints();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean intersects(Rectangle2D bounds) {
-    return connection.intersects(bounds);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setPoints(List<Point2D> thePoints) {
+        connection.setPoints(thePoints);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Rectangle2D getAbsoluteBounds() {
-    return connection.getAbsoluteBounds();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void resetPoints() {
+        connection.resetPoints();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString() {
-    return relation == null ? super.toString() : relation.toString();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public List<Line2D> getSegments() {
+        return connection.getSegments();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isVisible(Rectangle2D bounds) {
-    return connection.isVisible(bounds);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public Line2D getSegmentAtPoint(double xcoord, double ycoord) {
+        return connection.getSegmentAtPoint(xcoord, ycoord);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public CompositeNode getParent() { return connection.getParent(); }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean contains(double x, double y) {
+        return connection.contains(x, y);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isAncestor(DiagramElement element) {
-    return connection.isAncestor(element);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean intersects(Rectangle2D bounds) {
+        return connection.intersects(bounds);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setParent(CompositeNode aParent) {
-    connection.setParent(aParent);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public Rectangle2D getAbsoluteBounds() {
+        return connection.getAbsoluteBounds();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void recalculateSize(DrawingContext drawingContext) {
-    connection.recalculateSize(drawingContext);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override public String toString() {
+        return relation == null ? super.toString() : relation.toString();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Selection getSelection(DiagramOperations operations) {
-    return new UmlConnectionSelection(this,
-      connection.getSelection(operations));
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isVisible(Rectangle2D bounds) {
+        return connection.isVisible(bounds);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Label getLabelAt(double mx, double my) { return null; }
+    /**
+     * {@inheritDoc}
+     */
+    public CompositeNode getParent() {
+        return connection.getParent();
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void setParent(CompositeNode aParent) {
+        connection.setParent(aParent);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isValid() { return connection.isValid(); }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isAncestor(DiagramElement element) {
+        return connection.isAncestor(element);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void invalidate() { connection.invalidate(); }
+    /**
+     * {@inheritDoc}
+     */
+    public void recalculateSize(DrawingContext drawingContext) {
+        connection.recalculateSize(drawingContext);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setIsDashed(boolean flag) { connection.setIsDashed(flag); }
+    /**
+     * {@inheritDoc}
+     */
+    public Selection getSelection(DiagramOperations operations) {
+        return new UmlConnectionSelection(this, connection.getSelection(operations));
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setPoints(List<Point2D> thePoints) {
-    connection.setPoints(thePoints);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public Label getLabelAt(double mx, double my) {
+        return null;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public AffineTransform calculateRotationInEndPoint1() {
-    return connection.calculateRotationInEndPoint1();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isValid() {
+        return connection.isValid();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public AffineTransform calculateRotationInEndPoint2() {
-    return connection.calculateRotationInEndPoint2();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void invalidate() {
+        connection.invalidate();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Point2D getEndPoint1() { return connection.getEndPoint1(); }
+    /**
+     * {@inheritDoc}
+     */
+    public void setIsDashed(boolean flag) {
+        connection.setIsDashed(flag);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Point2D getEndPoint2() { return connection.getEndPoint2(); }
+    /**
+     * {@inheritDoc}
+     */
+    public AffineTransform calculateRotationInEndPoint1() {
+        return connection.calculateRotationInEndPoint1();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void copyData(Connection conn) { connection.copyData(conn); }
+    /**
+     * {@inheritDoc}
+     */
+    public AffineTransform calculateRotationInEndPoint2() {
+        return connection.calculateRotationInEndPoint2();
+    }
 
-  // *************************************************************************
-  // ***** Nesting
-  // ********************
+    /**
+     * {@inheritDoc}
+     */
+    public Point2D getEndPoint1() {
+        return connection.getEndPoint1();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isNestable() { return false; }
+    /**
+     * {@inheritDoc}
+     */
+    public Point2D getEndPoint2() {
+        return connection.getEndPoint2();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean canNestElements() { return false; }
+    /**
+     * {@inheritDoc}
+     */
+    public void copyData(Connection conn) {
+        connection.copyData(conn);
+    }
+
+    // *************************************************************************
+    // ***** Nesting
+    // ********************
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isNestable() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canNestElements() {
+        return false;
+    }
 }

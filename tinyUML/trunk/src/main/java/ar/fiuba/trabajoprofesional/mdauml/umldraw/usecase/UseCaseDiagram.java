@@ -19,54 +19,54 @@ import java.util.Map;
  */
 public class UseCaseDiagram extends GeneralDiagram {
 
-  private static final long serialVersionUID = -722188541879347330L;
+    private static final long serialVersionUID = -722188541879347330L;
 
-  /**
-   * Constructor.
-   * 
-   * @param umlModel the Uml model
-   */
-  public UseCaseDiagram(UmlModel umlModel) {
-    super(umlModel);
-  }
+    /**
+     * Constructor.
+     *
+     * @param umlModel the Uml model
+     */
+    public UseCaseDiagram(UmlModel umlModel) {
+        super(umlModel);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  protected Map<ElementType, UmlDiagramElement> setupElementPrototypeMap() {
-    Map<ElementType, UmlDiagramElement> elementPrototypes =
-        new HashMap<ElementType, UmlDiagramElement>();
+    /**
+     * {@inheritDoc}
+     */
+    protected Map<ElementType, UmlDiagramElement> setupElementPrototypeMap() {
+        Map<ElementType, UmlDiagramElement> elementPrototypes =
+            new HashMap<ElementType, UmlDiagramElement>();
 
-    // Add actor prototype
-    UmlActor actor = (UmlActor) UmlActor.getPrototype().clone();
-    ActorElement actorPrototype = (ActorElement) ActorElement.getPrototype().clone();
-    actorPrototype.setModelElement(actor);
-    elementPrototypes.put(ElementType.ACTOR, actorPrototype);
+        // Add actor prototype
+        UmlActor actor = (UmlActor) UmlActor.getPrototype().clone();
+        ActorElement actorPrototype = (ActorElement) ActorElement.getPrototype().clone();
+        actorPrototype.setModelElement(actor);
+        elementPrototypes.put(ElementType.ACTOR, actorPrototype);
 
-    // Add useCase prototype
-    UmlUseCase useCase = (UmlUseCase) UmlUseCase.getPrototype().clone();
-    UseCaseElement useCasePrototype = (UseCaseElement) UseCaseElement.getPrototype().clone();
-    useCasePrototype.setModelElement(useCase);
-    elementPrototypes.put(ElementType.USE_CASE, useCasePrototype);
+        // Add useCase prototype
+        UmlUseCase useCase = (UmlUseCase) UmlUseCase.getPrototype().clone();
+        UseCaseElement useCasePrototype = (UseCaseElement) UseCaseElement.getPrototype().clone();
+        useCasePrototype.setModelElement(useCase);
+        elementPrototypes.put(ElementType.USE_CASE, useCasePrototype);
 
-    return elementPrototypes;
-  }
+        return elementPrototypes;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  protected Map<RelationType, UmlConnection> setupConnectionPrototypeMap() {
-    Map<RelationType, UmlConnection> connectionPrototypes =
-        new HashMap<RelationType, UmlConnection>();
+    /**
+     * {@inheritDoc}
+     */
+    protected Map<RelationType, UmlConnection> setupConnectionPrototypeMap() {
+        Map<RelationType, UmlConnection> connectionPrototypes =
+            new HashMap<RelationType, UmlConnection>();
 
-    UmlRelation fullnavigable = new UmlRelation();
-    fullnavigable.setCanSetElement1Navigability(true);
-    fullnavigable.setCanSetElement2Navigability(true);
+        UmlRelation fullnavigable = new UmlRelation();
+        fullnavigable.setCanSetElement1Navigability(true);
+        fullnavigable.setCanSetElement2Navigability(true);
 
-    Association assocPrototype = (Association) SimpleAssociation.getPrototype().clone();
-    assocPrototype.setRelation((Relation) fullnavigable.clone());
-    connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
+        Association assocPrototype = (Association) SimpleAssociation.getPrototype().clone();
+        assocPrototype.setRelation((Relation) fullnavigable.clone());
+        connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
 
-    return connectionPrototypes;
-  }
+        return connectionPrototypes;
+    }
 }

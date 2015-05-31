@@ -11,30 +11,30 @@ import java.awt.*;
  */
 public class UseCaseEditorToolbarManager extends AbstractToolbarManager {
 
-  private ButtonGroup buttongroup;
+    private ButtonGroup buttongroup;
 
-  /**
-   * Constructor.
-   */
-  public UseCaseEditorToolbarManager() {
-    buttongroup = new ButtonGroup();
-    JToolBar toolbar = getToolbar();
-    toolbar.add(createToggleButtonWithName(buttongroup, "select"));
-    toolbar.add(createToggleButtonWithName(buttongroup, "actor"));
-    toolbar.add(createToggleButtonWithName(buttongroup, "usecase"));
-    toolbar.addSeparator(new Dimension(10, 10));
-    toolbar.add(createToggleButtonWithName(buttongroup, "association"));
-    doClick("SELECT_MODE");
-  }
+    /**
+     * Constructor.
+     */
+    public UseCaseEditorToolbarManager() {
+        buttongroup = new ButtonGroup();
+        JToolBar toolbar = getToolbar();
+        toolbar.add(createToggleButtonWithName(buttongroup, "select"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "actor"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "usecase"));
+        toolbar.addSeparator(new Dimension(10, 10));
+        toolbar.add(createToggleButtonWithName(buttongroup, "association"));
+        doClick("SELECT_MODE");
+    }
 
-  /**
-   * Creates the specified toggle button.
-   * @param aButtonGroup an optional ButtonGroup to add to
-   * @param name the toggle button name
-   * @return the toggle button
-   */
-  private JToggleButton createToggleButtonWithName(ButtonGroup aButtonGroup,
-    String name) {
-    return createToggleButton(aButtonGroup, "usecasetoolbar." + name);
-  }
+    /**
+     * Creates the specified toggle button.
+     *
+     * @param aButtonGroup an optional ButtonGroup to add to
+     * @param name         the toggle button name
+     * @return the toggle button
+     */
+    private JToggleButton createToggleButtonWithName(ButtonGroup aButtonGroup, String name) {
+        return createToggleButton(aButtonGroup, "usecasetoolbar." + name);
+    }
 }

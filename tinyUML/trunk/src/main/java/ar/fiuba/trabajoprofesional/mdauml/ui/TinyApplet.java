@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -35,70 +35,75 @@ import java.io.ObjectInputStream;
  */
 public class TinyApplet extends JApplet implements ApplicationShell {
 
-  private static final long serialVersionUID = -6522080794225507772L;
-  private transient ApplicationState appState;
+    private static final long serialVersionUID = -6522080794225507772L;
+    private transient ApplicationState appState;
 
-  /**
-   * Reset the transient values for serialization.
-   * @param stream an ObjectInputStream
-   * @throws java.io.IOException if I/O error occured
-   * @throws ClassNotFoundException if class was not found
-   */
-  @SuppressWarnings("PMD.UnusedFormalParameter")
-  private void readObject(ObjectInputStream stream)
-    throws IOException, ClassNotFoundException {
-    appState = new ApplicationState(this);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void init() {
-    super.init();
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        createGUI();
-      }
-    });
-  }
-
-  /**
-   * Initialize the user interface.
-   */
-  private void createGUI() {
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception ex) {
-      ex.printStackTrace();
+    /**
+     * Reset the transient values for serialization.
+     *
+     * @param stream an ObjectInputStream
+     * @throws java.io.IOException    if I/O error occured
+     * @throws ClassNotFoundException if class was not found
+     */
+    @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        appState = new ApplicationState(this);
     }
-    appState = new ApplicationState(this);
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Component getShellComponent() { return this; }
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void init() {
+        super.init();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createGUI();
+            }
+        });
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public DiagramEditor getCurrentEditor() {
-    return appState.getCurrentEditor();
-  }
+    /**
+     * Initialize the user interface.
+     */
+    private void createGUI() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        appState = new ApplicationState(this);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public MenuManager getMenuManager() { return appState.getMenuManager(); }
+    /**
+     * {@inheritDoc}
+     */
+    public Component getShellComponent() {
+        return this;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setTitle(File file) { }
+    /**
+     * {@inheritDoc}
+     */
+    public DiagramEditor getCurrentEditor() {
+        return appState.getCurrentEditor();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void quitApplication() { }
+    /**
+     * {@inheritDoc}
+     */
+    public MenuManager getMenuManager() {
+        return appState.getMenuManager();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setTitle(File file) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void quitApplication() {
+    }
 }

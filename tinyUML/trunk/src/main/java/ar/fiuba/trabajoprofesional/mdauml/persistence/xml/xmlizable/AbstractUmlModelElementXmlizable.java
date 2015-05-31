@@ -6,34 +6,34 @@ import ar.fiuba.trabajoprofesional.mdauml.model.AbstractUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlHelper;
 
 
-public class AbstractUmlModelElementXmlizable extends DefaultNamedElementXmlizable{
+public class AbstractUmlModelElementXmlizable extends DefaultNamedElementXmlizable {
 
-  public static final String CLASS_TAG ="AbstractUmlModelElement";
-  
-  public AbstractUmlModelElementXmlizable(AbstractUmlModelElement instance) {
-    super(instance);
-  }
-  public AbstractUmlModelElementXmlizable(){
-    super();
-  }
-  
-  @Override
-  public Element toXml(Element root) throws Exception {
+    public static final String CLASS_TAG = "AbstractUmlModelElement";
 
-    Element element = XmlHelper.getNewElement(root, CLASS_TAG);
-    XmlHelper.addAtribute(root, element, ID_ATTR, this.id.toString());
-    element.appendChild(super.toXml(root));
+    public AbstractUmlModelElementXmlizable(AbstractUmlModelElement instance) {
+        super(instance);
+    }
 
-    return element;
-  }
+    public AbstractUmlModelElementXmlizable() {
+        super();
+    }
 
-  @Override
-  public Object fromXml(Element element) throws Exception {
+    @Override public Element toXml(Element root) throws Exception {
 
-    Element defaultNamedElement = XmlHelper.getChild(element, DefaultNamedElementXmlizable.CLASS_TAG);
-    super.fromXml(defaultNamedElement); 
-    return instance;
-      
-  }
-  
+        Element element = XmlHelper.getNewElement(root, CLASS_TAG);
+        XmlHelper.addAtribute(root, element, ID_ATTR, this.id.toString());
+        element.appendChild(super.toXml(root));
+
+        return element;
+    }
+
+    @Override public Object fromXml(Element element) throws Exception {
+
+        Element defaultNamedElement =
+            XmlHelper.getChild(element, DefaultNamedElementXmlizable.CLASS_TAG);
+        super.fromXml(defaultNamedElement);
+        return instance;
+
+    }
+
 }

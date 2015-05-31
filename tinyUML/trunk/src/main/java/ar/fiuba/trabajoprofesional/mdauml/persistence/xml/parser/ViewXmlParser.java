@@ -7,27 +7,25 @@ import org.w3c.dom.Document;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 
 public class ViewXmlParser implements XmlParser {
-  
-  private Project project;
 
-  public ViewXmlParser() {
-  }
+    private Project project;
 
-  public ViewXmlParser(Project project) {
-    this.project = project;
-  }
+    public ViewXmlParser() {
+    }
 
-  @Override
-  public Document generateXml(Project project) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    public ViewXmlParser(Project project) {
+        this.project = project;
+    }
 
-  @Override
-  public Project parse(File file) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    @Override public Document generateXml(Project project) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override public Project parse(File file) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
 }

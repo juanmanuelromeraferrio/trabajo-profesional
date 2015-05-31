@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -33,34 +33,34 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
  */
 public final class Dependency extends BaseConnection {
 
-  private static final long serialVersionUID = -4618365497931544032L;
-  private static Dependency prototype;
+    private static final long serialVersionUID = -4618365497931544032L;
+    private static Dependency prototype;
 
-  /**
-   * Returns the prototype instance.
-   * @return the prototype instance
-   */
-  public static Dependency getPrototype() {
-    if (prototype == null) prototype = new Dependency();
-    return prototype;
-  }
+    /**
+     * Constructor.
+     */
+    private Dependency() {
+        setConnection(new SimpleConnection());
+        setIsDashed(true);
+    }
 
-  /**
-   * Constructor.
-   */
-  private Dependency() {
-    setConnection(new SimpleConnection());
-    setIsDashed(true);
-  }
+    /**
+     * Returns the prototype instance.
+     *
+     * @return the prototype instance
+     */
+    public static Dependency getPrototype() {
+        if (prototype == null)
+            prototype = new Dependency();
+        return prototype;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void draw(DrawingContext drawingContext) {
-    super.draw(drawingContext);
-    // Draw the arrow here, has to be rotated around the tip
-    new SimpleArrowTip().draw(drawingContext, getEndPoint2(),
-      calculateRotationInEndPoint2());
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void draw(DrawingContext drawingContext) {
+        super.draw(drawingContext);
+        // Draw the arrow here, has to be rotated around the tip
+        new SimpleArrowTip().draw(drawingContext, getEndPoint2(), calculateRotationInEndPoint2());
+    }
 }

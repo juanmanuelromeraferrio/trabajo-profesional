@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -29,88 +29,99 @@ import java.util.List;
  * could and should possibly be in a different package.
  * Serialization note: Selections should not be persisted and therefore do not
  * inherit from Serializable.
+ *
  * @author Wei-ju Wu
  * @version 1.0
  */
 public interface Selection {
 
-  /**
-   * Returns the current selected element.
-   * @return the selected element
-   */
-  DiagramElement getElement();
+    /**
+     * Returns the current selected element.
+     *
+     * @return the selected element
+     */
+    DiagramElement getElement();
 
-  /**
-   * Returns the currently selected elements. Single selections only contain
-   * one element.
-   * @return the selected elements
-   */
-  List<DiagramElement> getElements();
+    /**
+     * Returns the currently selected elements. Single selections only contain
+     * one element.
+     *
+     * @return the selected elements
+     */
+    List<DiagramElement> getElements();
 
-  /**
-   * Returns the dragging state for this object.
-   * @return true if the user is dragging this object, false otherwise
-   */
-  boolean isDragging();
-  
-  /**
-   * Initiates the pressing state.
-   * @param xcoord the x coordinate
-   * @param ycoord the y coordinate
-   */
-  void startPressing(double xcoord, double ycoord);
+    /**
+     * Returns the dragging state for this object.
+     *
+     * @return true if the user is dragging this object, false otherwise
+     */
+    boolean isDragging();
 
-  /**
-   * Initiates the dragging process.
-   * @param xcoord the x coordinate
-   * @param ycoord the y coordinate
-   */
-  void startDragging();
+    /**
+     * Initiates the pressing state.
+     *
+     * @param xcoord the x coordinate
+     * @param ycoord the y coordinate
+     */
+    void startPressing(double xcoord, double ycoord);
 
-  /**
-   * Stops the dragging process.
-   * @param xcoord the x coordinate
-   * @param ycoord the y coordinate
-   */
-  void stopDragging(double xcoord, double ycoord);
+    /**
+     * Initiates the dragging process.
+     *
+     * @param xcoord the x coordinate
+     * @param ycoord the y coordinate
+     */
+    void startDragging();
 
-  /**
-   * Cancels the dragging action.
-   */
-  void cancelDragging();
+    /**
+     * Stops the dragging process.
+     *
+     * @param xcoord the x coordinate
+     * @param ycoord the y coordinate
+     */
+    void stopDragging(double xcoord, double ycoord);
 
-  /**
-   * Updates the position while dragging.
-   * @param xcoord the x coordinate
-   * @param ycoord the y coordianate
-   */
-  void updatePosition(double xcoord, double ycoord);
+    /**
+     * Cancels the dragging action.
+     */
+    void cancelDragging();
 
-  /**
-   * Draws this selection object.
-   * @param drawingContext the drawingContext
-   */
-  void draw(DrawingContext drawingContext);
+    /**
+     * Updates the position while dragging.
+     *
+     * @param xcoord the x coordinate
+     * @param ycoord the y coordianate
+     */
+    void updatePosition(double xcoord, double ycoord);
 
-  /**
-   * Returns true if the selection contains this position.
-   * @param xcoord the x coordinate
-   * @param ycoord the y coordinate
-   * @return true if the position is contained in the Selection, false otherwise
-   */
-  boolean contains(double xcoord, double ycoord);
+    /**
+     * Draws this selection object.
+     *
+     * @param drawingContext the drawingContext
+     */
+    void draw(DrawingContext drawingContext);
 
-  /**
-   * Returns the cursor for the specified position.
-   * @param xcoord the x coordinate
-   * @param ycoord the y coordinate
-   * @return the Cursor
-   */
-  Cursor getCursorForPosition(double xcoord, double ycoord);
+    /**
+     * Returns true if the selection contains this position.
+     *
+     * @param xcoord the x coordinate
+     * @param ycoord the y coordinate
+     * @return true if the position is contained in the Selection, false otherwise
+     */
+    boolean contains(double xcoord, double ycoord);
 
-  /**
-   * Updates the dimensions of the selection according to the underlying
-   * object.
-   */
-  void updateDimensions();
+    /**
+     * Returns the cursor for the specified position.
+     *
+     * @param xcoord the x coordinate
+     * @param ycoord the y coordinate
+     * @return the Cursor
+     */
+    Cursor getCursorForPosition(double xcoord, double ycoord);
+
+    /**
+     * Updates the dimensions of the selection according to the underlying
+     * object.
+     */
+    void updateDimensions();
 }

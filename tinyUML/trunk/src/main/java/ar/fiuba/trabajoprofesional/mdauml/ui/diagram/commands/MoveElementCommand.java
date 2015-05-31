@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -32,57 +32,55 @@ import javax.swing.undo.AbstractUndoableEdit;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class MoveElementCommand extends AbstractUndoableEdit
-implements Command {
+public class MoveElementCommand extends AbstractUndoableEdit implements Command {
 
-  private DiagramEditorNotification notification;
-  private Command[] moveOperations;
+    private DiagramEditorNotification notification;
+    private Command[] moveOperations;
 
-  /**
-   * Constructor.
-   * @param aNotification the notification
-   * @param aMoveOperations the move operations
-   */
-  public MoveElementCommand(DiagramEditorNotification aNotification,
-    final Command[] aMoveOperations) {
-    notification = aNotification;
-    moveOperations = new Command[aMoveOperations.length];
-    for (int i = 0; i < aMoveOperations.length; i++) {
-      moveOperations[i] = aMoveOperations[i];
+    /**
+     * Constructor.
+     *
+     * @param aNotification   the notification
+     * @param aMoveOperations the move operations
+     */
+    public MoveElementCommand(DiagramEditorNotification aNotification,
+        final Command[] aMoveOperations) {
+        notification = aNotification;
+        moveOperations = new Command[aMoveOperations.length];
+        for (int i = 0; i < aMoveOperations.length; i++) {
+            moveOperations[i] = aMoveOperations[i];
+        }
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void run() {
-    for (Command moveOperation : moveOperations) {
-      moveOperation.run();
+    /**
+     * {@inheritDoc}
+     */
+    public void run() {
+        for (Command moveOperation : moveOperations) {
+            moveOperation.run();
+        }
+        notification.notifyElementsMoved();
     }
-    notification.notifyElementsMoved();
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void undo() {
-    super.undo();
-    for (Command moveOperation : moveOperations) {
-      moveOperation.undo();
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void undo() {
+        super.undo();
+        for (Command moveOperation : moveOperations) {
+            moveOperation.undo();
+        }
+        notification.notifyElementsMoved();
     }
-    notification.notifyElementsMoved();
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void redo() {
-    super.redo();
-    for (Command moveOperation : moveOperations) {
-      moveOperation.redo();
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void redo() {
+        super.redo();
+        for (Command moveOperation : moveOperations) {
+            moveOperation.redo();
+        }
+        notification.notifyElementsMoved();
     }
-    notification.notifyElementsMoved();
-  }
 }

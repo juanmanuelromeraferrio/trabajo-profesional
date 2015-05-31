@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -37,61 +37,60 @@ import java.io.ObjectOutputStream;
  */
 public class MultiLineLabel extends SimpleLabel {
 
-  private static final long serialVersionUID = 3993300155345177335L;
-  private transient MultilineLayout layout;
+    private static final long serialVersionUID = 3993300155345177335L;
+    private transient MultilineLayout layout;
 
-  /**
-   * Writes the instance variables to the stream.
-   * @param stream an ObjectOutputStream
-   * @throws java.io.IOException if I/O error occured
-   */
-  @SuppressWarnings("PMD.UnusedFormalParameter")
-  private void writeObject(ObjectOutputStream stream) throws IOException {
-    // layout should not be written
-  }
-
-  /**
-   * Reset the transient values for serialization.
-   * @param stream an ObjectInputStream
-   * @throws java.io.IOException if I/O error occured
-   * @throws ClassNotFoundException if class was not found
-   */
-  @SuppressWarnings("PMD.UnusedFormalParameter")
-  private void readObject(ObjectInputStream stream)
-    throws IOException, ClassNotFoundException {
-    layout = null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void draw(DrawingContext drawingContext) {
-    double x = getAbsoluteX1(), y = getAbsoluteY1();
-    double layoutWidth = getSize().getWidth();
-    double textY = y;
-    if (layout == null) recalculateSize(drawingContext);
-    for (TextLayout line : layout.getLines()) {
-      // Set the left position of the text depending on the text layout
-      // direction
-      double textX = line.isLeftToRight() ? x : layoutWidth - line.getAdvance();
-      textY += line.getAscent();
-      line.draw(drawingContext.getGraphics2D(), (float) textX, (float) textY);
-      // Move text position another step downward
-      textY += line.getDescent() + line.getLeading();
+    /**
+     * Writes the instance variables to the stream.
+     *
+     * @param stream an ObjectOutputStream
+     * @throws java.io.IOException if I/O error occured
+     */
+    @SuppressWarnings("PMD.UnusedFormalParameter") private void writeObject(
+        ObjectOutputStream stream) throws IOException {
+        // layout should not be written
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void recalculateSize(DrawingContext drawingContext) {
-    layout = MultilineLayouter.getInstance().calculateLayout(
-      drawingContext.getGraphics2D().getFontRenderContext(),
-      drawingContext.getFont(FontType.DEFAULT), getText(),
-      getSize().getWidth());
-    setSize(layout.getSize().getWidth(), layout.getSize().getHeight());
-    setValid(true);
-  }
+    /**
+     * Reset the transient values for serialization.
+     *
+     * @param stream an ObjectInputStream
+     * @throws java.io.IOException    if I/O error occured
+     * @throws ClassNotFoundException if class was not found
+     */
+    @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        layout = null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void draw(DrawingContext drawingContext) {
+        double x = getAbsoluteX1(), y = getAbsoluteY1();
+        double layoutWidth = getSize().getWidth();
+        double textY = y;
+        if (layout == null)
+            recalculateSize(drawingContext);
+        for (TextLayout line : layout.getLines()) {
+            // Set the left position of the text depending on the text layout
+            // direction
+            double textX = line.isLeftToRight() ? x : layoutWidth - line.getAdvance();
+            textY += line.getAscent();
+            line.draw(drawingContext.getGraphics2D(), (float) textX, (float) textY);
+            // Move text position another step downward
+            textY += line.getDescent() + line.getLeading();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void recalculateSize(DrawingContext drawingContext) {
+        layout = MultilineLayouter.getInstance()
+            .calculateLayout(drawingContext.getGraphics2D().getFontRenderContext(),
+                drawingContext.getFont(FontType.DEFAULT), getText(), getSize().getWidth());
+        setSize(layout.getSize().getWidth(), layout.getSize().getHeight());
+        setValid(true);
+    }
 }

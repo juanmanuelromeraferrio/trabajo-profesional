@@ -1,18 +1,18 @@
 /**
  * Copyright 2007 Wei-ju Wu
- *
+ * <p/>
  * This file is part of TinyUML.
- *
+ * <p/>
  * TinyUML is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * TinyUML is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -33,116 +33,121 @@ import java.util.List;
  */
 public class RubberbandSelector implements Selection {
 
-  private Point2D anchor = new Point2D.Double();
-  private Point2D current = new Point2D.Double();
-  private boolean isDragging;
-  private CompositeNode compositeNode;
-  private List<DiagramElement> selectedElements =
-    new ArrayList<DiagramElement>();
+    private Point2D anchor = new Point2D.Double();
+    private Point2D current = new Point2D.Double();
+    private boolean isDragging;
+    private CompositeNode compositeNode;
+    private List<DiagramElement> selectedElements = new ArrayList<DiagramElement>();
 
-  /**
-   * Sets the diagram object this selector belongs to.
-   * @param aDiagram the diagram
-   */
-  public void setDiagram(CompositeNode aDiagram) {
-    compositeNode = aDiagram;
-  }
-
-  /**
-   * Returns the selected elements.
-   * @return the selected elements
-   */
-  public List<DiagramElement> getSelectedElements() {
-    return selectedElements;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isDragging() {
-    return isDragging;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void startPressing(double xcoord, double ycoord) {
-    anchor.setLocation(xcoord, ycoord);
-    
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void stopDragging(double xcoord, double ycoord) {
-    double x = Math.min(xcoord, anchor.getX());
-    double y = Math.min(ycoord, anchor.getY());
-    double w = Math.max(xcoord, anchor.getX()) - x;
-    double h = Math.max(ycoord, anchor.getY()) - y;
-    selectedElements = new ArrayList<DiagramElement>();
-    compositeNode.getChildrenInSpecifiedBounds(
-      new Rectangle2D.Double(x, y, w, h), selectedElements);
-    isDragging = false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void cancelDragging() {
-    isDragging = false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void updatePosition(double xcoord, double ycoord) {
-    current.setLocation(xcoord, ycoord);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void updateDimensions() { }
-
-  /**
-   * {@inheritDoc}
-   */
-  public Cursor getCursorForPosition(double xcoord, double ycoord) {
-    return Cursor.getDefaultCursor();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public boolean contains(double xcoord, double ycoord) { return false; }
-
-  /**
-   * {@inheritDoc}
-   */
-  public DiagramElement getElement() { return NullElement.getInstance(); }
-
-  /**
-   * {@inheritDoc}
-   */
-  public List<DiagramElement> getElements() {
-    return new ArrayList<DiagramElement>();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void draw(DrawingContext drawingContext) {
-    if (isDragging) {
-      double diffx = current.getX() - anchor.getX();
-      double diffy = current.getY() - anchor.getY();
-      double x = diffx > 0 ? anchor.getX() : current.getX();
-      double y = diffy > 0 ? anchor.getY() : current.getY();
-      drawingContext.drawRubberband(x, y, Math.abs(diffx), Math.abs(diffy));
+    /**
+     * Sets the diagram object this selector belongs to.
+     *
+     * @param aDiagram the diagram
+     */
+    public void setDiagram(CompositeNode aDiagram) {
+        compositeNode = aDiagram;
     }
-  }
 
-  @Override
-  public void startDragging() {
-    isDragging = true;    
-  }
+    /**
+     * Returns the selected elements.
+     *
+     * @return the selected elements
+     */
+    public List<DiagramElement> getSelectedElements() {
+        return selectedElements;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDragging() {
+        return isDragging;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void startPressing(double xcoord, double ycoord) {
+        anchor.setLocation(xcoord, ycoord);
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void stopDragging(double xcoord, double ycoord) {
+        double x = Math.min(xcoord, anchor.getX());
+        double y = Math.min(ycoord, anchor.getY());
+        double w = Math.max(xcoord, anchor.getX()) - x;
+        double h = Math.max(ycoord, anchor.getY()) - y;
+        selectedElements = new ArrayList<DiagramElement>();
+        compositeNode
+            .getChildrenInSpecifiedBounds(new Rectangle2D.Double(x, y, w, h), selectedElements);
+        isDragging = false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void cancelDragging() {
+        isDragging = false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updatePosition(double xcoord, double ycoord) {
+        current.setLocation(xcoord, ycoord);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateDimensions() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Cursor getCursorForPosition(double xcoord, double ycoord) {
+        return Cursor.getDefaultCursor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean contains(double xcoord, double ycoord) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public DiagramElement getElement() {
+        return NullElement.getInstance();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<DiagramElement> getElements() {
+        return new ArrayList<DiagramElement>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void draw(DrawingContext drawingContext) {
+        if (isDragging) {
+            double diffx = current.getX() - anchor.getX();
+            double diffy = current.getY() - anchor.getY();
+            double x = diffx > 0 ? anchor.getX() : current.getX();
+            double y = diffy > 0 ? anchor.getY() : current.getY();
+            drawingContext.drawRubberband(x, y, Math.abs(diffx), Math.abs(diffy));
+        }
+    }
+
+    @Override public void startDragging() {
+        isDragging = true;
+    }
 }
