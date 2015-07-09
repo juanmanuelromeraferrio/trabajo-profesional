@@ -40,9 +40,6 @@ public class UmlActor extends AbstractUmlModelElement {
         this.description = description;
     }
 
-    @Override public int hashCode() {
-        return this.getName().length();
-    }
 
     @Override public boolean equals(Object obj) {
         if (obj instanceof UmlActor && ((UmlActor) obj).getName().equals(this.getName()))

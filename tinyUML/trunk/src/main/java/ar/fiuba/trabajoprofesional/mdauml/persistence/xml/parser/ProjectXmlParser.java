@@ -5,6 +5,7 @@ import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,11 +43,12 @@ public class ProjectXmlParser implements XmlParser {
 
         String modelPath = XmlHelper.querySingle(root, "./" + Constants.MODEL_TAG).getTextContent();
         String viewPath = XmlHelper.querySingle(root, "./" + Constants.VIEW_TAG).getTextContent();
-
+        Registerer.clean();
         ModelXmlParser modelXmlParser = new ModelXmlParser(project);
         ViewXmlParser viewXmlParser = new ViewXmlParser(project);
         modelXmlParser.parse(new File(modelPath));
         viewXmlParser.parse(new File(viewPath));
+        Registerer.clean();
         return project;
     }
 
@@ -72,12 +74,13 @@ public class ProjectXmlParser implements XmlParser {
         root.appendChild(model);
         root.appendChild(view);
 
+        Registerer.clean();
         ModelXmlParser modelXmlParser = new ModelXmlParser();
         this.modelXml = modelXmlParser.generateXml(project);
 
         ViewXmlParser viewXmlParser = new ViewXmlParser();
         this.viewXml = viewXmlParser.generateXml(project);
-
+        Registerer.clean();
         return doc;
     }
 

@@ -8,15 +8,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 
 
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Constants;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlHelper;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.xmlizable.UmlActorXmlizable;
@@ -42,19 +40,12 @@ public class ModelXmlParser implements XmlParser {
         doc.appendChild(root);
         Set<UmlModelElement> elements = project.getModel().getElements();
         for (NamedElement element : elements) {
-            Xmlizable elementXmlizable = convertToXmlizable(element);
-            Node elementNode = elementXmlizable.toXml(root);
+            Node elementNode = XmlSerializer.toXml(root, element);
             root.appendChild(elementNode);
         }
         return doc;
     }
 
-    private Xmlizable convertToXmlizable(NamedElement element) throws Exception {
-        if (element instanceof UmlActor) {
-            return new UmlActorXmlizable((UmlActor) element);
-        }
-        throw new Exception("Nonexistent Xmlizable for: " + element.toString());
-    }
 
     @Override public Project parse(File file) throws Exception {
         UmlModel model = project.getModel();
@@ -65,8 +56,7 @@ public class ModelXmlParser implements XmlParser {
         for (int i = 0; i < modelElements.getLength(); i++) {
             if (modelElements.item(i) instanceof Element) {
                 Element element = (Element) modelElements.item(i);
-                Xmlizable xmlizable = getXmlizableOfTag(element.getTagName());
-                Object instance = xmlizable.fromXml(element);
+                Object instance = XmlSerializer.fromXml(element);
                 if (instance instanceof UmlModelElement)
                     model.addElement((UmlModelElement) instance);
 
@@ -75,11 +65,5 @@ public class ModelXmlParser implements XmlParser {
         return project;
     }
 
-    private Xmlizable getXmlizableOfTag(String tagName) throws Exception {
-        if (tagName.equals(UmlActorXmlizable.CLASS_TAG)) {
-            return new UmlActorXmlizable();
-        }
-        throw new Exception("Nonexistent Xmlizable for: " + tagName);
-    }
 
 }

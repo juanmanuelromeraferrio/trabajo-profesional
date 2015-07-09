@@ -189,8 +189,14 @@ public class UmlUseCase extends AbstractUmlModelElement {
 
     }
 
+    @Override public boolean equals(Object obj) {
+        if (obj instanceof UmlUseCase && ((UmlUseCase) obj).getName().equals(this.getName()))
+            return true;
+        return false;
+    }
 
-    public class Flow {
+
+    public static class Flow {
         private List<Step> flow = new ArrayList<Step>();
 
         public List<Step> getFlow() {
@@ -216,7 +222,7 @@ public class UmlUseCase extends AbstractUmlModelElement {
         }
 
 
-        public class Step {
+        public static class Step {
             private String description;
 
             public String getDescription() {

@@ -31,39 +31,39 @@ import javax.swing.*;
  */
 public final class Main {
 
-  /**
-   * Private constructor.
-   */
-  private Main() { }
-
-  /**
-   * The start method for this application.
-   * @param args the command line parameters
-   */
-  public static void main(String[] args) {
-
-    // Mac OS X settings
-    if (System.getProperty("mrj.version") != null) {
-      System.setProperty("apple.laf.useScreenMenuBar", "true");
-      System.setProperty("com.apple.eawt.CocoaComponent.CompatibilityMode",
-          "false");
-      System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-          "TinyUML");
+    /**
+     * Private constructor.
+     */
+    private Main() {
     }
 
-    SwingUtilities.invokeLater(new Runnable() {
-      /**
-       * {@inheritDoc}
-       */
-      public void run() {
-        try {
-          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-          JFrame frame = new AppFrame();
-          frame.setVisible(true);
-        } catch (Exception ex) {
-          ex.printStackTrace();
+    /**
+     * The start method for this application.
+     *
+     * @param args the command line parameters
+     */
+    public static void main(String[] args) {
+
+        // Mac OS X settings
+        if (System.getProperty("mrj.version") != null) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.eawt.CocoaComponent.CompatibilityMode", "false");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "TinyUML");
         }
-      }
-    });
-  }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            /**
+             * {@inheritDoc}
+             */
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    JFrame frame = new AppFrame();
+                    frame.setVisible(true);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
 }

@@ -105,9 +105,14 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
 
     @Override public void removeElement(UmlModelElement anElement, UmlDiagram diagram) {
         removeElementToMap(anElement);
+
+        for (UmlModelListener l : modelListeners) {
+            l.elementRemoved(anElement, diagram);
+        }
         if (!contains(anElement)) {
+            //Removed from model
             for (UmlModelListener l : modelListeners) {
-                l.elementRemoved(anElement, diagram);
+                l.elementRemoved(anElement, null);
             }
         }
     }
