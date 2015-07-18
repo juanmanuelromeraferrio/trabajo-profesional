@@ -75,33 +75,38 @@ public class XmlHelper {
 
 
     public static Element getNewElement(Element element, String name) {
-        return element.getOwnerDocument().createElement(name);
+        String safeName = name.replaceAll("\\$", "::");
+        return element.getOwnerDocument().createElement(safeName);
     }
 
     public static Element addChildElement(Element root, Element element, String name) {
-        Element child = getNewElement(root, name);
+        String safeName = name.replaceAll("\\$", "::");
+        Element child = getNewElement(root, safeName);
         element.appendChild(child);
         return child;
     }
 
 
     public static Attr getNewAttribute(Element element, String name) {
-        return element.getOwnerDocument().createAttribute(name);
+        String safeName = name.replaceAll("\\$", "::");
+        return element.getOwnerDocument().createAttribute(safeName);
     }
 
     public static Attr addAtribute(Element root, Element element, String name, String value) {
-        Attr attribute = getNewAttribute(root, name);
+        String safeName = name.replaceAll("\\$", "::");
+        Attr attribute = getNewAttribute(root, safeName);
         attribute.setNodeValue(value);
         element.setAttributeNode(attribute);
         return attribute;
     }
 
     public static Element getChild(Element element, String name) {
+        String safeName = name.replaceAll("\\$", "::");
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             Node node = element.getChildNodes().item(i);
             if (node instanceof Element) {
                 Element el = (Element) node;
-                if (el.getNodeName().equals(name))
+                if (el.getNodeName().equals(safeName))
                     return el;
             }
         }

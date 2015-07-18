@@ -19,7 +19,11 @@ import java.util.Map;
  */
 public class UseCaseDiagram extends GeneralDiagram {
 
-    private static final long serialVersionUID = -722188541879347330L;
+
+    public UseCaseDiagram() {
+    }
+
+    ;
 
     /**
      * Constructor.

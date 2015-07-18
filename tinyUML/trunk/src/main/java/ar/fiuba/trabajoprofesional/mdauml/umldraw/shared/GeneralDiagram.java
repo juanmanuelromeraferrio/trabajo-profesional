@@ -63,10 +63,9 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
 public abstract class GeneralDiagram extends AbstractCompositeNode
     implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
-    private static final long serialVersionUID = -874538211438595440L;
     private static final int ADDITIONAL_SPACE_RIGHT = 30;
     private static final int ADDITIONAL_SPACE_BOTTOM = 30;
-    protected UmlModel umlmodel;
+    protected transient UmlModel umlmodel;
     private int gridSize = 7;
     private String name;
     private List<Connection> connections = new ArrayList<Connection>();
@@ -99,6 +98,11 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
      * A constructor added for mocking only. Think about making UmlDiagram an interface.
      */
     public GeneralDiagram() {
+        //initializeNameLabel();
+        // setSize(20000, 26000);
+        //setSize(600, 400);
+        //elementPrototypes = setupElementPrototypeMap();
+        //connectionPrototypes = setupConnectionPrototypeMap();
     }
 
     /**
@@ -630,5 +634,21 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
         }
         node1.addConnection(conn);
         node2.addConnection(conn);
+    }
+
+    @Override public List<Connection> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(List<Connection> connections) {
+        this.connections = connections;
+    }
+
+    public Label getNameLabel() {
+        return nameLabel;
+    }
+
+    public void setNameLabel(Label nameLabel) {
+        this.nameLabel = nameLabel;
     }
 }

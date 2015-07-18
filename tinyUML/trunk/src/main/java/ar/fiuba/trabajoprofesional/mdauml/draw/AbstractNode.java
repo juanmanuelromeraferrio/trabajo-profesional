@@ -36,14 +36,17 @@ import java.util.List;
  */
 public abstract class AbstractNode implements Node {
 
-    private static final long serialVersionUID = -8643725646833660531L;
     private Point2D origin = new Point2D.Double(0, 0);
     private Dimension2D size = new DoubleDimension(40, 20);
     private Dimension2D minimumSize = new DoubleDimension(40, 20);
     private CompositeNode parent;
-    private Collection<NodeChangeListener> changeListeners = new ArrayList<NodeChangeListener>();
+    private transient Collection<NodeChangeListener> changeListeners =
+        new ArrayList<NodeChangeListener>();
     private List<Connection> connections = new ArrayList<Connection>();
-    private transient NodeSelection selection;
+    private transient NodeSelection selection = null;
+
+    public AbstractNode() {
+    }
 
     /**
      * Writes the instance variables to the stream.
@@ -135,6 +138,10 @@ public abstract class AbstractNode implements Node {
         return origin;
     }
 
+    public void setOrigin(Point2D origin) {
+        this.origin = origin;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -170,11 +177,20 @@ public abstract class AbstractNode implements Node {
         minimumSize.setSize(width, height);
     }
 
+
+    public void setMinimumSize(Dimension2D minimumSize) {
+        this.minimumSize = minimumSize;
+    }
+
     /**
      * {@inheritDoc}
      */
     public Dimension2D getSize() {
         return size;
+    }
+
+    public void setSize(Dimension2D size) {
+        this.size = size;
     }
 
     /**
@@ -208,6 +224,14 @@ public abstract class AbstractNode implements Node {
      */
     protected void setSizePlain(double width, double height) {
         size.setSize(width, height);
+    }
+
+    public Collection<NodeChangeListener> getChangeListeners() {
+        return changeListeners;
+    }
+
+    public NodeSelection getSelection() {
+        return selection;
     }
 
     /**
@@ -445,5 +469,13 @@ public abstract class AbstractNode implements Node {
      */
     public boolean canNestElements() {
         return false;
+    }
+
+    public void setConnections(List<Connection> connections) {
+        this.connections = connections;
+    }
+
+    public void setChangeListeners(Collection<NodeChangeListener> changeListeners) {
+        this.changeListeners = changeListeners;
     }
 }

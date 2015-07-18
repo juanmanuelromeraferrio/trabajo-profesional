@@ -21,10 +21,8 @@ package ar.fiuba.trabajoprofesional.mdauml.draw;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * An abstract class that implements the additional functionality introduced
@@ -36,7 +34,11 @@ import java.util.ListIterator;
 public abstract class AbstractCompositeNode extends AbstractNode implements CompositeNode {
 
     private static final long serialVersionUID = 3667605559862445493L;
-    private List<DiagramElement> children = new LinkedList<DiagramElement>();
+    private List<DiagramElement> children = new ArrayList<DiagramElement>();
+
+
+    public AbstractCompositeNode() {
+    }
 
     /**
      * {@inheritDoc}
@@ -44,7 +46,7 @@ public abstract class AbstractCompositeNode extends AbstractNode implements Comp
     @Override public Object clone() {
         AbstractCompositeNode cloned = null;
         cloned = (AbstractCompositeNode) super.clone();
-        cloned.children = new LinkedList<DiagramElement>();
+        cloned.children = new ArrayList<DiagramElement>();
         for (DiagramElement element : children) {
             DiagramElement clonedChild = (DiagramElement) element.clone();
             clonedChild.setParent(cloned);
@@ -189,5 +191,9 @@ public abstract class AbstractCompositeNode extends AbstractNode implements Comp
                 ((AbstractNode) child).notifyNodeMoved();
             }
         }
+    }
+
+    public void setChildren(List<DiagramElement> children) {
+        this.children = children;
     }
 }

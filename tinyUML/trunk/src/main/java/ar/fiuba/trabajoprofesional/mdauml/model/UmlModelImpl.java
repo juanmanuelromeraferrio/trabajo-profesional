@@ -174,7 +174,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
     /**
      * {@inheritDoc}
      */
-    public List<? extends UmlDiagram> getDiagrams() {
+    public List<UmlDiagram> getDiagrams() {
         return diagrams;
     }
 

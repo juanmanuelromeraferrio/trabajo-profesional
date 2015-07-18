@@ -32,7 +32,7 @@ public class UmlUseCase extends AbstractUmlModelElement {
     /**
      * Constructor.
      */
-    private UmlUseCase() {
+    public UmlUseCase() {
     }
 
     ;
@@ -174,6 +174,8 @@ public class UmlUseCase extends AbstractUmlModelElement {
 
         this.umlActors.remove(actor);
     }
+
+
 
     @Override public Object clone() {
         UmlUseCase cloned = (UmlUseCase) super.clone();

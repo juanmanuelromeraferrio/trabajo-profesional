@@ -48,7 +48,7 @@ public abstract class ConnectionSelection implements Selection {
      * @param operations the DiagramOperations object
      * @param conn       the Connection object
      */
-    protected ConnectionSelection(DiagramOperations operations, Connection conn) {
+    public ConnectionSelection(DiagramOperations operations, Connection conn) {
         editor = operations;
         connection = conn;
     }

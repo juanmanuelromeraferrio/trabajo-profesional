@@ -23,14 +23,12 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 /**
- * This interface generalizes a visible element within the TinyUML editor.
- * Note that DiagramElements have to be Serializable, because the data is
- * written using Java serialization.
+ * This interface generalizes a visible element within the MDAUML editor.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface DiagramElement extends Serializable, Cloneable {
+public interface DiagramElement extends Cloneable {
 
     /**
      * Defines the clone() method as public.

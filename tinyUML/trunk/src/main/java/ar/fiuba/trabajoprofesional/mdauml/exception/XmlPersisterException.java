@@ -1,6 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.exception;
 
-public class XmlPersisterException extends ProjectPersisterException {
+public class XmlPersisterException extends ProjectSerializerException {
     public XmlPersisterException(String msg) {
         super(msg);
     }

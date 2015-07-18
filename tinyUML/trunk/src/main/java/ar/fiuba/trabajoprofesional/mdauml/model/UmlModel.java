@@ -88,7 +88,7 @@ public interface UmlModel extends Serializable {
      *
      * @return the diagrams
      */
-    List<? extends UmlDiagram> getDiagrams();
+    List<UmlDiagram> getDiagrams();
 
     /**
      * Adds the specified model listener.

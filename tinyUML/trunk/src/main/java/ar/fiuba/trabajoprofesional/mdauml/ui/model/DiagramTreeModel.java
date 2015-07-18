@@ -120,7 +120,7 @@ public class DiagramTreeModel extends DefaultTreeModel
     }
 
     @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
-        //insertToFolder(element, diagram);
+        insertToFolder(element, diagram);
         insertToModelFolder(element);
         addNameChangeListener((NamedElement) element);
 
@@ -210,6 +210,11 @@ public class DiagramTreeModel extends DefaultTreeModel
 
     @Override public void elementRemoved(UmlModelElement element, UmlDiagram diagram) {
 
+        if (diagram == null) {
+            removeFromFolder(modelFolder, element);
+            return;
+        }
+
         DefaultMutableTreeNode diagramNode = null;
         if (diagram instanceof StructureDiagram) {
             diagramNode = getDiagramNode(structureFolder, diagram);
@@ -218,7 +223,7 @@ public class DiagramTreeModel extends DefaultTreeModel
         }
 
         removeFromDiagram(diagramNode, element);
-        removeFromFolder(modelFolder, element);
+
 
     }
 
@@ -263,10 +268,10 @@ public class DiagramTreeModel extends DefaultTreeModel
     }
 
     /**
-     * Removes the specified diagram from the folder if it is found.
+     * Removes the specified element from the folder if it is found.
      *
      * @param folder  the folder
-     * @param diagram the diagram
+     * @param element the element
      */
     private void removeFromFolder(DefaultMutableTreeNode folder, UmlModelElement element) {
         for (int i = 0; i < folder.getChildCount(); i++) {

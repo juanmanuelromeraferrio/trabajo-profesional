@@ -14,7 +14,7 @@ public class SimpleAssociation extends Association {
     /**
      * Constructor.
      */
-    private SimpleAssociation() {
+    public SimpleAssociation() {
         setConnection(new SimpleConnection());
         setupMultiplicityLabels();
         setupNameLabel();

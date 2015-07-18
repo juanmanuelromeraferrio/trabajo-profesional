@@ -144,4 +144,8 @@ public class SimpleLabel extends AbstractNode implements Label {
             return this;
         return null;
     }
+
+    public FontType getFontType() {
+        return fontType;
+    }
 }

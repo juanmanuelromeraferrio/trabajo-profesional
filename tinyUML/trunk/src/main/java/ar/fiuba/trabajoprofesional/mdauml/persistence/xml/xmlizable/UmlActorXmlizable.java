@@ -1,5 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.persistence.xml.xmlizable;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.AbstractUmlModelElement;
 import org.w3c.dom.Element;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
@@ -9,7 +10,6 @@ import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlHelper;
 
 public class UmlActorXmlizable extends AbstractUmlModelElementXmlizable {
 
-    public static final String CLASS_TAG = "UmlActor";
     public static final String DESCRIPTION_TAG = "description";
 
     public UmlActorXmlizable(UmlActor instance) {
@@ -20,30 +20,24 @@ public class UmlActorXmlizable extends AbstractUmlModelElementXmlizable {
         super();
     }
 
-    @Override public Element toXml(Element root) throws Exception {
+
+    @Override public void serialize(Element element, Element root) throws Exception {
+        Element parent =
+            XmlHelper.addChildElement(root, element, AbstractUmlModelElement.class.getName());
+        super.serialize(parent, root);
+
         UmlActor castedInstance = (UmlActor) instance;
-        Element element = XmlHelper.getNewElement(root, CLASS_TAG);
-        XmlHelper.addAtribute(root, element, ObjectXmlizable.ID_ATTR, this.id.toString());
-        element.appendChild(super.toXml(root));
         Element description = XmlHelper.addChildElement(root, element, DESCRIPTION_TAG);
         description.setTextContent(castedInstance.getDescription());
-        return element;
     }
 
-    @Override public Object fromXml(Element element) throws Exception {
-        if (instance == null) {
-            String id = element.getAttribute(ID_ATTR);
-            this.instance = UmlActor.getPrototype().clone();
-            this.id = Long.valueOf(id);
-            Registerer.register(this.id, instance);
-        }
-        Element abstractUmlModelElement =
-            XmlHelper.getChild(element, AbstractUmlModelElementXmlizable.CLASS_TAG);
-        super.fromXml(abstractUmlModelElement);
-        Element description = XmlHelper.getChild(element, DESCRIPTION_TAG);
-        ((UmlActor) instance).setDescription(description.getNodeValue());
-        return instance;
+    @Override public Object deserialize(Element element) throws Exception {
+        Element childElement = XmlHelper.getChild(element, AbstractUmlModelElement.class.getName());
+        instance = super.deserialize(childElement);
 
+        Element description = XmlHelper.getChild(element, DESCRIPTION_TAG);
+        ((UmlActor) instance).setDescription(description.getTextContent());
+        return instance;
     }
 
 }

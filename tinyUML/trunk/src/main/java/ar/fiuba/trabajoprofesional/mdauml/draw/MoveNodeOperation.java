@@ -56,10 +56,12 @@ public class MoveNodeOperation extends AbstractUndoableEdit implements Command {
      * {@inheritDoc}
      */
     public void run() {
-        if (originalParent != null)
-            originalParent.removeChild(node);
-        if (newParent != null)
-            newParent.addChild(node);
+        if (originalParent == null || !originalParent.equals(newParent)) {
+            if (originalParent != null)
+                originalParent.removeChild(node);
+            if (newParent != null)
+                newParent.addChild(node);
+        }
         node.setAbsolutePos(targetPos.getX(), targetPos.getY());
     }
 

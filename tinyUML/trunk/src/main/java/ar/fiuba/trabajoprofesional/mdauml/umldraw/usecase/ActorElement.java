@@ -38,7 +38,7 @@ public final class ActorElement extends AbstractCompositeNode
     /**
      * Private constructor.
      */
-    private ActorElement() {
+    public ActorElement() {
         setSize(DEFAULT_WIDHT, DEFAULT_HEIGHT);
         setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
         label = new SimpleLabel();
@@ -229,5 +229,21 @@ public final class ActorElement extends AbstractCompositeNode
     @Override public boolean acceptsConnection(RelationType associationType, RelationEndType as,
         UmlNode with) {
         return true;
+    }
+
+    public UmlActor getActor() {
+        return actor;
+    }
+
+    public void setActor(UmlActor actor) {
+        this.actor = actor;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
     }
 }

@@ -19,6 +19,18 @@ public class Registerer {
         return nextId - 1;
     }
 
+    public static boolean isRegistered(Object object) {
+        return ids.get(object) != null;
+    }
+
+    public static boolean isRegistered(Long id) {
+        return objects.get(id) != null;
+    }
+
+    public static Long getId(Object object) {
+        return ids.get(object);
+    }
+
     public static Object getObject(Long id) {
         return objects.get(id);
     }

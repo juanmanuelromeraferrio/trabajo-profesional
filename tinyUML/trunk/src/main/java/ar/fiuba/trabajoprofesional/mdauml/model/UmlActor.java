@@ -14,11 +14,20 @@ public class UmlActor extends AbstractUmlModelElement {
 
     private static UmlActor prototype;
     private String description;
+    private transient String example = "hola";
+
+    public String getExample() {
+        return example;
+    }
+
+    public void setExample(String example) {
+        this.example = example;
+    }
 
     /**
      * Constructor.
      */
-    protected UmlActor() {
+    public UmlActor() {
     }
 
     /**

@@ -9,7 +9,6 @@ import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlHelper;
 
 public class DefaultNamedElementXmlizable extends ObjectXmlizable {
 
-    public static final String CLASS_TAG = "DefaultNamedElement";
     public static final String NAME_TAG = "name";
 
     public DefaultNamedElementXmlizable(DefaultNamedElement instance) {
@@ -21,27 +20,19 @@ public class DefaultNamedElementXmlizable extends ObjectXmlizable {
     }
 
 
-    @Override public Element toXml(Element root) throws Exception {
+    @Override public void serialize(Element element, Element root) throws Exception {
+
         DefaultNamedElement castedInstance = (DefaultNamedElement) instance;
-        Element element = XmlHelper.getNewElement(root, CLASS_TAG);
         XmlHelper.addAtribute(root, element, ID_ATTR, this.id.toString());
         Element name = XmlHelper.addChildElement(root, element, NAME_TAG);
         name.setTextContent(castedInstance.getName());
-        return element;
     }
 
-    @Override public Object fromXml(Element element) throws Exception {
-        if (instance == null) {
-            String id = element.getAttribute(ID_ATTR);
-            this.instance = new DefaultNamedElement();
-            this.id = Long.valueOf(id);
-            Registerer.register(this.id, instance);
-        }
+    @Override public Object deserialize(Element element) throws Exception {
         Element name = XmlHelper.getChild(element, NAME_TAG);
-        ((DefaultNamedElement) instance).setName(name.getNodeValue());
+        ((DefaultNamedElement) instance).setName(name.getTextContent());
 
         return instance;
-
     }
 
 }

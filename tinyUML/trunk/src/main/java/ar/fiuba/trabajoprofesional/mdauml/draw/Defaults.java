@@ -35,7 +35,7 @@ public final class Defaults implements Serializable {
     private static Defaults instance = new Defaults();
 
     /**
-     * Private constructor.
+     * constructor.
      */
     private Defaults() {
     }

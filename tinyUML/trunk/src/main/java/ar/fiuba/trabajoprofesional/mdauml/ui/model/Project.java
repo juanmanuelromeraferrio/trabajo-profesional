@@ -75,4 +75,6 @@ public class Project implements Serializable {
     public void addOpenDiagram(UmlDiagram diagram) {
         openDiagrams.add(diagram);
     }
+
+
 }
