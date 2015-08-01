@@ -94,8 +94,9 @@ public class XmlHelper {
 
     public static Attr addAtribute(Element root, Element element, String name, String value) {
         String safeName = name.replaceAll("\\$", "::");
+        String safeValue = value.replaceAll("\\$", "::");
         Attr attribute = getNewAttribute(root, safeName);
-        attribute.setNodeValue(value);
+        attribute.setNodeValue(safeValue);
         element.setAttributeNode(attribute);
         return attribute;
     }

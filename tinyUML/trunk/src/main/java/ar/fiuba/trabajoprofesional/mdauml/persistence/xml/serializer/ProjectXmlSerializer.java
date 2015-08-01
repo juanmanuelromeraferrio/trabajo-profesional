@@ -72,6 +72,7 @@ public class ProjectXmlSerializer implements XmlSerializer {
 
     @Override public void write(Project project, String path) throws ProjectSerializerException {
         try {
+
             String projectPath = getProjectPath(path);
             String modelPath = getModelPath(path);
             String viewPath = getViewPath(path);
@@ -86,6 +87,7 @@ public class ProjectXmlSerializer implements XmlSerializer {
             xmlEncoder.writeObject(projectXml);
             xmlEncoder.close();
 
+            Registerer.clean();
             ModelXmlSerializer modelXmlSerializer = new ModelXmlSerializer();
             modelXmlSerializer.write(project, modelPath);
 
