@@ -92,6 +92,13 @@ public class XmlHelper {
         return element.getOwnerDocument().createAttribute(safeName);
     }
 
+    public static String getAttribute(Element element, String name) {
+
+        String value = element.getAttribute(name);
+        String safeValue = value.replace((CharSequence) "::", "$");
+        return safeValue;
+    }
+
     public static Attr addAtribute(Element root, Element element, String name, String value) {
         String safeName = name.replaceAll("\\$", "::");
         String safeValue = value.replaceAll("\\$", "::");
@@ -114,4 +121,14 @@ public class XmlHelper {
         return null;
     }
 
+    public static Element getFirstChild(Element element) {
+
+        NodeList nodelist = element.getChildNodes();
+        for (int i = 0; i < nodelist.getLength(); i++) {
+            Node node = nodelist.item(i);
+            if (node instanceof Element)
+                return (Element) node;
+        }
+        return null;
+    }
 }

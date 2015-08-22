@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlSerializer2;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlObjectSerializer;
 
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 
@@ -37,7 +37,7 @@ public class ModelXmlSerializer implements XmlSerializer {
 
         modelXml.setElements(elements2);
 
-        XmlSerializer2 xmlSerializer = new XmlSerializer2(path);
+        XmlObjectSerializer xmlSerializer = new XmlObjectSerializer(path);
 
         xmlSerializer.writeObject(modelXml);
 
