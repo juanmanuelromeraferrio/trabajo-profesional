@@ -1,0 +1,6 @@
+**.iml
+.idea
+out
+.idea/**
+out/**
+tinyUML/trunk/src/test/**/*.xml
