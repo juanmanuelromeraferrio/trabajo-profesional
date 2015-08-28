@@ -3,8 +3,13 @@ package test.mdauml.persistence;
 import ar.fiuba.trabajoprofesional.mdauml.exception.XmlObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlObjectSerializer;
 import junit.framework.TestCase;
+import test.mdauml.persistence.classes.NonDefaultConstructorClass;
 import test.mdauml.persistence.classes.Primitives;
+import test.mdauml.persistence.classes.SingletonClass;
 import test.mdauml.persistence.classes.StaticFields;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fernando on 17/08/2015.
@@ -99,6 +104,41 @@ public class SerializerTest extends TestCase {
         assertEquals("9", StaticFields.getStaticString());
         assertEquals(primitives, StaticFields.getStaticPrimitives());
 
+
+
+    }
+
+
+
+    public void testSingletonClass() throws Exception {
+
+        XmlObjectSerializer s = new XmlObjectSerializer("testSingletonClass.xml");
+        SingletonClass.instance.setValue("hola");
+        s.writeObject(SingletonClass.instance);
+
+        SingletonClass readed = (SingletonClass) s.readObject();
+
+
+        assertEquals(readed, SingletonClass.instance);
+    }
+
+    public void testNonDefaultConstructorClass() throws Exception {
+
+        XmlObjectSerializer s = new XmlObjectSerializer("testNonDefaultConstructorClass.xml");
+        int [] ia = {1,2};
+        String [] sa = {"a","b"};
+        String str = "hola" ;
+        List<String> l = new ArrayList<String>();
+
+        NonDefaultConstructorClass original = new NonDefaultConstructorClass(5,2,ia,sa,str,l);
+
+        Object [] args = new Object[1];
+        original.ellipsis(args);
+        s.writeObject(original);
+
+        NonDefaultConstructorClass readed = (NonDefaultConstructorClass) s.readObject();
+
+        assertEquals(readed.getValue(),original.getValue());
 
 
     }

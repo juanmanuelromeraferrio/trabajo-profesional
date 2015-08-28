@@ -191,9 +191,41 @@ public class XmlObjectSerializer {
                 minArg=ctor.getGenericParameterTypes().length;
             }
         }
+            if(ctor ==null)
+                return null;
             ctor.setAccessible(true);
             Object [] initargs= new Object[minArg];
-            return ctor.newInstance();
+            Class[] types = ctor.getParameterTypes();
+            int i=0;
+            for(Class type : types){
+                if (type == Integer.TYPE) {
+                    initargs[i++]=0;
+                } else if (type == Double.TYPE) {
+                    initargs[i++]=0.0;
+                } else if (type == Boolean.TYPE) {
+                    initargs[i++]=false;
+                } else if (type == Character.TYPE) {
+                    initargs[i++]='\0';
+                } else if (type == Byte.TYPE) {
+                    initargs[i++]=0x00;
+                } else if (type == Short.TYPE) {
+                    initargs[i++]=(short)0;
+                } else if (type == Long.TYPE) {
+                    initargs[i++]=0L;
+                } else if (type == Float.TYPE) {
+                    initargs[i++]=0.0f;
+                } else if (type.isArray()){
+                    initargs[i++]=Array.newInstance(type.getComponentType(),0);
+                }else{
+                    initargs[i++]=createInstance(type);
+                }
+
+
+
+            }
+            if(initargs.length==0)
+                return ctor.newInstance();
+            return ctor.newInstance(initargs);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
