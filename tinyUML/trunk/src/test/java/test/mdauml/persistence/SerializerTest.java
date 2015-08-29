@@ -3,10 +3,7 @@ package test.mdauml.persistence;
 import ar.fiuba.trabajoprofesional.mdauml.exception.XmlObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlObjectSerializer;
 import junit.framework.TestCase;
-import test.mdauml.persistence.classes.NonDefaultConstructorClass;
-import test.mdauml.persistence.classes.Primitives;
-import test.mdauml.persistence.classes.SingletonClass;
-import test.mdauml.persistence.classes.StaticFields;
+import test.mdauml.persistence.classes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +64,26 @@ public class SerializerTest extends TestCase {
         Primitives primitives = (Primitives) s.readObject();
 
         assertEquals(original, primitives);
+
+    }
+
+
+    public void testArrayFields() throws Exception {
+        XmlObjectSerializer s = new XmlObjectSerializer("testArrayFields.xml");
+        int [] ia = {1,2,3};
+        String [] sa = {"a","b","c"};
+        ArrayClass original = new ArrayClass();
+        original.setArrayOfInt(ia);
+        original.setArrayOfString(sa);
+
+        s.writeObject(original);
+
+        ArrayClass primitives = (ArrayClass) s.readObject();
+
+        assertEquals(original, primitives);
+
+
+
 
     }
 
@@ -138,9 +155,54 @@ public class SerializerTest extends TestCase {
 
         NonDefaultConstructorClass readed = (NonDefaultConstructorClass) s.readObject();
 
-        assertEquals(readed.getValue(),original.getValue());
+        assertEquals(readed,original);
 
 
+    }
+
+    public void testMap()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testMap.xml");
+        MapClass original = new MapClass();
+        original.getMap().put("this", 4);
+        original.getMap().put("is", 2);
+        original.getMap().put("a", 1);
+        original.getMap().put("map",3);
+        s.writeObject(original);
+        MapClass readed = (MapClass) s.readObject();
+        assertEquals(readed,original);
+    }
+    public void testSet()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testSet.xml");
+        SetClass original = new SetClass();
+        original.getSet().add("this");
+        original.getSet().add("is");
+        original.getSet().add("a");
+        original.getSet().add("set");
+        s.writeObject(original);
+        SetClass readed = (SetClass) s.readObject();
+        assertEquals(readed,original);
+    }
+    public void testList()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testList.xml");
+        ListClass original = new ListClass();
+        original.getList().add("this");
+        original.getList().add("is");
+        original.getList().add("a");
+        original.getList().add("list");
+        s.writeObject(original);
+        ListClass readed = (ListClass) s.readObject();
+        assertEquals(readed,original);
+    }
+
+    public void testTransientField()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testTransientField.xml");
+        TransientField original = new TransientField();
+        int firstValue = original.getDoNotPersist();
+        original.setDoNotPersist(456);
+        s.writeObject(original);
+        TransientField readed = (TransientField) s.readObject();
+        assertEquals(readed.getDoNotPersist(),firstValue);
+        assertEquals(original.getDoNotPersist(),456);
     }
 
 }

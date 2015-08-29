@@ -51,7 +51,7 @@ public class XmlObjectSerializer {
     private static final String TYPE_ATT = "type";
     private static final String ARRAY_TAG = "array";
     private static final String LENGTH_ATT = "length";
-    private static final String SERIALIZED_TAG = "serialized";
+    private static final String ROOT_TAG = "XmlObjectSerializer";
     private static final String NULL_TAG = "null";
     private static final String SET_TAG = "set";
     private static final String MAP_TAG = "map";
@@ -113,7 +113,7 @@ public class XmlObjectSerializer {
             writing=true;
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             doc = docBuilder.newDocument();
-            root = doc.createElement(SERIALIZED_TAG);
+            root = doc.createElement(ROOT_TAG);
             doc.appendChild(root);
         }
         Element element = toXml(obj);
@@ -128,11 +128,13 @@ public class XmlObjectSerializer {
 
             if (tagName.equals(NULL_TAG))
                 return null;
+            if (tagName.equals(STRING_TAG))
+                return element.getTextContent();
 
             Class<? extends Object> clazz = Class.forName(
                 XmlHelper.getAttribute(element, CLASS_ATT));
-            if (String.class.isAssignableFrom(clazz))
-                return element.getTextContent();
+
+
             if (Double.class.isAssignableFrom(clazz))
                 return Double.valueOf(element.getTextContent());
             if (Float.class.isAssignableFrom(clazz))
@@ -264,19 +266,25 @@ public class XmlObjectSerializer {
 
             NodeList nodelist = element.getChildNodes();
 
-            for(int i = 0 ; i < nodelist.getLength()-1 ; i+=2 ){
+            Object key=null;
+            Object value=null;
 
-                Element keyElement = (Element) nodelist.item(i);
-                Element valueElement = (Element) nodelist.item(i+1);
-                if(element.getTagName().equals(KEY_TAG)){
-                    Element keyChild = (Element) keyElement.getFirstChild();
-                    if(valueElement.getTagName().equals(VALUE_TAG)){
-                        Element valueChild = (Element) valueElement.getFirstChild();
-                        Object key = fromXml(keyChild);
-                        Object value = fromXml(valueChild);
-                        map.put(key,value);
-                    }
+            for(int i = 0 ; i < nodelist.getLength() ; i++ ){
+                if( ! (nodelist.item(i) instanceof Element))
+                    continue;
 
+                Element childElement = (Element) nodelist.item(i);
+
+                if(childElement.getTagName().equals(KEY_TAG)) {
+                    Element keyChild =  XmlHelper.getFirstChild(childElement);
+                    key = fromXml(keyChild);
+                }else if (childElement.getTagName().equals(VALUE_TAG)) {
+                    if(key==null)
+                        continue;
+                    Element valueChild =XmlHelper.getFirstChild(childElement);
+                    value = fromXml(valueChild);
+                    map.put(key,value);
+                    key=null;
                 }
 
             }
@@ -400,33 +408,37 @@ public class XmlObjectSerializer {
     private void setArrayFromXml(Object obj, Field field, Element fieldElement) {
         try {
             int length = Integer.valueOf( fieldElement.getAttribute(LENGTH_ATT));
-            String typeStr = XmlHelper.getAttribute(fieldElement,TYPE_ATT);
-            Class<?> componentType = field.getType().getComponentType();
-            Object array = Array.newInstance(Class.forName(typeStr), length);
-            NodeList nodes = fieldElement.getChildNodes();
-            for (int i = 0; i < length; i++) {
-                Element component = (Element) nodes.item(i);
 
+            Class<?> componentType = field.getType().getComponentType();
+            Object array = Array.newInstance(componentType, length);
+            NodeList nodes = fieldElement.getChildNodes();
+            for (int i = 0, j=0; i < nodes.getLength(); i++) {
+
+                Node node = nodes.item(i);
+                if(! (node instanceof Element))
+                    continue;
+                Element component = (Element) node;
                 if (componentType == Integer.TYPE) {
-                    Array.set(array,i,Integer.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Integer.valueOf(component.getTextContent()));
                 } else if (componentType == Double.TYPE) {
-                    Array.set(array,i,Double.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Double.valueOf(component.getTextContent()));
                 } else if (componentType == Boolean.TYPE) {
-                    Array.set(array,i,Boolean.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Boolean.valueOf(component.getTextContent()));
                 } else if (componentType == Character.TYPE) {
-                    Array.set(array,i,Character.valueOf(component.getTextContent().charAt(0)));
+                    Array.set(array,j++,Character.valueOf(component.getTextContent().charAt(0)));
                 } else if (componentType == Byte.TYPE) {
-                    Array.set(array,i,Byte.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Byte.valueOf(component.getTextContent()));
                 } else if (componentType == Short.TYPE) {
-                    Array.set(array,i,Short.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Short.valueOf(component.getTextContent()));
                 } else if (componentType == Long.TYPE) {
-                    Array.set(array,i,Long.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Long.valueOf(component.getTextContent()));
                 } else if (componentType == Float.TYPE) {
-                    Array.set(array,i,Float.valueOf(component.getTextContent()));
+                    Array.set(array,j++,Float.valueOf(component.getTextContent()));
                 }else
-                    Array.set(array,i,fromXml(component));
+                    Array.set(array,j++,fromXml(component));
 
             }
+            field.set(obj,array);
 
 
         }catch (Exception e  ){
