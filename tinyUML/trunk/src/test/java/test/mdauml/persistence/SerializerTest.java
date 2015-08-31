@@ -166,7 +166,7 @@ public class SerializerTest extends TestCase {
         original.getMap().put("this", 4);
         original.getMap().put("is", 2);
         original.getMap().put("a", 1);
-        original.getMap().put("map",3);
+        original.getMap().put("map", 3);
         s.writeObject(original);
         MapClass readed = (MapClass) s.readObject();
         assertEquals(readed,original);
@@ -203,6 +203,24 @@ public class SerializerTest extends TestCase {
         TransientField readed = (TransientField) s.readObject();
         assertEquals(readed.getDoNotPersist(),firstValue);
         assertEquals(original.getDoNotPersist(),456);
+    }
+
+    public void testWrappedPrimitives()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testWrappedPrimitives.xml");
+        WrappedPrimitives original = new WrappedPrimitives();
+        original.setB((byte) 0x1F);
+        original.setC('c');
+        original.setD(12.235464);
+        original.setF(0.0002346F);
+        original.setSh((short) 5);
+        original.setI(546);
+        original.setL(123456789L);
+        original.setFa(false);
+        original.setTr(true);
+        s.writeObject(original);
+        WrappedPrimitives readed = (WrappedPrimitives) s.readObject();
+        assertEquals(readed,original);
+
     }
 
 }
