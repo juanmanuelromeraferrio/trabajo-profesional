@@ -1,6 +1,5 @@
 package test.mdauml.persistence.classes;
 
-import com.sun.scenario.effect.impl.prism.PrMergePeer;
 
 /**
  * Created by Fernando on 17/08/2015.

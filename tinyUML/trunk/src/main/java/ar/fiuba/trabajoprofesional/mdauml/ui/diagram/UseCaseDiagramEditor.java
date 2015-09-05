@@ -102,6 +102,7 @@ public class UseCaseDiagramEditor extends DiagramEditor {
                 umlUseCase.setSecondaryActors(dialog.getSecondaryActors());
                 umlUseCase.setPreconditions(dialog.getPreconditions());
                 umlUseCase.setPostconditions(dialog.getPostconditions());
+                umlUseCase.setMainFLow(dialog.getMainFlow());
                 redraw();
 
             }
