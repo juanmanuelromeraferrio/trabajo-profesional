@@ -1,8 +1,8 @@
-package ar.fiuba.trabajoprofesional.mdauml.persistence.xml.serializer;
+package ar.fiuba.trabajoprofesional.mdauml.persistence;
 
 
 
-public class ProjectXml {
+public class ProjectPersistence {
     public String modelPath;
     public String viewPath;
 

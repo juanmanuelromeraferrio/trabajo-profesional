@@ -2,7 +2,8 @@ package ar.fiuba.trabajoprofesional.mdauml.persistence.xml;
 
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.RegisterExistentIdException;
-import ar.fiuba.trabajoprofesional.mdauml.exception.XmlObjectSerializerException;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ObjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 
 
@@ -28,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class XmlObjectSerializer {
+public class XmlObjectSerializer implements ObjectSerializer{
 
     private static final String INT_TAG = "int";
     private static final String DOUBLE_TAG = "double";
@@ -71,20 +72,20 @@ public class XmlObjectSerializer {
     private boolean writing=false;
 
 
-    public XmlObjectSerializer(String filePath) throws
-        XmlObjectSerializerException {
+    public XmlObjectSerializer(String filePath) throws ObjectSerializerException {
         try {
             file = new File(filePath);
 
         } catch (Exception e) {
-            throw new XmlObjectSerializerException(
-                "Error creating XmlSerializer for file: " + filePath + " .\n", e);
+            throw new ObjectSerializerException(
+                "Error creating Serializer for file: " + filePath + " .\n", e);
         }
     }
 
     public Object readObject( ) throws Exception {
         if(!reading){
-            Registerer.clean();
+            if(writing)
+                Registerer.clean();
             writing=false;
             reading=true;
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -108,7 +109,8 @@ public class XmlObjectSerializer {
     }
     public void writeObject(Object obj) throws Exception {
         if(!writing){
-            Registerer.clean();
+            if(reading)
+                Registerer.clean();
             reading=false;
             writing=true;
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -121,6 +123,8 @@ public class XmlObjectSerializer {
         saveXml(doc);
 
     }
+
+
 
     private Object fromXml(Element element)  {
         try {

@@ -1,6 +1,6 @@
 package test.mdauml.persistence;
 
-import ar.fiuba.trabajoprofesional.mdauml.exception.XmlObjectSerializerException;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlObjectSerializer;
 import junit.framework.TestCase;
 import test.mdauml.persistence.classes.*;
@@ -8,10 +8,14 @@ import test.mdauml.persistence.classes.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Fernando on 17/08/2015.
- */
+
 public class SerializerTest extends TestCase {
+
+
+
+    public void before(){
+        Registerer.clean();
+    }
 
 
 
@@ -219,6 +223,19 @@ public class SerializerTest extends TestCase {
         original.setTr(true);
         s.writeObject(original);
         WrappedPrimitives readed = (WrappedPrimitives) s.readObject();
+        assertEquals(readed,original);
+
+    }
+
+    public void testInnerClaas()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testInnerClaas.xml");
+        InnerClass original = new InnerClass();
+        original.addChild("these");
+        original.addChild("are");
+        original.addChild("my");
+        original.addChild("children");
+        s.writeObject(original);
+        InnerClass readed = (InnerClass)s.readObject();
         assertEquals(readed,original);
 
     }

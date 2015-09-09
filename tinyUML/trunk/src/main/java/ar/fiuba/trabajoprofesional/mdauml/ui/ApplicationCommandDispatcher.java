@@ -17,9 +17,11 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.serializer.ProjectXmlSerializer;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ProjectSerializer;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlProjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.ui.commands.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
@@ -224,13 +226,16 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
             if (fileChooser.showOpenDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
                 try {
                     File currentFile = fileChooser.getSelectedFile();
-                    Project openProject = (Project) ProjectXmlSerializer.getInstace()
-                        .read(currentFile.getAbsolutePath());
+                    Project openProject = (Project) new XmlProjectSerializer(currentFile.getAbsolutePath())
+                        .read();
                     appState.restoreFromProject(openProject);
                     appState.setCurrentFile(currentFile);
                 } catch (ProjectSerializerException e) {
                     JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
                         getResourceString("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
+                } catch (ObjectSerializerException e) {
+                    JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
+                            getResourceString("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -285,18 +290,24 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
      */
     private File saveModelFile(File file) {
         try {
-            ProjectXmlSerializer.getInstace()
-                .write(appState.createProjectForWrite(), file.getAbsolutePath());
+            ProjectSerializer serializer = new XmlProjectSerializer(file.getAbsolutePath());
+
+            serializer.write(appState.createProjectForWrite());
             appState.getUndoManager().discardAllEdits();
             appState.updateMenuAndToolbars();
+            String projectPath = serializer.getProjectPath(file.getAbsolutePath());
+
+            return new File(projectPath);
+
         } catch (ProjectSerializerException e) {
             JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
                 getResourceString("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
             return null;
+        } catch (ObjectSerializerException e) {
+            JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
+                    getResourceString("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
         }
-        String projectPath =
-            ProjectXmlSerializer.getInstace().getProjectPath(file.getAbsolutePath());
-        return new File(projectPath);
+        return file;
     }
 
     /**
