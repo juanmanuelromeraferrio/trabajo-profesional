@@ -55,6 +55,8 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.SelectionListener;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
 /**
@@ -289,7 +291,7 @@ public class ApplicationState
         treeModel.setModel(umlModel);
         tabbedPane.removeAll();
         for (UmlDiagram diagram : project.getOpenDiagrams()) {
-            openExistingStructureEditor((GeneralDiagram) diagram);
+            openExistingEditor((GeneralDiagram) diagram);
         }
     }
 
@@ -442,18 +444,46 @@ public class ApplicationState
         addDiagramEditorEvents(editorPanel);
     }
 
+
+    /**
+     * Opens an existing editor.
+     *
+     * @param diagram the diagram
+     */
+    protected void openExistingEditor(GeneralDiagram diagram) {
+        if(diagram instanceof StructureDiagram)
+            openExistingStructureEditor((StructureDiagram) diagram);
+        else if(diagram instanceof UseCaseDiagram)
+            openExistingUseCaseEditor((UseCaseDiagram) diagram);
+    }
+
+
     /**
      * Opens an existing structure editor.
      *
      * @param diagram the diagram
      */
-    protected void openExistingStructureEditor(GeneralDiagram diagram) {
+    protected void openExistingStructureEditor(StructureDiagram diagram) {
         if (!isAlreadyOpen(diagram)) {
             EditorPanel editorPanel = editorFactory.openStructureEditor(diagram);
             currentEditor = editorPanel.getDiagramEditor();
             addDiagramEditorEvents(editorPanel);
         }
     }
+
+    /**
+     * Opens an existing use case editor.
+     *
+     * @param diagram the diagram
+     */
+    protected void openExistingUseCaseEditor(UseCaseDiagram diagram) {
+        if (!isAlreadyOpen(diagram)) {
+            EditorPanel editorPanel = editorFactory.openUseCaseEditor(diagram);
+            currentEditor = editorPanel.getDiagramEditor();
+            addDiagramEditorEvents(editorPanel);
+        }
+    }
+
 
     /**
      * Determines whether the specified diagram is already opened in the editor.

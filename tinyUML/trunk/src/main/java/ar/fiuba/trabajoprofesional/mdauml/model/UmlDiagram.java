@@ -19,6 +19,11 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
+
+import java.util.List;
+
 /**
  * An interface to represent UML diagrams. Defining the UML within the model
  * offers the advantage that the UmlModel instance can be used as the root
@@ -28,5 +33,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  * @version 1.0
  */
 public interface UmlDiagram extends NamedElement {
+    List<UmlDiagramElement> getElements();
 
 }

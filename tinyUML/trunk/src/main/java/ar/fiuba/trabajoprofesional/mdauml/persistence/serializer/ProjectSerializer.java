@@ -60,15 +60,9 @@ public abstract class ProjectSerializer implements Serializer {
 
             for(UmlDiagram diagram : viewPersistence.getUmlDiagrams()) {
                 project.getModel().addDiagram(diagram);
-                if(diagram instanceof AbstractCompositeNode){
-                    AbstractCompositeNode compositeDiagram = (AbstractCompositeNode) diagram;
-                    for(DiagramElement diagElement :compositeDiagram.getChildren()){
-                        if( diagElement instanceof UmlDiagramElement){
-                            UmlDiagramElement umlDiagramElement = (UmlDiagramElement)diagElement;
-                            project.getModel().addElement(umlDiagramElement.getModelElement(),diagram);
-                        }
-                    }
-                }
+                for(UmlDiagramElement umlDiagramElement :diagram.getElements())
+                    project.getModel().addElement(umlDiagramElement.getModelElement(),diagram);
+
             }
 
         return project;

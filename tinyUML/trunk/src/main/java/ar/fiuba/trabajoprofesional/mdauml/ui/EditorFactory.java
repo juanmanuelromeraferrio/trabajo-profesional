@@ -90,9 +90,20 @@ public class EditorFactory {
      * @param diagram the diagram
      * @return the editor panel
      */
-    public EditorPanel openStructureEditor(GeneralDiagram diagram) {
+    public EditorPanel openStructureEditor(GeneralDiagram diagram   ) {
         return createEditorPanel(new StructureDiagramEditor(shell.getShellComponent(), diagram),
             new StaticStructureEditorToolbarManager());
+    }
+
+    /**
+     * Opens a use case editor for an existing diagram.
+     *
+     * @param diagram the diagram
+     * @return the editor panel
+     */
+    public EditorPanel openUseCaseEditor(UseCaseDiagram diagram) {
+        return createEditorPanel(new UseCaseDiagramEditor(shell.getShellComponent(), diagram),
+                new UseCaseEditorToolbarManager());
     }
 
     /**

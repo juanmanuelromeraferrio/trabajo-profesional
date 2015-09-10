@@ -23,6 +23,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
@@ -30,6 +31,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
@@ -195,6 +197,12 @@ public class DiagramTreeModel extends DefaultTreeModel
         } else if (diagram instanceof UseCaseDiagram) {
             insertNodeInto(child, useCaseFolder, useCaseFolder.getChildCount());
         }
+        for(UmlDiagramElement diagElement : diagram.getElements()){
+            insertToFolder(diagElement.getModelElement(), diagram);
+            insertToModelFolder(diagElement.getModelElement());
+        }
+
+
     }
 
     /**

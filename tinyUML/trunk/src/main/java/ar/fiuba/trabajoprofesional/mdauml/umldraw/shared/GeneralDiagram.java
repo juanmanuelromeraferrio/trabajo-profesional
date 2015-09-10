@@ -158,17 +158,6 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     }
 
     /**
-     * Initializes the name label.
-     */
-    private void initializeNameLabel() {
-        nameLabel.setSource(this);
-        nameLabel.setParent(this);
-        nameLabel.setOrigin(5, 3);
-        nameLabel.setSize(10, 10);
-        nameLabel.setFontType(FontType.ELEMENT_NAME);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public String getName() {
@@ -347,7 +336,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
      */
     private void drawBorder(DrawingContext drawingContext) {
         drawingContext.drawRectangle(getOrigin().getX(), getOrigin().getY(), getSize().getWidth(),
-            getSize().getHeight(), null);
+                getSize().getHeight(), null);
     }
 
     /**
@@ -435,6 +424,15 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
         resizeToNode(node);
     }
 
+
+    @Override public List<UmlDiagramElement> getElements(){
+        List<DiagramElement> children = getChildren();
+        List<UmlDiagramElement> elements = new ArrayList<>();
+        for(DiagramElement diagramElement: children)
+            if(diagramElement instanceof UmlDiagramElement)
+                elements.add((UmlDiagramElement) diagramElement);
+        return elements;
+    }
     /**
      * {@inheritDoc}
      */
@@ -463,6 +461,17 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
                 umlmodel.addElement(umlnode.getModelElement(), this);
             }
         }
+    }
+
+    /**
+     * Initializes the name label.
+     */
+    private void initializeNameLabel() {
+        nameLabel.setSource(this);
+        nameLabel.setParent(this);
+        nameLabel.setOrigin(5, 3);
+        nameLabel.setSize(10, 10);
+        nameLabel.setFontType(FontType.ELEMENT_NAME);
     }
 
     /**

@@ -32,6 +32,8 @@ import javax.swing.tree.TreePath;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 
 /**
  * A specialized tree component to display diagrams.
@@ -85,9 +87,9 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
             TreePath path = getPathForLocation(e.getX(), e.getY());
             if (path != null) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                if (node.getUserObject() instanceof GeneralDiagram) {
-                    appState.openExistingStructureEditor((GeneralDiagram) node.getUserObject());
-                }
+                if (node.getUserObject() instanceof GeneralDiagram)
+                    appState.openExistingEditor((GeneralDiagram) node.getUserObject());
+
             }
         }
     }
