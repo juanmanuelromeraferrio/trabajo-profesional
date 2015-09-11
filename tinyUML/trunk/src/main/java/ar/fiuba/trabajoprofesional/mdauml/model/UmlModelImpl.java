@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 /**
  * This class is the default implementation of the UmlModel interface.
@@ -156,6 +157,8 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
      */
     public void addDiagram(UmlDiagram diagram) {
         diagrams.add(diagram);
+        if(diagram instanceof GeneralDiagram)
+            ((GeneralDiagram)diagram).setUmlmodel(this);
         for (UmlModelListener l : modelListeners) {
             l.diagramAdded(diagram);
         }

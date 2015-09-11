@@ -34,5 +34,4 @@ import java.util.List;
  */
 public interface UmlDiagram extends NamedElement {
     List<UmlDiagramElement> getElements();
-
 }

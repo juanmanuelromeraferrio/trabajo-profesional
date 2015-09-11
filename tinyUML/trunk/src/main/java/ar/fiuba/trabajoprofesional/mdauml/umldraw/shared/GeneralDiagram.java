@@ -653,6 +653,10 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
         this.connections = connections;
     }
 
+    public void setUmlmodel(UmlModel umlmodel) {
+        this.umlmodel = umlmodel;
+    }
+
     public Label getNameLabel() {
         return nameLabel;
     }
