@@ -51,9 +51,6 @@ public abstract class ProjectSerializer implements Serializer {
             ModelSerializer modelXmlSerializer = new ModelSerializer(modelObjectSerializer);
             ModelPersistence modelPersistence = (ModelPersistence) modelXmlSerializer.read();
 
-            for(UmlModelElement element :modelPersistence.getElements() ){
-                project.getModel().addElement(element);
-            }
 
             ViewSerializer viewXmlSerializer = new ViewSerializer(viewObjectSerializer);
             ViewPersistence viewPersistence = (ViewPersistence) viewXmlSerializer.read();

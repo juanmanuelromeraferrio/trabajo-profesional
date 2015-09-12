@@ -31,6 +31,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
@@ -198,6 +199,8 @@ public class DiagramTreeModel extends DefaultTreeModel
             insertNodeInto(child, useCaseFolder, useCaseFolder.getChildCount());
         }
         for(UmlDiagramElement diagElement : diagram.getElements()){
+            if(diagElement instanceof UmlConnection)
+                continue;
             insertToFolder(diagElement.getModelElement(), diagram);
             insertToModelFolder(diagElement.getModelElement());
         }
