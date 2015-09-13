@@ -86,23 +86,17 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
      * @param aModel the UmlModel
      */
     public GeneralDiagram(UmlModel aModel) {
+        initialize(aModel);
+    }
+    public void initialize(UmlModel aModel){
         initializeNameLabel();
-        // setSize(20000, 26000);
         setSize(600, 400);
         umlmodel = aModel;
         elementPrototypes = setupElementPrototypeMap();
         connectionPrototypes = setupConnectionPrototypeMap();
-    }
 
-    /**
-     * A constructor added for mocking only. Think about making UmlDiagram an interface.
-     */
+    }
     public GeneralDiagram() {
-        //initializeNameLabel();
-        // setSize(20000, 26000);
-        //setSize(600, 400);
-        //elementPrototypes = setupElementPrototypeMap();
-        //connectionPrototypes = setupConnectionPrototypeMap();
     }
 
     /**

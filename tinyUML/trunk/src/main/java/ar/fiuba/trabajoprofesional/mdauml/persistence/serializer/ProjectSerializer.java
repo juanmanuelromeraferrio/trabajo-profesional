@@ -11,6 +11,7 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import org.w3c.dom.Element;
 
@@ -56,6 +57,8 @@ public abstract class ProjectSerializer implements Serializer {
             ViewPersistence viewPersistence = (ViewPersistence) viewXmlSerializer.read();
 
             for(UmlDiagram diagram : viewPersistence.getUmlDiagrams()) {
+                if(diagram instanceof GeneralDiagram)
+                    ((GeneralDiagram)diagram).initialize(project.getModel());
                 project.getModel().addDiagram(diagram);
                 for(UmlDiagramElement umlDiagramElement :diagram.getElements())
                     project.getModel().addElement(umlDiagramElement.getModelElement(),diagram);

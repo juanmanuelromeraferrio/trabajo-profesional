@@ -157,8 +157,6 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
      */
     public void addDiagram(UmlDiagram diagram) {
         diagrams.add(diagram);
-        if(diagram instanceof GeneralDiagram)
-            ((GeneralDiagram)diagram).setUmlmodel(this);
         for (UmlModelListener l : modelListeners) {
             l.diagramAdded(diagram);
         }

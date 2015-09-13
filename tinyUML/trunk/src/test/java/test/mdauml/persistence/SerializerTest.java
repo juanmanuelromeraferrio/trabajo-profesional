@@ -1,5 +1,6 @@
 package test.mdauml.persistence;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlObjectSerializer;
 import junit.framework.TestCase;
@@ -234,10 +235,22 @@ public class SerializerTest extends TestCase {
         original.addChild("are");
         original.addChild("my");
         original.addChild("children");
+        original.setStaticInner(new InnerClass.StaticInner());
+        original.setInnerWithoutConstructor(
+                original.new InnerWithoutConstructor());
+        original.initialize();
         s.writeObject(original);
         InnerClass readed = (InnerClass)s.readObject();
         assertEquals(readed,original);
 
     }
 
+    public void testEnumObject()throws Exception{
+        XmlObjectSerializer s = new XmlObjectSerializer("testEnumObject.xml");
+        ElementType original = ElementType.ACTOR;
+        s.writeObject(original);
+        ElementType readed = (ElementType)s.readObject();
+        assertEquals(readed,original);
+
+    }
 }

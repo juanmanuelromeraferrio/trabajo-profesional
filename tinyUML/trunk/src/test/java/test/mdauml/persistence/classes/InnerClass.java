@@ -3,6 +3,8 @@ package test.mdauml.persistence.classes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static test.mdauml.persistence.classes.InnerClass.AbstractInner.*;
+
 
 public class InnerClass {
 
@@ -55,4 +57,69 @@ public class InnerClass {
 
     }
 
+    public class InnerWithoutConstructor{
+        public void mymethod(){
+            int s = children.size();
+        }
+    }
+    InnerWithoutConstructor innerWithoutConstructor;
+
+    public void setInnerWithoutConstructor(InnerWithoutConstructor innerWithoutConstructor) {
+        this.innerWithoutConstructor = innerWithoutConstructor;
+    }
+
+    private class PrivateInner{
+
+    }
+    PrivateInner privateInner= new PrivateInner();
+
+    static public class StaticInner{
+
+    }
+    StaticInner staticInner;
+
+    static private class StaticPrivateInner{
+
+    }
+    StaticPrivateInner staticPrivateInner = new StaticPrivateInner();
+    public abstract class AbstractInner{
+
+        public abstract class InnerAbstractInner{
+
+            public abstract void doSomethingElse();
+
+        }
+
+        protected InnerAbstractInner innerAbstractInner;
+
+        public abstract void doSomething();
+    }
+
+    public void setPrivateInner(PrivateInner privateInner) {
+        this.privateInner = privateInner;
+    }
+
+    public void setStaticInner(StaticInner staticInner) {
+        this.staticInner = staticInner;
+    }
+
+    public void setStaticPrivateInner(StaticPrivateInner staticPrivateInner) {
+        this.staticPrivateInner = staticPrivateInner;
+    }
+
+    AbstractInner abstractInner = new AbstractInner() {
+        @Override
+        public void doSomething() {
+            innerAbstractInner = new InnerAbstractInner() {
+                @Override
+                public void doSomethingElse() {
+                    int a = 2*2;
+                }
+            };
+        }
+    };
+
+    public void initialize(){
+        abstractInner.doSomething();
+    }
 }

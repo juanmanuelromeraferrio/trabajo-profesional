@@ -7,6 +7,7 @@ import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ObjectSerialize
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,6 +64,7 @@ public class XmlObjectSerializer implements ObjectSerializer{
     private static final String CLASS_TAG = "class";
     private static final String CHARACTER_TAG = "character";
     private static final String BOOLEAN_OBJ_TAG = "boolean-obj";
+    private static final String CONTAINING_TAG = "containingObject";
 
     private File file;
     private Document doc;
@@ -135,10 +137,15 @@ public class XmlObjectSerializer implements ObjectSerializer{
             if (tagName.equals(STRING_TAG))
                 return element.getTextContent();
 
+
             Class<? extends Object> clazz = Class.forName(
                 XmlHelper.getAttribute(element, CLASS_ATT));
 
-
+            if (Enum.class.isAssignableFrom(clazz)) {
+                Class<? extends Enum> enumClazz =(Class<? extends Enum>) clazz;
+                Enum<? extends Object> anEnumValue = Enum.valueOf(enumClazz, element.getTextContent());
+                return anEnumValue;
+            }
             if (Double.class.isAssignableFrom(clazz))
                 return Double.valueOf(element.getTextContent());
             if (Float.class.isAssignableFrom(clazz))
@@ -164,11 +171,18 @@ public class XmlObjectSerializer implements ObjectSerializer{
             if (Character.class.isAssignableFrom(clazz))
                 return Character.valueOf(element.getTextContent().charAt(0));
 
+
+
             String id = element.getAttribute(ID_REF_ATT);
             if (!id.isEmpty())
                 return Registerer.getObject(Long.valueOf(id));
-            id = element.getAttribute(ID_ATT);
-            Object object = createInstance(clazz);
+
+            Object enclosing=null;
+            if(hasAnEnclosingObject(clazz))
+                enclosing = enclosingFromXml(element);
+
+                id = element.getAttribute(ID_ATT);
+            Object object = createInstance(clazz,enclosing);
             Registerer.register(Long.valueOf(id),object);
 
             if (Set.class.isAssignableFrom(clazz))
@@ -186,8 +200,16 @@ public class XmlObjectSerializer implements ObjectSerializer{
 
     }
 
-    private Object createInstance(Class<? extends Object> clazz) {
+    private Object enclosingFromXml(Element element) {
+        Element containing = XmlHelper.getChild(element,CONTAINING_TAG);
+        Element objectElement = XmlHelper.getFirstChild(containing);
+        Object containingObject = fromXml(objectElement);
+        return containingObject;
+    }
+
+    private Object createInstance(Class<? extends Object> clazz,Object enclosing) {
         try {
+
         Constructor[] ctors = clazz.getDeclaredConstructors();
         int minArg=9999;
         Constructor ctor = null;
@@ -203,6 +225,7 @@ public class XmlObjectSerializer implements ObjectSerializer{
             Object [] initargs= new Object[minArg];
             Class[] types = ctor.getParameterTypes();
             int i=0;
+            boolean enclosingSet=false;
             for(Class type : types){
                 if (type == Integer.TYPE) {
                     initargs[i++]=0;
@@ -223,7 +246,10 @@ public class XmlObjectSerializer implements ObjectSerializer{
                 } else if (type.isArray()){
                     initargs[i++]=Array.newInstance(type.getComponentType(),0);
                 }else{
-                    initargs[i++]=createInstance(type);
+                    if(!enclosingSet && enclosing!=null && type.isAssignableFrom(enclosing.getClass()) )
+                        initargs[i++]=enclosing;
+                    else
+                        initargs[i++]=createInstance(type,null);
                 }
 
 
@@ -376,7 +402,7 @@ public class XmlObjectSerializer implements ObjectSerializer{
                 clazz = (Class) obj;
                 obj = null;
             }
-            String name = fieldElement.getAttribute(NAME_ATT);
+            String name = XmlHelper.getAttribute(fieldElement,NAME_ATT);
             field = clazz.getDeclaredField(name);
 
             field.setAccessible(true);
@@ -458,7 +484,7 @@ public class XmlObjectSerializer implements ObjectSerializer{
 
             Class<? extends Enum> clazz =
                 (Class<? extends Enum>) Class.forName(field.getType().getName());
-            Enum<?> anEnum = Enum.valueOf(clazz,fieldElement.getTextContent());
+            Enum<?> anEnum = Enum.valueOf(clazz, fieldElement.getTextContent());
            ;
             field.set(obj, anEnum);
         } catch (ClassNotFoundException e) {
@@ -524,10 +550,23 @@ public class XmlObjectSerializer implements ObjectSerializer{
 
         //these are not registered because they are inmutables
         if (String.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz)
-            || Boolean.class.isAssignableFrom(clazz) || Character.class.isAssignableFrom(clazz)) {
+            || Boolean.class.isAssignableFrom(clazz) || Character.class.isAssignableFrom(clazz)
+            || Enum.class.isAssignableFrom(clazz)    ) {
             element.setTextContent(obj.toString());
             return element;
         }
+
+
+        if(hasAnEnclosingObject(clazz)) {
+            int level = getInnerLevel(clazz);
+            Field enclosingField = clazz.getDeclaredField("this$" + level);
+            enclosingField.setAccessible(true);
+            Element enclosingObjectElement = toXml(enclosingField.get(obj));
+            Element containingElement=XmlHelper.getNewElement(root,CONTAINING_TAG);
+            containingElement.appendChild(enclosingObjectElement);
+            element.appendChild(containingElement);
+        }
+
 
         if (Registerer.isRegistered(obj)) {
             XmlHelper.addAtribute(root, element, ID_REF_ATT, Registerer.getId(obj).toString());
@@ -537,12 +576,23 @@ public class XmlObjectSerializer implements ObjectSerializer{
         XmlHelper.addAtribute(root, element, ID_ATT, Registerer.getId(obj).toString());
 
 
+
         if (Collection.class.isAssignableFrom(clazz))
             return collectionToXml(obj, element);
         if (Map.class.isAssignableFrom(clazz))
             return mapToXml((Map) obj, element);
 
         return toXml(obj, obj.getClass(), element);
+    }
+
+    private int getInnerLevel(Class<? extends Object> clazz) {
+        int i = -1;
+        Class currentClass = clazz;
+        while(currentClass.getEnclosingClass()!=null){
+            i++;
+            currentClass=currentClass.getEnclosingClass();
+        }
+        return i;
     }
 
     private String getObjectTag(Object obj) {
@@ -560,6 +610,8 @@ public class XmlObjectSerializer implements ObjectSerializer{
             return CHARACTER_TAG;
         if (Boolean.class.isAssignableFrom(obj.getClass()))
             return BOOLEAN_OBJ_TAG;
+        if(Enum.class.isAssignableFrom(obj.getClass()))
+            return ENUM_TAG;
         return OBJECT_TAG;
     }
 
@@ -749,6 +801,27 @@ public class XmlObjectSerializer implements ObjectSerializer{
             fields.addAll(Arrays.asList(c.getDeclaredFields()));
         }
         return fields;
+    }
+
+
+    private boolean hasAnEnclosingObject(Class clazz){
+        if(clazz.isMemberClass()){
+           if(Modifier.isStatic(clazz.getModifiers()))
+                return false;
+            return true;
+        }
+        return clazz.isAnonymousClass();
+    }
+
+    private List<Field> getStaticFields(Class clazz) {
+        Field[] declaredFields = clazz.getDeclaredFields();
+        List<Field> staticFields = new ArrayList<>();
+        for (Field field : declaredFields) {
+            if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
+                staticFields.add(field);
+            }
+        }
+        return staticFields;
     }
 
 

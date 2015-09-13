@@ -1,9 +1,5 @@
 package test.mdauml.persistence.classes;
 
-import org.apache.batik.gvt.text.ArabicTextHandler;
-
-import java.util.Objects;
-
 public class ArrayClass {
 
     public int[] arrayOfInt;

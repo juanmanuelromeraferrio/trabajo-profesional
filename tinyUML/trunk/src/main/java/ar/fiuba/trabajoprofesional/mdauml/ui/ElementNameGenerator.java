@@ -14,7 +14,7 @@ public class ElementNameGenerator implements Serializable {
      */
     private static final long serialVersionUID = -6984115003747185226L;
 
-    private static UmlModel umlModel;
+    private static transient UmlModel umlModel;
     private static Map<ElementType, Integer> nameMap = new HashMap<ElementType, Integer>();
 
     public static String getName(ElementType elementType) {
@@ -41,4 +41,7 @@ public class ElementNameGenerator implements Serializable {
         umlModel = model;
     }
 
+    public static Map<ElementType, Integer> getNameMap() {
+        return nameMap;
+    }
 }
