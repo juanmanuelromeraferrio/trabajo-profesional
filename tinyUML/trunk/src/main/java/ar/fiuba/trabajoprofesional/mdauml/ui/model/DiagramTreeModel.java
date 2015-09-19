@@ -225,6 +225,9 @@ public class DiagramTreeModel extends DefaultTreeModel
             removeFromFolder(modelFolder, element);
             return;
         }
+        for(UmlDiagramElement diagramElement: diagram.getElements())
+            if(diagramElement.getModelElement()!= null && diagramElement.getModelElement().equals(element))
+                return; //still exists in the diagram
 
         DefaultMutableTreeNode diagramNode = null;
         if (diagram instanceof StructureDiagram) {

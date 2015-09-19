@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 /**
  * This class is the default implementation of the UmlModel interface.
@@ -105,7 +104,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
     }
 
     @Override public void removeElement(UmlModelElement anElement, UmlDiagram diagram) {
-        removeElementToMap(anElement);
+        removeElementFromMap(anElement);
 
         for (UmlModelListener l : modelListeners) {
             l.elementRemoved(anElement, diagram);
@@ -118,7 +117,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
         }
     }
 
-    private void removeElementToMap(UmlModelElement anElement) {
+    private void removeElementFromMap(UmlModelElement anElement) {
 
         if (mapMainElementsCounts.containsKey(anElement)) {
             Long count = mapMainElementsCounts.get(anElement);
