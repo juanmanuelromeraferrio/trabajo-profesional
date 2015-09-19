@@ -211,11 +211,18 @@ public class UmlUseCase extends AbstractUmlModelElement {
     }
 
     public void addStep(Step step) {
+      int size = flow.size();
+      step.setIndex(size + 1);
       flow.add(step);
     }
 
     public void addStep(Step step, int index) {
+      step.setIndex(index + 1);
       flow.add(index, step);
+      for (int i = index + 1; i < flow.size(); i++) {
+        flow.get(i).incrementIndex();
+      }
+
     }
 
     public Step getStep(int index) {
@@ -223,6 +230,11 @@ public class UmlUseCase extends AbstractUmlModelElement {
     }
 
     public void removeStep(Step step) {
+      int index = flow.indexOf(step);
+      for (int i = index + 1; i < flow.size(); i++) {
+        flow.get(i).decrementIndex();
+      }
+
       flow.remove(step);
     }
 
@@ -238,7 +250,7 @@ public class UmlUseCase extends AbstractUmlModelElement {
       private Set<String> entities;
       private String type;
       private String description;
-
+      private Integer index;
 
 
       public Step(String type, String description, Set<String> entities) {
@@ -246,6 +258,14 @@ public class UmlUseCase extends AbstractUmlModelElement {
         this.entities = entities;
         this.type = type;
         this.description = description;
+      }
+
+      public Step(String type, String description, Set<String> entities, Integer index) {
+        super();
+        this.entities = entities;
+        this.type = type;
+        this.description = description;
+        this.index = index;
       }
 
       public Set<String> getEntities() {
@@ -271,6 +291,29 @@ public class UmlUseCase extends AbstractUmlModelElement {
       public void setDescription(String description) {
         this.description = description;
       }
+
+      public Integer getIndex() {
+        return index;
+      }
+
+      public void setIndex(Integer index) {
+        this.index = index;
+      }
+
+      public void incrementIndex() {
+        this.index++;
+      }
+
+      public void decrementIndex() {
+        this.index--;
+      }
+
+      public String showStep() {
+        String filterDescription = this.getDescription().replace("@", "");
+        return this.getIndex() + "- " + this.getType() + ": " + filterDescription;
+      }
+
+
     }
 
 

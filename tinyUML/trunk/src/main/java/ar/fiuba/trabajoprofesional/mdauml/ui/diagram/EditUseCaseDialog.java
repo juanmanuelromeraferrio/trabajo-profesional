@@ -184,16 +184,22 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     DefaultListModel<String> mainFlowStepModel = new DefaultListModel<String>();
 
     for (Step step : flow) {
-      String information = getInformationStep(step);
+      String information = step.showStep();
       mainFlowStepModel.addElement(information);
     }
     mainFlowStepList.setModel(mainFlowStepModel);
 
   }
 
-  private String getInformationStep(Step step) {
-    return step.getType() + ": " + step.getDescription();
+  private void refreshMainFlow(DefaultListModel<String> listModel) {
+    List<Step> flow = mainFlow.getFlow();
+    listModel.clear();
+    for (Step step_ : flow) {
+      String informationStep = step_.showStep();
+      listModel.addElement(informationStep);
+    }
   }
+
 
   private void initComponents() {
     setResizable(false);
@@ -474,7 +480,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           String stepType = dialog.getStepType();
           Step step = new Step(stepType, stepDescription, entities);
           mainFlow.addStep(step);
-          String informationStep = getInformationStep(step);
+          String informationStep = step.showStep();
           ((DefaultListModel<String>) mainFlowStepList.getModel()).addElement(informationStep);
 
         }
@@ -511,11 +517,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           Step newStep = new Step(stepType, stepDescription, entities);
           mainFlow.removeStep(step);
           mainFlow.addStep(newStep, selectedStep);
-          String informationStep = getInformationStep(newStep);
-
-          listModel.remove(selectedStep);
-          listModel.add(selectedStep, informationStep);
-
+          refreshMainFlow(listModel);
         }
       }
     });
@@ -537,7 +539,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
         Step step = mainFlow.getStep(selectedStep);
         mainFlow.removeStep(step);
-        listModel.remove(selectedStep);
+        refreshMainFlow(listModel);
       }
     });
 

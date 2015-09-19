@@ -41,7 +41,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private static final long serialVersionUID = 4748892124691187498L;
 
 
-  private Boolean isOk;
+  private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;
   private JComboBox<String> comboEntities;
   private JComboBox<String> comboTypesStep;
@@ -83,6 +83,10 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     List<String> entityListFinal = new ArrayList<String>();
     for (String entity : entitiesList) {
 
+      if (entity.startsWith("@")) {
+        continue;
+      }
+
       String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
       if (!entityListFinal.contains(entityFormated)) {
         entityListFinal.add(entityFormated);
@@ -100,7 +104,6 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     // Marco el tipo seleccionado
     comboTypesStep.setSelectedItem(type);
   }
-
 
   private void initComponents() {
     setResizable(false);
@@ -168,19 +171,38 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         List<String> entityModel = new ArrayList<String>();
         String description = stepDescription.getText();
         String[] split = description.split(" ");
+
         List<String> entitiesList = Arrays.asList(split);
+        List<String> entitiesSelected = new ArrayList<String>();
+
         for (String entity : entitiesList) {
 
-          String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+          if (entity.startsWith("@")) {
+            String entityFormatedSelected =
+                entity.substring(1, 2).toUpperCase() + entity.substring(2);
+            if (!entitiesSelected.contains(entityFormatedSelected)) {
+              entitiesSelected.add(entityFormatedSelected);
+            }
+          } else {
+            String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
 
-          if (!entityModel.contains(entityFormated)) {
-            entityModel.add(entityFormated);
+            if (!entityModel.contains(entityFormated)) {
+              entityModel.add(entityFormated);
+            }
           }
-
-          Collections.sort(entityModel);
-          comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
-          stepDescription.setEnabled(false);
         }
+
+
+        Collections.sort(entityModel);
+        Collections.sort(entitiesSelected);
+        comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
+
+        for (String entitySelect : entitiesSelected) {
+          ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
+        }
+
+        stepDescription.setEnabled(false);
+
       }
     });
 
