@@ -351,4 +351,15 @@ public class BaseConnection implements UmlConnection {
     public boolean canNestElements() {
         return false;
     }
+
+
+    @Override
+    public void nodeMoved(Node node) {
+        connection.nodeMoved(node);
+    }
+
+    @Override
+    public void nodeResized(Node node) {
+        connection.nodeResized(node);
+    }
 }

@@ -68,8 +68,6 @@ public interface Selection {
     /**
      * Initiates the dragging process.
      *
-     * @param xcoord the x coordinate
-     * @param ycoord the y coordinate
      */
     void startDragging();
 

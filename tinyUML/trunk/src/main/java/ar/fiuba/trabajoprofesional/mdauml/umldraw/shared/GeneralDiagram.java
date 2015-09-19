@@ -95,6 +95,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
         elementPrototypes = setupElementPrototypeMap();
         connectionPrototypes = setupConnectionPrototypeMap();
 
+
     }
     public GeneralDiagram() {
     }

@@ -33,7 +33,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface Connection extends DiagramElement {
+public interface Connection extends DiagramElement,NodeChangeListener {
 
     /**
      * Copies the underlying data from the specified connection. This is a

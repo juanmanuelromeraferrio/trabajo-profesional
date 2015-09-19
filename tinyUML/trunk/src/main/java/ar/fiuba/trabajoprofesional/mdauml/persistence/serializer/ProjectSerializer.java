@@ -4,10 +4,10 @@ import java.beans.XMLDecoder;
 import java.io.*;
 import java.util.regex.Pattern;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.AbstractCompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
+import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.*;
@@ -48,7 +48,7 @@ public abstract class ProjectSerializer implements Serializer {
 
             Project project = new Project(new UmlModelImpl());
 
-
+            Registerer.clean();
             ModelSerializer modelXmlSerializer = new ModelSerializer(modelObjectSerializer);
             ModelPersistence modelPersistence = (ModelPersistence) modelXmlSerializer.read();
 
@@ -56,9 +56,24 @@ public abstract class ProjectSerializer implements Serializer {
             ViewSerializer viewXmlSerializer = new ViewSerializer(viewObjectSerializer);
             ViewPersistence viewPersistence = (ViewPersistence) viewXmlSerializer.read();
 
+
+
             for(UmlDiagram diagram : viewPersistence.getUmlDiagrams()) {
-                if(diagram instanceof GeneralDiagram)
-                    ((GeneralDiagram)diagram).initialize(project.getModel());
+                if(diagram instanceof GeneralDiagram) {
+                    GeneralDiagram generalDiagram = (GeneralDiagram) diagram;
+                    generalDiagram.initialize(project.getModel());
+                    for(Connection connection: generalDiagram.getConnections()){
+                        if(connection instanceof NodeChangeListener){
+                            NodeChangeListener conn = (NodeChangeListener)connection;
+                            Node node1 = connection.getNode1();
+                            Node node2 = connection.getNode2();
+                            node1.addNodeChangeListener(conn);
+                            node2.addNodeChangeListener(conn);
+                        }
+
+
+                    }
+                }
                 project.getModel().addDiagram(diagram);
                 for(UmlDiagramElement umlDiagramElement :diagram.getElements())
                     project.getModel().addElement(umlDiagramElement.getModelElement(),diagram);

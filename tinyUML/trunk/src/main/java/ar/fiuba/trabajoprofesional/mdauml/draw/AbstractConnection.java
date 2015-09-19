@@ -34,7 +34,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public abstract class AbstractConnection implements Connection, NodeChangeListener {
+public abstract class AbstractConnection implements Connection {
 
     protected static final double DELTA = 3.0;
     private static final long serialVersionUID = -1014584869536016852L;
