@@ -52,6 +52,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 
 /**
  * This class implements the effective layout area. It shows the boundaries of the diagram and also
@@ -65,6 +66,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
 
     private static final int ADDITIONAL_SPACE_RIGHT = 30;
     private static final int ADDITIONAL_SPACE_BOTTOM = 30;
+    private transient DiagramEditor editor;
     protected transient UmlModel umlmodel;
     private int gridSize = 7;
     private String name;
@@ -658,5 +660,13 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
 
     public void setNameLabel(Label nameLabel) {
         this.nameLabel = nameLabel;
+    }
+
+    public DiagramEditor getEditor() {
+        return editor;
+    }
+
+    public void setEditor(DiagramEditor editor) {
+        this.editor = editor;
     }
 }

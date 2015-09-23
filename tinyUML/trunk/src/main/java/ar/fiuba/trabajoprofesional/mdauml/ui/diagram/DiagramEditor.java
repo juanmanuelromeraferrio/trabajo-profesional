@@ -119,6 +119,7 @@ public abstract class DiagramEditor extends JComponent
         mainWindow = aWindow;
         diagram = aDiagram;
         diagram.addNodeChangeListener(this);
+        diagram.setEditor(this);
         // Make sure the this component has no layout manager, is opaque and has
         // no double buffer
         setLayout(null);

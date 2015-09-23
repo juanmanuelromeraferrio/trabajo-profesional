@@ -387,7 +387,11 @@ public class ApplicationState
             TreePath path = tree.getSelectionPath();
             if (path != null) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                hasSelection = tree.getModel().isLeaf(node);
+                Object userObject = node.getUserObject();
+
+                hasSelection = (userObject instanceof UmlModelElement &&
+                                    !((DefaultMutableTreeNode)node.getParent().getParent()).isRoot()
+                                ) ||  userObject instanceof GeneralDiagram;
             }
         } else {
             hasSelection = getCurrentEditor() != null && getCurrentEditor().canDelete();
@@ -594,6 +598,12 @@ public class ApplicationState
             }
         }
     }
+
+
+    public DiagramTreeModel getTreeModel() {
+        return treeModel;
+    }
+
 
     @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
     }

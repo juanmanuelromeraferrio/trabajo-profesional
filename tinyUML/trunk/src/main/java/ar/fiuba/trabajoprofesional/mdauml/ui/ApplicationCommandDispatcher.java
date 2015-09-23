@@ -17,13 +17,20 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ProjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlProjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.ui.commands.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DiagramEditorNotification;
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
@@ -31,14 +38,16 @@ import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.*;
 
 /**
  * This class implements the application global command handling. This was outfactored from
@@ -319,9 +328,29 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
             if (tree.getSelectionPath() != null) {
                 DefaultMutableTreeNode node =
                     (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-                DeleteDiagramCommand command = new DeleteDiagramCommand(appState.getUmlModel(),
-                    (UmlDiagram) node.getUserObject());
-                appState.execute(command);
+
+                Object nodeObject = node.getUserObject();
+                if(nodeObject instanceof UmlDiagram){
+                    DeleteDiagramCommand command = new DeleteDiagramCommand(appState.getUmlModel(),
+                            (UmlDiagram) node.getUserObject());
+                    appState.execute(command);
+                }
+                if(nodeObject instanceof UmlModelElement) {
+                    Object parentObj = ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+                    if(parentObj instanceof GeneralDiagram){
+                        GeneralDiagram diagram = (GeneralDiagram) parentObj;
+                        ArrayList<DiagramElement> elementList = new ArrayList<>();
+                        for(UmlDiagramElement diagElement : diagram.getElements()){
+                            if(diagElement.getModelElement().equals(nodeObject))
+                                elementList.add(diagElement);
+                        }
+
+                        DeleteElementCommand command = new DeleteElementCommand( diagram.getEditor(),elementList);
+                        command.run();
+                    }
+
+                }
+
             }
         } else if (appState.getCurrentEditor() != null) {
             appState.getCurrentEditor().deleteSelection();
