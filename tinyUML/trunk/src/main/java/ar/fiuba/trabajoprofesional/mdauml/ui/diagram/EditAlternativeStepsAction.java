@@ -18,21 +18,22 @@ import javax.swing.border.EmptyBorder;
 import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
 
-public class EditListAction extends AbstractAction {
+public class EditAlternativeStepsAction extends AbstractAction {
   /**
      *
      */
   private static final long serialVersionUID = 1L;
 
   private JList<String> list;
-
+  private UmlStep selectedStep;
+  private UmlStep alternativeSelectedStep;
   private JPopupMenu editPopup;
   private JTextField editTextField;
   private Class<?> modelClass;
 
   private int row;
 
-  public EditListAction(String text) {
+  public EditAlternativeStepsAction(String text) {
     super(text);
     setModelClass(DefaultListModel.class);
   }
@@ -43,12 +44,10 @@ public class EditListAction extends AbstractAction {
 
   protected void applyValueToModel(String value, ListModel<String> model, int row) {
     DefaultListModel<String> dlm = (DefaultListModel<String>) model;
-    if (value.isEmpty()) {
-      dlm.remove(row);
-    } else {
-      dlm.set(row, value);
+    if (!value.isEmpty()) {
+      alternativeSelectedStep.setDescription(value);
+      dlm.set(row, alternativeSelectedStep.showDescription());
     }
-
   }
 
   /*
@@ -78,8 +77,10 @@ public class EditListAction extends AbstractAction {
     }
 
     Rectangle r = list.getCellBounds(row, row);
+    this.alternativeSelectedStep = selectedStep.getChildren(row);
+    String selectValue = alternativeSelectedStep.getDescription();
 
-    String selectValue = model.getElementAt(row);
+    model.getElementAt(row);
 
     editPopup.setPreferredSize(new Dimension(r.width, r.height));
     editPopup.show(list, r.x, r.y);
@@ -119,7 +120,12 @@ public class EditListAction extends AbstractAction {
     editPopup.add(editTextField);
   }
 
-  public void setList(JList<String> list) {
+  public void setData(UmlStep selectedStep, JList<String> list) {
+    this.selectedStep = selectedStep;
     this.list = list;
+  }
+
+  public void setSelectedStep(UmlStep selectedStep) {
+    this.selectedStep = selectedStep;
   }
 }

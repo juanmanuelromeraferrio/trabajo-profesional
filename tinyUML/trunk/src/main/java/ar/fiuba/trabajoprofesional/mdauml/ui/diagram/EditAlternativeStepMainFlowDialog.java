@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -23,17 +22,20 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
+import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlAlternativeStep;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 
-public class EditStepMainFlowDialog extends javax.swing.JDialog {
+public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
 
   /**
    * 
@@ -44,71 +46,80 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;
   private JComboBox<String> comboEntities;
-  private JComboBox<String> comboTypesStep;
+  private JComboBox<String> comboSteps;
   private JTextPane stepDescription;
-  private UmlMainStep step;
+  private JTextField alternativeStepTextField;
+
+
+  private Flow myFlow;
+  private ArrayList<UmlStep> actualSteps;
+  private UmlStep selectedStep;
+  private JList<String> jListAlternativeSteps;
+  private EditAlternativeStepsAction alternativeStepEditListAction;
 
   /**
    * Creates new form EditUseCaseDialog
    *
    * @param parent the parent frame
+   * @wbp.parser.constructor
    */
-  public EditStepMainFlowDialog(java.awt.Window parent) {
+  public EditAlternativeStepMainFlowDialog(java.awt.Window parent, Flow flow) {
     super(parent, ModalityType.APPLICATION_MODAL);
+    this.myFlow = (Flow) flow.clone();
     initComponents();
 
   }
 
-  public EditStepMainFlowDialog(java.awt.Window parent, UmlMainStep step) {
-    super(parent, ModalityType.APPLICATION_MODAL);
-
-    this.step = step;
-    initComponents();
-    myPostInit();
-  }
+  // public EditAlternativeStepMainFlowDialog(java.awt.Window parent, Uml alternativeStep) {
+  // super(parent, ModalityType.APPLICATION_MODAL);
+  //
+  // this.alternativeStep = alternativeStep;
+  // initComponents();
+  // myPostInit();
+  // }
 
 
 
   private void myPostInit() {
-    String description = step.getDescription();
-    Set<String> entities = step.getEntities();
-    String type = step.getType();
-
-    // Guardo Descripcion
-    this.stepDescription.setText(description);
-
-    // Guardo lista de Entidades Posibles
-    String[] split = description.split(" ");
-    List<String> entitiesList = Arrays.asList(split);
-    List<String> entityListFinal = new ArrayList<String>();
-    for (String entity : entitiesList) {
-
-      if (entity.startsWith("@")) {
-        continue;
-      }
-
-      String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
-      if (!entityListFinal.contains(entityFormated)) {
-        entityListFinal.add(entityFormated);
-      }
-    }
-    Collections.sort(entityListFinal);
-    comboEntities.setModel(new DefaultComboBoxModel(entityListFinal.toArray()));
-
-    // Guardo las entidades seleccionadas
-    DefaultListModel<String> model = (DefaultListModel<String>) this.entities.getModel();
-    for (String entity : entities) {
-      model.addElement(entity);
-    }
-
-    // Marco el tipo seleccionado
-    comboTypesStep.setSelectedItem(type);
+    // String description = step.getDescription();
+    // Set<String> entities = step.getEntities();
+    // String type = step.getType();
+    //
+    // // Guardo Descripcion
+    // this.stepDescription.setText(description);
+    //
+    // // Guardo lista de Entidades Posibles
+    // String[] split = description.split(" ");
+    // List<String> entitiesList = Arrays.asList(split);
+    // List<String> entityListFinal = new ArrayList<String>();
+    // for (String entity : entitiesList) {
+    //
+    // if (entity.startsWith("@")) {
+    // continue;
+    // }
+    //
+    // String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+    // if (!entityListFinal.contains(entityFormated)) {
+    // entityListFinal.add(entityFormated);
+    // }
+    // }
+    // Collections.sort(entityListFinal);
+    // comboEntities.setModel(new DefaultComboBoxModel(entityListFinal.toArray()));
+    //
+    // // Guardo las entidades seleccionadas
+    // DefaultListModel<String> model = (DefaultListModel<String>) this.entities.getModel();
+    // for (String entity : entities) {
+    // model.addElement(entity);
+    // }
+    //
+    // // Marco el tipo seleccionado
+    // comboSteps.setSelectedItem(type);
   }
 
   private void initComponents() {
     setResizable(false);
-    setSize(new Dimension(475, 280));
-    setTitle(ApplicationResources.getInstance().getString("editstepmainflow.title"));
+    setSize(new Dimension(480, 402));
+    setTitle(ApplicationResources.getInstance().getString("editstepalternativeflow.title"));
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
     JScrollPane mainScrollPanel = new JScrollPane();
@@ -134,17 +145,16 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     GroupLayout groupLayout = new GroupLayout(getContentPane());
     groupLayout.setHorizontalGroup(groupLayout
-        .createParallelGroup(Alignment.LEADING)
-        .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+        .createParallelGroup(Alignment.TRAILING)
         .addGroup(
-            Alignment.TRAILING,
-            groupLayout.createSequentialGroup().addContainerGap(170, Short.MAX_VALUE)
+            groupLayout.createSequentialGroup().addContainerGap(343, Short.MAX_VALUE)
                 .addComponent(btnOk).addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(btnCancel).addContainerGap()));
+                .addComponent(btnCancel).addContainerGap())
+        .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE));
     groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
         groupLayout
             .createSequentialGroup()
-            .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 215,
+            .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 342,
                 GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(ComponentPlacement.RELATED)
             .addGroup(
@@ -156,73 +166,109 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     JPanel stepPanel = new JPanel();
     stepPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        ApplicationResources.getInstance().getString("editstepmainflow.step.label"),
-        TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        ApplicationResources.getInstance().getString(
+            "editstepalternativeflow.alternativestep.label"), TitledBorder.LEADING,
+        TitledBorder.TOP, null, null));
 
-    JScrollPane scrollPaneStep = new JScrollPane();
 
-    JButton saveStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.save"));
-    saveStep.addActionListener(new ActionListener() {
-      @SuppressWarnings({"unchecked", "rawtypes"})
+    JButton addASButton = new JButton("Add");
+    addASButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+
+        String alternativeStepDescription = alternativeStepTextField.getText();
+        if (!alternativeStepDescription.isEmpty()) {
+
+          UmlStep alternativeStep = new UmlAlternativeStep(alternativeStepDescription);
+          myFlow.addChildrenStep(selectedStep, alternativeStep);
+
+          ((DefaultListModel<String>) jListAlternativeSteps.getModel()).addElement(alternativeStep
+              .showDescription());
+          alternativeStepTextField.setText("");
+        }
+      }
+
+    });
+
+    JButton editASButton = new JButton("Edit");
+    alternativeStepEditListAction = new EditAlternativeStepsAction("Edit");
+    editASButton.setAction(alternativeStepEditListAction);
+    JButton deleteASButton = new JButton("Delete");
+    deleteASButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
 
-        // Remove all entities
-        entities.setModel(new DefaultListModel<String>());
+        DefaultListModel<String> listModel =
+            ((DefaultListModel<String>) jListAlternativeSteps.getModel());
 
-        List<String> entityModel = new ArrayList<String>();
-        String description = stepDescription.getText();
-        String[] split = description.split(" ");
+        if (listModel.isEmpty())
+          return;
 
-        List<String> entitiesList = Arrays.asList(split);
-        List<String> entitiesSelected = new ArrayList<String>();
+        int selectedAlternativeStep = jListAlternativeSteps.getSelectedIndex();
 
-        for (String entity : entitiesList) {
+        if (selectedAlternativeStep == -1) {
+          selectedAlternativeStep = listModel.getSize() - 1;
+        }
 
-          if (entity.startsWith("@")) {
-            String entityFormatedSelected =
-                entity.substring(1, 2).toUpperCase() + entity.substring(2);
-            if (!entitiesSelected.contains(entityFormatedSelected)) {
-              entitiesSelected.add(entityFormatedSelected);
-            }
-          } else {
-            String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+        myFlow.removeChildrenStep(selectedStep, selectedAlternativeStep);
+        refreshModel(listModel);
 
-            if (!entityModel.contains(entityFormated)) {
-              entityModel.add(entityFormated);
-            }
+      }
+    });
+
+    alternativeStepTextField = new JTextField();
+    alternativeStepTextField.setColumns(10);
+
+
+
+    JLabel stepLabel =
+        new JLabel(ApplicationResources.getInstance().getString(
+            "editstepalternativeflow.step.label"));
+
+
+    List<String> completeSteps = new ArrayList<String>();
+    actualSteps = new ArrayList<UmlStep>();
+    List<UmlStep> steps = myFlow.getFlow();
+    for (UmlStep step : steps) {
+      completeSteps.add(step.showDescription());
+      actualSteps.add(step);
+      for (UmlStep chlidrenSteps : step.getCompleteStepsChildrens()) {
+        completeSteps.add(chlidrenSteps.showDescription());
+        actualSteps.add(chlidrenSteps);
+      }
+    }
+
+
+    String[] arrayCompleteSteps = new String[completeSteps.size()];
+    completeSteps.toArray(arrayCompleteSteps);
+
+    this.selectedStep = actualSteps.get(0);
+
+    ComboBoxModel<String> typeComboBoxModel = new DefaultComboBoxModel<String>(arrayCompleteSteps);
+    comboSteps = new JComboBox<String>();
+    comboSteps.setModel(typeComboBoxModel);
+    comboSteps.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+
+        ((DefaultListModel<String>) jListAlternativeSteps.getModel()).clear();
+
+        String selectedEntity = (String) comboSteps.getSelectedItem();
+
+        for (UmlStep step : actualSteps) {
+          if (step.showDescription().equals(selectedEntity)) {
+            selectedStep = step;
           }
         }
+        
+        alternativeStepEditListAction.setSelectedStep(selectedStep);
 
-
-        Collections.sort(entityModel);
-        Collections.sort(entitiesSelected);
-        comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
-
-        for (String entitySelect : entitiesSelected) {
-          ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
+        for (UmlStep obj : selectedStep.getChildrens()) {
+          ((DefaultListModel<String>) jListAlternativeSteps.getModel()).addElement(obj
+              .showDescription());
         }
 
-        stepDescription.setEnabled(false);
-
       }
     });
 
-    JButton editStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.edit"));
-    editStep.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        stepDescription.setEnabled(true);
-      }
-    });
-
-
-    JLabel typeLabel =
-        new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.type.label"));
-    String[] typeItems =
-        {ApplicationResources.getInstance().getString("editstepmainflow.user.type"),
-            ApplicationResources.getInstance().getString("editstepmainflow.system.type")};
-    ComboBoxModel<String> typeComboBoxModel = new DefaultComboBoxModel<String>(typeItems);
-    comboTypesStep = new JComboBox<String>();
-    comboTypesStep.setModel(typeComboBoxModel);
+    JScrollPane scrollPaneStep = new JScrollPane();
 
     GroupLayout gropuLayoutStepPanel = new GroupLayout(stepPanel);
     gropuLayoutStepPanel.setHorizontalGroup(gropuLayoutStepPanel.createParallelGroup(
@@ -236,22 +282,29 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
                     .addGroup(
                         gropuLayoutStepPanel
                             .createSequentialGroup()
-                            .addComponent(scrollPaneStep, GroupLayout.DEFAULT_SIZE, 321,
-                                Short.MAX_VALUE)
-                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addGroup(
+                                gropuLayoutStepPanel
+                                    .createParallelGroup(Alignment.LEADING)
+                                    .addComponent(alternativeStepTextField,
+                                        GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                                    .addComponent(scrollPaneStep, GroupLayout.PREFERRED_SIZE, 321,
+                                        GroupLayout.PREFERRED_SIZE))
+                            .addGap(18)
                             .addGroup(
                                 gropuLayoutStepPanel
                                     .createParallelGroup(Alignment.TRAILING)
-                                    .addComponent(saveStep, GroupLayout.PREFERRED_SIZE, 63,
-                                        GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(editStep, GroupLayout.PREFERRED_SIZE, 63,
-                                        Short.MAX_VALUE)))
+                                    .addComponent(editASButton, Alignment.LEADING,
+                                        GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(deleteASButton, Alignment.LEADING,
+                                        GroupLayout.PREFERRED_SIZE, 63, Short.MAX_VALUE)
+                                    .addComponent(addASButton, GroupLayout.PREFERRED_SIZE, 63,
+                                        GroupLayout.PREFERRED_SIZE)))
                     .addGroup(
                         gropuLayoutStepPanel
                             .createSequentialGroup()
-                            .addComponent(typeLabel)
+                            .addComponent(stepLabel)
                             .addGap(18)
-                            .addComponent(comboTypesStep, GroupLayout.PREFERRED_SIZE, 313,
+                            .addComponent(comboSteps, GroupLayout.PREFERRED_SIZE, 313,
                                 GroupLayout.PREFERRED_SIZE))).addContainerGap()));
     gropuLayoutStepPanel.setVerticalGroup(gropuLayoutStepPanel.createParallelGroup(
         Alignment.LEADING).addGroup(
@@ -260,22 +313,32 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
             .addGroup(
                 gropuLayoutStepPanel
                     .createParallelGroup(Alignment.BASELINE)
-                    .addComponent(typeLabel)
-                    .addComponent(comboTypesStep, GroupLayout.PREFERRED_SIZE,
-                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stepLabel)
+                    .addComponent(comboSteps, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(ComponentPlacement.UNRELATED)
             .addGroup(
                 gropuLayoutStepPanel
                     .createParallelGroup(Alignment.BASELINE)
-                    .addComponent(scrollPaneStep, GroupLayout.PREFERRED_SIZE, 52,
+                    .addComponent(alternativeStepTextField, GroupLayout.PREFERRED_SIZE,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addASButton))
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addGroup(
+                gropuLayoutStepPanel
+                    .createParallelGroup(Alignment.TRAILING)
+                    .addComponent(scrollPaneStep, GroupLayout.PREFERRED_SIZE, 93,
                         GroupLayout.PREFERRED_SIZE)
                     .addGroup(
-                        gropuLayoutStepPanel.createSequentialGroup().addComponent(saveStep)
-                            .addPreferredGap(ComponentPlacement.RELATED).addComponent(editStep)))
-            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                        gropuLayoutStepPanel.createSequentialGroup().addComponent(editASButton)
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addComponent(deleteASButton))).addContainerGap(20, Short.MAX_VALUE)));
 
-    stepDescription = new JTextPane();
-    scrollPaneStep.setViewportView(stepDescription);
+    jListAlternativeSteps = new JList<String>();
+    jListAlternativeSteps.setModel(new DefaultListModel<String>());
+    alternativeStepEditListAction.setData(selectedStep, jListAlternativeSteps);
+
+    scrollPaneStep.setViewportView(jListAlternativeSteps);
     stepPanel.setLayout(gropuLayoutStepPanel);
 
     JPanel entitiesPanel = new JPanel();
@@ -303,11 +366,11 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
             firstLayout
                 .createSequentialGroup()
                 .addGap(6)
-                .addComponent(stepPanel, GroupLayout.PREFERRED_SIZE, 114,
+                .addComponent(stepPanel, GroupLayout.PREFERRED_SIZE, 196,
                     GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGap(18)
                 .addComponent(entitiesPanel, GroupLayout.PREFERRED_SIZE, 82,
-                    GroupLayout.PREFERRED_SIZE).addContainerGap()));
+                    GroupLayout.PREFERRED_SIZE).addGap(38)));
 
     JScrollPane scrollPaneEntity = new JScrollPane();
 
@@ -402,6 +465,13 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   }
 
 
+  private void refreshModel(DefaultListModel<String> listModel) {
+    listModel.clear();
+    for (UmlStep obj : selectedStep.getChildrens()) {
+      listModel.addElement(obj.showDescription());
+    }
+  }
+
   public String getDescription() {
     return this.stepDescription.getText();
   }
@@ -414,10 +484,14 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   }
 
   public String getStepType() {
-    return (String) this.comboTypesStep.getSelectedItem();
+    return (String) this.comboSteps.getSelectedItem();
   }
 
   public boolean isOk() {
     return isOk;
+  }
+
+  public Flow getUpdatedFlow() {
+    return myFlow;
   }
 }

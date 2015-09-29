@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase.Flow.Step;
-
 /**
  * This class represents an UML UseCase
  *
@@ -55,11 +53,11 @@ public class UmlUseCase extends AbstractUmlModelElement {
     this.mainFlow = mainFLow;
   }
 
-  public void addMainFlowStep(Step step) {
+  public void addMainFlowStep(UmlStep step) {
     this.mainFlow.addStep(step);
   }
 
-  public void removeMainFlowStep(Step step) {
+  public void removeMainFlowStep(UmlStep step) {
     this.mainFlow.removeStep(step);
   }
 
@@ -197,126 +195,4 @@ public class UmlUseCase extends AbstractUmlModelElement {
       return true;
     return false;
   }
-
-
-  public static class Flow {
-    private List<Step> flow = new ArrayList<Step>();
-
-    public List<Step> getFlow() {
-      return flow;
-    }
-
-    public void setFlow(List<Step> flow) {
-      this.flow = new ArrayList<Step>(flow);
-    }
-
-    public void addStep(Step step) {
-      int size = flow.size();
-      step.setIndex(size + 1);
-      flow.add(step);
-    }
-
-    public void addStep(Step step, int index) {
-      step.setIndex(index + 1);
-      flow.add(index, step);
-      for (int i = index + 1; i < flow.size(); i++) {
-        flow.get(i).incrementIndex();
-      }
-
-    }
-
-    public Step getStep(int index) {
-      return flow.get(index);
-    }
-
-    public void removeStep(Step step) {
-      int index = flow.indexOf(step);
-      for (int i = index + 1; i < flow.size(); i++) {
-        flow.get(i).decrementIndex();
-      }
-
-      flow.remove(step);
-    }
-
-    @Override
-    public Object clone() {
-      Flow cloned = new Flow();
-      cloned.flow = new ArrayList<>(this.flow);
-      return cloned;
-    }
-
-
-    public static class Step {
-      private Set<String> entities;
-      private String type;
-      private String description;
-      private Integer index;
-
-
-      public Step(String type, String description, Set<String> entities) {
-        super();
-        this.entities = entities;
-        this.type = type;
-        this.description = description;
-      }
-
-      public Step(String type, String description, Set<String> entities, Integer index) {
-        super();
-        this.entities = entities;
-        this.type = type;
-        this.description = description;
-        this.index = index;
-      }
-
-      public Set<String> getEntities() {
-        return entities;
-      }
-
-      public void setEntities(Set<String> entities) {
-        this.entities = entities;
-      }
-
-      public String getType() {
-        return type;
-      }
-
-      public void setType(String type) {
-        this.type = type;
-      }
-
-      public String getDescription() {
-        return description;
-      }
-
-      public void setDescription(String description) {
-        this.description = description;
-      }
-
-      public Integer getIndex() {
-        return index;
-      }
-
-      public void setIndex(Integer index) {
-        this.index = index;
-      }
-
-      public void incrementIndex() {
-        this.index++;
-      }
-
-      public void decrementIndex() {
-        this.index--;
-      }
-
-      public String showStep() {
-        String filterDescription = this.getDescription().replace("@", "");
-        return this.getIndex() + "- " + this.getType() + ": " + filterDescription;
-      }
-
-
-    }
-
-
-  }
-
 }
