@@ -17,6 +17,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -65,6 +66,7 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
         addMouseMotionListener(this);
         setRootVisible(false);
         setShowsRootHandles(true);
+        setCellRenderer(new DiagramTreeRenderer());
     }
 
     /**
@@ -121,6 +123,9 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
             l.setReleasePoint(e.getX() + this.getLocationOnScreen().getX(),
                 e.getY() + this.getLocationOnScreen().getY());
         }
+        for (TreeDraggerListener l : treeDraggerListener) {
+            l.setDraggerElement(null);
+        }
     }
 
     /**
@@ -154,6 +159,7 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
         // TODO Auto-generated method stub
 
     }
+
 
 
 

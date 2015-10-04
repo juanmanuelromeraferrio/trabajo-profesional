@@ -27,7 +27,6 @@ public class TreeDragger implements TreeDraggerListener {
 
     @Override public void setDraggerElement(UmlModelElement element) {
         this.draggerElement = element;
-        System.out.println("Dragging:" + draggerElement.getName());
     }
 
 
@@ -35,6 +34,8 @@ public class TreeDragger implements TreeDraggerListener {
         if (draggerElement == null)
             return;
         DiagramEditor currentDiagramEditor = shell.getCurrentEditor();
+        if(currentDiagramEditor == null)
+            return;
 
         GeneralDiagram diagram = currentDiagramEditor.getDiagram();
         Point origin = currentDiagramEditor.getLocationOnScreen();
