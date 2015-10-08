@@ -23,7 +23,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
@@ -33,7 +32,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
@@ -143,7 +142,7 @@ public class DiagramTreeModel extends DefaultTreeModel
     private void insertToFolder(UmlModelElement element, UmlDiagram diagram) {
 
         DefaultMutableTreeNode diagramNode = null;
-        if (diagram instanceof StructureDiagram) {
+        if (diagram instanceof ClassDiagram) {
             diagramNode = getDiagramNode(structureFolder, diagram);
         } else if (diagram instanceof UseCaseDiagram) {
             diagramNode = getDiagramNode(useCaseFolder, diagram);
@@ -193,7 +192,7 @@ public class DiagramTreeModel extends DefaultTreeModel
      */
     private void insertToFolder(UmlDiagram diagram) {
         DefaultMutableTreeNode child = new DefaultMutableTreeNode(diagram);
-        if (diagram instanceof StructureDiagram) {
+        if (diagram instanceof ClassDiagram) {
             insertNodeInto(child, structureFolder, structureFolder.getChildCount());
         } else if (diagram instanceof UseCaseDiagram) {
             insertNodeInto(child, useCaseFolder, useCaseFolder.getChildCount());
@@ -230,7 +229,7 @@ public class DiagramTreeModel extends DefaultTreeModel
                 return; //still exists in the diagram
 
         DefaultMutableTreeNode diagramNode = null;
-        if (diagram instanceof StructureDiagram) {
+        if (diagram instanceof ClassDiagram) {
             diagramNode = getDiagramNode(structureFolder, diagram);
         } else if (diagram instanceof UseCaseDiagram) {
             diagramNode = getDiagramNode(useCaseFolder, diagram);

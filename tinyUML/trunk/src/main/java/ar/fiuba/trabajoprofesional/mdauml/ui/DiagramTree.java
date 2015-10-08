@@ -17,7 +17,6 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -33,8 +32,6 @@ import javax.swing.tree.TreePath;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 
 /**
  * A specialized tree component to display diagrams.
@@ -151,7 +148,7 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
     }
 
     @Override public void mouseDragged(MouseEvent arg0) {
-        // TODO Auto-generated method stub
+
 
     }
 

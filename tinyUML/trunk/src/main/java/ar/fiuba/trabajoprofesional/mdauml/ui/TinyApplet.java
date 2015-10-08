@@ -47,7 +47,7 @@ public class TinyApplet extends JApplet implements ApplicationShell {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-        appState = new ApplicationState(this);
+        appState = new ApplicationState();
     }
 
     /**
@@ -71,7 +71,7 @@ public class TinyApplet extends JApplet implements ApplicationShell {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        appState = new ApplicationState(this);
+        appState = new ApplicationState();
     }
 
     /**

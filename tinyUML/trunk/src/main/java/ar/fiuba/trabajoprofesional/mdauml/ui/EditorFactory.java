@@ -21,12 +21,10 @@ import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.SequenceDiagramEditor;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.StructureDiagramEditor;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.ClassDiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.UseCaseDiagramEditor;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.sequence.SequenceDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
@@ -42,7 +40,6 @@ import java.awt.*;
  */
 public class EditorFactory {
 
-    private ApplicationShell shell;
     private ApplicationState appState;
     private JTabbedPane tabbedPane;
     private int structureCounter = 1, sequenceCounter = 1, useCaseCounter = 1;
@@ -50,15 +47,10 @@ public class EditorFactory {
     /**
      * Constructor.
      *
-     * @param aShell      the application shell
-     * @param anAppState  the application state object
-     * @param aTabbedPane the tabbed pane
      */
-    public EditorFactory(ApplicationShell aShell, ApplicationState anAppState,
-        JTabbedPane aTabbedPane) {
-        shell = aShell;
-        appState = anAppState;
-        tabbedPane = aTabbedPane;
+    public EditorFactory() {
+        appState = AppFrame.get().getAppState();
+        tabbedPane = appState.getTabbedPane();
     }
 
     /**
@@ -75,13 +67,13 @@ public class EditorFactory {
      * @return the editor panel
      */
     public EditorPanel openNewStructureEditor(UmlModel umlModel) {
-        GeneralDiagram diagram = new StructureDiagram(umlModel);
+        GeneralDiagram diagram = new ClassDiagram(umlModel);
         diagram.setLabelText(
             ApplicationResources.getInstance().getString("stdcaption.structurediagram") + " "
                 + (structureCounter++));
         umlModel.addDiagram(diagram);
-        return createEditorPanel(new StructureDiagramEditor(shell.getShellComponent(), diagram),
-            new StaticStructureEditorToolbarManager());
+        return createEditorPanel(new ClassDiagramEditor( diagram),
+            new StaticClassEditorToolbarManager());
     }
 
     /**
@@ -91,8 +83,8 @@ public class EditorFactory {
      * @return the editor panel
      */
     public EditorPanel openStructureEditor(GeneralDiagram diagram   ) {
-        return createEditorPanel(new StructureDiagramEditor(shell.getShellComponent(), diagram),
-            new StaticStructureEditorToolbarManager());
+        return createEditorPanel(new ClassDiagramEditor(diagram),
+            new StaticClassEditorToolbarManager());
     }
 
     /**
@@ -102,7 +94,7 @@ public class EditorFactory {
      * @return the editor panel
      */
     public EditorPanel openUseCaseEditor(UseCaseDiagram diagram) {
-        return createEditorPanel(new UseCaseDiagramEditor(shell.getShellComponent(), diagram),
+        return createEditorPanel(new UseCaseDiagramEditor(diagram),
                 new UseCaseEditorToolbarManager());
     }
 
@@ -134,21 +126,7 @@ public class EditorFactory {
         return editor;
     }
 
-    /**
-     * Creates a new Sequence editor.
-     *
-     * @param umlModel the UmlModel
-     * @return the editor panel
-     */
-    public EditorPanel openNewSequenceEditor(UmlModel umlModel) {
-        GeneralDiagram diagram = new SequenceDiagram(umlModel);
-        diagram.setLabelText(
-            ApplicationResources.getInstance().getString("stdcaption.sequencediagram") + " "
-                + (sequenceCounter++));
-        umlModel.addDiagram(diagram);
-        return createEditorPanel(new SequenceDiagramEditor(shell.getShellComponent(), diagram),
-            new SequenceEditorToolbarManager());
-    }
+
 
     /**
      * Creates a new Use Case editor.
@@ -162,7 +140,7 @@ public class EditorFactory {
             ApplicationResources.getInstance().getString("stdcaption.usecasediagram") + " "
                 + (useCaseCounter++));
         umlModel.addDiagram(diagram);
-        return createEditorPanel(new UseCaseDiagramEditor(shell.getShellComponent(), diagram),
+        return createEditorPanel(new UseCaseDiagramEditor( diagram),
             new UseCaseEditorToolbarManager());
     }
 

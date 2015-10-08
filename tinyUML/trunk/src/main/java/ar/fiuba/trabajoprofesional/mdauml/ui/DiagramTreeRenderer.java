@@ -2,7 +2,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class DiagramTreeRenderer extends DefaultTreeCellRenderer {
             setIcon(usecaseIcon);
         } else if (object instanceof UseCaseDiagram) {
             setIcon(usecaseDiagramIcon);
-        } else if (object instanceof StructureDiagram) {
+        } else if (object instanceof ClassDiagram) {
             setIcon(classDiagramIcon);
         }
         return this;

@@ -1,6 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
-import java.awt.Point;
+import java.awt.*;
+import java.awt.dnd.DragSource;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
@@ -22,18 +23,23 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 public class TreeDragger implements TreeDraggerListener {
 
     private UmlModelElement draggerElement;
-    private ApplicationShell shell;
 
 
     @Override public void setDraggerElement(UmlModelElement element) {
         this.draggerElement = element;
+        if(element!=null) {
+            AppFrame.get().setCursor(DragSource.DefaultMoveDrop);
+            ApplicationState.TREE_DRAGING=true;
+        }
     }
 
 
     @Override public void setReleasePoint(double x, double y) {
         if (draggerElement == null)
             return;
-        DiagramEditor currentDiagramEditor = shell.getCurrentEditor();
+        AppFrame.get().setCursor(Cursor.getDefaultCursor());
+        ApplicationState.TREE_DRAGING=false;
+        DiagramEditor currentDiagramEditor = AppFrame.get().getCurrentEditor();
         if(currentDiagramEditor == null)
             return;
 
@@ -82,10 +88,5 @@ public class TreeDragger implements TreeDraggerListener {
 
     }
 
-
-    public void setShell(ApplicationShell shell) {
-        this.shell = shell;
-
-    }
 
 }

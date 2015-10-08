@@ -29,7 +29,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.PackageElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 import test.mdauml.draw.MyAbsoluteParent;
 
 /**
@@ -41,7 +41,7 @@ public class PackageElementTest extends MockObjectTestCase {
 
   private Mock mockUmlModel = mock(UmlModel.class);
   private GeneralDiagram diagram =
-    new StructureDiagram((UmlModel) mockUmlModel.proxy());
+    new ClassDiagram((UmlModel) mockUmlModel.proxy());
   private UmlPackage pkg = (UmlPackage) UmlPackage.getPrototype().clone();
   private PackageElement pkgElem = (PackageElement)
     PackageElement.getPrototype().clone();

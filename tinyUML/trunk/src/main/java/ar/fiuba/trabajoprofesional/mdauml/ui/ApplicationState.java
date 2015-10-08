@@ -27,7 +27,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,12 +54,12 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.SelectionListener;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
 /**
- * This class holds the common elements that the TinyUML default application consists of.
+ * This class holds the common elements that the application consists of.
  *
  * @author Wei-ju Wu
  * @version 1.0
@@ -87,31 +86,30 @@ public class ApplicationState
     private Component currentFocusedComponent;
 
 
-    private ApplicationShell shell;
+
     // The command processor to hold this application's operations.
     private UndoManager undoManager;
+
+    public static boolean TREE_DRAGING = false;
 
     /**
      * Constructor.
      *
-     * @param aShell the application shell
      */
-    public ApplicationState(ApplicationShell aShell) {
-        shell = aShell;
+    public ApplicationState( ) {
+
+    }
+    public void init(){
         undoManager = new UndoManager();
         appCommandDispatcher = new ApplicationCommandDispatcher(this);
-        editorDispatcher = new EditorCommandDispatcher(shell);
-        shell.getContentPane().add(createEditorArea(), BorderLayout.CENTER);
-        editorFactory = new EditorFactory(shell, this, tabbedPane);
-        treeDragger.setShell(shell);
+        editorDispatcher = new EditorCommandDispatcher(AppFrame.get());
+        AppFrame.get().getContentPane().add(createEditorArea(), BorderLayout.CENTER);
+        editorFactory = new EditorFactory( );
         tree.addTreeDraggerListener(treeDragger);
         installMainToolbar();
         installMenubar();
         installStatusbar();
         newProject();
-
-
-
     }
 
     /**
@@ -123,14 +121,7 @@ public class ApplicationState
         return umlModel;
     }
 
-    /**
-     * Returns the application shell.
-     *
-     * @return the shell
-     */
-    public ApplicationShell getShell() {
-        return shell;
-    }
+
 
     /**
      * Returns the MenuManager.
@@ -166,6 +157,10 @@ public class ApplicationState
         return currentEditor;
     }
 
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
     /**
      * Creates the tabbed pane for the editor area.
      *
@@ -197,7 +192,7 @@ public class ApplicationState
         toolbarmanager = new MainToolbarManager();
         toolbarmanager.addCommandListener(appCommandDispatcher);
         toolbarmanager.addCommandListener(editorDispatcher);
-        shell.getContentPane().add(toolbarmanager.getToolbar(), BorderLayout.NORTH);
+        AppFrame.get().getContentPane().add(toolbarmanager.getToolbar(), BorderLayout.NORTH);
     }
 
     /**
@@ -207,7 +202,7 @@ public class ApplicationState
         menumanager = new MenuManager();
         menumanager.addCommandListener(appCommandDispatcher);
         menumanager.addCommandListener(editorDispatcher);
-        shell.setJMenuBar(menumanager.getMenuBar());
+        AppFrame.get().setJMenuBar(menumanager.getMenuBar());
     }
 
     /**
@@ -217,7 +212,7 @@ public class ApplicationState
         JPanel statusbar = new JPanel(new BorderLayout());
         statusbar.add(coordLabel, BorderLayout.WEST);
         statusbar.add(memLabel, BorderLayout.EAST);
-        shell.getContentPane().add(statusbar, BorderLayout.SOUTH);
+        AppFrame.get().getContentPane().add(statusbar, BorderLayout.SOUTH);
     }
 
     /**
@@ -261,7 +256,7 @@ public class ApplicationState
      */
     public void setCurrentFile(File file) {
         currentFile = file;
-        shell.setTitle(file);
+        AppFrame.get().setTitle(file);
     }
 
     /**
@@ -421,14 +416,7 @@ public class ApplicationState
     // ***** Visible Editor management
     // ****************************************
 
-    /**
-     * Opens a new sequence editor.
-     */
-    protected void openNewSequenceEditor() {
-        EditorPanel editorPanel = editorFactory.openNewSequenceEditor(umlModel);
-        currentEditor = editorPanel.getDiagramEditor();
-        addDiagramEditorEvents(editorPanel);
-    }
+
 
     /**
      * Opens a new structure editor.
@@ -455,8 +443,8 @@ public class ApplicationState
      * @param diagram the diagram
      */
     protected void openExistingEditor(GeneralDiagram diagram) {
-        if(diagram instanceof StructureDiagram)
-            openExistingStructureEditor((StructureDiagram) diagram);
+        if(diagram instanceof ClassDiagram)
+            openExistingStructureEditor((ClassDiagram) diagram);
         else if(diagram instanceof UseCaseDiagram)
             openExistingUseCaseEditor((UseCaseDiagram) diagram);
     }
@@ -467,7 +455,7 @@ public class ApplicationState
      *
      * @param diagram the diagram
      */
-    protected void openExistingStructureEditor(StructureDiagram diagram) {
+    protected void openExistingStructureEditor(ClassDiagram diagram) {
         if (!isAlreadyOpen(diagram)) {
             EditorPanel editorPanel = editorFactory.openStructureEditor(diagram);
             currentEditor = editorPanel.getDiagramEditor();

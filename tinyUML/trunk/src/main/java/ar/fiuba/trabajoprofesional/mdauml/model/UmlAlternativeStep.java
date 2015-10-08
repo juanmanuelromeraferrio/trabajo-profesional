@@ -3,7 +3,7 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jmock.util.NotImplementedException;
+
 
 public class UmlAlternativeStep extends UmlStep {
 
@@ -38,7 +38,7 @@ public class UmlAlternativeStep extends UmlStep {
 
   @Override
   public UmlStep clone() {
-    throw new NotImplementedException();
+    throw new RuntimeException("Not Implented");
   }
 
 }

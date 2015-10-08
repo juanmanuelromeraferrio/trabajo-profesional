@@ -23,6 +23,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ConvertConnectionTypeCommand;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.SetConnectionNavigabilityCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
@@ -41,7 +42,7 @@ import java.util.Map;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class StructureDiagramEditor extends DiagramEditor {
+public class ClassDiagramEditor extends DiagramEditor {
 
     /**
      *
@@ -56,11 +57,10 @@ public class StructureDiagramEditor extends DiagramEditor {
     /**
      * Constructor.
      *
-     * @param aWindow  the main window
      * @param aDiagram the diagram
      */
-    public StructureDiagramEditor(Component aWindow, GeneralDiagram aDiagram) {
-        super(aWindow, aDiagram);
+    public ClassDiagramEditor( GeneralDiagram aDiagram) {
+        super( aDiagram);
     }
 
     /**
@@ -69,44 +69,44 @@ public class StructureDiagramEditor extends DiagramEditor {
     private static void initSelectorMap() {
         try {
             selectorMap.put("CREATE_PACKAGE", new MethodCall(
-                StructureDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.PACKAGE));
             selectorMap.put("CREATE_COMPONENT", new MethodCall(
-                StructureDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.COMPONENT));
             selectorMap.put("CREATE_CLASS", new MethodCall(
-                StructureDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.CLASS));
-            selectorMap.put("CREATE_DEPENDENCY", new MethodCall(StructureDiagramEditor.class
+            selectorMap.put("CREATE_DEPENDENCY", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.DEPENDENCY));
-            selectorMap.put("CREATE_ASSOCIATION", new MethodCall(StructureDiagramEditor.class
+            selectorMap.put("CREATE_ASSOCIATION", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.ASSOCIATION));
-            selectorMap.put("CREATE_COMPOSITION", new MethodCall(StructureDiagramEditor.class
+            selectorMap.put("CREATE_COMPOSITION", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.COMPOSITION));
-            selectorMap.put("CREATE_AGGREGATION", new MethodCall(StructureDiagramEditor.class
+            selectorMap.put("CREATE_AGGREGATION", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.AGGREGATION));
-            selectorMap.put("CREATE_INHERITANCE", new MethodCall(StructureDiagramEditor.class
+            selectorMap.put("CREATE_INHERITANCE", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.INHERITANCE));
             selectorMap.put("CREATE_INTERFACE_REALIZATION", new MethodCall(
-                StructureDiagramEditor.class
+                ClassDiagramEditor.class
                     .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.INTERFACE_REALIZATION));
             selectorMap.put("RESET_POINTS",
-                new MethodCall(StructureDiagramEditor.class.getMethod("resetConnectionPoints")));
+                new MethodCall(ClassDiagramEditor.class.getMethod("resetConnectionPoints")));
             selectorMap.put("RECT_TO_DIRECT",
-                new MethodCall(StructureDiagramEditor.class.getMethod("rectilinearToDirect")));
+                new MethodCall(ClassDiagramEditor.class.getMethod("rectilinearToDirect")));
             selectorMap.put("DIRECT_TO_RECT",
-                new MethodCall(StructureDiagramEditor.class.getMethod("directToRectilinear")));
+                new MethodCall(ClassDiagramEditor.class.getMethod("directToRectilinear")));
             selectorMap.put("NAVIGABLE_TO_SOURCE", new MethodCall(
-                StructureDiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
+                ClassDiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
                 RelationEndType.SOURCE));
             selectorMap.put("NAVIGABLE_TO_TARGET", new MethodCall(
-                StructureDiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
+                ClassDiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
                 RelationEndType.TARGET));
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
@@ -117,12 +117,12 @@ public class StructureDiagramEditor extends DiagramEditor {
      * {@inheritDoc}
      */
     public void editProperties(DiagramElement element) {
-        Window window = (mainWindow instanceof Window) ? ((Window) mainWindow) : null;
+        Window window = ((Window) AppFrame.get()) ;
         if (element instanceof ClassElement) {
             ClassElement classElement = (ClassElement) element;
             UmlClass umlclass = (UmlClass) classElement.getModelElement();
             EditClassDialog dialog = new EditClassDialog(window, classElement, true);
-            dialog.setLocationRelativeTo(mainWindow);
+            dialog.setLocationRelativeTo(AppFrame.get());
             dialog.setVisible(true);
             if (dialog.isOk()) {
                 umlclass.setAbstract(dialog.classIsAbstract());
@@ -138,7 +138,7 @@ public class StructureDiagramEditor extends DiagramEditor {
         } else if (element instanceof Association) {
             Association association = (Association) element;
             EditAssociationDialog dialog = new EditAssociationDialog(window, association, true);
-            dialog.setLocationRelativeTo(mainWindow);
+            dialog.setLocationRelativeTo(AppFrame.get());
             dialog.setVisible(true);
             redraw();
         }

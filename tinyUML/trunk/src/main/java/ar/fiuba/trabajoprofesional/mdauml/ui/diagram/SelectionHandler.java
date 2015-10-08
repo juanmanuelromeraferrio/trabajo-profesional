@@ -21,6 +21,8 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
+import ar.fiuba.trabajoprofesional.mdauml.ui.ApplicationState;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 
@@ -241,11 +243,13 @@ public class SelectionHandler implements EditorMode {
      * {@inheritDoc}
      */
     public void mouseMoved(EditorMouseEvent e) {
+        if(ApplicationState.TREE_DRAGING)
+            return;
         double mx = e.getX(), my = e.getY();
         if (currentSelection.contains(mx, my)) {
-            editor.setCursor(currentSelection.getCursorForPosition(mx, my));
+            AppFrame.get().setCursor(currentSelection.getCursorForPosition(mx, my));
         } else {
-            editor.setCursor(Cursor.getDefaultCursor());
+            AppFrame.get().setCursor(Cursor.getDefaultCursor());
         }
     }
 

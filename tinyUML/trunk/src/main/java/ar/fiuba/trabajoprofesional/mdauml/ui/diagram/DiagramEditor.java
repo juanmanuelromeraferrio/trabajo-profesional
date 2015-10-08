@@ -48,6 +48,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.NodeChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Scaling;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DiagramEditorNotification;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.EditConnectionPointsCommand;
@@ -84,7 +85,7 @@ public abstract class DiagramEditor extends JComponent
 
     protected transient SelectionHandler selectionHandler;
     // We need this object to display dialogs
-    protected Component mainWindow;
+
     private transient EditorMode editorMode;
     private transient List<UndoableEditListener> editListeners =
         new ArrayList<UndoableEditListener>();
@@ -111,12 +112,10 @@ public abstract class DiagramEditor extends JComponent
     /**
      * Constructor. Basic setup of the layout area.
      *
-     * @param aWindow  the main window
      * @param aDiagram the diagram
      */
-    public DiagramEditor(Component aWindow, GeneralDiagram aDiagram) {
+    public DiagramEditor( GeneralDiagram aDiagram) {
         setFocusable(true);
-        mainWindow = aWindow;
         diagram = aDiagram;
         diagram.addNodeChangeListener(this);
         diagram.setEditor(this);

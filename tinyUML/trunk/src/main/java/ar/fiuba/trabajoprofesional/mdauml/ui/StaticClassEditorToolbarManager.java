@@ -23,19 +23,19 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This class manages the a toolbar for a static structure dialog.
+ * This class manages the a toolbar for a static class dialog.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class StaticStructureEditorToolbarManager extends AbstractToolbarManager {
+public class StaticClassEditorToolbarManager extends AbstractToolbarManager {
 
     private ButtonGroup buttongroup;
 
     /**
      * Constructor.
      */
-    public StaticStructureEditorToolbarManager() {
+    public StaticClassEditorToolbarManager() {
         buttongroup = new ButtonGroup();
         JToolBar toolbar = getToolbar();
         toolbar.add(createToggleButtonWithName(buttongroup, "select"));

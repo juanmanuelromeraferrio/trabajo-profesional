@@ -41,14 +41,24 @@ import java.io.ObjectInputStream;
 public class AppFrame extends JFrame implements ApplicationShell {
 
     private transient ApplicationState appState;
+    private static  AppFrame instance= null;
+    public static AppFrame get(){
+        if(instance==null) {
+            instance = new AppFrame();
+            instance.init();
+        }
+
+        return instance;
+
+    }
 
     /**
      * Creates a new instance of AppFrame.
      */
-    public AppFrame() {
+    private AppFrame() {
         setTitle(getResourceString("application.title"));
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        appState = new ApplicationState(this);
+
 
         addWindowListener(new WindowAdapter() {
             /**
@@ -58,9 +68,15 @@ public class AppFrame extends JFrame implements ApplicationShell {
                 quitApplication();
             }
         });
+
+
+        //setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+    private void init(){
+        appState = new ApplicationState();
+        appState.init();
         pack();
         appState.scheduleMemTimer();
-        //setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     /**
@@ -72,7 +88,7 @@ public class AppFrame extends JFrame implements ApplicationShell {
      */
     @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-        appState = new ApplicationState(this);
+        appState = new ApplicationState();
     }
 
     /**
@@ -146,5 +162,9 @@ public class AppFrame extends JFrame implements ApplicationShell {
         } else {
             setTitle(ApplicationResources.getInstance().getString("application.title"));
         }
+    }
+
+    public ApplicationState getAppState() {
+        return appState;
     }
 }

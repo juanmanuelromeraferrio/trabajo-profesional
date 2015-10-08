@@ -32,7 +32,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.NullElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 import test.mdauml.draw.MyCompositeNode;
 
 /**
@@ -50,7 +50,7 @@ public class UmlDiagramTest extends MockObjectTestCase {
    */
   @Override
   protected void setUp() {
-    diagram = new StructureDiagram((UmlModel) mockModel.proxy());
+    diagram = new ClassDiagram((UmlModel) mockModel.proxy());
   }
 
   /**

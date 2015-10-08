@@ -43,14 +43,14 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association.Associat
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class StructureDiagram extends GeneralDiagram {
+public class ClassDiagram extends GeneralDiagram {
 
     /**
      * Constructor.
      *
      * @param umlModel the UmlModel
      */
-    public StructureDiagram(UmlModel umlModel) {
+    public ClassDiagram(UmlModel umlModel) {
         super(umlModel);
     }
 

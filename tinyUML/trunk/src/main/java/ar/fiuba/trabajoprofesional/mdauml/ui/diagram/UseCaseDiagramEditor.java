@@ -1,6 +1,5 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import java.awt.Component;
 import java.awt.Window;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +9,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
@@ -37,11 +37,10 @@ public class UseCaseDiagramEditor extends DiagramEditor {
     /**
      * Constructor.
      *
-     * @param aWindow  the main window
      * @param aDiagram the diagram
      */
-    public UseCaseDiagramEditor(Component aWindow, GeneralDiagram aDiagram) {
-        super(aWindow, aDiagram);
+    public UseCaseDiagramEditor( GeneralDiagram aDiagram) {
+        super(aDiagram);
     }
 
     /**
@@ -57,7 +56,7 @@ public class UseCaseDiagramEditor extends DiagramEditor {
                 UseCaseDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.USE_CASE));
 
-            selectorMap.put("CREATE_ASSOCIATION", new MethodCall(StructureDiagramEditor.class
+            selectorMap.put("CREATE_ASSOCIATION", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.ASSOCIATION));
 
@@ -70,18 +69,18 @@ public class UseCaseDiagramEditor extends DiagramEditor {
      * {@inheritDoc}
      */
     public void editProperties(DiagramElement element) {
-        Window window = (mainWindow instanceof Window) ? ((Window) mainWindow) : null;
+        Window window =(Window) AppFrame.get();
         if (element instanceof Association) {
             Association association = (Association) element;
             EditAssociationDialog dialog = new EditAssociationDialog(window, association, true);
-            dialog.setLocationRelativeTo(mainWindow);
+            dialog.setLocationRelativeTo(AppFrame.get());
             dialog.setVisible(true);
             redraw();
         } else if (element instanceof ActorElement) {
             ActorElement actorElement = (ActorElement) element;
             UmlActor umlActor = (UmlActor) actorElement.getModelElement();
             EditActorDialog dialog = new EditActorDialog(window, actorElement, true);
-            dialog.setLocationRelativeTo(mainWindow);
+            dialog.setLocationRelativeTo(AppFrame.get());
             dialog.setVisible(true);
             if (dialog.isOk()) {
                 umlActor.setName(dialog.getName());
@@ -93,7 +92,7 @@ public class UseCaseDiagramEditor extends DiagramEditor {
             UseCaseElement useCaseElement = (UseCaseElement) element;
             UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
             EditUseCaseDialog dialog = new EditUseCaseDialog(window, useCaseElement, true);
-            dialog.setLocationRelativeTo(mainWindow);
+            dialog.setLocationRelativeTo(AppFrame.get());
             dialog.setVisible(true);
             if (dialog.isOk()) {
                 umlUseCase.setName(dialog.getName());

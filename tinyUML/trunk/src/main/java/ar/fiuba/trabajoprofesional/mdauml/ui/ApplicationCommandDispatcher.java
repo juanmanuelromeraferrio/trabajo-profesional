@@ -139,12 +139,6 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
         appState.openNewStructureEditor();
     }
 
-    /**
-     * Opens a new sequence editor.
-     */
-    public void openNewSequenceEditor() {
-        appState.openNewSequenceEditor();
-    }
 
     /**
      * Opens a new use case editor.
@@ -171,7 +165,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
      * Quits the application.
      */
     public void quitApplication() {
-        appState.getShell().quitApplication();
+        AppFrame.get().quitApplication();
     }
 
     /**
@@ -391,7 +385,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
      * @return the shell component
      */
     private Component getShellComponent() {
-        return appState.getShell().getShellComponent();
+        return AppFrame.get();
     }
 
     /**

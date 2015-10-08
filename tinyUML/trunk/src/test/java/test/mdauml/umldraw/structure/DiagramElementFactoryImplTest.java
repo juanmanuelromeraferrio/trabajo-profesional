@@ -38,7 +38,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
 
 /**
  * Tests the DiagramElementFactory part of StructureDiagram.
@@ -48,8 +48,8 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.StructureDiagram;
 public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   private Mock mockUmlModel = mock(UmlModel.class);
   private int notificationCounter;
-  private StructureDiagram diagram =
-    new StructureDiagram((UmlModel) mockUmlModel.proxy()) {
+  private ClassDiagram diagram =
+    new ClassDiagram((UmlModel) mockUmlModel.proxy()) {
     public void nodeMoved(Node node) {
       notificationCounter++;
     }
