@@ -1,12 +1,11 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.SimpleAssociation;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.SimpleAssociation;
 
 import java.util.HashMap;
 import java.util.Map;

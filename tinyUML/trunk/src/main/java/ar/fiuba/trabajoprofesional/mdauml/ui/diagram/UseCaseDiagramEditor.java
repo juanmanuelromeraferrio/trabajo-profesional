@@ -11,7 +11,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;

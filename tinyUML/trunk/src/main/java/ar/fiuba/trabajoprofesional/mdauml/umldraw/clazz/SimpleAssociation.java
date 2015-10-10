@@ -1,6 +1,7 @@
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.structure;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 
 public class SimpleAssociation extends Association {
 
@@ -29,5 +30,10 @@ public class SimpleAssociation extends Association {
         if (prototype == null)
             prototype = new SimpleAssociation();
         return prototype;
+    }
+
+    @Override
+    public void setModelElement(UmlModelElement model) {
+
     }
 }

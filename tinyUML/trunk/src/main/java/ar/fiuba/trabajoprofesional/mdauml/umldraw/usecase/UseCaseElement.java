@@ -110,13 +110,11 @@ public final class UseCaseElement extends AbstractCompositeNode
         return useCase;
     }
 
-    /**
-     * Sets the model element.
-     *
-     * @param UseCase the model element
-     */
-    public void setModelElement(UmlUseCase UseCase) {
-        this.useCase = UseCase;
+    @Override
+    public void setModelElement(UmlModelElement model) {
+        if(model instanceof UmlUseCase)
+            this.useCase = (UmlUseCase)model;
+        else throw new IllegalArgumentException("UmlUseCase expected");
     }
 
     /**

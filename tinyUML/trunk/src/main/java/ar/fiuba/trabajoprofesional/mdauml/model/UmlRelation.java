@@ -184,4 +184,9 @@ public class UmlRelation extends AbstractUmlModelElement implements Relation {
         }
         return "";
     }
+
+    @Override
+    public ElementType getElementType() {
+        return ElementType.RELATION;
+    }
 }

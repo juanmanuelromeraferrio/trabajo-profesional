@@ -26,8 +26,6 @@ import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ProjectSerializ
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlProjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.ui.commands.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DiagramEditorNotification;
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
@@ -38,7 +36,6 @@ import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,8 +74,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     private void initSelectorMap() {
         try {
             selectorMap.put("NEW_MODEL", new MethodCall(getClass().getMethod("newModel")));
-            selectorMap.put("NEW_STRUCTURE_DIAGRAM",
-                new MethodCall(getClass().getMethod("openNewStructureEditor")));
+            selectorMap.put("NEW_CLASS_DIAGRAM",
+                new MethodCall(getClass().getMethod("openNewClassEditor")));
             selectorMap.put("NEW_USE_CASE_DIAGRAM",
                 new MethodCall(getClass().getMethod("openNewUseCaseEditor")));
             selectorMap.put("OPEN_MODEL", new MethodCall(getClass().getMethod("openModel")));
@@ -133,10 +130,10 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     }
 
     /**
-     * Opens a new structure editor.
+     * Opens a new class editor.
      */
-    public void openNewStructureEditor() {
-        appState.openNewStructureEditor();
+    public void openNewClassEditor() {
+        appState.openNewClassEditor();
     }
 
 

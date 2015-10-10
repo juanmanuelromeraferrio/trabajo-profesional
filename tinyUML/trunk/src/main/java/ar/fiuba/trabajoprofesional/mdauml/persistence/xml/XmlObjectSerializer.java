@@ -7,7 +7,6 @@ import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ObjectSerialize
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 
 
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

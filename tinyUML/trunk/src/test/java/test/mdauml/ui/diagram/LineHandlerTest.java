@@ -21,7 +21,7 @@ package test.mdauml.ui.diagram;
 
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Dependency;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Dependency;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.DiagramElementFactory;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
@@ -32,7 +32,6 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorMouseEvent;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.LineHandler;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
-import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleLineConnectMethod;
 
 /**
  * A test class for LineHandler.

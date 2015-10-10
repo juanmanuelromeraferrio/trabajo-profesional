@@ -47,4 +47,8 @@ public class UmlActor extends AbstractUmlModelElement {
         return false;
     }
 
+    @Override
+    public ElementType getElementType() {
+        return ElementType.ACTOR;
+    }
 }

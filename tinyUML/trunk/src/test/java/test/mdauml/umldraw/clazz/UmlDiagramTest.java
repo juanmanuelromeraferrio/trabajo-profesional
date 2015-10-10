@@ -17,7 +17,7 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package test.mdauml.umldraw.structure;
+package test.mdauml.umldraw.clazz;
 
 import java.awt.geom.Point2D;
 
@@ -32,7 +32,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.NullElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import test.mdauml.draw.MyCompositeNode;
 
 /**

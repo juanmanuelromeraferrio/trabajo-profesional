@@ -28,8 +28,8 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ConvertConnectionT
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.SetConnectionNavigabilityCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 
 import java.awt.*;

@@ -29,6 +29,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.AbstractUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
@@ -102,9 +103,9 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
         if (path != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             if (e.getButton() == MouseEvent.BUTTON1) {
-                if (node.isLeaf() && node.getUserObject() instanceof UmlModelElement) {
+                if (node.isLeaf() && node.getUserObject() instanceof AbstractUmlModelElement) {
                     for (TreeDraggerListener l : treeDraggerListener) {
-                        l.setDraggerElement((UmlModelElement) node.getUserObject());
+                        l.setDraggerElement((AbstractUmlModelElement) node.getUserObject());
                     }
                 }
             }

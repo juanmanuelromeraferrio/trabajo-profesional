@@ -1,9 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import java.awt.Dialog.ModalityType;
-
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
 
 import javax.swing.GroupLayout;
@@ -13,12 +10,8 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
-import javax.swing.JFormattedTextField;
-
-import java.awt.TextArea;
 
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 

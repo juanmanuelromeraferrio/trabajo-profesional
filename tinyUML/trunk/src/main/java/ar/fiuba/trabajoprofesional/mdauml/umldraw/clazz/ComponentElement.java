@@ -17,7 +17,7 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.structure;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
@@ -111,6 +111,13 @@ public final class ComponentElement extends AbstractCompositeNode implements Lab
      */
     public UmlModelElement getModelElement() {
         return component;
+    }
+
+    @Override
+    public void setModelElement(UmlModelElement model) {
+        if(model instanceof UmlComponent)
+            component= (UmlComponent) model;
+        else throw new IllegalArgumentException("UmlComponent expected");
     }
 
     /**

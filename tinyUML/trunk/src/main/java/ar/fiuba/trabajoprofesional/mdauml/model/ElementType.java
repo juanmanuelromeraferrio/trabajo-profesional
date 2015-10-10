@@ -24,8 +24,14 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  * @version 1.0
  */
 public enum ElementType {
-    CLASS("Class"), COMPONENT("Component"), PACKAGE("Package"), NOTE("Note"), LIFE_LINE(
-        "Life line"), ACTOR("Actor"), USE_CASE("Use Case");
+    CLASS("Class"),
+    COMPONENT("Component"),
+    PACKAGE("Package"),
+    NOTE("Note"),
+    ACTOR("Actor"),
+    USE_CASE("Use Case"),
+    RELATION("Relation"),
+    STEREOTYPE("Stereotype");
 
     private String name;
 

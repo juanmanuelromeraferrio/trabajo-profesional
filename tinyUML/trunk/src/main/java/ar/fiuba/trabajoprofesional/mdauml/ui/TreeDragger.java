@@ -2,30 +2,22 @@ package ar.fiuba.trabajoprofesional.mdauml.ui;
 
 import java.awt.*;
 import java.awt.dnd.DragSource;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.PackageElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+
+import javax.swing.*;
 
 public class TreeDragger implements TreeDraggerListener {
 
-    private UmlModelElement draggerElement;
+    private AbstractUmlModelElement draggerElement;
 
 
-    @Override public void setDraggerElement(UmlModelElement element) {
+    @Override public void setDraggerElement(AbstractUmlModelElement element) {
         this.draggerElement = element;
         if(element!=null) {
             AppFrame.get().setCursor(DragSource.DefaultMoveDrop);
@@ -46,36 +38,15 @@ public class TreeDragger implements TreeDraggerListener {
         GeneralDiagram diagram = currentDiagramEditor.getDiagram();
         Point origin = currentDiagramEditor.getLocationOnScreen();
 
-        double x1 = diagram.getAbsoluteX1() + origin.getX();
-        double x2 = diagram.getAbsoluteX2() + origin.getX();
-        double y1 = diagram.getAbsoluteX1() + origin.getY();
-        double y2 = diagram.getAbsoluteY2() + origin.getY();
-
-
-
-        if (x > x1 && x < x2 && y > y1 && y < y2) {
-
-            Node element = null;
-            if (draggerElement instanceof UmlActor) {
-                element = (Node) ActorElement.getPrototype().clone();
-                ActorElement actor = (ActorElement) element;
-                actor.setModelElement((UmlActor) draggerElement);
-            } else if (draggerElement instanceof UmlUseCase) {
-                element = (Node) UseCaseElement.getPrototype().clone();
-                UseCaseElement usecase = (UseCaseElement) element;
-                usecase.setModelElement((UmlUseCase) draggerElement);
-            } else if (draggerElement instanceof UmlClass) {
-                element = (Node) ClassElement.getPrototype().clone();
-                ClassElement clazz = (ClassElement) element;
-                clazz.setModelElement((UmlClass) draggerElement);
-            } else if (draggerElement instanceof UmlPackage) {
-                element = (Node) PackageElement.getPrototype().clone();
-                PackageElement packageElement = (PackageElement) element;
-                packageElement.setModelElement((UmlPackage) draggerElement);
-            } else
+        if (isInside(currentDiagramEditor,x,y)) {
+            Node element;
+            try {
+                element = diagram.createNodeFromModel(draggerElement);
+            }catch (IllegalArgumentException e){
+                JOptionPane.showMessageDialog(AppFrame.get(), getResourceString("error.dragger.wrongDiagram.message"),
+                        getResourceString("error.dragger.wrongDiagram.title"), JOptionPane.ERROR_MESSAGE);
                 return;
-
-
+            }
 
             AddNodeCommand createCommand =
                 new AddNodeCommand(currentDiagramEditor, diagram, element, x - origin.getX(),
@@ -88,5 +59,23 @@ public class TreeDragger implements TreeDraggerListener {
 
     }
 
+    private boolean isInside(DiagramEditor diagramEditor,double x,double y){
+        GeneralDiagram diagram = diagramEditor.getDiagram();
+        Point origin = diagramEditor.getLocationOnScreen();
+
+        double x1 = diagram.getAbsoluteX1() + origin.getX();
+        double x2 = diagram.getAbsoluteX2() + origin.getX();
+        double y1 = diagram.getAbsoluteX1() + origin.getY();
+        double y2 = diagram.getAbsoluteY2() + origin.getY();
+
+
+
+        return x > x1 && x < x2 && y > y1 && y < y2;
+
+    }
+
+    private String getResourceString(String property) {
+        return ApplicationResources.getInstance().getString(property);
+    }
 
 }

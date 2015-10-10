@@ -90,13 +90,11 @@ public final class ActorElement extends AbstractCompositeNode
         return actor;
     }
 
-    /**
-     * Sets the model element.
-     *
-     * @param actor the model element
-     */
-    public void setModelElement(UmlActor actor) {
-        this.actor = actor;
+    @Override
+    public void setModelElement(UmlModelElement model) {
+        if(model instanceof UmlActor)
+            this.actor= (UmlActor) model;
+        else throw new IllegalArgumentException("UmlActor expected");
     }
 
     /**

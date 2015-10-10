@@ -17,7 +17,7 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.structure;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
@@ -136,6 +136,13 @@ public final class PackageElement extends AbstractCompositeNode implements Label
      */
     public UmlModelElement getModelElement() {
         return pkg;
+    }
+
+    @Override
+    public void setModelElement(UmlModelElement model) {
+        if(model instanceof UmlPackage)
+            pkg= (UmlPackage) model;
+        else throw new IllegalArgumentException("UmlPackage expected");
     }
 
     /**

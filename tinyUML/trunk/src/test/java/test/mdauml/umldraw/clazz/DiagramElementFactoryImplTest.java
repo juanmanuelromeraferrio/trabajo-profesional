@@ -17,19 +17,19 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package test.mdauml.umldraw.structure;
+package test.mdauml.umldraw.clazz;
 
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Dependency;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Dependency;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.DiagramElementFactory;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.PackageElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.PackageElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
@@ -38,10 +38,10 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 
 /**
- * Tests the DiagramElementFactory part of StructureDiagram.
+ * Tests the DiagramElementFactory part of ClassDiagram.
  * @author Wei-ju Wu
  * @version 1.0
  */

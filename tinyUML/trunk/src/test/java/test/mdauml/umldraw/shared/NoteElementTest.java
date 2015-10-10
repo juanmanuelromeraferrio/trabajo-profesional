@@ -27,7 +27,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 
 /**
  * A test class for NoteElement.

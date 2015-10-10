@@ -54,7 +54,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.SelectionListener;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.DiagramTreeModel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
@@ -419,10 +419,10 @@ public class ApplicationState
 
 
     /**
-     * Opens a new structure editor.
+     * Opens a new class editor.
      */
-    protected void openNewStructureEditor() {
-        EditorPanel editorPanel = editorFactory.openNewStructureEditor(umlModel);
+    protected void openNewClassEditor() {
+        EditorPanel editorPanel = editorFactory.openNewClassEditor(umlModel);
         currentEditor = editorPanel.getDiagramEditor();
         addDiagramEditorEvents(editorPanel);
     }
@@ -444,20 +444,22 @@ public class ApplicationState
      */
     protected void openExistingEditor(GeneralDiagram diagram) {
         if(diagram instanceof ClassDiagram)
-            openExistingStructureEditor((ClassDiagram) diagram);
+            openExistingClassEditor((ClassDiagram) diagram);
         else if(diagram instanceof UseCaseDiagram)
             openExistingUseCaseEditor((UseCaseDiagram) diagram);
+
+        tabbedPane.setSelectedIndex(getIndexOfDiagram(diagram));
     }
 
 
     /**
-     * Opens an existing structure editor.
+     * Opens an existing class editor.
      *
      * @param diagram the diagram
      */
-    protected void openExistingStructureEditor(ClassDiagram diagram) {
+    protected void openExistingClassEditor(ClassDiagram diagram) {
         if (!isAlreadyOpen(diagram)) {
-            EditorPanel editorPanel = editorFactory.openStructureEditor(diagram);
+            EditorPanel editorPanel = editorFactory.openClassEditor(diagram);
             currentEditor = editorPanel.getDiagramEditor();
             addDiagramEditorEvents(editorPanel);
         }
@@ -474,6 +476,16 @@ public class ApplicationState
             currentEditor = editorPanel.getDiagramEditor();
             addDiagramEditorEvents(editorPanel);
         }
+
+    }
+
+    private int getIndexOfDiagram(GeneralDiagram diagram) {
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            EditorPanel editorPanel = (EditorPanel) tabbedPane.getComponentAt(i);
+            if (editorPanel.getDiagramEditor().getDiagram() == diagram)
+                return i;
+        }
+        return -1;
     }
 
 

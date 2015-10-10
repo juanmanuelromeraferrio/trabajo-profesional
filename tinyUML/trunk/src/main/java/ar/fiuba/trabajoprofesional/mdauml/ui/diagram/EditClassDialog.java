@@ -23,7 +23,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlProperty;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStereotype;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.StringTableModel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import javax.swing.*;

@@ -65,6 +65,8 @@ public abstract class AbstractUmlModelElement extends DefaultNamedElement
         }
     }
 
+    public abstract ElementType getElementType();
+
     /**
      * {@inheritDoc}
      */

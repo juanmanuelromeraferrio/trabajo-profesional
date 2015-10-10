@@ -37,4 +37,5 @@ public interface UmlDiagramElement extends DiagramElement {
      * @return the model element
      */
     UmlModelElement getModelElement();
+    void setModelElement(UmlModelElement model);
 }

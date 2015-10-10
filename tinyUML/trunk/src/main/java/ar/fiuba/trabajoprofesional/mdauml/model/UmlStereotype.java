@@ -46,4 +46,9 @@ public final class UmlStereotype extends AbstractUmlModelElement {
             prototype = new UmlStereotype();
         return prototype;
     }
+
+    @Override
+    public ElementType getElementType() {
+        return ElementType.STEREOTYPE;
+    }
 }

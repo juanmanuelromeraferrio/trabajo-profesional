@@ -24,7 +24,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.ClassDiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.UseCaseDiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
@@ -32,7 +32,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A manager class for the available structure diagrams in the application. It maintains the UI
+ * A manager class for the available class diagrams in the application. It maintains the UI
  * context for in order to properly create the editor.
  *
  * @author Wei-ju Wu
@@ -42,7 +42,7 @@ public class EditorFactory {
 
     private ApplicationState appState;
     private JTabbedPane tabbedPane;
-    private int structureCounter = 1, sequenceCounter = 1, useCaseCounter = 1;
+    private int classCounter = 1, useCaseCounter = 1;
 
     /**
      * Constructor.
@@ -57,32 +57,32 @@ public class EditorFactory {
      * Resets the internal counter.
      */
     public void reset() {
-        structureCounter = 1;
+        classCounter = 1;
     }
 
     /**
-     * Opens a new structure editor and displays it in the editor area.
+     * Opens a new class editor and displays it in the editor area.
      *
      * @param umlModel the UmlModel the diagram belongs to
      * @return the editor panel
      */
-    public EditorPanel openNewStructureEditor(UmlModel umlModel) {
+    public EditorPanel openNewClassEditor(UmlModel umlModel) {
         GeneralDiagram diagram = new ClassDiagram(umlModel);
         diagram.setLabelText(
-            ApplicationResources.getInstance().getString("stdcaption.structurediagram") + " "
-                + (structureCounter++));
+            ApplicationResources.getInstance().getString("stdcaption.classdiagram") + " "
+                + (classCounter++));
         umlModel.addDiagram(diagram);
         return createEditorPanel(new ClassDiagramEditor( diagram),
             new StaticClassEditorToolbarManager());
     }
 
     /**
-     * Opens a structure editor for an existing diagram.
+     * Opens a class editor for an existing diagram.
      *
      * @param diagram the diagram
      * @return the editor panel
      */
-    public EditorPanel openStructureEditor(GeneralDiagram diagram   ) {
+    public EditorPanel openClassEditor(GeneralDiagram diagram   ) {
         return createEditorPanel(new ClassDiagramEditor(diagram),
             new StaticClassEditorToolbarManager());
     }
@@ -103,7 +103,7 @@ public class EditorFactory {
      *
      * @param diagramEditor  the diagram editor
      * @param toolbarManager the ToolbarManager
-     * @return the StructureEditor panel
+     * @return the panel
      */
     private EditorPanel createEditorPanel(DiagramEditor diagramEditor,
         ToolbarManager toolbarManager) {

@@ -54,6 +54,11 @@ public final class UmlClass extends AbstractUmlModelElement {
         return prototype;
     }
 
+    @Override
+    public ElementType getElementType() {
+        return ElementType.CLASS;
+    }
+
     /**
      * {@inheritDoc}
      */

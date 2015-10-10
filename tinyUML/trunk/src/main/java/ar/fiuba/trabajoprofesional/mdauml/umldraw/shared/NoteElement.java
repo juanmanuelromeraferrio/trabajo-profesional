@@ -163,6 +163,11 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
         return null;
     }
 
+    @Override
+    public void setModelElement(UmlModelElement model) {
+
+    }
+
     /**
      * {@inheritDoc}
      */

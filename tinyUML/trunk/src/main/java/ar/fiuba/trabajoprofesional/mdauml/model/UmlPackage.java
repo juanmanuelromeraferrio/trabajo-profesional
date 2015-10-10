@@ -46,4 +46,9 @@ public final class UmlPackage extends AbstractUmlModelElement {
             prototype = new UmlPackage();
         return prototype;
     }
+
+    @Override
+    public ElementType getElementType() {
+        return ElementType.PACKAGE;
+    }
 }

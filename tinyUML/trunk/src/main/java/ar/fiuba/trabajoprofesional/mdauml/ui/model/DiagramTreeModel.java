@@ -32,7 +32,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
@@ -51,20 +51,20 @@ public class DiagramTreeModel extends DefaultTreeModel
     private static final long serialVersionUID = -3100105764720456764L;
 
     private UmlModel model;
-    private DefaultMutableTreeNode structureFolder, useCaseFolder, modelFolder;
+    private DefaultMutableTreeNode classFolder, useCaseFolder, modelFolder;
 
     /**
      * Constructor.
      */
     public DiagramTreeModel() {
         super(new DefaultMutableTreeNode("Root node"));
-        structureFolder =
-            new DefaultMutableTreeNode(getResourceString("stdcaption.structurediagrams"));
+        classFolder =
+            new DefaultMutableTreeNode(getResourceString("stdcaption.classdiagrams"));
         useCaseFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.usecasediagrams"));
         modelFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.modelfolder"));
 
         insertNodeInto(useCaseFolder, (DefaultMutableTreeNode) getRoot(), 0);
-        insertNodeInto(structureFolder, (DefaultMutableTreeNode) getRoot(), 1);
+        insertNodeInto(classFolder, (DefaultMutableTreeNode) getRoot(), 1);
         insertNodeInto(modelFolder, (DefaultMutableTreeNode) getRoot(), 2);
     }
 
@@ -98,9 +98,9 @@ public class DiagramTreeModel extends DefaultTreeModel
                 ((GeneralDiagram) diagram).removeNameChangeListener(this);
             }
         }
-        structureFolder.removeAllChildren();
+        classFolder.removeAllChildren();
         useCaseFolder.removeAllChildren();
-        nodeStructureChanged(structureFolder);
+        nodeStructureChanged(classFolder);
         nodeStructureChanged(useCaseFolder);
     }
 
@@ -116,7 +116,7 @@ public class DiagramTreeModel extends DefaultTreeModel
             insertToFolder(diagram);
             addNameChangeListener((GeneralDiagram) diagram);
         }
-        nodeStructureChanged(structureFolder);
+        nodeStructureChanged(classFolder);
         nodeStructureChanged(useCaseFolder);
         reload();
     }
@@ -143,7 +143,7 @@ public class DiagramTreeModel extends DefaultTreeModel
 
         DefaultMutableTreeNode diagramNode = null;
         if (diagram instanceof ClassDiagram) {
-            diagramNode = getDiagramNode(structureFolder, diagram);
+            diagramNode = getDiagramNode(classFolder, diagram);
         } else if (diagram instanceof UseCaseDiagram) {
             diagramNode = getDiagramNode(useCaseFolder, diagram);
         }
@@ -193,7 +193,7 @@ public class DiagramTreeModel extends DefaultTreeModel
     private void insertToFolder(UmlDiagram diagram) {
         DefaultMutableTreeNode child = new DefaultMutableTreeNode(diagram);
         if (diagram instanceof ClassDiagram) {
-            insertNodeInto(child, structureFolder, structureFolder.getChildCount());
+            insertNodeInto(child, classFolder, classFolder.getChildCount());
         } else if (diagram instanceof UseCaseDiagram) {
             insertNodeInto(child, useCaseFolder, useCaseFolder.getChildCount());
         }
@@ -230,7 +230,7 @@ public class DiagramTreeModel extends DefaultTreeModel
 
         DefaultMutableTreeNode diagramNode = null;
         if (diagram instanceof ClassDiagram) {
-            diagramNode = getDiagramNode(structureFolder, diagram);
+            diagramNode = getDiagramNode(classFolder, diagram);
         } else if (diagram instanceof UseCaseDiagram) {
             diagramNode = getDiagramNode(useCaseFolder, diagram);
         }
@@ -244,7 +244,7 @@ public class DiagramTreeModel extends DefaultTreeModel
      * {@inheritDoc}
      */
     public void diagramRemoved(UmlDiagram diagram) {
-        removeFromFolder(structureFolder, diagram);
+        removeFromFolder(classFolder, diagram);
         removeFromFolder(useCaseFolder, diagram);
     }
 
@@ -300,7 +300,7 @@ public class DiagramTreeModel extends DefaultTreeModel
      * {@inheritDoc}
      */
     public void nameChanged(NamedElement element) {
-        searchNodeInFolder(structureFolder, element);
+        searchNodeInFolder(classFolder, element);
         searchNodeInFolder(useCaseFolder, element);
         searchNodeInFolder(modelFolder, element);
     }

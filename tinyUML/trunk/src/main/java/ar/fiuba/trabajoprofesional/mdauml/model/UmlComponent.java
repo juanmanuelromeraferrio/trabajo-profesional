@@ -46,4 +46,9 @@ public final class UmlComponent extends AbstractUmlModelElement {
             prototype = new UmlComponent();
         return prototype;
     }
+
+    @Override
+    public ElementType getElementType() {
+        return ElementType.COMPONENT;
+    }
 }

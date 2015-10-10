@@ -17,7 +17,7 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package test.mdauml.umldraw.structure;
+package test.mdauml.umldraw.clazz;
 
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
@@ -29,9 +29,9 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation.ReadingDirection;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.AssociationNameLabel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.RectilinearAssociation;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.AssociationNameLabel;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.RectilinearAssociation;
 import test.mdauml.draw.MyAbsoluteParent;
 
 /**

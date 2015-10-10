@@ -21,7 +21,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.Multiplicity;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation.ReadingDirection;
 

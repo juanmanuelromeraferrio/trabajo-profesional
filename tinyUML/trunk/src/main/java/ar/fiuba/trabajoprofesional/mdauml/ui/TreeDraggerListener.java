@@ -1,12 +1,12 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.AbstractUmlModelElement;
 
 public interface TreeDraggerListener {
 
 
-    public void setDraggerElement(UmlModelElement element);
+    void setDraggerElement(AbstractUmlModelElement element);
 
-    public void setReleasePoint(double d, double e);
+    void setReleasePoint(double d, double e);
 
 }

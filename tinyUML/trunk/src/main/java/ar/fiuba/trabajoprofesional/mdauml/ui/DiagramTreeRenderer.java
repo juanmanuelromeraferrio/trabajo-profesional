@@ -2,7 +2,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ClassDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 
 import javax.swing.*;

@@ -121,6 +121,13 @@ public class BaseConnection implements UmlConnection {
         return relation;
     }
 
+    @Override
+    public void setModelElement(UmlModelElement model) {
+        if(model instanceof Relation)
+            this.relation= (Relation) model;
+        else throw new IllegalArgumentException("Relation expected");
+    }
+
     /**
      * Returns the Node 0 element.
      *

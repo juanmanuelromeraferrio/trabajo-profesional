@@ -17,7 +17,7 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package test.mdauml.umldraw.structure;
+package test.mdauml.umldraw.clazz;
 
 import java.awt.FontMetrics;
 import java.awt.geom.Point2D;
@@ -29,9 +29,9 @@ import org.jmock.cglib.MockObjectTestCase;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association.AssociationType;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.RectilinearAssociation;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association.AssociationType;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.RectilinearAssociation;
 import test.mdauml.draw.MyAbsoluteParent;
 import test.mdauml.draw.MyCompositeNode;
 

@@ -1,6 +1,7 @@
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.structure;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 
 public class RectilinearAssociation extends Association {
 
@@ -30,4 +31,8 @@ public class RectilinearAssociation extends Association {
         return prototype;
     }
 
+    @Override
+    public void setModelElement(UmlModelElement model) {
+
+    }
 }

@@ -46,11 +46,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.draw.NodeChangeListener;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Selection;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleLabel;
-import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
-import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
-import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 
@@ -599,6 +595,16 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
         }
         umlnode.addNodeChangeListener(this);
         return umlnode;
+    }
+    public UmlNode createNodeFromModel(AbstractUmlModelElement modelElement){
+
+        UmlDiagramElement proto =  elementPrototypes.get(modelElement.getElementType());
+        if (proto==null)
+            throw new IllegalArgumentException("There is no element for the supplied model");
+        UmlNode umlnode= (UmlNode) proto.clone();
+        umlnode.setModelElement(modelElement);
+        return umlnode;
+
     }
 
     /**

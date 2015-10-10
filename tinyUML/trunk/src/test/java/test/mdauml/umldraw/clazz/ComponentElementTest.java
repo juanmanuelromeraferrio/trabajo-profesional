@@ -17,13 +17,13 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package test.mdauml.umldraw.structure;
+package test.mdauml.umldraw.clazz;
 
 import java.awt.geom.Dimension2D;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Compartment;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.ComponentElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ComponentElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DoubleDimension;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;

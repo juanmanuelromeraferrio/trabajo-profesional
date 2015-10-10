@@ -173,6 +173,10 @@ public class UmlUseCase extends AbstractUmlModelElement {
   }
 
 
+  @Override
+  public ElementType getElementType() {
+    return ElementType.USE_CASE;
+  }
 
   @Override
   public Object clone() {

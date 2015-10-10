@@ -15,7 +15,7 @@
  * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
  * USA
  */
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.structure;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.structure.Association.AssociationType;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association.AssociationType;
 
 /**
  * This class specializes the GeneralDiagram, at the same time it implements the
