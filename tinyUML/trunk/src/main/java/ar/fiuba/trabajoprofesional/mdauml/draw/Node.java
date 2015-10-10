@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -186,7 +188,7 @@ public interface Node extends DiagramElement {
      *
      * @param conn the connection to add
      */
-    void addConnection(Connection conn);
+    void addConnection(Connection conn) throws AddConnectionException;
 
     /**
      * Removes the specified connection from this node.

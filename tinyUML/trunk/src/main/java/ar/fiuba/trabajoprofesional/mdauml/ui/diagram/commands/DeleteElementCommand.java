@@ -23,6 +23,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
 import javax.swing.undo.AbstractUndoableEdit;
@@ -122,12 +123,16 @@ public class DeleteElementCommand extends AbstractUndoableEdit implements Comman
      * @param node the node that is readded
      */
     private void reattachNodeConnections(Node node) {
-        for (Connection conn : node.getConnections()) {
-            if (conn.getNode1() != node)
-                conn.getNode1().addConnection(conn);
-            if (conn.getNode2() != node)
-                conn.getNode2().addConnection(conn);
-            conn.getParent().addChild(conn);
+        try {
+            for (Connection conn : node.getConnections()) {
+                if (conn.getNode1() != node)
+                    conn.getNode1().addConnection(conn);
+                if (conn.getNode2() != node)
+                    conn.getNode2().addConnection(conn);
+                conn.getParent().addChild(conn);
+            }
+        }catch (AddConnectionException e){
+            e.printStackTrace();
         }
     }
 
@@ -150,8 +155,15 @@ public class DeleteElementCommand extends AbstractUndoableEdit implements Comman
      * @param conn the connection that is readded
      */
     private void reattachConnectionToNodes(Connection conn) {
-        conn.getNode1().addConnection(conn);
-        conn.getNode2().addConnection(conn);
+
+        try {
+            conn.getNode1().addConnection(conn);
+            conn.getNode2().addConnection(conn);
+
+
+        } catch (AddConnectionException e) {
+            e.printStackTrace();
+        }
     }
 
 

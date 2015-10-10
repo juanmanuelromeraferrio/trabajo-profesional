@@ -17,6 +17,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -442,7 +444,7 @@ public abstract class AbstractNode implements Node {
     /**
      * {@inheritDoc}
      */
-    public void addConnection(Connection conn) {
+    public void addConnection(Connection conn) throws AddConnectionException {
         connections.add(conn);
     }
 

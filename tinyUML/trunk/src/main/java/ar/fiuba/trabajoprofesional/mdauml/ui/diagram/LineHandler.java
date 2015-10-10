@@ -22,12 +22,16 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddConnectionCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
+import javax.swing.*;
 import java.awt.geom.Point2D;
 
 /**
@@ -132,13 +136,20 @@ public class LineHandler implements EditorMode {
         double mx = event.getX(), my = event.getY();
         DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
         if (source != null && isValidTarget(elem)) {
-            UmlConnection conn = editor.getDiagram().getElementFactory()
-                .createConnection(relationType, (UmlNode) source, (UmlNode) elem);
-            connectMethod
-                .generateAndSetPointsToConnection(conn, source, (UmlNode) elem, anchor, tmpPos);
-            AddConnectionCommand command =
-                new AddConnectionCommand(editor, editor.getDiagram(), conn);
-            editor.execute(command);
+            try {
+                UmlConnection conn = editor.getDiagram().getElementFactory()
+                        .createConnection(relationType, (UmlNode) source, (UmlNode) elem);
+                connectMethod
+                        .generateAndSetPointsToConnection(conn, source, (UmlNode) elem, anchor, tmpPos);
+                AddConnectionCommand command =
+                        new AddConnectionCommand(editor, editor.getDiagram(), conn);
+                editor.execute(command);
+            }catch (AddConnectionException e){
+                JOptionPane.showMessageDialog(AppFrame.get(), e.getMessage(),
+                        ApplicationResources.getInstance().getString("error.connection.title")
+                        , JOptionPane.ERROR_MESSAGE);
+
+            }
         }
         isDragging = false;
         editor.redraw();

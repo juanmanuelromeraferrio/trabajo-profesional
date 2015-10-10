@@ -1,26 +1,17 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
-import java.awt.Color;
-import java.awt.geom.Dimension2D;
-
-import ar.fiuba.trabajoprofesional.mdauml.draw.AbstractCompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Compartment;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
-import ar.fiuba.trabajoprofesional.mdauml.draw.EllipseCompartment;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
-import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleLabel;
-import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElementListener;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+
+import java.awt.*;
+import java.awt.geom.Dimension2D;
 
 /**
  * This class represents a UseCase element in the editor. It is responsible for rendering the
@@ -226,10 +217,10 @@ public final class UseCaseElement extends AbstractCompositeNode
         return true;
     }
 
-    @Override public void addConnection(Connection conn) {
-        super.addConnection(conn);
+    @Override public void addConnection(Connection conn) throws AddConnectionException {
 
-        if (conn instanceof UmlConnection) {
+
+        if (conn instanceof Association) {
             UmlConnection umlConn = (UmlConnection) conn;
             Relation relation = (Relation) umlConn.getModelElement();
 
@@ -238,10 +229,16 @@ public final class UseCaseElement extends AbstractCompositeNode
 
             if (element1 != this.useCase && element1 instanceof UmlActor) {
                 this.useCase.addUmlActor((UmlActor) element1);
+                super.addConnection(conn);
             } else if (element2 != this.useCase && element2 instanceof UmlActor) {
                 this.useCase.addUmlActor((UmlActor) element2);
-            }
-        }
+                super.addConnection(conn);
+            }else
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.association.withoutactor"));
+        }else
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.invalidConnectionType"));
+
+
 
 
 

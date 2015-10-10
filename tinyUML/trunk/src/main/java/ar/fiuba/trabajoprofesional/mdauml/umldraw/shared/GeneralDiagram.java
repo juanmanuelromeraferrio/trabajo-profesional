@@ -17,38 +17,22 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
-import java.awt.Color;
-import java.awt.Rectangle;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
+import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
+
+import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import ar.fiuba.trabajoprofesional.mdauml.draw.AbstractCompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Diagram;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramOperations;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
-import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
-import ar.fiuba.trabajoprofesional.mdauml.draw.NodeChangeListener;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Selection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleLabel;
-import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 
 /**
  * This class implements the effective layout area. It shows the boundaries of the diagram and also
@@ -610,7 +594,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     /**
      * {@inheritDoc}
      */
-    public UmlConnection createConnection(RelationType relationType, UmlNode node1, UmlNode node2) {
+    public UmlConnection createConnection(RelationType relationType, UmlNode node1, UmlNode node2) throws AddConnectionException {
         UmlConnection prototype = connectionPrototypes.get(relationType);
         UmlConnection conn = null;
         if (prototype != null) {
@@ -635,7 +619,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
      * @param node1 the Node 1
      * @param node2 the Node 2
      */
-    private void bindConnection(UmlConnection conn, UmlNode node1, UmlNode node2) {
+    private void bindConnection(UmlConnection conn, UmlNode node1, UmlNode node2) throws AddConnectionException {
         conn.setNode1(node1);
         conn.setNode2(node2);
 
@@ -644,8 +628,10 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
             relation.setElement1(node1.getModelElement());
             relation.setElement2(node2.getModelElement());
         }
+
         node1.addConnection(conn);
         node2.addConnection(conn);
+
     }
 
     @Override public List<Connection> getConnections() {

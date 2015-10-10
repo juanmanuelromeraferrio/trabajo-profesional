@@ -2,12 +2,17 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Inheritance;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
+
 
 /**
  * This class represents a Actor element in the editor. It is responsible for rendering the
@@ -24,7 +29,6 @@ public final class ActorElement extends AbstractCompositeNode
 
     private static final double DEFAULT_WIDHT = 40;
     private static final double DEFAULT_HEIGHT = 70;
-
     private static final double LABEL_MARGIN_TOP = 5;
 
     private static final Color BACKGROUND = Color.WHITE;
@@ -47,6 +51,7 @@ public final class ActorElement extends AbstractCompositeNode
     }
 
     /**
+
      * Returns the prototype instance.
      *
      * @return the prototype instance
@@ -227,6 +232,67 @@ public final class ActorElement extends AbstractCompositeNode
     @Override public boolean acceptsConnection(RelationType associationType, RelationEndType as,
         UmlNode with) {
         return true;
+    }
+
+    @Override public void addConnection(Connection connection) throws AddConnectionException{
+        if(isValidInheritance(connection))
+            addInheritance((Inheritance)connection);
+        else{
+            String error = connectionError(connection);
+            if(! error.isEmpty()) {
+                throw new AddConnectionException(error);
+
+            }
+        }
+
+    }
+
+
+    private String connectionError(Connection connection) {
+        if(connection instanceof Inheritance)
+            if(connection.getNode1() ==this)
+                if(! (connection.getNode2() instanceof ActorElement))
+                    return ApplicationResources.getInstance().getString("error.connection.actor.noactorinheritance");
+                else
+                    if (this.actor == ((ActorElement)connection.getNode2()).actor)
+                        return ApplicationResources.getInstance().getString("error.connection.actor.autoref");
+                    else
+                        return "";
+            else
+            if(! (connection.getNode1() instanceof ActorElement))
+                return ApplicationResources.getInstance().getString("error.connection.actor.noactorinheritance");
+            else
+                if (this.actor == ((ActorElement)connection.getNode1()).actor)
+                    return ApplicationResources.getInstance().getString("error.connection.actor.autoref");
+                else
+                    return "";
+        else
+            if(connection instanceof Association)
+                if(connection.getNode1() ==this)
+                    if(connection.getNode2() instanceof UseCaseElement)
+                        return "";
+                    else
+                        return ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase");
+                else
+                    if(connection.getNode1() instanceof UseCaseElement)
+                        return "";
+                    else
+                        return ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase");
+
+            else return "Invalid Connection";
+    }
+
+    private boolean isValidInheritance(Connection connection) {
+        return  connection instanceof Inheritance &&
+                connection.getNode1()==this &&
+                connection.getNode2() instanceof ActorElement &&
+                ((ActorElement)connection.getNode1()).getActor()!=
+                        ((ActorElement)connection.getNode2()).getActor();
+    }
+
+    private void addInheritance(Inheritance inheritance) throws AddConnectionException {
+        actor.addParent(((ActorElement) inheritance.getNode2()).getActor());
+        super.addConnection(inheritance);
     }
 
     public UmlActor getActor() {

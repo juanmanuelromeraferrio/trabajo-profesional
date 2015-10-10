@@ -1,11 +1,12 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Inheritance;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.SimpleAssociation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.SimpleAssociation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,9 +67,18 @@ public class UseCaseDiagram extends GeneralDiagram {
         fullnavigable.setCanSetElement1Navigability(true);
         fullnavigable.setCanSetElement2Navigability(true);
 
+        UmlRelation notnavigable = new UmlRelation();
+        notnavigable.setCanSetElement1Navigability(false);
+        notnavigable.setCanSetElement2Navigability(false);
+
         Association assocPrototype = (Association) SimpleAssociation.getPrototype().clone();
         assocPrototype.setRelation((Relation) fullnavigable.clone());
         connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
+
+
+        Inheritance inheritPrototype = (Inheritance) Inheritance.getPrototype().clone();
+        inheritPrototype.setRelation((Relation) notnavigable.clone());
+        connectionPrototypes.put(RelationType.INHERITANCE, inheritPrototype);
 
         return connectionPrototypes;
     }

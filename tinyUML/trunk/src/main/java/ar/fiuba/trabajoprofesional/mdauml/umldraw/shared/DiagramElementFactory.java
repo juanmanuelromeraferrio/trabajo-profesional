@@ -20,6 +20,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 
@@ -49,7 +50,7 @@ public interface DiagramElementFactory {
      * @param node2        the second node
      * @return the created connection
      */
-    UmlConnection createConnection(RelationType relationType, UmlNode node1, UmlNode node2);
+    UmlConnection createConnection(RelationType relationType, UmlNode node1, UmlNode node2) throws AddConnectionException;
 
     /**
      * Asks the factory for the connect method of the specified RelationType.

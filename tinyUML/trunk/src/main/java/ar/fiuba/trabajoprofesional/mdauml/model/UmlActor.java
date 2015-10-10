@@ -1,5 +1,8 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * This class represents an UML Actor
  *
@@ -14,6 +17,8 @@ public class UmlActor extends AbstractUmlModelElement {
 
     private static UmlActor prototype;
     private String description;
+    private UmlActor parent=null;
+    private Set<UmlActor> children = new HashSet<>();
 
     /**
      * Constructor.
@@ -40,6 +45,30 @@ public class UmlActor extends AbstractUmlModelElement {
         this.description = description;
     }
 
+    public void addParent(UmlActor parent){
+        if(this.equals(parent) || (this.parent!=null && this.parent.equals(parent)))
+            return;
+
+        if(this.parent!=null)
+            this.parent.removeChild(this);
+        this.parent = parent;
+        this.parent.addChild(this);
+
+    }
+    public void removeParent(){
+        if(this.parent==null)
+            return;
+        this.parent.removeChild(this);
+        this.parent=null;
+    }
+    private void addChild(UmlActor child){
+        this.children.add(child);
+
+    }
+
+    private void removeChild(UmlActor child){
+       this.children.remove(child);
+    }
 
     @Override public boolean equals(Object obj) {
         if (obj instanceof UmlActor && ((UmlActor) obj).getName().equals(this.getName()))
