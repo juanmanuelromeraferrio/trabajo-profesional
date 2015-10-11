@@ -201,6 +201,15 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
         return false;
     }
 
+    @Override
+    public void reset() {
+        mapMainElementsCounts = new HashMap<UmlModelElement, Long>();
+        diagrams = new ArrayList<UmlDiagram>();
+        modelListeners = new HashSet<UmlModelListener>();
+
+
+    }
+
     @Override public void nameChanged(NamedElement element) throws ElementNameAlreadyExist {
         Set<UmlModelElement> mainElements = mapMainElementsCounts.keySet();
         for (UmlModelElement modelElement : mainElements) {

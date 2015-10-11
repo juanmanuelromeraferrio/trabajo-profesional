@@ -44,4 +44,9 @@ public class ElementNameGenerator implements Serializable {
     public static Map<ElementType, Integer> getNameMap() {
         return nameMap;
     }
+
+    public static void reset(){
+        umlModel=null;
+        nameMap = new HashMap<ElementType, Integer>();
+    }
 }

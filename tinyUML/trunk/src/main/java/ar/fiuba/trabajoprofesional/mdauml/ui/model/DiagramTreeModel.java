@@ -100,8 +100,10 @@ public class DiagramTreeModel extends DefaultTreeModel
         }
         classFolder.removeAllChildren();
         useCaseFolder.removeAllChildren();
+        modelFolder.removeAllChildren();
         nodeStructureChanged(classFolder);
         nodeStructureChanged(useCaseFolder);
+        nodeStructureChanged(modelFolder);
     }
 
     /**

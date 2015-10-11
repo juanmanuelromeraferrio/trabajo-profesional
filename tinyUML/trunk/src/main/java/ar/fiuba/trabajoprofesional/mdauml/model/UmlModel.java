@@ -112,4 +112,5 @@ public interface UmlModel extends Serializable {
      */
     boolean exist(String name);
 
+    void reset();
 }

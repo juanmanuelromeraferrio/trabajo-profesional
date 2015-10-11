@@ -265,9 +265,13 @@ public class ApplicationState
     protected void newProject() {
         undoManager.discardAllEdits();
         tabbedPane.removeAll();
-        umlModel = new UmlModelImpl();
-        editorFactory.reset();
+        if(umlModel==null)
+            umlModel=new UmlModelImpl();
+        else
+            umlModel.reset();
+        ElementNameGenerator.reset();
         ElementNameGenerator.setModel(umlModel);
+        editorFactory.reset();
         openNewUseCaseEditor();
         treeModel.setModel(umlModel);
         tree.expandPath(treeModel.getModelPath());

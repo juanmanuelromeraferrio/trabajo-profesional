@@ -58,6 +58,7 @@ public class EditorFactory {
      */
     public void reset() {
         classCounter = 1;
+        useCaseCounter = 1;
     }
 
     /**
