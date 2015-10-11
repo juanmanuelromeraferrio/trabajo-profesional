@@ -587,6 +587,7 @@ public abstract class DiagramEditor extends JComponent
      * {@inheritDoc}
      */
     public void notifyElementAdded(DiagramElement element) {
+        element.setDiagram(getDiagram());
         for (EditorStateListener l : editorListeners) {
             l.elementAdded(this);
         }
@@ -597,6 +598,7 @@ public abstract class DiagramEditor extends JComponent
      * {@inheritDoc}
      */
     public void notifyElementRemoved(DiagramElement element) {
+        element.setDiagram(null);
         for (EditorStateListener l : editorListeners) {
             l.elementRemoved(this);
         }

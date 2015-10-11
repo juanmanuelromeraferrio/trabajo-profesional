@@ -238,9 +238,25 @@ public final class UseCaseElement extends AbstractCompositeNode
         }else
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.invalidConnectionType"));
 
+    }
+    @Override public void removeConnection(Connection conn) {
 
 
+        if (conn instanceof Association) {
+            UmlConnection umlConn = (UmlConnection) conn;
+            Relation relation = (Relation) umlConn.getModelElement();
 
+            UmlModelElement element1 = relation.getElement1();
+            UmlModelElement element2 = relation.getElement2();
 
+            if (element1 != this.useCase && element1 instanceof UmlActor) {
+                this.useCase.removeUmlActor((UmlActor) element1);
+                super.removeConnection(conn);
+            } else if (element2 != this.useCase && element2 instanceof UmlActor) {
+                this.useCase.removeUmlActor((UmlActor) element2);
+                super.removeConnection(conn);
+
+            }
+        }
     }
 }

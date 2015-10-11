@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -43,6 +45,17 @@ public abstract class AbstractConnection implements Connection {
     private boolean isValid;
     private boolean isDashed;
     private List<Point2D> points;
+    private GeneralDiagram diagram;
+
+
+    @Override
+    public GeneralDiagram getDiagram() {
+        return diagram;
+    }
+
+    public void setDiagram(GeneralDiagram diagram) {
+        this.diagram = diagram;
+    }
 
     /**
      * {@inheritDoc}

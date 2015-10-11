@@ -18,6 +18,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Line2D;
@@ -46,8 +47,19 @@ public abstract class AbstractNode implements Node {
         new ArrayList<NodeChangeListener>();
     private List<Connection> connections = new ArrayList<Connection>();
     private transient NodeSelection selection = null;
+    private GeneralDiagram diagram;
 
     public AbstractNode() {
+
+    }
+
+    @Override
+    public GeneralDiagram getDiagram() {
+        return diagram;
+    }
+
+    public void setDiagram(GeneralDiagram diagram) {
+        this.diagram = diagram;
     }
 
     /**

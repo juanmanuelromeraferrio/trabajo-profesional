@@ -4,6 +4,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Inheritance;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
@@ -12,6 +13,8 @@ import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,9 +42,6 @@ public final class ActorElement extends AbstractCompositeNode
     private UmlActor actor;
     private Label label;
 
-    /**
-     * Private constructor.
-     */
     public ActorElement() {
         setSize(DEFAULT_WIDHT, DEFAULT_HEIGHT);
         setMinimumSize(MIN_WIDTH, MIN_HEIGHT);
@@ -243,8 +243,16 @@ public final class ActorElement extends AbstractCompositeNode
                 throw new AddConnectionException(error);
 
             }
+            super.addConnection(connection);
         }
 
+    }
+    @Override public void removeConnection(Connection connection){
+        if(connection instanceof Inheritance){
+            if(connection.getNode1()==this)
+                this.actor.removeParent();
+        }
+        super.removeConnection(connection);
     }
 
 
@@ -291,8 +299,25 @@ public final class ActorElement extends AbstractCompositeNode
     }
 
     private void addInheritance(Inheritance inheritance) throws AddConnectionException {
-        actor.addParent(((ActorElement) inheritance.getNode2()).getActor());
+        ActorElement fatherElement = ((ActorElement) inheritance.getNode2());
+        removeExistingInheritance();
+        actor.addParent(fatherElement.actor);
         super.addConnection(inheritance);
+    }
+
+    private void removeExistingInheritance() {
+        Connection todelete =null;
+        for(Connection conn : getConnections()){
+            if(conn instanceof Inheritance && conn.getNode1()==this){
+                todelete=conn;
+                break;
+            }
+        }
+        if(todelete==null)
+            return;
+        List<DiagramElement> conns=new ArrayList<>(); conns.add(todelete);
+        DeleteElementCommand command = new DeleteElementCommand(getDiagram().getEditor(),conns);
+        getDiagram().getEditor().execute(command);
     }
 
     public UmlActor getActor() {

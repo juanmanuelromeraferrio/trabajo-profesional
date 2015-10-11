@@ -34,6 +34,8 @@ import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 
 import javax.swing.*;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -337,7 +339,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
                         }
 
                         DeleteElementCommand command = new DeleteElementCommand( diagram.getEditor(),elementList);
-                        command.run();
+
+                        diagram.getEditor().execute(command);
                     }
 
                 }

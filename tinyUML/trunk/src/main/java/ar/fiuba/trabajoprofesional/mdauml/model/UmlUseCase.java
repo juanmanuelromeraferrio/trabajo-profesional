@@ -170,6 +170,8 @@ public class UmlUseCase extends AbstractUmlModelElement {
   public void removeUmlActor(UmlActor actor) {
 
     this.umlActors.remove(actor);
+    this.mainActors.remove(actor);
+    this.secondaryActors.remove(actor);
   }
 
 

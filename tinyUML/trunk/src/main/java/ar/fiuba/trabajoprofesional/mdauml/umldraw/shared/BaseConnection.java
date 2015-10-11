@@ -42,11 +42,22 @@ public class BaseConnection implements UmlConnection {
     private static final long serialVersionUID = 4796693000723361980L;
     private Relation relation;
     private Connection connection;
+    private GeneralDiagram diagram;
 
     /**
      * Makes the Constructor protected to prevent direct instantiation.
      */
     protected BaseConnection() {
+    }
+
+    @Override
+    public GeneralDiagram getDiagram() {
+        return diagram;
+    }
+
+    @Override
+    public void setDiagram(GeneralDiagram diagram) {
+        this.diagram = diagram;
     }
 
     /**

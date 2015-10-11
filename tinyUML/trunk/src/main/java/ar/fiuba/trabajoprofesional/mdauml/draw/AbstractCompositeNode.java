@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
@@ -38,6 +40,7 @@ public abstract class AbstractCompositeNode extends AbstractNode implements Comp
 
 
     public AbstractCompositeNode() {
+
     }
 
     /**

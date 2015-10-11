@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
@@ -167,4 +169,7 @@ public interface DiagramElement extends Cloneable {
      * @return true if the element is nestable in other elements, false otherwise
      */
     boolean isNestable();
+
+    GeneralDiagram getDiagram();
+    void setDiagram(GeneralDiagram d);
 }

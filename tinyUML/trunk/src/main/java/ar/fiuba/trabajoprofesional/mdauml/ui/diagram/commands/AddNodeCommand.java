@@ -78,6 +78,7 @@ public class AddNodeCommand extends AbstractUndoableEdit implements Command {
      * {@inheritDoc}
      */
     public void run() {
+
         parent.addChild(node);
         node.setAbsolutePos(absx, absy);
         notification.notifyElementAdded(node);
