@@ -17,8 +17,8 @@ public class UmlActor extends AbstractUmlModelElement {
 
     private static UmlActor prototype;
     private String description;
-    private UmlActor parent=null;
-    private Set<UmlActor> children = new HashSet<>();
+    private InheritanceRelation parentRel;
+    private Set<InheritanceRelation> children = new HashSet<>();
 
     /**
      * Constructor.
@@ -45,29 +45,35 @@ public class UmlActor extends AbstractUmlModelElement {
         this.description = description;
     }
 
-    public void addParent(UmlActor parent){
-        if(this.equals(parent) || (this.parent!=null && this.parent.equals(parent)))
+    public void addParent(InheritanceRelation rel){
+        UmlActor relParent= (UmlActor) rel.getParent();
+
+
+        if(this.equals(relParent) || (this.parentRel !=null && this.parentRel.equals(rel)))
             return;
 
-        if(this.parent!=null)
-            this.parent.removeChild(this);
-        this.parent = parent;
-        this.parent.addChild(this);
+        if(this.parentRel !=null){
+            UmlActor parent = (UmlActor)this.parentRel.getParent();
+            parent.removeChild(this.parentRel);
+        }
+        this.parentRel = rel;
+        relParent.addChild(rel);
 
     }
     public void removeParent(){
-        if(this.parent==null)
+        if(this.parentRel ==null)
             return;
-        this.parent.removeChild(this);
-        this.parent=null;
+        UmlActor parent = (UmlActor)this.parentRel.getParent();
+        parent.removeChild(this.parentRel);
+        this.parentRel =null;
     }
-    private void addChild(UmlActor child){
-        this.children.add(child);
+    private void addChild(InheritanceRelation rel){
+        this.children.add(rel);
 
     }
 
-    private void removeChild(UmlActor child){
-       this.children.remove(child);
+    private void removeChild(InheritanceRelation rel){
+       this.children.remove(rel);
     }
 
     @Override public boolean equals(Object obj) {
@@ -79,5 +85,19 @@ public class UmlActor extends AbstractUmlModelElement {
     @Override
     public ElementType getElementType() {
         return ElementType.ACTOR;
+    }
+
+    public UmlActor getParent() {
+        if(parentRel==null)
+            return null;
+        return (UmlActor) parentRel.getParent();
+    }
+
+    public Set<UmlActor> getChildren() {
+        Set<UmlActor>  actorChildren = new HashSet<>();
+        for(InheritanceRelation rel: children)
+            actorChildren.add((UmlActor) rel.getChild());
+
+        return actorChildren;
     }
 }

@@ -21,6 +21,9 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
+import ar.fiuba.trabajoprofesional.mdauml.model.InheritanceRelation;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.ArrowConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
 
 import java.awt.*;
@@ -34,7 +37,7 @@ import java.awt.geom.Point2D;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class Inheritance extends BaseConnection {
+public final class Inheritance extends ArrowConnection {
 
     private static final long serialVersionUID = 3261336029815928290L;
     private static Inheritance prototype;
@@ -45,6 +48,9 @@ public final class Inheritance extends BaseConnection {
     private Inheritance() {
         setConnection(new RectilinearConnection());
         setIsDashed(false);
+        setOpenHead(false);
+        setHeadColor(Color.WHITE);
+        relation=new InheritanceRelation();
     }
 
     /**
@@ -63,25 +69,6 @@ public final class Inheritance extends BaseConnection {
      */
     @Override public void draw(DrawingContext drawingContext) {
         super.draw(drawingContext);
-        drawInheritanceArrow(drawingContext, calculateRotationInEndPoint2());
     }
 
-    /**
-     * Draws the fat inheritance arrow.
-     *
-     * @param drawingContext    the drawing context
-     * @param rotationTransform the rotation transform
-     */
-    private void drawInheritanceArrow(DrawingContext drawingContext,
-        AffineTransform rotationTransform) {
-        Point2D endpoint = getEndPoint2();
-        double x = endpoint.getX(), y = endpoint.getY();
-        GeneralPath arrow = new GeneralPath();
-        arrow.moveTo(x - 9, y - 5);
-        arrow.lineTo(x, y);
-        arrow.lineTo(x - 9, y + 5);
-        arrow.closePath();
-        arrow.transform(rotationTransform);
-        drawingContext.draw(arrow, Color.WHITE);
-    }
 }

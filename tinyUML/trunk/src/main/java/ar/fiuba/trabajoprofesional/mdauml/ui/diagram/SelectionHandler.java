@@ -117,7 +117,9 @@ public class SelectionHandler implements EditorMode {
         handleSelectionOnMousePress(e);
         if (e.isPopupTrigger()) {
             displayContextMenu(e);
+
         }
+        editor.redraw();
     }
 
     /**
@@ -127,9 +129,8 @@ public class SelectionHandler implements EditorMode {
      */
     private void displayContextMenu(EditorMouseEvent e) {
         double mx = e.getX(), my = e.getY();
-        Selection selection = getSelection(mx, my);
         if (!nothingSelected()) {
-            JPopupMenu menu = menubuilder.createContextMenu(selection);
+            JPopupMenu menu = menubuilder.createContextMenu(currentSelection);
             menu.show(editor, e.getMouseEvent().getX(), e.getMouseEvent().getY());
         }
     }
@@ -149,6 +150,8 @@ public class SelectionHandler implements EditorMode {
             }
 
             currentDragged.startPressing(mx, my);
+        } else if(e.isPopupTrigger()){   //dragging and select if right click
+            currentSelection=currentDragged;
         }
     }
 
@@ -197,9 +200,7 @@ public class SelectionHandler implements EditorMode {
      */
     public void mouseReleased(EditorMouseEvent e) {
         handleSelectionOnMouseReleased(e);
-        if (e.isPopupTrigger()) {
-            displayContextMenu(e);
-        }
+
     }
 
     /**

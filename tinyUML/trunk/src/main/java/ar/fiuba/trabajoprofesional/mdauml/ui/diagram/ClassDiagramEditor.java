@@ -96,18 +96,7 @@ public class ClassDiagramEditor extends DiagramEditor {
                 ClassDiagramEditor.class
                     .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.INTERFACE_REALIZATION));
-            selectorMap.put("RESET_POINTS",
-                new MethodCall(ClassDiagramEditor.class.getMethod("resetConnectionPoints")));
-            selectorMap.put("RECT_TO_DIRECT",
-                new MethodCall(ClassDiagramEditor.class.getMethod("rectilinearToDirect")));
-            selectorMap.put("DIRECT_TO_RECT",
-                new MethodCall(ClassDiagramEditor.class.getMethod("directToRectilinear")));
-            selectorMap.put("NAVIGABLE_TO_SOURCE", new MethodCall(
-                ClassDiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
-                RelationEndType.SOURCE));
-            selectorMap.put("NAVIGABLE_TO_TARGET", new MethodCall(
-                ClassDiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
-                RelationEndType.TARGET));
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }
@@ -144,53 +133,7 @@ public class ClassDiagramEditor extends DiagramEditor {
         }
     }
 
-    /**
-     * Switches a rectilinear connection to a direct one.
-     */
-    public void rectilinearToDirect() {
-        if (getSelectedElements().size() > 0 && getSelectedElements()
-            .get(0) instanceof UmlConnection) {
-            UmlConnection conn = (UmlConnection) getSelectedElements().get(0);
-            execute(new ConvertConnectionTypeCommand(this, conn, new SimpleConnection()));
-            // we can only tell the selection handler to forget about the selection
-            selectionHandler.deselectAll();
-        }
-    }
 
-    /**
-     * Switches a direct connection into a rectilinear one.
-     */
-    public void directToRectilinear() {
-        if (getSelectedElements().size() > 0 && getSelectedElements()
-            .get(0) instanceof UmlConnection) {
-            UmlConnection conn = (UmlConnection) getSelectedElements().get(0);
-            execute(new ConvertConnectionTypeCommand(this, conn, new RectilinearConnection()));
-            // we can only tell the selection handler to forget about the selection
-            selectionHandler.deselectAll();
-        }
-    }
-
-    /**
-     * Sets the end type navigability of the current selected connection.
-     *
-     * @param endType the RelationEndType
-     */
-    public void setNavigability(RelationEndType endType) {
-        if (getSelectedElements().size() > 0 && getSelectedElements()
-            .get(0) instanceof UmlConnection) {
-            UmlConnection conn = (UmlConnection) getSelectedElements().get(0);
-            Relation relation = (Relation) conn.getModelElement();
-            // Setup a toggle
-            if (endType == RelationEndType.SOURCE) {
-                execute(new SetConnectionNavigabilityCommand(this, conn, endType,
-                    !relation.isNavigableToElement1()));
-            }
-            if (endType == RelationEndType.TARGET) {
-                execute(new SetConnectionNavigabilityCommand(this, conn, endType,
-                    !relation.isNavigableToElement2()));
-            }
-        }
-    }
 
     /**
      * {@inheritDoc}

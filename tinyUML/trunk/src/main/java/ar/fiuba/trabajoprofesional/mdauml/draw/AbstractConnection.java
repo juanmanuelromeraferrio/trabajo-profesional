@@ -48,6 +48,7 @@ public abstract class AbstractConnection implements Connection {
     private GeneralDiagram diagram;
 
 
+
     @Override
     public GeneralDiagram getDiagram() {
         return diagram;

@@ -1,5 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +28,8 @@ public class UmlUseCase extends AbstractUmlModelElement {
   private List<Flow> alternativeFlows = new ArrayList<Flow>();
   private List<String> preconditions = new ArrayList<String>();
   private List<String> postconditions = new ArrayList<String>();
+
+  private Set<ExtendRelation> extendRelations = new HashSet<>();
 
   /**
    * Constructor.
@@ -200,5 +204,16 @@ public class UmlUseCase extends AbstractUmlModelElement {
     if (obj instanceof UmlUseCase && ((UmlUseCase) obj).getName().equals(this.getName()))
       return true;
     return false;
+  }
+
+  public void addExtend(ExtendRelation extend) {
+    extendRelations.add(extend);
+  }
+
+  public void removeExtend(ExtendRelation extend) {
+    extendRelations.remove(extend);
+  }
+  public boolean isExtending(){
+    return !extendRelations.isEmpty();
   }
 }

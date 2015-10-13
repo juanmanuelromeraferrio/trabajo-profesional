@@ -25,6 +25,7 @@ public class UseCaseEditorToolbarManager extends AbstractToolbarManager {
         toolbar.addSeparator(new Dimension(10, 10));
         toolbar.add(createToggleButtonWithName(buttongroup, "association"));
         toolbar.add(createToggleButtonWithName(buttongroup, "inheritance"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "extend"));
         doClick("SELECT_MODE");
     }
 

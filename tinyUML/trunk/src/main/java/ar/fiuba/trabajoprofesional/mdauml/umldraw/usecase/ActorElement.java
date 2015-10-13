@@ -287,7 +287,9 @@ public final class ActorElement extends AbstractCompositeNode
                     else
                         return ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase");
 
-            else return "Invalid Connection";
+            else if(connection instanceof Extend  )
+                return ApplicationResources.getInstance().getString("error.connection.actor.invalidConnection");
+                else   return "Invalid Connection";
     }
 
     private boolean isValidInheritance(Connection connection) {
@@ -299,9 +301,8 @@ public final class ActorElement extends AbstractCompositeNode
     }
 
     private void addInheritance(Inheritance inheritance) throws AddConnectionException {
-        ActorElement fatherElement = ((ActorElement) inheritance.getNode2());
         removeExistingInheritance();
-        actor.addParent(fatherElement.actor);
+        actor.addParent((InheritanceRelation) inheritance.getModelElement());
         super.addConnection(inheritance);
     }
 

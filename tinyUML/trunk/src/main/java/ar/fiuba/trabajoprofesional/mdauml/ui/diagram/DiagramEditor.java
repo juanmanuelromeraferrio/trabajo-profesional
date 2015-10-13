@@ -38,24 +38,15 @@ import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramOperations;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
-import ar.fiuba.trabajoprofesional.mdauml.draw.NodeChangeListener;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Scaling;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
+import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DiagramEditorNotification;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.EditConnectionPointsCommand;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.MoveElementCommand;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ResetConnectionPointsCommand;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ResizeElementCommand;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
@@ -164,6 +155,21 @@ public abstract class DiagramEditor extends JComponent
             selectorMap.put("CREATE_NOTE_CONNECTION", new MethodCall(
                 DiagramEditor.class.getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.NOTE_CONNECTOR));
+
+            selectorMap.put("RESET_POINTS",
+                    new MethodCall(DiagramEditor.class.getMethod("resetConnectionPoints")));
+            selectorMap.put("RECT_TO_DIRECT",
+                    new MethodCall(DiagramEditor.class.getMethod("rectilinearToDirect")));
+            selectorMap.put("DIRECT_TO_RECT",
+                    new MethodCall(DiagramEditor.class.getMethod("directToRectilinear")));
+            selectorMap.put("NAVIGABLE_TO_SOURCE", new MethodCall(
+                    DiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
+                    RelationEndType.SOURCE));
+            selectorMap.put("NAVIGABLE_TO_TARGET", new MethodCall(
+                    DiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
+                    RelationEndType.TARGET));
+
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }
@@ -517,6 +523,54 @@ public abstract class DiagramEditor extends JComponent
     public void editProperties() {
         if (getSelectedElements().size() > 0) {
             editProperties(getSelectedElements().get(0));
+        }
+    }
+
+    /**
+     * Switches a rectilinear connection to a direct one.
+     */
+    public void rectilinearToDirect() {
+        if (getSelectedElements().size() > 0 && getSelectedElements()
+                .get(0) instanceof UmlConnection) {
+            UmlConnection conn = (UmlConnection) getSelectedElements().get(0);
+            execute(new ConvertConnectionTypeCommand(this, conn, new SimpleConnection()));
+            // we can only tell the selection handler to forget about the selection
+            selectionHandler.deselectAll();
+        }
+    }
+
+    /**
+     * Switches a direct connection into a rectilinear one.
+     */
+    public void directToRectilinear() {
+        if (getSelectedElements().size() > 0 && getSelectedElements()
+                .get(0) instanceof UmlConnection) {
+            UmlConnection conn = (UmlConnection) getSelectedElements().get(0);
+            execute(new ConvertConnectionTypeCommand(this, conn, new RectilinearConnection()));
+            // we can only tell the selection handler to forget about the selection
+            selectionHandler.deselectAll();
+        }
+    }
+
+    /**
+     * Sets the end type navigability of the current selected connection.
+     *
+     * @param endType the RelationEndType
+     */
+    public void setNavigability(RelationEndType endType) {
+        if (getSelectedElements().size() > 0 && getSelectedElements()
+                .get(0) instanceof UmlConnection) {
+            UmlConnection conn = (UmlConnection) getSelectedElements().get(0);
+            Relation relation = (Relation) conn.getModelElement();
+            // Setup a toggle
+            if (endType == RelationEndType.SOURCE) {
+                execute(new SetConnectionNavigabilityCommand(this, conn, endType,
+                        !relation.isNavigableToElement1()));
+            }
+            if (endType == RelationEndType.TARGET) {
+                execute(new SetConnectionNavigabilityCommand(this, conn, endType,
+                        !relation.isNavigableToElement2()));
+            }
         }
     }
 

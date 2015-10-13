@@ -71,14 +71,20 @@ public class UseCaseDiagram extends GeneralDiagram {
         notnavigable.setCanSetElement1Navigability(false);
         notnavigable.setCanSetElement2Navigability(false);
 
+        UmlRelation targetnavigable = new UmlRelation();
+        targetnavigable.setCanSetElement1Navigability(false);
+        targetnavigable.setCanSetElement2Navigability(true);
+
         Association assocPrototype = (Association) SimpleAssociation.getPrototype().clone();
         assocPrototype.setRelation((Relation) fullnavigable.clone());
         connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
 
 
         Inheritance inheritPrototype = (Inheritance) Inheritance.getPrototype().clone();
-        inheritPrototype.setRelation((Relation) notnavigable.clone());
         connectionPrototypes.put(RelationType.INHERITANCE, inheritPrototype);
+
+        Extend extendPrototype = (Extend) Extend.getPrototype().clone();
+        connectionPrototypes.put(RelationType.EXTEND, extendPrototype);
 
         return connectionPrototypes;
     }

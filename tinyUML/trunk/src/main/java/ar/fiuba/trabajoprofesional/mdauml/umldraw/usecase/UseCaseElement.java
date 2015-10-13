@@ -219,44 +219,79 @@ public final class UseCaseElement extends AbstractCompositeNode
 
     @Override public void addConnection(Connection conn) throws AddConnectionException {
 
+        UmlConnection umlConn = (UmlConnection) conn;
+        Relation relation = (Relation) umlConn.getModelElement();
+
+        UmlModelElement element1 = relation.getElement1();
+        UmlModelElement element2 = relation.getElement2();
 
         if (conn instanceof Association) {
-            UmlConnection umlConn = (UmlConnection) conn;
-            Relation relation = (Relation) umlConn.getModelElement();
 
-            UmlModelElement element1 = relation.getElement1();
-            UmlModelElement element2 = relation.getElement2();
+            addAssociation(element1,element2);
+            super.addConnection(conn);
 
-            if (element1 != this.useCase && element1 instanceof UmlActor) {
-                this.useCase.addUmlActor((UmlActor) element1);
-                super.addConnection(conn);
-            } else if (element2 != this.useCase && element2 instanceof UmlActor) {
-                this.useCase.addUmlActor((UmlActor) element2);
-                super.addConnection(conn);
-            }else
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.association.withoutactor"));
+        }else if(conn instanceof Extend){
+            addExtend((Extend) conn,element1,element2);
+            super.addConnection(conn);
+
+
         }else
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.invalidConnectionType"));
 
     }
+
+    private void addExtend(Extend extend,UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
+        if(element1==this.useCase && element2 instanceof UmlUseCase) {
+            if(element2 == this.useCase)
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.autoreferencial"));
+            this.useCase.addExtend((ExtendRelation) extend.getModelElement());
+        }
+        else if(element2!=this.useCase || !(element1 instanceof UmlUseCase))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.withoutUsecase"));
+
+    }
+
+    private void addAssociation(UmlModelElement element1, UmlModelElement element2) throws AddConnectionException{
+        if (element1 != this.useCase && element1 instanceof UmlActor) {
+            this.useCase.addUmlActor((UmlActor) element1);
+
+        } else if (element2 != this.useCase && element2 instanceof UmlActor) {
+            this.useCase.addUmlActor((UmlActor) element2);
+
+        }else
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.association.withoutactor"));
+
+    }
+
     @Override public void removeConnection(Connection conn) {
 
 
+        UmlConnection umlConn = (UmlConnection) conn;
+        Relation relation = (Relation) umlConn.getModelElement();
+
+        UmlModelElement element1 = relation.getElement1();
+        UmlModelElement element2 = relation.getElement2();
+
         if (conn instanceof Association) {
-            UmlConnection umlConn = (UmlConnection) conn;
-            Relation relation = (Relation) umlConn.getModelElement();
+            removeAssociation(element1,element2);
+            super.removeConnection(conn);
+        }else if(conn instanceof Extend){
+            removeExtend((Extend)conn,element1,element2);
+            super.removeConnection(conn);
+        }
+    }
 
-            UmlModelElement element1 = relation.getElement1();
-            UmlModelElement element2 = relation.getElement2();
+    private void removeExtend(Extend conn, UmlModelElement element1, UmlModelElement element2) {
+        if(this.useCase==element1)
+            useCase.removeExtend((ExtendRelation) conn.getModelElement());
+    }
 
-            if (element1 != this.useCase && element1 instanceof UmlActor) {
-                this.useCase.removeUmlActor((UmlActor) element1);
-                super.removeConnection(conn);
-            } else if (element2 != this.useCase && element2 instanceof UmlActor) {
-                this.useCase.removeUmlActor((UmlActor) element2);
-                super.removeConnection(conn);
+    private void removeAssociation(UmlModelElement element1, UmlModelElement element2) {
+        if (element1 != this.useCase && element1 instanceof UmlActor) {
+            this.useCase.removeUmlActor((UmlActor) element1);
+        } else if (element2 != this.useCase && element2 instanceof UmlActor) {
+            this.useCase.removeUmlActor((UmlActor) element2);
 
-            }
         }
     }
 }

@@ -123,7 +123,6 @@ public class ClassDiagram extends GeneralDiagram {
         connectionPrototypes.put(RelationType.AGGREGATION, aggrPrototype);
 
         Inheritance inheritPrototype = (Inheritance) Inheritance.getPrototype().clone();
-        inheritPrototype.setRelation((Relation) notnavigable.clone());
         connectionPrototypes.put(RelationType.INHERITANCE, inheritPrototype);
 
         Inheritance interfRealPrototype = (Inheritance) Inheritance.getPrototype().clone();

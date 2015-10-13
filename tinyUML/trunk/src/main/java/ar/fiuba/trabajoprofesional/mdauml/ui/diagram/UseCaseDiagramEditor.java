@@ -1,10 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
@@ -63,6 +60,11 @@ public class UseCaseDiagramEditor extends DiagramEditor {
             selectorMap.put("CREATE_INHERITANCE", new MethodCall(UseCaseDiagramEditor.class
                     .getMethod("setCreateConnectionMode", RelationType.class),
                     RelationType.INHERITANCE));
+
+            selectorMap.put("CREATE_EXTEND", new MethodCall(UseCaseDiagramEditor.class
+                    .getMethod("setCreateConnectionMode", RelationType.class),
+                    RelationType.EXTEND));
+
 
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
