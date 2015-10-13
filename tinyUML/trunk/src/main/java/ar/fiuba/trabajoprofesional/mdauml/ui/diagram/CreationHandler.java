@@ -24,6 +24,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
 
 import java.awt.*;
@@ -103,6 +104,17 @@ public class CreationHandler implements EditorMode {
      * {@inheritDoc}
      */
     public void mouseReleased(EditorMouseEvent event) {
+        if(AppFrame.get().getAppState().TREE_DRAGING){
+            CompositeNode parent = editor.getDiagram();
+            DiagramElement possibleParent =
+                    editor.getDiagram().getChildAt(tmpPos.getX(), tmpPos.getY());
+            if (isNestingCondition(possibleParent)) {
+                parent = (CompositeNode) possibleParent;
+            }
+            AddNodeCommand createCommand =
+                    new AddNodeCommand(editor, parent, element, tmpPos.getX(), tmpPos.getY());
+            editor.execute(createCommand);
+        }
     }
 
     /**

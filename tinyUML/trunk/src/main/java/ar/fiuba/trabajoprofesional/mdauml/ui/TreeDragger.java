@@ -42,6 +42,7 @@ public class TreeDragger implements TreeDraggerListener {
             Node element;
             try {
                 element = diagram.createNodeFromModel(draggerElement);
+                element.addNodeChangeListener(diagram);
             }catch (IllegalArgumentException e){
                 JOptionPane.showMessageDialog(AppFrame.get(), getResourceString("error.dragger.wrongDiagram.message"),
                         getResourceString("error.dragger.wrongDiagram.title"), JOptionPane.ERROR_MESSAGE);
