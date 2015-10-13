@@ -65,6 +65,10 @@ public class UseCaseDiagramEditor extends DiagramEditor {
                     .getMethod("setCreateConnectionMode", RelationType.class),
                     RelationType.EXTEND));
 
+            selectorMap.put("CREATE_INCLUDE", new MethodCall(UseCaseDiagramEditor.class
+                    .getMethod("setCreateConnectionMode", RelationType.class),
+                    RelationType.INCLUDE));
+
 
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();

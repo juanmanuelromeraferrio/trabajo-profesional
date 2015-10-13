@@ -287,7 +287,7 @@ public final class ActorElement extends AbstractCompositeNode
                     else
                         return ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase");
 
-            else if(connection instanceof Extend  )
+            else if(connection instanceof Extend  || connection instanceof Include)
                 return ApplicationResources.getInstance().getString("error.connection.actor.invalidConnection");
                 else   return "Invalid Connection";
     }

@@ -30,6 +30,7 @@ public class UmlUseCase extends AbstractUmlModelElement {
   private List<String> postconditions = new ArrayList<String>();
 
   private Set<ExtendRelation> extendRelations = new HashSet<>();
+  private Set<IncludeRelation> includeRelations = new HashSet<>();
 
   /**
    * Constructor.
@@ -215,5 +216,16 @@ public class UmlUseCase extends AbstractUmlModelElement {
   }
   public boolean isExtending(){
     return !extendRelations.isEmpty();
+  }
+
+  public void addInclude(IncludeRelation include) {
+    includeRelations.add(include);
+  }
+
+  public void removeInclude(IncludeRelation include) {
+    includeRelations.remove(include);
+  }
+  public boolean isIncluding(){
+    return !includeRelations.isEmpty();
   }
 }

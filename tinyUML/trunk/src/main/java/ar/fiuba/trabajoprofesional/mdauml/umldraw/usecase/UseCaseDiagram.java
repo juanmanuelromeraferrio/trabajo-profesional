@@ -86,6 +86,9 @@ public class UseCaseDiagram extends GeneralDiagram {
         Extend extendPrototype = (Extend) Extend.getPrototype().clone();
         connectionPrototypes.put(RelationType.EXTEND, extendPrototype);
 
+        Include includePrototype = (Include) Include.getPrototype().clone();
+        connectionPrototypes.put(RelationType.INCLUDE, includePrototype);
+
         return connectionPrototypes;
     }
 }

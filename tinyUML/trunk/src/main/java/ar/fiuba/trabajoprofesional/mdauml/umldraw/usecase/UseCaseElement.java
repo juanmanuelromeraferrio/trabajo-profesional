@@ -235,9 +235,24 @@ public final class UseCaseElement extends AbstractCompositeNode
             super.addConnection(conn);
 
 
+        }else if(conn instanceof Include){
+            addInclude((Include) conn, element1, element2);
+            super.addConnection(conn);
+
+
         }else
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.invalidConnectionType"));
 
+    }
+
+    private void addInclude(Include include, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
+        if(element1==this.useCase && element2 instanceof UmlUseCase) {
+            if(element2 == this.useCase)
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.autoreferencial"));
+            this.useCase.addInclude((IncludeRelation) include.getModelElement());
+        }
+        else if(element2!=this.useCase || !(element1 instanceof UmlUseCase))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.withoutUsecase"));
     }
 
     private void addExtend(Extend extend,UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
@@ -278,7 +293,15 @@ public final class UseCaseElement extends AbstractCompositeNode
         }else if(conn instanceof Extend){
             removeExtend((Extend)conn,element1,element2);
             super.removeConnection(conn);
+        }else if(conn instanceof Include){
+            removeInclude((Include) conn, element1, element2);
+            super.removeConnection(conn);
         }
+    }
+
+    private void removeInclude(Include include, UmlModelElement element1, UmlModelElement element2) {
+        if(this.useCase==element1)
+            useCase.removeInclude((IncludeRelation) include.getModelElement());
     }
 
     private void removeExtend(Extend conn, UmlModelElement element1, UmlModelElement element2) {
