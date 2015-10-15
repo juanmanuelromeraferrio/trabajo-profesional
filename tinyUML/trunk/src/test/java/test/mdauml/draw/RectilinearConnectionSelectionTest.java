@@ -22,6 +22,8 @@ package test.mdauml.draw;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.util.List;
+
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
@@ -73,7 +75,7 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    * {@inheritDoc}
    */
   @Override
-  protected void setUp() {
+  protected void setUp() throws AddConnectionException {
     setupHorizontalConnection();
     setupVerticalConnection();
     setupRectilinearConnection();
@@ -82,7 +84,7 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
   /**
    * Sets up the horizontal connection.
    */
-  private void setupHorizontalConnection() {
+  private void setupHorizontalConnection() throws AddConnectionException {
     horizNode1.setOrigin(10.0, 100.0);
     horizNode2.setOrigin(120.0, 98.0); // slightly above
     horizSelection = setupConnection(horizNode1, horizNode2, horizConn);    
@@ -91,7 +93,7 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
   /**
    * Sets up the vertical connection.
    */
-  private void setupVerticalConnection() {
+  private void setupVerticalConnection() throws AddConnectionException {
     vertNode1.setOrigin(10.0, 100.0);
     vertNode2.setOrigin(12.0, 180.0); // slightly right
     vertSelection = setupConnection(vertNode1, vertNode2, vertConn);        
@@ -100,7 +102,7 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
   /**
    * Sets up the rectilinear connection.
    */
-  private void setupRectilinearConnection() {
+  private void setupRectilinearConnection() throws AddConnectionException {
     rectNode1.setOrigin(10.0, 100.0);
     rectNode2.setOrigin(120.0, 180.0);
     rectSelection = setupConnection(rectNode1, rectNode2, rectConn);    
@@ -114,7 +116,7 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    * @return the selection
    */
   private RectilinearConnectionSelection setupConnection(Node node1, Node node2,
-    Connection conn) {
+    Connection conn) throws AddConnectionException {
     node1.setParent(parent);
     node1.setSize(80.0, 40.0);
     node2.setParent(parent);
@@ -133,7 +135,7 @@ public class RectilinearConnectionSelectionTest extends MockObjectTestCase {
    * @param node1 the first node
    * @param node2 the second node
    */
-  private void bindConnection(Connection conn, Node node1, Node node2) {
+  private void bindConnection(Connection conn, Node node1, Node node2) throws AddConnectionException {
     conn.setNode1(node1);
     conn.setNode2(node2);
     node1.addConnection(conn);

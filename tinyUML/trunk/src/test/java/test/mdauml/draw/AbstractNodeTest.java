@@ -27,6 +27,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.draw.AbstractNode;
@@ -385,7 +387,7 @@ public class AbstractNodeTest extends MockObjectTestCase {
   /**
    * Tests adding and removing connections.
    */
-  public void testConnections() {
+  public void testConnections() throws AddConnectionException {
     Mock mockConnection = mock(Connection.class);
     node.addConnection((Connection) mockConnection.proxy());
     assertEquals(1, node.getConnections().size());

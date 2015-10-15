@@ -58,6 +58,7 @@ public abstract class AbstractNode implements Node {
         return diagram;
     }
 
+
     public void setDiagram(GeneralDiagram diagram) {
         this.diagram = diagram;
     }

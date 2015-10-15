@@ -19,9 +19,10 @@
  */
 package test.mdauml.umldraw.clazz;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
@@ -29,7 +30,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Dependency;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.DiagramElementFactory;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.PackageElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
@@ -100,7 +101,7 @@ public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   /**
    * Tests the creation of a Dependency given two Nodes.
    */
-  public void testCreateDependency() {
+  public void testCreateDependency() throws AddConnectionException {
     PackageElement source = (PackageElement)
       factory.createNode(ElementType.PACKAGE);
     PackageElement target = (PackageElement)
@@ -117,7 +118,7 @@ public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   /**
    * Tests the creation of an Association.
    */
-  public void testCreateAssociation() {
+  public void testCreateAssociation() throws AddConnectionException {
     ClassElement class1 = (ClassElement) factory.createNode(ElementType.CLASS);
     ClassElement class2 = (ClassElement) factory.createNode(ElementType.CLASS);
 
@@ -132,7 +133,7 @@ public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   /**
    * Tests the creation of a Composition.
    */
-  public void testCreateComposition() {
+  public void testCreateComposition() throws AddConnectionException {
     ClassElement class1 = (ClassElement) factory.createNode(ElementType.CLASS);
     ClassElement class2 = (ClassElement) factory.createNode(ElementType.CLASS);
     
@@ -147,7 +148,7 @@ public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   /**
    * Tests the creation of an Aggregation.
    */
-  public void testCreateAggregation() {
+  public void testCreateAggregation() throws AddConnectionException {
     ClassElement class1 = (ClassElement) factory.createNode(ElementType.CLASS);
     ClassElement class2 = (ClassElement) factory.createNode(ElementType.CLASS);
     
@@ -162,7 +163,7 @@ public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   /**
    * Tests the creation of a note connection.
    */
-  public void testCreateNoteConnection() {
+  public void testCreateNoteConnection() throws AddConnectionException {
     ClassElement clss = (ClassElement) factory.createNode(ElementType.CLASS);
     NoteElement note = (NoteElement) factory.createNode(ElementType.NOTE);
     NoteConnection conn = (NoteConnection)

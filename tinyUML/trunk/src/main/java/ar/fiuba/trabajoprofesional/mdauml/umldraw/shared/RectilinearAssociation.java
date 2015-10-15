@@ -1,4 +1,4 @@
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;

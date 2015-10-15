@@ -29,9 +29,9 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation.ReadingDirection;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.AssociationNameLabel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.RectilinearAssociation;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.AssociationNameLabel;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.RectilinearAssociation;
 import test.mdauml.draw.MyAbsoluteParent;
 
 /**

@@ -22,6 +22,8 @@ package test.mdauml.draw;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.util.List;
+
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import org.jmock.cglib.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
@@ -58,12 +60,9 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
 
   /**
    * Sets up a connection.
-   * @param node1 the first node
-   * @param node2 the second node
-   * @param conn the connection
    * @return the selection
    */
-  private SimpleConnectionSelection setupConnection() {
+  private SimpleConnectionSelection setupConnection() throws AddConnectionException {
     node1.setParent(parent);
     node1.setSize(80.0, 40.0);
     node2.setParent(parent);
@@ -86,7 +85,7 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
    * @param node1 the first node
    * @param node2 the second node
    */
-  private void bindConnection(Connection conn, Node node1, Node node2) {
+  private void bindConnection(Connection conn, Node node1, Node node2) throws AddConnectionException {
     conn.setNode1(node1);
     conn.setNode2(node2);
     node1.addConnection(conn);
@@ -97,7 +96,7 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
    * Dragging a segment and hereby generating a new control point to drag
    * around, then cancel the drag.
    */
-  public void testDragSegmentAndCancel() {
+  public void testDragSegmentAndCancel() throws AddConnectionException {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();
@@ -120,7 +119,7 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
    * Dragging a segment and hereby generating a new control point to drag
    * around, then stop the drag.
    */
-  public void testDragSegmentAndStop() {
+  public void testDragSegmentAndStop() throws AddConnectionException {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();
@@ -142,7 +141,7 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
    * Dragging a segment and hereby generating a new control point to drag
    * around, then stop the drag at a meltin position.
    */
-  public void testDragSegmentAndStopAtMeltinPosition() {
+  public void testDragSegmentAndStopAtMeltinPosition() throws AddConnectionException {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();
@@ -169,7 +168,7 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
   /**
    * Dragging a point and moving it around.
    */
-  public void testDragPointAndStop() {
+  public void testDragPointAndStop() throws AddConnectionException {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();
@@ -191,7 +190,7 @@ public class SimpleConnectionSelectionTest extends MockObjectTestCase {
   /**
    * Dragging a point and moving it around and stopping at a meltin position.
    */
-  public void testDragPointAndStopWithMeldin() {
+  public void testDragPointAndStopWithMeldin() throws AddConnectionException {
     node1.setOrigin(10, 10); // (10, 10, 80, 40) -> max (90, 50)
     node2.setOrigin(120, 10); // (120, 10, 80, 40) -> max (200, 50)
     SimpleConnectionSelection selection = setupConnection();

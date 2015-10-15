@@ -20,6 +20,8 @@
 package test.mdauml.draw;
 
 import java.awt.geom.Point2D;
+
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
@@ -46,7 +48,7 @@ public class RectilinearLineConnectMethodTest extends MockObjectTestCase {
   /**
    * {@inheritDoc}
    */
-  protected void setUp() {
+  protected void setUp() throws AddConnectionException {
     sourceNode.setParent(parent);
     targetNode.setParent(parent);
     conn.setNode1(sourceNode);

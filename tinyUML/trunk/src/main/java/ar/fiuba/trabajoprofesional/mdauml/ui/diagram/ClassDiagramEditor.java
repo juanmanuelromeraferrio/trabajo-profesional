@@ -20,15 +20,10 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.ConvertConnectionTypeCommand;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.SetConnectionNavigabilityCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 

@@ -29,9 +29,9 @@ import org.jmock.cglib.MockObjectTestCase;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association.AssociationType;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.RectilinearAssociation;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association.AssociationType;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.RectilinearAssociation;
 import test.mdauml.draw.MyAbsoluteParent;
 import test.mdauml.draw.MyCompositeNode;
 

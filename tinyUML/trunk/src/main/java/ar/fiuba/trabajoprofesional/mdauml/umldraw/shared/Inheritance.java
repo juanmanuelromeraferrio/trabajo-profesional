@@ -17,19 +17,13 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
 import ar.fiuba.trabajoprofesional.mdauml.model.InheritanceRelation;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.ArrowConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Point2D;
 
 /**
  * An inheritance connection.

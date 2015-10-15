@@ -28,12 +28,8 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlComponent;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.NoteElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association.AssociationType;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association.AssociationType;
 
 /**
  * This class specializes the GeneralDiagram, at the same time it implements the

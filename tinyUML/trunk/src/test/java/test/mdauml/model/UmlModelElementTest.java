@@ -19,6 +19,7 @@
  */
 package test.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.model.AbstractUmlModelElement;
@@ -36,6 +37,11 @@ public class UmlModelElementTest extends MockObjectTestCase {
     // made public for testing
     public void notifyElementChanged() {
       super.notifyElementChanged();
+    }
+
+    @Override
+    public ElementType getElementType() {
+      return ElementType.ACTOR;
     }
   }
   

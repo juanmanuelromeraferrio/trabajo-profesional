@@ -42,11 +42,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.undo.UndoManager;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelImpl;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorMouseEvent;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorStateListener;
@@ -610,6 +606,11 @@ public class ApplicationState
 
 
     @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
+    }
+
+    @Override
+    public void elementAdded(UmlModelElement element, UmlPackage pkg, UmlDiagram diagram) {
+
     }
 
     @Override public void elementRemoved(UmlModelElement element, UmlDiagram diagram) {

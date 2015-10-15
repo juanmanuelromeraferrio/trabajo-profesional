@@ -28,14 +28,14 @@ import java.awt.*;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class StaticClassEditorToolbarManager extends AbstractToolbarManager {
+public class ClassEditorToolbarManager extends AbstractToolbarManager {
 
     private ButtonGroup buttongroup;
 
     /**
      * Constructor.
      */
-    public StaticClassEditorToolbarManager() {
+    public ClassEditorToolbarManager() {
         buttongroup = new ButtonGroup();
         JToolBar toolbar = getToolbar();
         toolbar.add(createToggleButtonWithName(buttongroup, "select"));
@@ -63,6 +63,6 @@ public class StaticClassEditorToolbarManager extends AbstractToolbarManager {
      * @return the toggle button
      */
     private JToggleButton createToggleButtonWithName(ButtonGroup aButtonGroup, String name) {
-        return createToggleButton(aButtonGroup, "statictoolbar." + name);
+        return createToggleButton(aButtonGroup, "classtoolbar." + name);
     }
 }

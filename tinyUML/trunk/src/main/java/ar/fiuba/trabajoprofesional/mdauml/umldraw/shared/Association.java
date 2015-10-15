@@ -17,12 +17,11 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

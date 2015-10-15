@@ -82,6 +82,10 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     public GeneralDiagram() {
     }
 
+    public UmlModel getUmlmodel() {
+        return umlmodel;
+    }
+
     /**
      * Writes the instance variables to the stream.
      *
@@ -402,13 +406,20 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     }
 
 
-    @Override public List<UmlDiagramElement> getElements(){
-        List<DiagramElement> children = getChildren();
+    @Override public List<UmlDiagramElement> getElements() {
+        return getElementFrom(this);
+    }
+    private List<UmlDiagramElement> getElementFrom(AbstractCompositeNode node){
+        List<DiagramElement> children = node.getChildren();
         List<UmlDiagramElement> elements = new ArrayList<>();
-        for(DiagramElement diagramElement: children)
-            if(diagramElement instanceof UmlDiagramElement)
-                elements.add((UmlDiagramElement) diagramElement);
+        for(DiagramElement child : children) {
+            if (child instanceof AbstractCompositeNode)
+                elements.addAll(getElementFrom((AbstractCompositeNode) child));
+            if (child instanceof UmlDiagramElement)
+                elements.add((UmlDiagramElement) child);
+        }
         return elements;
+
     }
     /**
      * {@inheritDoc}

@@ -47,6 +47,15 @@ public interface UmlModelListener {
     void elementAdded(UmlModelElement element, UmlDiagram diagram);
 
     /**
+     * Called when a element was added to a package.
+     *
+     * @param element the element that was added
+     * @param pkg the package where the element was added
+     * @param diagram the diagram where the element was added
+     */
+    void elementAdded(UmlModelElement element, UmlPackage pkg, UmlDiagram diagram);
+
+    /**
      * Called when a element was removed.
      *
      * @param element the element that was removed

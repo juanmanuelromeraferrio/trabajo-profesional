@@ -74,7 +74,7 @@ public class EditorFactory {
                 + (classCounter++));
         umlModel.addDiagram(diagram);
         return createEditorPanel(new ClassDiagramEditor( diagram),
-            new StaticClassEditorToolbarManager());
+            new ClassEditorToolbarManager());
     }
 
     /**
@@ -85,7 +85,7 @@ public class EditorFactory {
      */
     public EditorPanel openClassEditor(GeneralDiagram diagram   ) {
         return createEditorPanel(new ClassDiagramEditor(diagram),
-            new StaticClassEditorToolbarManager());
+            new ClassEditorToolbarManager());
     }
 
     /**

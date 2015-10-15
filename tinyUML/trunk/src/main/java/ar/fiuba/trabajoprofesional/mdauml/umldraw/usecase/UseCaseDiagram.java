@@ -1,12 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Inheritance;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.SimpleAssociation;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +47,12 @@ public class UseCaseDiagram extends GeneralDiagram {
         UseCaseElement useCasePrototype = (UseCaseElement) UseCaseElement.getPrototype().clone();
         useCasePrototype.setModelElement(useCase);
         elementPrototypes.put(ElementType.USE_CASE, useCasePrototype);
+
+        // Add package prototype
+        UmlPackage pkg = (UmlPackage) UmlPackage.getPrototype().clone();
+        PackageElement pkgPrototype = (PackageElement) PackageElement.getPrototype().clone();
+        pkgPrototype.setModelElement(pkg);
+        elementPrototypes.put(ElementType.PACKAGE, pkgPrototype);
 
         return elementPrototypes;
     }

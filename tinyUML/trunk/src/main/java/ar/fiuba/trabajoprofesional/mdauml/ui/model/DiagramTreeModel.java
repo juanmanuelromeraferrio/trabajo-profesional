@@ -23,12 +23,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
-import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelListener;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
@@ -129,12 +124,32 @@ public class DiagramTreeModel extends DefaultTreeModel
         addNameChangeListener((NamedElement) element);
 
     }
+    @Override public void elementAdded(UmlModelElement element, UmlPackage pkg, UmlDiagram diagram) {
+        insertToFolder(element, diagram, pkg);
+        insertToModelFolder(element,pkg);
+        addNameChangeListener((NamedElement) element);
+
+    }
 
     private void insertToModelFolder(UmlModelElement element) {
-        if (!folderContainsElement(modelFolder, element)) {
+        if (!nodeContainsElement(modelFolder, element)) {
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
             insertNodeInto(child, modelFolder, modelFolder.getChildCount());
         }
+    }
+
+    private void insertToModelFolder(UmlModelElement element, UmlPackage pkg) {
+
+        while(nodeContainsElement(modelFolder,element))
+            removeNodeFromParent(findNodeInFolder(modelFolder,element));
+
+        DefaultMutableTreeNode pkgNode = getElementNode(modelFolder,pkg);
+
+        if (pkgNode!=null && !nodeContainsElement(pkgNode, element)) {
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
+            insertNodeInto(child, pkgNode, pkgNode.getChildCount());
+        }
+
     }
 
     private void addNameChangeListener(NamedElement element) {
@@ -145,33 +160,55 @@ public class DiagramTreeModel extends DefaultTreeModel
 
         DefaultMutableTreeNode diagramNode = null;
         if (diagram instanceof ClassDiagram) {
-            diagramNode = getDiagramNode(classFolder, diagram);
+            diagramNode = getElementNode(classFolder, diagram);
         } else if (diagram instanceof UseCaseDiagram) {
-            diagramNode = getDiagramNode(useCaseFolder, diagram);
+            diagramNode = getElementNode(useCaseFolder, diagram);
         }
-        if (!folderContainsElement(diagramNode, element)) {
+        if (!nodeContainsElement(diagramNode, element)) {
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
             insertNodeInto(child, diagramNode, diagramNode.getChildCount());
         }
 
     }
+    private void insertToFolder(UmlModelElement element, UmlDiagram diagram,UmlPackage pkg) {
 
-    private boolean folderContainsElement(DefaultMutableTreeNode folder, UmlModelElement element) {
+        DefaultMutableTreeNode diagramNode = null;
+        if (diagram instanceof ClassDiagram) {
+            diagramNode = getElementNode(classFolder, diagram);
+        } else if (diagram instanceof UseCaseDiagram) {
+            diagramNode = getElementNode(useCaseFolder, diagram);
+        }
+        while(nodeContainsElement(diagramNode,element))
+            removeNodeFromParent(findNodeInFolder(diagramNode,element));
+
+        DefaultMutableTreeNode pkgNode = getElementNode(diagramNode,pkg);
+        if (pkgNode!=null && !nodeContainsElement(pkgNode, element)) {
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
+            insertNodeInto(child, pkgNode, pkgNode.getChildCount());
+        }
+
+    }
+
+    private boolean nodeContainsElement(DefaultMutableTreeNode folder, UmlModelElement element) {
+        if(folder.isLeaf())
+            return false;
         Enumeration e = folder.children();
         while (e.hasMoreElements()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
             if (node.getUserObject().equals(element)) {
                 return true;
             }
+            if(nodeContainsElement(node,element))
+                return true;
         }
         return false;
     }
 
-    private DefaultMutableTreeNode getDiagramNode(DefaultMutableTreeNode folder,
-        UmlDiagram diagram) {
-        for (int i = 0; i < folder.getChildCount(); i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) folder.getChildAt(i);
-            if (node.getUserObject() == diagram) {
+    private DefaultMutableTreeNode getElementNode(DefaultMutableTreeNode father,
+        Object element) {
+        for (int i = 0; i < father.getChildCount(); i++) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) father.getChildAt(i);
+            if (node.getUserObject() == element) {
                 return node;
             }
         }
@@ -232,15 +269,16 @@ public class DiagramTreeModel extends DefaultTreeModel
 
         DefaultMutableTreeNode diagramNode = null;
         if (diagram instanceof ClassDiagram) {
-            diagramNode = getDiagramNode(classFolder, diagram);
+            diagramNode = getElementNode(classFolder, diagram);
         } else if (diagram instanceof UseCaseDiagram) {
-            diagramNode = getDiagramNode(useCaseFolder, diagram);
+            diagramNode = getElementNode(useCaseFolder, diagram);
         }
 
-        removeFromDiagram(diagramNode, element);
+        removeFromFolder(diagramNode, element);
 
 
     }
+
 
     /**
      * {@inheritDoc}
@@ -250,37 +288,8 @@ public class DiagramTreeModel extends DefaultTreeModel
         removeFromFolder(useCaseFolder, diagram);
     }
 
-    /**
-     * Removes the specified element from the diagram if it is found.
-     *
-     * @param diagram the diagram
-     * @param element the element
-     */
-    private void removeFromDiagram(DefaultMutableTreeNode diagram, UmlModelElement element) {
-        for (int i = 0; i < diagram.getChildCount(); i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) diagram.getChildAt(i);
-            if (node.getUserObject() == element) {
-                removeNodeFromParent(node);
-                break;
-            }
-        }
-    }
 
-    /**
-     * Removes the specified diagram from the folder if it is found.
-     *
-     * @param folder  the folder
-     * @param diagram the diagram
-     */
-    private void removeFromFolder(DefaultMutableTreeNode folder, UmlDiagram diagram) {
-        for (int i = 0; i < folder.getChildCount(); i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) folder.getChildAt(i);
-            if (node.getUserObject() == diagram) {
-                removeNodeFromParent(node);
-                break;
-            }
-        }
-    }
+
 
     /**
      * Removes the specified element from the folder if it is found.
@@ -288,13 +297,15 @@ public class DiagramTreeModel extends DefaultTreeModel
      * @param folder  the folder
      * @param element the element
      */
-    private void removeFromFolder(DefaultMutableTreeNode folder, UmlModelElement element) {
+    private void removeFromFolder(DefaultMutableTreeNode folder, Object element) {
+        if(folder.isLeaf())
+            return;
         for (int i = 0; i < folder.getChildCount(); i++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) folder.getChildAt(i);
             if (node.getUserObject() == element) {
                 removeNodeFromParent(node);
-                break;
             }
+            removeFromFolder(node,element);
         }
     }
 
@@ -307,19 +318,37 @@ public class DiagramTreeModel extends DefaultTreeModel
         searchNodeInFolder(modelFolder, element);
     }
 
-    private void searchNodeInFolder(DefaultMutableTreeNode folder, NamedElement element) {
-        for (int i = 0; i < folder.getChildCount(); i++) {
-            DefaultMutableTreeNode treenode = (DefaultMutableTreeNode) folder.getChildAt(i);
-            for (int j = 0; j < treenode.getChildCount(); j++) {
-                DefaultMutableTreeNode leaf = (DefaultMutableTreeNode) treenode.getChildAt(j);
-                if (leaf.getUserObject() == element) {
-                    nodeChanged(leaf);
-                }
+    private void searchNodeInFolder(DefaultMutableTreeNode node, NamedElement element) {
+        if(node.isLeaf()) {
+            if (node.getUserObject() == element) {
+                nodeChanged(node);
             }
-            if (treenode.getUserObject() == element) {
-                nodeChanged(treenode);
+            return;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            DefaultMutableTreeNode treenode = (DefaultMutableTreeNode) node.getChildAt(i);
+            searchNodeInFolder(treenode, element);
+            if (node.getUserObject() == element) {
+                nodeChanged(node);
             }
         }
+    }
+    private DefaultMutableTreeNode findNodeInFolder(DefaultMutableTreeNode node, NamedElement element) {
+        if(node.isLeaf()) {
+            if (node.getUserObject() == element) {
+                return node;
+            }
+            return null;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            DefaultMutableTreeNode treenode = (DefaultMutableTreeNode) node.getChildAt(i);
+            DefaultMutableTreeNode found = findNodeInFolder(treenode, element);
+            if(found!=null) return  found;
+            if (node.getUserObject() == element) {
+                return node;
+            }
+        }
+        return null;
     }
 
     /**

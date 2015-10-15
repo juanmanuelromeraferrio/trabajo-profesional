@@ -47,12 +47,22 @@ public interface UmlModel extends Serializable {
     void addElement(UmlModelElement anElement, UmlDiagram diagram);
 
     /**
+     * Adds the specified element in the specified package.
+     *
+     * @param anElement the element to add
+     * @param pkg   the package where the element is added
+     * @param diagram   the diagram where the element is added
+     */
+    void addElement(UmlModelElement anElement, UmlPackage pkg, UmlDiagram diagram);
+
+    /**
      * Removes the specified element in the specified diagram.
      *
      * @param anElement the element to remove
      * @param diagram   the diagram where the element is removed
      */
     void removeElement(UmlModelElement anElement, UmlDiagram diagram);
+
 
     /**
      * Determines if the specified model element is in the model.

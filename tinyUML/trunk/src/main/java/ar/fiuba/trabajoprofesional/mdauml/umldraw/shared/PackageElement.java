@@ -17,15 +17,11 @@
  * along with TinyUML; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
+package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
 
 import java.awt.*;
@@ -262,13 +258,25 @@ public final class PackageElement extends AbstractCompositeNode implements Label
      */
     @Override public void addChild(DiagramElement element) {
         mainCompartment.addChild(element);
+
+        if(element instanceof UmlNode){
+            UmlModelElement model = ((UmlNode)element).getModelElement();
+            getDiagram().getUmlmodel().addElement(model,pkg,getDiagram());
+        }
+
     }
 
     /**
      * {@inheritDoc}
      */
     @Override public void removeChild(DiagramElement element) {
-        mainCompartment.removeChild(element);
+        //mainCompartment.removeChild(element);
+        if (element instanceof UmlNode) {
+            UmlNode umlnode = (UmlNode) element;
+            if (umlnode.getModelElement() != null) {
+                getDiagram().getUmlmodel().removeElement(umlnode.getModelElement(), getDiagram());
+            }
+        }
     }
 
     /**

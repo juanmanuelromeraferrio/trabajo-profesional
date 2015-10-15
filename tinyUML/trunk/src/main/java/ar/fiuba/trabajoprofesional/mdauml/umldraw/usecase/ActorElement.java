@@ -5,8 +5,8 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Inheritance;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Inheritance;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
