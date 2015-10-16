@@ -189,4 +189,25 @@ public class UmlRelation extends AbstractUmlModelElement implements Relation {
     public ElementType getElementType() {
         return ElementType.RELATION;
     }
+
+    private boolean isInitialized(){
+        return !(getElement2()==null || getElement1()==null );
+    }
+    @Override
+    public int hashCode(){
+        if(!isInitialized())
+            return 1;
+        return (getElement2().getName()+getElement1().getName()).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if(!(this.getClass().isAssignableFrom(object.getClass())))
+            return false;
+        UmlRelation other = (UmlRelation) object;
+        if(!isInitialized()|| !other.isInitialized())
+            return false;
+
+        return getElement2()==other.getElement2() && getElement1()== other.getElement1();
+    }
 }

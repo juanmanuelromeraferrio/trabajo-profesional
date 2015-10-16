@@ -20,26 +20,7 @@ public class ExtendRelation extends UmlRelation {
     public String getName(){
         return LABEL;
     }
-    private boolean isInitialized(){
-        return !(getElement2()==null || getElement1()==null );
-    }
-    @Override
-    public int hashCode(){
-        if(!isInitialized())
-            return 1;
-        return (getElement2().getName()+getElement1().getName()).hashCode();
-    }
 
-    @Override
-    public boolean equals(Object object){
-        if(!(object instanceof ExtendRelation))
-            return false;
-        ExtendRelation other = (ExtendRelation) object;
-        if(!isInitialized()|| !other.isInitialized())
-            return false;
-
-        return getElement2()==other.getElement2() && getElement1()== other.getElement1();
-    }
 
     
     public UmlStep getExtentionPoint() {

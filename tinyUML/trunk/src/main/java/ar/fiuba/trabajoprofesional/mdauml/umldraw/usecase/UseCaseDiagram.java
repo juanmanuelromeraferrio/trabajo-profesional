@@ -90,6 +90,9 @@ public class UseCaseDiagram extends GeneralDiagram {
         Include includePrototype = (Include) Include.getPrototype().clone();
         connectionPrototypes.put(RelationType.INCLUDE, includePrototype);
 
+        Nest nestPrototype = (Nest) Nest.getPrototype().clone();
+        connectionPrototypes.put(RelationType.NEST, nestPrototype);
+
         return connectionPrototypes;
     }
 }
