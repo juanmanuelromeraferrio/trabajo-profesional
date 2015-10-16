@@ -50,17 +50,43 @@ public class Nest extends BaseConnection {
 
     private void drawAnchor(DrawingContext drawingContext) {
         Point2D endingPoint = getEndPoint1();
-        double radius = 7;
-        Point2D translation;
-        if(isRigth(endingPoint))
-            translation = new Point2D.Double(radius,0);
-        else if(isLeft(endingPoint))
-            translation = new Point2D.Double(-radius,0);
-        else if(isUp(endingPoint))
-            translation = new Point2D.Double(0,-radius);
-        else
-            translation = new Point2D.Double(0,radius);
+        Point2D next = getPoints().get(1);
+        double radius = 6;
+        double tg = (next.getY() - endingPoint.getY())/(next.getX()- endingPoint.getX());
 
+
+        Point2D translation;
+        //follows the direction until +- 35 degrees
+        double tgLimit = Math.tan(Math.toRadians(35));
+        double cotgLimit = 1/tgLimit;
+        if(isRigth(endingPoint)) {
+            if(tg > tgLimit)
+                tg=tgLimit;
+            if(tg < -tgLimit )
+                tg = -tgLimit;
+            translation = new Point2D.Double(radius, tg * radius);
+        }
+        else if(isLeft(endingPoint)) {
+            if(tg > tgLimit)
+                tg=tgLimit;
+            if(tg < -tgLimit )
+                tg = -tgLimit;
+            translation = new Point2D.Double(-radius, -tg * radius);
+        }
+        else if(isUp(endingPoint)) {
+            if(tg > 0 && tg < cotgLimit)
+                tg=cotgLimit;
+            if(tg < 0 && tg > -cotgLimit)
+                tg=-cotgLimit;
+            translation = new Point2D.Double(-radius / tg, -radius);
+        }
+        else {
+            if(tg > 0 && tg < cotgLimit)
+                tg=cotgLimit;
+            if(tg < 0 && tg > -cotgLimit)
+                tg=-cotgLimit;
+            translation = new Point2D.Double(radius / tg, radius);
+        }
         Point2D center =  new Point2D.Double(endingPoint.getX()+translation.getX(),endingPoint.getY()+translation.getY());
 
 
@@ -68,6 +94,7 @@ public class Nest extends BaseConnection {
         drawingContext.drawEllipse(new Point2D.Double(center.getX() - radius, center.getY() - radius), new DoubleDimension(2*radius,2*radius),Color.white);
         drawingContext.drawLine(center.getX(),center.getY()-radius,center.getX(),center.getY()+radius);
         drawingContext.drawLine(center.getX()-radius,center.getY(),center.getX()+radius,center.getY());
+
 
     }
 
