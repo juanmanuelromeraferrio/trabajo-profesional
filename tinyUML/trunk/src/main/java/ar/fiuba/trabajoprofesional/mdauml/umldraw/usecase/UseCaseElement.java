@@ -19,7 +19,7 @@ import java.awt.geom.Dimension2D;
  * @version 1.0
  */
 public final class UseCaseElement extends AbstractCompositeNode
-    implements LabelSource, UmlNode, UmlModelElementListener {
+    implements LabelSource, UmlNode, UmlModelElementListener,PackageListener {
 
     private static final long serialVersionUID = 8767029215902619069L;
 
@@ -311,7 +311,7 @@ public final class UseCaseElement extends AbstractCompositeNode
     }
 
     private void removeNest() {
-        this.useCase.unpack();
+
     }
 
     private void removeInclude(Include include, UmlModelElement element1, UmlModelElement element2) {
@@ -331,5 +331,18 @@ public final class UseCaseElement extends AbstractCompositeNode
             this.useCase.removeUmlActor((UmlActor) element2);
 
         }
+
+
+    }
+
+    @Override
+    public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+
+    }
+
+    @Override
+    public void removeFromPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+        if(this.getModelElement()==packageableUmlModelElement)
+            removeExistingConnection(Nest.class);
     }
 }

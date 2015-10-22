@@ -187,7 +187,7 @@ public class NodeSelection implements Selection, NodeChangeListener {
         if (isDraggedToANewParent(elem)) {
             reparentNode((CompositeNode) elem);
         } else if (isDraggedOutOfParent(elem)) {
-            reparentNode(editor.getDiagram());
+            moveOutOfParent();
         } else {
             Collection<Node> nodes = new ArrayList<Node>();
             nodes.add(node);
@@ -205,6 +205,19 @@ public class NodeSelection implements Selection, NodeChangeListener {
     private void reparentNode(CompositeNode newparent) {
         MoveNodeOperation op = new MoveNodeOperation(node, newparent, tmpPos);
         editor.moveElements(new Command[] {op});
+        node.getDiagram().getEditor().addNestConnectionToParent(node,newparent);
+    }
+
+    /**
+     * Moves this node out of its parent and adds a Nest Connection if its needed
+     *
+     *
+     */
+    private void moveOutOfParent() {
+        CompositeNode lastParent=node.getLastParent();
+        MoveNodeOperation op = new MoveNodeOperation(node, node.getDiagram(), tmpPos);
+        editor.moveElements(new Command[] {op});
+        node.getDiagram().getEditor().addNestConnectionToParent(node,lastParent);
     }
 
     /**

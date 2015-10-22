@@ -129,6 +129,11 @@ public abstract class AbstractConnection implements Connection {
         return parent;
     }
 
+    @Override
+    public CompositeNode getLastParent() {
+        return getParent();
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -18,8 +18,13 @@
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.model.PackageListener;
+import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Nest;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Line2D;
@@ -38,7 +43,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public abstract class AbstractNode implements Node {
+public abstract class AbstractNode implements Node{
 
     private Point2D origin = new Point2D.Double(0, 0);
     private Dimension2D size = new DoubleDimension(40, 20);
@@ -126,6 +131,19 @@ public abstract class AbstractNode implements Node {
     public CompositeNode getParent() {
         return parent;
     }
+
+
+    /**
+     *
+     * @return  the top-level parent that it's not a diagram if any or the diagram otherwise
+     */
+    public CompositeNode getLastParent(){
+        CompositeNode lastParent=getParent();
+        while(lastParent!=null && !(lastParent.getParent() instanceof GeneralDiagram))
+            lastParent=lastParent.getParent();
+        return lastParent;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -474,7 +492,7 @@ public abstract class AbstractNode implements Node {
     // ********************
 
 
-    protected void removeExistingConnection(Class clazz) {
+    public void removeExistingConnection(Class clazz) {
         Connection todelete =null;
         for(Connection conn : getConnections()){
             if(clazz.isInstance(conn) && (conn.getNode1()==this || conn.getNode2()==this )){
@@ -510,4 +528,5 @@ public abstract class AbstractNode implements Node {
     public void setChangeListeners(Collection<NodeChangeListener> changeListeners) {
         this.changeListeners = changeListeners;
     }
+
 }

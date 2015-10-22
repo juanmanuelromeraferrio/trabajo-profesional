@@ -21,6 +21,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Selection;
+import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
@@ -100,6 +101,8 @@ public class ContextMenuBuilder implements ActionListener {
         menu.add(drawOrderMenu);
         createMenuItem(drawOrderMenu, "draworder.tofront");
         createMenuItem(drawOrderMenu, "draworder.toback");
+        if(element.getModelElement() instanceof PackageableUmlModelElement)
+            createMenuItem(menu,"unpack");
         menu.addSeparator();
         createMenuItem(menu, "delete");
         return menu;

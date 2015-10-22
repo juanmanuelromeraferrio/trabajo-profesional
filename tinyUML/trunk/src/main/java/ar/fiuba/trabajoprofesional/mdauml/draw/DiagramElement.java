@@ -89,6 +89,12 @@ public interface DiagramElement extends Cloneable {
     CompositeNode getParent();
 
     /**
+     *
+     * @return the top-level parent that it's not a diagram if any or the diagram otherwise
+     */
+    CompositeNode getLastParent();
+
+    /**
      * Sets the parent of this element.
      *
      * @param parent the parent element

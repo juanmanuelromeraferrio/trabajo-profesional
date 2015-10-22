@@ -23,7 +23,7 @@ import java.util.List;
  * @version 1.0
  */
 public final class ActorElement extends AbstractCompositeNode
-    implements LabelSource, UmlNode, UmlModelElementListener {
+    implements LabelSource, UmlNode, UmlModelElementListener,PackageListener {
 
     private static final long serialVersionUID = 8767029215902619069L;
 
@@ -89,6 +89,7 @@ public final class ActorElement extends AbstractCompositeNode
     /**
      * {@inheritDoc}
      */
+    @Override
     public UmlModelElement getModelElement() {
         return actor;
     }
@@ -290,7 +291,7 @@ public final class ActorElement extends AbstractCompositeNode
     }
 
     private void removeNest() {
-        this.actor.unpack();
+
     }
 
 
@@ -308,5 +309,17 @@ public final class ActorElement extends AbstractCompositeNode
 
     public void setLabel(Label label) {
         this.label = label;
+    }
+
+
+    @Override
+    public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+
+    }
+
+    @Override
+    public void removeFromPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+        if(this.getModelElement()==packageableUmlModelElement)
+            removeExistingConnection(Nest.class);
     }
 }

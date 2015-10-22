@@ -1,13 +1,17 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class PackageableUmlModelElement extends AbstractUmlModelElement {
 
 
     private NestRelation packageRelation;
-    private List<PackageListener> listeners  = new ArrayList<>();
+    transient private Set<PackageListener> listeners  = new HashSet<>();
     private boolean isPackaged(){
         return packageRelation!=null;
     }
@@ -41,7 +45,15 @@ public abstract class PackageableUmlModelElement extends AbstractUmlModelElement
 
     private void notifyUnpackaged(UmlPackage pkg){
         for(PackageListener l : listeners){
-            l.removeFromPackage(pkg,this);
+            l.removeFromPackage(pkg, this);
         }
+    }
+
+    public void addPackageListener(PackageListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removePackageListener(PackageListener listener){
+        listeners.remove(listener);
     }
 }

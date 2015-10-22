@@ -261,6 +261,11 @@ public class BaseConnection implements UmlConnection {
         return connection.getParent();
     }
 
+    @Override
+    public CompositeNode getLastParent() {
+        return getParent();
+    }
+
     /**
      * {@inheritDoc}
      */

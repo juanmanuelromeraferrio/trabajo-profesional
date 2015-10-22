@@ -39,14 +39,14 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
-import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
-import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Nest;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
@@ -148,7 +148,10 @@ public abstract class DiagramEditor extends JComponent
             selectorMap
                 .put("PUT_TO_BACK", new MethodCall(DiagramEditor.class.getMethod("putToBack")));
             selectorMap.put("EDIT_PROPERTIES",
-                new MethodCall(DiagramEditor.class.getMethod("editProperties")));
+                    new MethodCall(DiagramEditor.class.getMethod("editProperties")));
+            selectorMap.put("UNPACK",
+                    new MethodCall(DiagramEditor.class.getMethod("unpack")));
+
             selectorMap.put("CREATE_NOTE",
                 new MethodCall(DiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                     ElementType.NOTE));
@@ -168,6 +171,7 @@ public abstract class DiagramEditor extends JComponent
             selectorMap.put("NAVIGABLE_TO_TARGET", new MethodCall(
                     DiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
                     RelationEndType.TARGET));
+
 
 
         } catch (NoSuchMethodException ex) {
@@ -457,7 +461,7 @@ public abstract class DiagramEditor extends JComponent
     private LineHandler createLineHandler(RelationType relationType) {
         LineHandler result = new LineHandler(this);
         result.setRelationType(relationType,
-            getDiagram().getElementFactory().getConnectMethod(relationType));
+                getDiagram().getElementFactory().getConnectMethod(relationType));
         return result;
     }
 
@@ -523,6 +527,20 @@ public abstract class DiagramEditor extends JComponent
     public void editProperties() {
         if (getSelectedElements().size() > 0) {
             editProperties(getSelectedElements().get(0));
+        }
+    }
+
+    /**
+     * Unpacks the current selection's model..
+     */
+    public void unpack() {
+        if (getSelectedElements().size() > 0) {
+            DiagramElement selected = getSelectedElements().get(0);
+            if(selected instanceof UmlNode){
+                UmlModelElement model = ((UmlNode) selected).getModelElement();
+                if(model instanceof PackageableUmlModelElement)
+                    ((PackageableUmlModelElement) model).unpack();
+            }
         }
     }
 
@@ -730,5 +748,28 @@ public abstract class DiagramEditor extends JComponent
         MethodCall methodcall = selectorMap.get(command);
         if (methodcall != null)
             methodcall.call(this);
+    }
+
+    public void addNestConnectionToParent(Node node,CompositeNode nesting) {
+        if(!(node instanceof AbstractNode))
+            return;
+
+        ((AbstractNode)node).removeExistingConnection(Nest.class);
+
+        UmlConnection conn = null;
+        try {
+            conn = getDiagram().getElementFactory()
+                    .createConnection(RelationType.NEST, (UmlNode) nesting, (UmlNode) node);
+        } catch (AddConnectionException e) {
+            e.printStackTrace();
+        }
+        LineConnectMethod connectMethod = getDiagram().getElementFactory().getConnectMethod(RelationType.NEST);
+        Point2D pos= new Point2D.Double(node.getAbsCenterX(),node.getAbsCenterY());
+        connectMethod
+                .generateAndSetPointsToConnection(conn, nesting, (UmlNode) node, new Point2D.Double(), pos);
+        AddConnectionCommand command =
+                new AddConnectionCommand(this, getDiagram(), conn);
+        execute(command);
+        redraw();
     }
 }

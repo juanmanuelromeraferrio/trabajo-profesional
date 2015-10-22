@@ -8,6 +8,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import javax.swing.*;
@@ -43,6 +44,11 @@ public class TreeDragger implements TreeDraggerListener {
             try {
                 element = diagram.createNodeFromModel(draggerElement);
                 element.addNodeChangeListener(diagram);
+                if(element instanceof UmlNode){
+                    UmlModelElement model = ((UmlNode) element).getModelElement();
+                    if(model instanceof PackageableUmlModelElement && element instanceof PackageListener)
+                        ((PackageableUmlModelElement) model).addPackageListener((PackageListener) element);
+                }
             }catch (IllegalArgumentException e){
                 JOptionPane.showMessageDialog(AppFrame.get(), getResourceString("error.dragger.wrongDiagram.message"),
                         getResourceString("error.dragger.wrongDiagram.title"), JOptionPane.ERROR_MESSAGE);
