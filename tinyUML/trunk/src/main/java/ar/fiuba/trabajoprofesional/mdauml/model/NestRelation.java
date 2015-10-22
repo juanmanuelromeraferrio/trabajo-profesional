@@ -17,8 +17,8 @@ public class NestRelation extends UmlRelation{
     }
 
 
-    public UmlModelElement getNesting(){return getElement2();}
-    public UmlModelElement getNested(){return getElement1();}
+    public UmlModelElement getNesting(){return getElement1();}
+    public UmlModelElement getNested(){return getElement2();}
 
 
 

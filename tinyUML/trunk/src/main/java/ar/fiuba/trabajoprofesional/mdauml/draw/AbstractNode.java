@@ -18,6 +18,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 import java.awt.geom.Dimension2D;
@@ -471,6 +472,22 @@ public abstract class AbstractNode implements Node {
     // *************************************************************************
     // ***** Nesting
     // ********************
+
+
+    protected void removeExistingConnection(Class clazz) {
+        Connection todelete =null;
+        for(Connection conn : getConnections()){
+            if(clazz.isInstance(conn) && (conn.getNode1()==this || conn.getNode2()==this )){
+                todelete=conn;
+                break;
+            }
+        }
+        if(todelete==null)
+            return;
+        List<DiagramElement> conns=new ArrayList<>(); conns.add(todelete);
+        DeleteElementCommand command = new DeleteElementCommand(getDiagram().getEditor(),conns);
+        getDiagram().getEditor().execute(command);
+    }
 
     /**
      * {@inheritDoc}

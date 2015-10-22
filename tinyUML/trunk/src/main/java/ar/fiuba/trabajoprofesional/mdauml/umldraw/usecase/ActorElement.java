@@ -5,9 +5,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Inheritance;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.*;
@@ -235,91 +233,66 @@ public final class ActorElement extends AbstractCompositeNode
     }
 
     @Override public void addConnection(Connection connection) throws AddConnectionException{
-        if(isValidInheritance(connection))
-            addInheritance((Inheritance)connection);
-        else{
-            String error = connectionError(connection);
-            if(! error.isEmpty()) {
-                throw new AddConnectionException(error);
+        UmlConnection umlConn = (UmlConnection) connection;
+        Relation relation = (Relation) umlConn.getModelElement();
 
-            }
-            super.addConnection(connection);
-        }
-
-    }
-    @Override public void removeConnection(Connection connection){
-        if(connection instanceof Inheritance){
-            if(connection.getNode1()==this)
-                this.actor.removeParent();
-        }
-        super.removeConnection(connection);
-    }
-
-
-    private String connectionError(Connection connection) {
+        UmlModelElement element1 = relation.getElement1();
+        UmlModelElement element2 = relation.getElement2();
         if(connection instanceof Inheritance)
-            if(connection.getNode1() ==this)
-                if(! (connection.getNode2() instanceof ActorElement))
-                    return ApplicationResources.getInstance().getString("error.connection.actor.noactorinheritance");
-                else
-                    if (this.actor == ((ActorElement)connection.getNode2()).actor)
-                        return ApplicationResources.getInstance().getString("error.connection.actor.autoref");
-                    else
-                        return "";
-            else
-            if(! (connection.getNode1() instanceof ActorElement))
-                return ApplicationResources.getInstance().getString("error.connection.actor.noactorinheritance");
-            else
-                if (this.actor == ((ActorElement)connection.getNode1()).actor)
-                    return ApplicationResources.getInstance().getString("error.connection.actor.autoref");
-                else
-                    return "";
+            addInheritance((Inheritance) connection,element1,element2);
+        else if(connection instanceof Association)
+            addAssociation((Association) connection, element1, element2);
+        else if(connection instanceof Nest)
+            addNest((Nest) connection,element1,element2);
         else
-            if(connection instanceof Association)
-                if(connection.getNode1() ==this)
-                    if(connection.getNode2() instanceof UseCaseElement)
-                        return "";
-                    else
-                        return ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase");
-                else
-                    if(connection.getNode1() instanceof UseCaseElement)
-                        return "";
-                    else
-                        return ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase");
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.invalidConnection"));
 
-            else if(connection instanceof Extend  || connection instanceof Include)
-                return ApplicationResources.getInstance().getString("error.connection.actor.invalidConnection");
-                else   return "Invalid Connection";
+        super.addConnection(connection);
+
+
     }
 
-    private boolean isValidInheritance(Connection connection) {
-        return  connection instanceof Inheritance &&
-                connection.getNode1()==this &&
-                connection.getNode2() instanceof ActorElement &&
-                ((ActorElement)connection.getNode1()).getActor()!=
-                        ((ActorElement)connection.getNode2()).getActor();
+    private void addNest(Nest connection, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
+        if(element1 == actor)
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.invalid"));
+
+        if(! (element1 instanceof UmlPackage ) )
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.nest.withoutPkg"));
+        removeExistingConnection(Nest.class);
+        actor.setPackageRelation((NestRelation) connection.getModelElement());
     }
 
-    private void addInheritance(Inheritance inheritance) throws AddConnectionException {
-        removeExistingInheritance();
+    private void addAssociation(Association association, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
+        if (element1 instanceof UmlUseCase || element2 instanceof UmlUseCase)
+            return;//managed by usecase
+        throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase"));
+    }
+
+    private void addInheritance(Inheritance inheritance, UmlModelElement e1, UmlModelElement e2) throws AddConnectionException {
+        if(this.actor!=e1)
+            return;
+        if(! (e2 instanceof UmlActor))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.noactorinheritance"));
+        if(e1 == e2)
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.autoref"));
+        removeExistingConnection(Inheritance.class);
         actor.addParent((InheritanceRelation) inheritance.getModelElement());
         super.addConnection(inheritance);
     }
 
-    private void removeExistingInheritance() {
-        Connection todelete =null;
-        for(Connection conn : getConnections()){
-            if(conn instanceof Inheritance && conn.getNode1()==this){
-                todelete=conn;
-                break;
-            }
-        }
-        if(todelete==null)
-            return;
-        List<DiagramElement> conns=new ArrayList<>(); conns.add(todelete);
-        DeleteElementCommand command = new DeleteElementCommand(getDiagram().getEditor(),conns);
-        getDiagram().getEditor().execute(command);
+    @Override public void removeConnection(Connection connection){
+        if(connection instanceof Inheritance){
+            if(connection.getNode1()==this)
+                this.actor.removeParent();
+        }else if(connection instanceof Nest)
+            removeNest();
+        super.removeConnection(connection);
     }
+
+    private void removeNest() {
+        this.actor.unpack();
+    }
+
 
     public UmlActor getActor() {
         return actor;

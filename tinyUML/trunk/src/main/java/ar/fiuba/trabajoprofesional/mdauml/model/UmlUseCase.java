@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author Juan Manuel Romera
  */
-public class UmlUseCase extends AbstractUmlModelElement {
+public class UmlUseCase extends PackageableUmlModelElement {
 
 
   /**
@@ -31,6 +31,7 @@ public class UmlUseCase extends AbstractUmlModelElement {
 
   private Set<ExtendRelation> extendRelations = new HashSet<>();
   private Set<IncludeRelation> includeRelations = new HashSet<>();
+
 
   /**
    * Constructor.
@@ -228,4 +229,6 @@ public class UmlUseCase extends AbstractUmlModelElement {
   public boolean isIncluding(){
     return !includeRelations.isEmpty();
   }
+
+
 }

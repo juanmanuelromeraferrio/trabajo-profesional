@@ -5,9 +5,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.*;
@@ -235,14 +233,28 @@ public final class UseCaseElement extends AbstractCompositeNode
             super.addConnection(conn);
 
 
-        }else if(conn instanceof Include){
+        }else if(conn instanceof Include) {
             addInclude((Include) conn, element1, element2);
+            super.addConnection(conn);
+
+        }else if(conn instanceof Nest){
+            addNest((Nest) conn, element1, element2);
             super.addConnection(conn);
 
 
         }else
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.invalidConnectionType"));
 
+    }
+
+    private void addNest(Nest nest, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
+        if(element1 == useCase)
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.invalid"));
+
+        if(! (element1 instanceof UmlPackage ) )
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.nest.withoutPkg"));
+        removeExistingConnection(Nest.class);
+        useCase.setPackageRelation((NestRelation) nest.getModelElement());
     }
 
     private void addInclude(Include include, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
@@ -287,16 +299,19 @@ public final class UseCaseElement extends AbstractCompositeNode
         UmlModelElement element1 = relation.getElement1();
         UmlModelElement element2 = relation.getElement2();
 
-        if (conn instanceof Association) {
+        if (conn instanceof Association)
             removeAssociation(element1,element2);
-            super.removeConnection(conn);
-        }else if(conn instanceof Extend){
+        else if(conn instanceof Extend)
             removeExtend((Extend)conn,element1,element2);
-            super.removeConnection(conn);
-        }else if(conn instanceof Include){
+        else if(conn instanceof Include)
             removeInclude((Include) conn, element1, element2);
-            super.removeConnection(conn);
-        }
+        else if(conn instanceof Nest)
+            removeNest();
+        super.removeConnection(conn);
+    }
+
+    private void removeNest() {
+        this.useCase.unpack();
     }
 
     private void removeInclude(Include include, UmlModelElement element1, UmlModelElement element2) {

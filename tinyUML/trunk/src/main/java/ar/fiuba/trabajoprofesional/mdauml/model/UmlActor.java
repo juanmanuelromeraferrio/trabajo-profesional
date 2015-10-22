@@ -8,7 +8,7 @@ import java.util.Set;
  *
  * @author Juan Manuel Romera
  */
-public class UmlActor extends AbstractUmlModelElement {
+public class UmlActor extends PackageableUmlModelElement{
 
     /**
      *

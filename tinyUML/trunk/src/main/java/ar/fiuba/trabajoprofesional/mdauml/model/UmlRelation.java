@@ -202,6 +202,8 @@ public class UmlRelation extends AbstractUmlModelElement implements Relation {
 
     @Override
     public boolean equals(Object object){
+        if(object==null)
+            return false;
         if(!(this.getClass().isAssignableFrom(object.getClass())))
             return false;
         UmlRelation other = (UmlRelation) object;
