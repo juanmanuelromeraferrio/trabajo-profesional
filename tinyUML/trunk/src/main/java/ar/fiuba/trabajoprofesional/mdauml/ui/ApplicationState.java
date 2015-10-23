@@ -608,11 +608,17 @@ public class ApplicationState
     @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
     }
 
+
+    @Override public void elementRemoved(UmlModelElement element, UmlDiagram diagram) {
+    }
+
     @Override
-    public void elementAdded(UmlModelElement element, UmlPackage pkg, UmlDiagram diagram) {
+    public void removeFromPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
 
     }
 
-    @Override public void elementRemoved(UmlModelElement element, UmlDiagram diagram) {
+    @Override
+    public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+
     }
 }

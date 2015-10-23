@@ -73,15 +73,6 @@ public class Compartment extends AbstractCompositeNode implements CompositeNode 
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void removeChild(DiagramElement child) {
-        super.removeChild(child);
-        getParent().removeChild(child);
-    }
-
-    /**
      * Returns the background color. The default background color is white.
      *
      * @return the background color

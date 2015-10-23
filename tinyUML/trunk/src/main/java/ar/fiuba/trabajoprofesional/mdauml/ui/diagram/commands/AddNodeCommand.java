@@ -21,6 +21,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
 import javax.swing.undo.AbstractUndoableEdit;
@@ -82,5 +83,6 @@ public class AddNodeCommand extends AbstractUndoableEdit implements Command {
         parent.addChild(node);
         node.setAbsolutePos(absx, absy);
         notification.notifyElementAdded(node);
+
     }
 }

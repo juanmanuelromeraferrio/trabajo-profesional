@@ -73,6 +73,7 @@ public abstract class AbstractUmlModelElement extends DefaultNamedElement
     @Override public Object clone() {
         AbstractUmlModelElement element = (AbstractUmlModelElement) super.clone();
         element.modelListeners = new HashSet<UmlModelElementListener>();
+
         return element;
     }
 }

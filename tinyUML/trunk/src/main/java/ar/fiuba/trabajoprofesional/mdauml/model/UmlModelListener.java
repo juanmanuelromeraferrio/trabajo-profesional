@@ -21,7 +21,7 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface UmlModelListener {
+public interface UmlModelListener extends PackageListener {
 
     /**
      * Called when a diagram was added.
@@ -46,14 +46,6 @@ public interface UmlModelListener {
      */
     void elementAdded(UmlModelElement element, UmlDiagram diagram);
 
-    /**
-     * Called when a element was added to a package.
-     *
-     * @param element the element that was added
-     * @param pkg the package where the element was added
-     * @param diagram the diagram where the element was added
-     */
-    void elementAdded(UmlModelElement element, UmlPackage pkg, UmlDiagram diagram);
 
     /**
      * Called when a element was removed.

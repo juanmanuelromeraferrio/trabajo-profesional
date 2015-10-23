@@ -102,7 +102,7 @@ public final class UseCaseElement extends AbstractCompositeNode
     @Override
     public void setModelElement(UmlModelElement model) {
         if(model instanceof UmlUseCase)
-            this.useCase = (UmlUseCase)model;
+            this.useCase = (UmlUseCase) model;
         else throw new IllegalArgumentException("UmlUseCase expected");
     }
 
@@ -253,7 +253,7 @@ public final class UseCaseElement extends AbstractCompositeNode
 
         if(! (element1 instanceof UmlPackage ) )
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.nest.withoutPkg"));
-        removeExistingConnection(Nest.class);
+
         useCase.setPackageRelation((NestRelation) nest.getModelElement());
     }
 

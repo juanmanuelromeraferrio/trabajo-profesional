@@ -92,13 +92,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
             l.elementAdded(anElement, diagram);
         }
     }
-    public void addElement(UmlModelElement anElement, UmlPackage pkg,UmlDiagram diagram) {
-        anElement.addNameChangeListener(this);
-        addElementToMap(anElement);
-        for (UmlModelListener l : modelListeners) {
-            l.elementAdded(anElement, pkg,diagram);
-        }
-    }
+
 
     private void addElementToMap(UmlModelElement anElement) {
         Long count = mapMainElementsCounts.get(anElement);

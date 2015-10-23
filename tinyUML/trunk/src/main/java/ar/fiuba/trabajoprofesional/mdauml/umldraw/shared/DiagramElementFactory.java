@@ -21,8 +21,10 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+import ar.fiuba.trabajoprofesional.mdauml.model.AbstractUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 
 /**
  * DiagramElements should be created by invoking methods on this factory
@@ -40,6 +42,14 @@ public interface DiagramElementFactory {
      * @return the UMLNode for the element type
      */
     UmlNode createNode(ElementType elementType);
+
+    /**
+     * Creates a node according to the model
+     *
+     * @param model the UML model element
+     * @return the UMLNode for the element type
+     */
+    UmlNode createNodeFromModel(AbstractUmlModelElement model);
 
     /**
      * Creates a connection between the two given nodes using the specified

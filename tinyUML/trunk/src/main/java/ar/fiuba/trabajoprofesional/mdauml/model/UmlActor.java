@@ -1,5 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +26,7 @@ public class UmlActor extends PackageableUmlModelElement{
      * Constructor.
      */
     public UmlActor() {
+
     }
 
     /**

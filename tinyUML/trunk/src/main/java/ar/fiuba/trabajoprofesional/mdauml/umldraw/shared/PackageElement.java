@@ -259,10 +259,6 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     @Override public void addChild(DiagramElement element) {
         mainCompartment.addChild(element);
 
-        if(element instanceof UmlNode){
-            UmlModelElement model = ((UmlNode)element).getModelElement();
-            getDiagram().getUmlmodel().addElement(model,pkg,getDiagram());
-        }
 
     }
 
@@ -270,13 +266,7 @@ public final class PackageElement extends AbstractCompositeNode implements Label
      * {@inheritDoc}
      */
     @Override public void removeChild(DiagramElement element) {
-        //mainCompartment.removeChild(element);
-        if (element instanceof UmlNode) {
-            UmlNode umlnode = (UmlNode) element;
-            if (umlnode.getModelElement() != null) {
-                getDiagram().getUmlmodel().removeElement(umlnode.getModelElement(), getDiagram());
-            }
-        }
+        mainCompartment.removeChild(element);
     }
 
     /**

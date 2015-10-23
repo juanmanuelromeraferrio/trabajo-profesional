@@ -430,6 +430,14 @@ public abstract class DiagramEditor extends JComponent
     public void setCreationMode(ElementType elementType) {
         editorMode = createCreationHandler(elementType);
     }
+    /**
+     * Switches the editor into creation from model mode.
+     *
+     * @param model the model that indicates what to create
+     */
+    public void setCreationModeFromModel(AbstractUmlModelElement model) {
+        editorMode = createCreationHandlerFromModel(model);
+    }
 
     /**
      * Creates the CreationHandler for Element types.
@@ -442,6 +450,19 @@ public abstract class DiagramEditor extends JComponent
         result.setElementType(elementType);
         return result;
     }
+
+    /**
+     * Creates the CreationHandler for Element types.
+     *
+     * @param model the model to create
+     * @return the CreationHandler
+     */
+    private CreationHandler createCreationHandlerFromModel(AbstractUmlModelElement model) {
+        CreationHandler result = new CreationHandler(this);
+        result.setElementFromModel(model);
+        return result;
+    }
+
 
     /**
      * Switches the editor into connection creation mode.
@@ -675,6 +696,12 @@ public abstract class DiagramEditor extends JComponent
             l.elementRemoved(this);
         }
         selectionHandler.elementRemoved(element);
+        if (element instanceof UmlNode) {
+            UmlNode umlnode = (UmlNode) element;
+            if (umlnode.getModelElement() != null) {
+                AppFrame.get().getAppState().getUmlModel().removeElement(umlnode.getModelElement(), element.getDiagram());
+            }
+        }
         repaint();
     }
 
@@ -754,7 +781,16 @@ public abstract class DiagramEditor extends JComponent
         if(!(node instanceof AbstractNode))
             return;
 
-        ((AbstractNode)node).removeExistingConnection(Nest.class);
+        for(Connection connection: node.getConnections()){
+            if(connection instanceof Nest){
+                Nest nest = (Nest) connection;
+                if(nest.getNode1().equals(nesting) &&
+                nest.getNode2().equals(node))
+                    return;
+
+
+            }
+        }
 
         UmlConnection conn = null;
         try {

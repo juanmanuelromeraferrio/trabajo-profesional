@@ -69,6 +69,7 @@ public final class ActorElement extends AbstractCompositeNode
         cloned.label.setSource(cloned);
         cloned.label.setParent(cloned);
 
+
         if (actor != null) {
             cloned.actor = (UmlActor) actor.clone();
         }
@@ -97,7 +98,8 @@ public final class ActorElement extends AbstractCompositeNode
     @Override
     public void setModelElement(UmlModelElement model) {
         if(model instanceof UmlActor)
-            this.actor= (UmlActor) model;
+            this.actor = (UmlActor) model;
+
         else throw new IllegalArgumentException("UmlActor expected");
     }
 
@@ -259,7 +261,7 @@ public final class ActorElement extends AbstractCompositeNode
 
         if(! (element1 instanceof UmlPackage ) )
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.nest.withoutPkg"));
-        removeExistingConnection(Nest.class);
+
         actor.setPackageRelation((NestRelation) connection.getModelElement());
     }
 

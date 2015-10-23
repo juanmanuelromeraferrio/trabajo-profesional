@@ -9,7 +9,6 @@ public class InheritanceRelation extends UmlRelation {
         this.setCanSetElement2Navigability(false);
         this.setNavigableToElement1(false);
         this.setNavigableToElement2(true);
-
     }
 
     @Override
@@ -17,12 +16,8 @@ public class InheritanceRelation extends UmlRelation {
         return "";
     }
 
-
     public UmlModelElement getParent(){return getElement2();}
     public UmlModelElement getChild(){return getElement1();}
-
-
-
 
 
 }

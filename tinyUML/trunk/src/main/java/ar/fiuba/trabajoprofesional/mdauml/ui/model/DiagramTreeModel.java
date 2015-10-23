@@ -121,36 +121,19 @@ public class DiagramTreeModel extends DefaultTreeModel
     @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
         insertToFolder(element, diagram);
         insertToModelFolder(element);
-        addNameChangeListener((NamedElement) element);
+        addNameChangeListener( element);
 
     }
-    @Override public void elementAdded(UmlModelElement element, UmlPackage pkg, UmlDiagram diagram) {
-        insertToFolder(element, diagram, pkg);
-        insertToModelFolder(element,pkg);
-        addNameChangeListener((NamedElement) element);
 
-    }
 
     private void insertToModelFolder(UmlModelElement element) {
-        if (!nodeContainsElement(modelFolder, element)) {
-            DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
-            insertNodeInto(child, modelFolder, modelFolder.getChildCount());
-        }
+        if(nodeContainsElement(modelFolder,element))
+            return;
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
+        insertNodeInto(child, modelFolder, modelFolder.getChildCount());
     }
 
-    private void insertToModelFolder(UmlModelElement element, UmlPackage pkg) {
 
-        while(nodeContainsElement(modelFolder,element))
-            removeNodeFromParent(findNodeInFolder(modelFolder,element));
-
-        DefaultMutableTreeNode pkgNode = getElementNode(modelFolder,pkg);
-
-        if (pkgNode!=null && !nodeContainsElement(pkgNode, element)) {
-            DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
-            insertNodeInto(child, pkgNode, pkgNode.getChildCount());
-        }
-
-    }
 
     private void addNameChangeListener(NamedElement element) {
         element.addNameChangeListener(this);
@@ -164,28 +147,14 @@ public class DiagramTreeModel extends DefaultTreeModel
         } else if (diagram instanceof UseCaseDiagram) {
             diagramNode = getElementNode(useCaseFolder, diagram);
         }
-        if (!nodeContainsElement(diagramNode, element)) {
-            DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
-            insertNodeInto(child, diagramNode, diagramNode.getChildCount());
-        }
 
-    }
-    private void insertToFolder(UmlModelElement element, UmlDiagram diagram,UmlPackage pkg) {
+        if( nodeContainsElement(diagramNode,element) )
+            return;
 
-        DefaultMutableTreeNode diagramNode = null;
-        if (diagram instanceof ClassDiagram) {
-            diagramNode = getElementNode(classFolder, diagram);
-        } else if (diagram instanceof UseCaseDiagram) {
-            diagramNode = getElementNode(useCaseFolder, diagram);
-        }
-        while(nodeContainsElement(diagramNode,element))
-            removeNodeFromParent(findNodeInFolder(diagramNode,element));
 
-        DefaultMutableTreeNode pkgNode = getElementNode(diagramNode,pkg);
-        if (pkgNode!=null && !nodeContainsElement(pkgNode, element)) {
-            DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
-            insertNodeInto(child, pkgNode, pkgNode.getChildCount());
-        }
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode(element);
+        insertNodeInto(child, diagramNode, diagramNode.getChildCount());
+
 
     }
 
@@ -366,5 +335,75 @@ public class DiagramTreeModel extends DefaultTreeModel
 
     public TreePath getModelPath() {
         return new TreePath(this.modelFolder.getPath());
+    }
+
+    @Override
+    public void removeFromPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+        for (int i = 0; i < classFolder.getChildCount(); i++) {
+            DefaultMutableTreeNode diagNode = (DefaultMutableTreeNode) classFolder.getChildAt(i);
+
+            if (nodeContainsElement(diagNode, packageableUmlModelElement)) {
+                removeFromFolder(diagNode, packageableUmlModelElement);
+
+                DefaultMutableTreeNode child = new DefaultMutableTreeNode(packageableUmlModelElement);
+                insertNodeInto(child, diagNode, diagNode.getChildCount());
+
+            }
+        }
+        for (int i = 0; i < useCaseFolder.getChildCount(); i++) {
+            DefaultMutableTreeNode diagNode = (DefaultMutableTreeNode) useCaseFolder.getChildAt(i);
+
+            if (nodeContainsElement(diagNode, packageableUmlModelElement)) {
+                removeFromFolder(diagNode, packageableUmlModelElement);
+
+                DefaultMutableTreeNode child = new DefaultMutableTreeNode(packageableUmlModelElement);
+                insertNodeInto(child, diagNode, diagNode.getChildCount());
+
+            }
+        }
+
+        if (nodeContainsElement(modelFolder, packageableUmlModelElement)) {
+            removeFromFolder(modelFolder, packageableUmlModelElement);
+
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(packageableUmlModelElement);
+            insertNodeInto(child, modelFolder, modelFolder.getChildCount());
+
+        }
+
+    }
+
+    @Override
+    public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+        for (int i = 0; i < classFolder.getChildCount(); i++) {
+            DefaultMutableTreeNode diagNode = (DefaultMutableTreeNode) classFolder.getChildAt(i);
+            DefaultMutableTreeNode pkg = findNodeInFolder(diagNode, umlPackage);
+            if (pkg!=null) {
+                removeFromFolder(diagNode, packageableUmlModelElement);
+
+                DefaultMutableTreeNode child = new DefaultMutableTreeNode(packageableUmlModelElement);
+                insertNodeInto(child, pkg, pkg.getChildCount());
+
+            }
+        }
+        for (int i = 0; i < useCaseFolder.getChildCount(); i++) {
+            DefaultMutableTreeNode diagNode = (DefaultMutableTreeNode) useCaseFolder.getChildAt(i);
+            DefaultMutableTreeNode pkg = findNodeInFolder(diagNode, umlPackage);
+            if (pkg!=null) {
+                removeFromFolder(diagNode, packageableUmlModelElement);
+
+                DefaultMutableTreeNode child = new DefaultMutableTreeNode(packageableUmlModelElement);
+                insertNodeInto(child, pkg, pkg.getChildCount());
+
+            }
+        }
+
+        DefaultMutableTreeNode pkg = findNodeInFolder(modelFolder, umlPackage);
+        if (pkg!=null) {
+            removeFromFolder(modelFolder, packageableUmlModelElement);
+
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(packageableUmlModelElement);
+            insertNodeInto(child, pkg, pkg.getChildCount());
+
+        }
     }
 }

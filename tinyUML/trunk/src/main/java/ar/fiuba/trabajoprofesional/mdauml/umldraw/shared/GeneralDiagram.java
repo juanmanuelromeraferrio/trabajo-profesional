@@ -22,6 +22,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.ElementNameGenerator;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 
@@ -472,12 +473,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
             super.removeChild(child);
         }
 
-        if (child instanceof UmlNode) {
-            UmlNode umlnode = (UmlNode) child;
-            if (umlnode.getModelElement() != null) {
-                umlmodel.removeElement(umlnode.getModelElement(), this);
-            }
-        }
+
     }
 
     /**
@@ -585,15 +581,16 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     public UmlNode createNode(ElementType elementType) {
         UmlNode umlnode = (UmlNode) elementPrototypes.get(elementType).clone();
         if (umlnode.getModelElement() != null) {
+            UmlModelElement model = umlnode.getModelElement();
             String name = ElementNameGenerator.getName(elementType);
             umlnode.getModelElement().setName(name);
+            if(model instanceof PackageableUmlModelElement && umlnode instanceof PackageListener)
+                ((PackageableUmlModelElement) model).addPackageListener((PackageListener) umlnode);
         }
         umlnode.addNodeChangeListener(this);
-        UmlModelElement model = umlnode.getModelElement();
-        if(model instanceof PackageableUmlModelElement && umlnode instanceof PackageListener)
-            ((PackageableUmlModelElement) model).addPackageListener((PackageListener) umlnode);
         return umlnode;
     }
+
     public UmlNode createNodeFromModel(AbstractUmlModelElement modelElement){
 
         UmlDiagramElement proto =  elementPrototypes.get(modelElement.getElementType());
@@ -601,6 +598,9 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
             throw new IllegalArgumentException("There is no element for the supplied model");
         UmlNode umlnode= (UmlNode) proto.clone();
         umlnode.setModelElement(modelElement);
+        umlnode.addNodeChangeListener(this);
+        if(modelElement instanceof PackageableUmlModelElement && umlnode instanceof PackageListener)
+            ((PackageableUmlModelElement) modelElement).addPackageListener((PackageListener) umlnode);
         return umlnode;
 
     }
@@ -674,5 +674,14 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
 
     public void setEditor(DiagramEditor editor) {
         this.editor = editor;
+    }
+
+    public DiagramElement findElementFromModel(UmlModelElement modelElement) {
+        List<UmlDiagramElement> elements = getElements();
+        for(UmlDiagramElement element : elements){
+            if(element.getModelElement()==modelElement)
+                return element;
+        }
+        return null;
     }
 }

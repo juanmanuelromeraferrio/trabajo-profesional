@@ -23,9 +23,12 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
-import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -78,6 +81,17 @@ public class CreationHandler implements EditorMode {
         element.setParent(editor.getDiagram());
         cachedBounds = null;
     }
+    /**
+     * Sets the Element
+     *
+     * @param model the model
+     */
+    public void setElementFromModel(AbstractUmlModelElement model) {
+        elementType = model.getElementType();
+        element = editor.getDiagram().getElementFactory().createNodeFromModel(model);
+        element.setParent(editor.getDiagram());
+        cachedBounds = null;
+    }
 
     /**
      * {@inheritDoc}
@@ -98,6 +112,31 @@ public class CreationHandler implements EditorMode {
         AddNodeCommand createCommand =
             new AddNodeCommand(editor, parent, element, tmpPos.getX(), tmpPos.getY());
         editor.execute(createCommand);
+        PackageElement pkgElement = findNestingPackage();
+        if(pkgElement != null){
+            editor.addNestConnectionToParent(element,pkgElement);
+
+        }
+
+
+    }
+
+
+
+    private PackageElement findNestingPackage() {
+        if(element instanceof UmlNode) {
+            UmlModelElement model = ((UmlNode) element).getModelElement();
+            if(model instanceof PackageableUmlModelElement){
+                UmlPackage pkg = ((PackageableUmlModelElement) model).getPackage();
+                if(pkg!=null  ){
+                    DiagramElement pkgElement = editor.getDiagram().findElementFromModel(pkg);
+                    return (PackageElement) pkgElement;
+                }
+            }
+
+        }
+        return null;
+
     }
 
     /**
@@ -113,7 +152,9 @@ public class CreationHandler implements EditorMode {
             }
             AddNodeCommand createCommand =
                     new AddNodeCommand(editor, parent, element, tmpPos.getX(), tmpPos.getY());
+
             editor.execute(createCommand);
+
         }
     }
 

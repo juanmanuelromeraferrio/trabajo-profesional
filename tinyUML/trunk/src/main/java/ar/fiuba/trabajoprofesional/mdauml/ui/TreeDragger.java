@@ -42,24 +42,20 @@ public class TreeDragger implements TreeDraggerListener {
         if (isInside(currentDiagramEditor,x,y)) {
             Node element;
             try {
-                element = diagram.createNodeFromModel(draggerElement);
-                element.addNodeChangeListener(diagram);
-                if(element instanceof UmlNode){
-                    UmlModelElement model = ((UmlNode) element).getModelElement();
-                    if(model instanceof PackageableUmlModelElement && element instanceof PackageListener)
-                        ((PackageableUmlModelElement) model).addPackageListener((PackageListener) element);
-                }
+                currentDiagramEditor.setCreationModeFromModel(draggerElement);
+                //element = diagram.createNodeFromModel(draggerElement);
+                //element.addNodeChangeListener(diagram);
             }catch (IllegalArgumentException e){
                 JOptionPane.showMessageDialog(AppFrame.get(), getResourceString("error.dragger.wrongDiagram.message"),
                         getResourceString("error.dragger.wrongDiagram.title"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            AddNodeCommand createCommand =
-                new AddNodeCommand(currentDiagramEditor, diagram, element, x - origin.getX(),
-                    y - origin.getY());
-
-            currentDiagramEditor.execute(createCommand);
+           // AddNodeCommand createCommand =
+             //   new AddNodeCommand(currentDiagramEditor, diagram, element, x - origin.getX(),
+                //    y - origin.getY());
+               //
+            //currentDiagramEditor.execute(createCommand);
 
         }
 
