@@ -5,25 +5,34 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class UmlMainStep extends UmlStep {
 
   private Set<String> entities;
-  private String type;
+  private String actor;
+  private StepType type;
 
   protected UmlMainStep(String description) {
     super(description);
     this.setEntities(new HashSet<String>());
   }
 
-  protected UmlMainStep(String description, String type) {
+  protected UmlMainStep(String description, String actor, StepType type) {
     this(description);
     this.setType(type);
+    this.setActor(actor);
   }
 
 
-  public UmlMainStep(String description, String type, Set<String> entities) {
-    this(description, type);
+  public UmlMainStep(String description, String actor, StepType type, Set<String> entities) {
+    this(description, actor, type);
     this.setEntities(entities);
+  }
+
+  public UmlMainStep(String description, StepType type) {
+    this(description);
+    this.setType(type);
   }
 
   public Set<String> getEntities() {
@@ -34,17 +43,40 @@ public class UmlMainStep extends UmlStep {
     this.entities = entities;
   }
 
-  public String getType() {
+  public String getActor() {
+    return actor;
+  }
+
+  public void setActor(String actor) {
+    this.actor = actor;
+  }
+
+  public StepType getType() {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(StepType type) {
     this.type = type;
   }
 
   @Override
   public String showDescription() {
-    return super.getCompleteIndex() + ". " + type + ": " + super.getDescription().replace("@", "");
+
+    switch (type) {
+      case IF:
+        return getIndexAndSpaces() + ". If " + super.getDescription();
+      case REGULAR:
+        return getIndexAndSpaces() + ". " + actor + ": " + super.getDescription().replace("@", "");
+      default:
+        return "";
+    }
+  }
+
+  private String getIndexAndSpaces() {
+    String completeIndex = super.getCompleteIndex();
+    int countMatches = StringUtils.countMatches(completeIndex, ".");
+    return StringUtils.leftPad(completeIndex, completeIndex.length() + countMatches * 3, " ");
+
   }
 
   @Override
@@ -55,7 +87,7 @@ public class UmlMainStep extends UmlStep {
       cloneEntities.add(entity);
     }
 
-    UmlStep cloned = new UmlMainStep(this.description, this.type, cloneEntities);
+    UmlStep cloned = new UmlMainStep(this.description, this.actor, this.type, cloneEntities);
     cloned.index = this.index;
 
     List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.childrens.size());
@@ -68,5 +100,13 @@ public class UmlMainStep extends UmlStep {
 
     cloned.childrens = cloneChildren;
     return cloned;
+  }
+
+  public boolean isFatherType() {
+    if (type.equals(StepType.IF) || type.equals(StepType.WHILE) || type.equals(StepType.FOR)) {
+      return true;
+    }
+
+    return false;
   }
 }

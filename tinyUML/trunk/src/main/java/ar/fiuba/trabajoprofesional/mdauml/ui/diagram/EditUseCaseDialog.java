@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -31,6 +32,7 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
+import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
@@ -46,6 +48,11 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
  * @version 1.0
  */
 public class EditUseCaseDialog extends javax.swing.JDialog {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 8629670441776556412L;
 
   private UseCaseElement useCaseElement;
 
@@ -68,6 +75,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   private EditListAction postconditionEditListAction;
 
   private Window parent;
+  private Stack<UmlMainStep> fathers;
 
 
 
@@ -82,6 +90,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.parent = parent;
     this.useCaseElement = anUseCase;
+    this.fathers = new Stack<UmlMainStep>();
     initComponents();
     myPostInit();
   }
@@ -201,6 +210,13 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     }
   }
 
+  private UmlMainStep getFather() {
+    UmlMainStep father = null;
+    if (!fathers.isEmpty()) {
+      father = fathers.peek();
+    }
+    return father;
+  }
 
   private void initComponents() {
     setResizable(false);
@@ -228,26 +244,22 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
       }
     });
     GroupLayout groupLayout = new GroupLayout(getContentPane());
-    groupLayout.setHorizontalGroup(
-      groupLayout.createParallelGroup(Alignment.TRAILING)
-        .addGroup(groupLayout.createSequentialGroup()
-          .addContainerGap(335, Short.MAX_VALUE)
-          .addComponent(btnOk)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(btnCancel)
-          .addContainerGap())
-        .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
-    );
-    groupLayout.setVerticalGroup(
-      groupLayout.createParallelGroup(Alignment.LEADING)
-        .addGroup(groupLayout.createSequentialGroup()
-          .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 633, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.UNRELATED)
-          .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-            .addComponent(btnCancel)
-            .addComponent(btnOk))
-          .addContainerGap())
-    );
+    groupLayout.setHorizontalGroup(groupLayout
+        .createParallelGroup(Alignment.TRAILING)
+        .addGroup(
+            groupLayout.createSequentialGroup().addContainerGap(335, Short.MAX_VALUE)
+                .addComponent(btnOk).addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(btnCancel).addContainerGap())
+        .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE));
+    groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
+        groupLayout
+            .createSequentialGroup()
+            .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 633,
+                GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(ComponentPlacement.UNRELATED)
+            .addGroup(
+                groupLayout.createParallelGroup(Alignment.LEADING).addComponent(btnCancel)
+                    .addComponent(btnOk)).addContainerGap()));
 
     JPanel panel = new JPanel();
     mainScrollPanel.setViewportView(panel);
@@ -476,17 +488,39 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     addMainFlowButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent);
+
+        UmlMainStep father = getFather();
+
+        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, father);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
         if (dialog.isOk()) {
 
+
           String stepDescription = dialog.getDescription();
-          Set<String> entities = dialog.getEntities();
-          String stepType = dialog.getStepType();
-          UmlStep step = new UmlMainStep(stepDescription, stepType, entities);
-          mainFlow.addStep(step);
+          StepType stepType = dialog.getStepType();
+
+          UmlStep step;
+          if (stepType.equals(StepType.REGULAR)) {
+            String actor = dialog.getActor();
+            Set<String> entities = dialog.getEntities();
+            step = new UmlMainStep(stepDescription, actor, stepType, entities);
+          } else {
+            step = new UmlMainStep(stepDescription, stepType);
+          }
+
+          if (father != null) {
+            mainFlow.addChildrenStep(father, step);
+          } else {
+            mainFlow.addStep(step);
+          }
+
+          UmlMainStep umlMainStep = (UmlMainStep) step;
+          if (umlMainStep.isFatherType()) {
+            fathers.push(umlMainStep);
+          }
+
           String informationStep = step.showDescription();
           ((DefaultListModel<String>) mainFlowStepList.getModel()).addElement(informationStep);
 
@@ -510,9 +544,9 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         }
 
         UmlMainStep step = (UmlMainStep) mainFlow.getStep(selectedStep);
+        UmlMainStep father = getFather();
 
-
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, step);
+        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, father, step);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
@@ -520,8 +554,9 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
           String stepDescription = dialog.getDescription();
           Set<String> entities = dialog.getEntities();
-          String stepType = dialog.getStepType();
-          UmlStep newStep = new UmlMainStep(stepDescription, stepType, entities);
+          StepType stepType = dialog.getStepType();
+          String actor = dialog.getActor();
+          UmlStep newStep = new UmlMainStep(stepDescription, actor, stepType, entities);
           mainFlow.removeStep(step);
           mainFlow.addStep(newStep, selectedStep);
           refreshMainFlow(listModel);
@@ -551,32 +586,34 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     });
 
     GroupLayout mainFlowGP = new GroupLayout(mainFlowPanel);
-    mainFlowGP.setHorizontalGroup(
-      mainFlowGP.createParallelGroup(Alignment.TRAILING)
-        .addGroup(mainFlowGP.createSequentialGroup()
-          .addContainerGap()
-          .addComponent(mainFlowStepPane, GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addGroup(mainFlowGP.createParallelGroup(Alignment.LEADING)
-            .addComponent(addMainFlowButton, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-            .addComponent(editStepMainFlowButton, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-            .addComponent(deletStepMainFlowButton, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
-          .addContainerGap())
-    );
-    mainFlowGP.setVerticalGroup(
-      mainFlowGP.createParallelGroup(Alignment.LEADING)
-        .addGroup(mainFlowGP.createSequentialGroup()
-          .addContainerGap(11, Short.MAX_VALUE)
-          .addGroup(mainFlowGP.createParallelGroup(Alignment.BASELINE)
-            .addComponent(mainFlowStepPane, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-            .addGroup(mainFlowGP.createSequentialGroup()
-              .addComponent(addMainFlowButton)
-              .addGap(7)
-              .addComponent(editStepMainFlowButton)
-              .addGap(8)
-              .addComponent(deletStepMainFlowButton)))
-          .addContainerGap(16, Short.MAX_VALUE))
-    );
+    mainFlowGP.setHorizontalGroup(mainFlowGP.createParallelGroup(Alignment.TRAILING).addGroup(
+        mainFlowGP
+            .createSequentialGroup()
+            .addContainerGap()
+            .addComponent(mainFlowStepPane, GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addGroup(
+                mainFlowGP
+                    .createParallelGroup(Alignment.LEADING)
+                    .addComponent(addMainFlowButton, GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                    .addComponent(editStepMainFlowButton, Alignment.TRAILING,
+                        GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                    .addComponent(deletStepMainFlowButton, GroupLayout.DEFAULT_SIZE, 67,
+                        Short.MAX_VALUE)).addContainerGap()));
+    mainFlowGP.setVerticalGroup(mainFlowGP.createParallelGroup(Alignment.LEADING).addGroup(
+        mainFlowGP
+            .createSequentialGroup()
+            .addContainerGap(11, Short.MAX_VALUE)
+            .addGroup(
+                mainFlowGP
+                    .createParallelGroup(Alignment.BASELINE)
+                    .addComponent(mainFlowStepPane, GroupLayout.PREFERRED_SIZE, 150,
+                        GroupLayout.PREFERRED_SIZE)
+                    .addGroup(
+                        mainFlowGP.createSequentialGroup().addComponent(addMainFlowButton)
+                            .addGap(7).addComponent(editStepMainFlowButton).addGap(8)
+                            .addComponent(deletStepMainFlowButton)))
+            .addContainerGap(16, Short.MAX_VALUE)));
 
 
     mainFlowStepList = new JList();
@@ -770,53 +807,74 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     scrollPane_6.setViewportView(alternativeFlows);
     alternativeFlowPanel.setLayout(gl_panel_5);
     GroupLayout gl_panel = new GroupLayout(panel);
-    gl_panel.setHorizontalGroup(
-      gl_panel.createParallelGroup(Alignment.LEADING)
-        .addGroup(gl_panel.createSequentialGroup()
-          .addContainerGap()
-          .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-            .addComponent(mainFlowPanel, GroupLayout.PREFERRED_SIZE, 426, GroupLayout.PREFERRED_SIZE)
-            .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 426, GroupLayout.PREFERRED_SIZE)
-            .addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-              .addComponent(mainActorsPanel, 0, 0, Short.MAX_VALUE)
-              .addGroup(gl_panel.createSequentialGroup()
-                .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-                  .addComponent(lblDescription)
-                  .addComponent(lblName))
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-                  .addComponent(scrollPane)
-                  .addComponent(name, GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))))
-            .addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 426, GroupLayout.PREFERRED_SIZE)
-            .addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 426, GroupLayout.PREFERRED_SIZE)
-            .addComponent(alternativeFlowPanel, GroupLayout.PREFERRED_SIZE, 426, GroupLayout.PREFERRED_SIZE))
-          .addContainerGap(31, Short.MAX_VALUE))
-    );
-    gl_panel.setVerticalGroup(
-      gl_panel.createParallelGroup(Alignment.LEADING)
-        .addGroup(gl_panel.createSequentialGroup()
-          .addContainerGap()
-          .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-            .addComponent(lblName)
-            .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-            .addComponent(lblDescription)
-            .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(mainFlowPanel, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE)
-          .addGap(18)
-          .addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(alternativeFlowPanel, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-          .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
+    gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(
+        gl_panel
+            .createSequentialGroup()
+            .addContainerGap()
+            .addGroup(
+                gl_panel
+                    .createParallelGroup(Alignment.LEADING)
+                    .addComponent(mainFlowPanel, GroupLayout.PREFERRED_SIZE, 426,
+                        GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 426,
+                        GroupLayout.PREFERRED_SIZE)
+                    .addGroup(
+                        gl_panel
+                            .createParallelGroup(Alignment.LEADING, false)
+                            .addComponent(mainActorsPanel, 0, 0, Short.MAX_VALUE)
+                            .addGroup(
+                                gl_panel
+                                    .createSequentialGroup()
+                                    .addGroup(
+                                        gl_panel.createParallelGroup(Alignment.LEADING)
+                                            .addComponent(lblDescription).addComponent(lblName))
+                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                    .addGroup(
+                                        gl_panel
+                                            .createParallelGroup(Alignment.LEADING, false)
+                                            .addComponent(scrollPane)
+                                            .addComponent(name, GroupLayout.DEFAULT_SIZE, 365,
+                                                Short.MAX_VALUE))))
+                    .addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 426,
+                        GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 426,
+                        GroupLayout.PREFERRED_SIZE)
+                    .addComponent(alternativeFlowPanel, GroupLayout.PREFERRED_SIZE, 426,
+                        GroupLayout.PREFERRED_SIZE)).addContainerGap(31, Short.MAX_VALUE)));
+    gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(
+        gl_panel
+            .createSequentialGroup()
+            .addContainerGap()
+            .addGroup(
+                gl_panel
+                    .createParallelGroup(Alignment.BASELINE)
+                    .addComponent(lblName)
+                    .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addGroup(
+                gl_panel
+                    .createParallelGroup(Alignment.LEADING)
+                    .addComponent(lblDescription)
+                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58,
+                        GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 82,
+                GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 114,
+                GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addComponent(mainFlowPanel, GroupLayout.PREFERRED_SIZE, 188,
+                GroupLayout.PREFERRED_SIZE)
+            .addGap(18)
+            .addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addComponent(alternativeFlowPanel, GroupLayout.PREFERRED_SIZE, 114,
+                GroupLayout.PREFERRED_SIZE)
+            .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
     JScrollPane scrollPane_1 = new JScrollPane();
 
