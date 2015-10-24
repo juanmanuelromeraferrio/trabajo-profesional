@@ -20,11 +20,15 @@ public abstract class UmlStep {
     this.father = father;
   }
 
+  public UmlStep getFather() {
+    return father;
+  }
+
 
   public void setDescription(String description) {
     this.description = description;
   }
-  
+
   public String getDescription() {
     return description;
   }
@@ -57,6 +61,16 @@ public abstract class UmlStep {
     childrens.add(step);
   }
 
+  public void addChildrenStep(UmlStep step, int selectedStep) {
+    step.setFather(this);
+    step.setIndex(selectedStep + 1);
+    childrens.add(selectedStep, step);
+
+    for (int i = selectedStep + 1; i < childrens.size(); i++) {
+      childrens.get(i).incrementIndex();
+    }
+  }
+
   public void removeChildrenStep(UmlStep step) {
     int index = childrens.indexOf(step);
     for (int i = index + 1; i < childrens.size(); i++) {
@@ -70,7 +84,7 @@ public abstract class UmlStep {
     UmlStep umlStep = childrens.get(selectedAlternativeStep);
     this.removeChildrenStep(umlStep);
   }
-  
+
   public UmlStep getChildren(int index) {
     return childrens.get(index);
   }

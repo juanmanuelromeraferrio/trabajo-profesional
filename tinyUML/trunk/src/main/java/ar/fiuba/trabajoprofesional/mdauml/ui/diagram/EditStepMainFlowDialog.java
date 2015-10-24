@@ -34,14 +34,12 @@ import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
-
 public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
   /**
    * 
    */
   private static final long serialVersionUID = 4748892124691187498L;
-
 
   private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;
@@ -51,13 +49,10 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private UmlMainStep step;
   private UmlMainStep father;
 
-
   private JComboBox<String> comboActorsStep;
   private JTextField textFieldCondition;
 
-
   private JLabel lblCondition;
-
 
   private JPanel entitiesPanel;
 
@@ -74,7 +69,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
   }
 
-  public EditStepMainFlowDialog(java.awt.Window parent, UmlMainStep step, UmlMainStep father) {
+  public EditStepMainFlowDialog(java.awt.Window parent, UmlMainStep father, UmlMainStep step) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
     this.step = step;
@@ -82,45 +77,20 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     myPostInit();
   }
 
-
-
   private void myPostInit() {
-    String description = step.getDescription();
-    Set<String> entities = step.getEntities();
+
     String actor = step.getActor();
     StepType type = step.getType();
-
-    // Guardo Descripcion
-    this.stepDescription.setText(description);
-
-    // Guardo lista de Entidades Posibles
-    String[] split = description.split(" ");
-    List<String> entitiesList = Arrays.asList(split);
-    List<String> entityListFinal = new ArrayList<String>();
-    for (String entity : entitiesList) {
-
-      if (entity.startsWith("@")) {
-        continue;
-      }
-
-      String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
-      if (!entityListFinal.contains(entityFormated)) {
-        entityListFinal.add(entityFormated);
-      }
-    }
-    Collections.sort(entityListFinal);
-    comboEntities.setModel(new DefaultComboBoxModel(entityListFinal.toArray()));
-
-    // Guardo las entidades seleccionadas
-    DefaultListModel<String> model = (DefaultListModel<String>) this.entities.getModel();
-    for (String entity : entities) {
-      model.addElement(entity);
-    }
 
     // Marco el actor seleccionado
     comboActorsStep.setSelectedItem(actor);
     // Marco el tipo seleccionado
     comboTypesStep.setSelectedItem(type);
+    comboTypesStep.setEnabled(false);
+
+    setDescription(step);
+    setEntities(step.getDescription(), step.getEntities());
+
   }
 
   private void initComponents() {
@@ -214,7 +184,6 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
             }
           }
 
-
           Collections.sort(entityModel);
           Collections.sort(entitiesSelected);
           comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
@@ -223,7 +192,6 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
             ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
           }
           stepDescription.setEnabled(false);
-
 
         }
 
@@ -242,10 +210,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-
     JLabel typeLabel =
         new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.type.label"));
-
 
     ComboBoxModel<StepType> typeComboBoxModel;
     if (father != null) {
@@ -263,14 +229,14 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         StepType selectedType = (StepType) comboTypesStep.getSelectedItem();
         if (selectedType.equals(StepType.IF)) {
           comboActorsStep.setEnabled(false);
-          stepDescription.setEnabled(false);
+          stepDescription.setVisible(false);
           lblCondition.setVisible(true);
           textFieldCondition.setVisible(true);
           textFieldCondition.setEnabled(true);
           entitiesPanel.setVisible(false);
         } else {
           comboActorsStep.setEnabled(true);
-          stepDescription.setEnabled(true);
+          stepDescription.setVisible(true);
           lblCondition.setVisible(false);
           textFieldCondition.setVisible(false);
           entitiesPanel.setVisible(true);
@@ -278,7 +244,6 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
       }
     });
-
 
     String[] actorItems =
         {ApplicationResources.getInstance().getString("editstepmainflow.user.actor"),
@@ -290,15 +255,12 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     comboActorsStep = new JComboBox<String>();
     comboActorsStep.setModel(actorComboBoxModel);
 
-
-
     lblCondition =
         new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.condition.label"));
     lblCondition.setVisible(false);
     textFieldCondition = new JTextField();
     textFieldCondition.setColumns(10);
     textFieldCondition.setVisible(false);
-
 
     GroupLayout gropuLayoutStepPanel = new GroupLayout(stepPanel);
     gropuLayoutStepPanel.setHorizontalGroup(gropuLayoutStepPanel.createParallelGroup(
@@ -501,6 +463,47 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     generalPanel.setLayout(firstLayout);
     getContentPane().setLayout(groupLayout);
 
+  }
+
+  private void setDescription(UmlMainStep step) {
+    StepType stepType = getStepType();
+    if (stepType.equals(StepType.IF)) {
+      textFieldCondition.setText(step.getDescription());
+    } else {
+      stepDescription.setText(step.getDescription());
+    }
+  }
+
+  private void setEntities(String description, Set<String> entities) {
+
+    StepType stepType = getStepType();
+    if (stepType.equals(StepType.IF)) {
+      return;
+    }
+
+    // Guardo lista de Entidades Posibles
+    String[] split = description.split(" ");
+    List<String> entitiesList = Arrays.asList(split);
+    List<String> entityListFinal = new ArrayList<String>();
+    for (String entity : entitiesList) {
+
+      if (entity.startsWith("@")) {
+        continue;
+      }
+
+      String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+      if (!entityListFinal.contains(entityFormated)) {
+        entityListFinal.add(entityFormated);
+      }
+    }
+    Collections.sort(entityListFinal);
+    comboEntities.setModel(new DefaultComboBoxModel(entityListFinal.toArray()));
+
+    // Guardo las entidades seleccionadas
+    DefaultListModel<String> model = (DefaultListModel<String>) this.entities.getModel();
+    for (String entity : entities) {
+      model.addElement(entity);
+    }
   }
 
   public String getDescription() {

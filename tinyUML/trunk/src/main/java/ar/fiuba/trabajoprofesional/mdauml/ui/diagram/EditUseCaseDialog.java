@@ -207,6 +207,11 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     for (UmlStep step_ : flow) {
       String informationStep = step_.showDescription();
       listModel.addElement(informationStep);
+      // for (UmlStep children : step_.getChildrens()) {
+      // String informationChildrenStep = children.showDescription();
+      // listModel.addElement(informationChildrenStep);
+      // }
+
     }
   }
 
@@ -534,6 +539,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
         DefaultListModel<String> listModel =
             ((DefaultListModel<String>) mainFlowStepList.getModel());
+
         if (listModel.isEmpty())
           return;
 
@@ -544,22 +550,55 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         }
 
         UmlMainStep step = (UmlMainStep) mainFlow.getStep(selectedStep);
-        UmlMainStep father = getFather();
+        UmlMainStep father = (UmlMainStep) step.getFather();
 
         EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, father, step);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
-        if (dialog.isOk()) {
 
+        if (dialog.isOk()) {
           String stepDescription = dialog.getDescription();
-          Set<String> entities = dialog.getEntities();
           StepType stepType = dialog.getStepType();
-          String actor = dialog.getActor();
-          UmlStep newStep = new UmlMainStep(stepDescription, actor, stepType, entities);
+
+
+          if (father != null) {
+            selectedStep = selectedStep - mainFlow.getFlow().indexOf(father) - 1;
+          }
+
+          // Borro el Step Original
           mainFlow.removeStep(step);
-          mainFlow.addStep(newStep, selectedStep);
+
+          // Creo uno nuevo
+          UmlStep newStep;
+          if (stepType.equals(StepType.REGULAR)) {
+            String actor = dialog.getActor();
+            Set<String> entities = dialog.getEntities();
+            newStep = new UmlMainStep(stepDescription, actor, stepType, entities);
+          } else {
+            newStep = new UmlMainStep(stepDescription, stepType);
+          }
+
+          if (father != null) {
+            mainFlow.addChildrenStep(father, newStep, selectedStep);
+          } else {
+            mainFlow.addStep(newStep, selectedStep);
+          }
+
+          // Add Children
+          for (UmlStep children : step.getChildrens()) {
+            mainFlow.addChildrenStep(newStep, children);
+          }
+
+          UmlMainStep umlMainStep = (UmlMainStep) newStep;
+          if (umlMainStep.isFatherType()) {
+            int index = fathers.indexOf(step);
+            fathers.remove(index);
+            fathers.insertElementAt(umlMainStep, index);
+          }
+
           refreshMainFlow(listModel);
+
         }
       }
     });
@@ -581,6 +620,13 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
         UmlStep step = mainFlow.getStep(selectedStep);
         mainFlow.removeStep(step);
+
+
+        UmlMainStep umlMainStep = (UmlMainStep) step;
+        if (umlMainStep.isFatherType()) {
+          fathers.remove(umlMainStep);
+        }
+
         refreshMainFlow(listModel);
       }
     });

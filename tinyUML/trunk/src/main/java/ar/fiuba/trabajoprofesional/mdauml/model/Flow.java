@@ -23,8 +23,17 @@ public class Flow {
   public void addStep(UmlStep step, int index) {
     step.setIndex(index + 1);
     flow.add(index, step);
+
+    UmlStep father = step.getFather();
     for (int i = index + 1; i < flow.size(); i++) {
-      flow.get(i).incrementIndex();
+      // Si tienen Padre solo incremento el index de
+      // los que son hijos del mismo padre.
+      if (father == null) {
+        UmlStep umlStep = flow.get(i);
+        if (umlStep.getFather() == null) {
+          umlStep.incrementIndex();
+        }
+      }
     }
 
   }
@@ -35,12 +44,36 @@ public class Flow {
 
   public void removeStep(UmlStep step) {
     int index = flow.indexOf(step);
+    UmlStep father = step.getFather();
     for (int i = index + 1; i < flow.size(); i++) {
-      flow.get(i).decrementIndex();
+
+      // Si no tiene padre Decremento el index
+      if (father == null) {
+        UmlStep umlStep = flow.get(i);
+        if (umlStep.getFather() == null) {
+          umlStep.decrementIndex();
+        }
+      }
     }
 
     flow.remove(step);
+
+    // Remove Step To Father
+    if (father != null) {
+      father.removeChildrenStep(step);
+    }
+
+    // Remove Childrens to Flow
+    removeChildrenToFlow(step);
   }
+
+  private void removeChildrenToFlow(UmlStep umlStep) {
+    for (UmlStep childrenStep : umlStep.getChildrens()) {
+      removeChildrenToFlow(childrenStep);
+      flow.remove(childrenStep);
+    }
+  }
+
 
   @Override
   public Object clone() {
@@ -54,11 +87,33 @@ public class Flow {
 
   }
 
-  public void addChildrenStep(UmlStep step, UmlStep childrenStep) {
-    step.addChildrenStep(childrenStep);
+  private void addChildrenToFlow(UmlStep umlStep, int selectedStep) {
+    flow.add(selectedStep, umlStep);
+    for (UmlStep childrenStep : umlStep.getChildrens()) {
+      addChildrenToFlow(childrenStep);
+    }
+  }
+
+  private void addChildrenToFlow(UmlStep umlStep) {
+    flow.add(umlStep);
+    for (UmlStep childrenStep : umlStep.getChildrens()) {
+      addChildrenToFlow(childrenStep);
+    }
+  }
+
+  public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep) {
+    fatherStep.addChildrenStep(childrenStep);
+    addChildrenToFlow(childrenStep);
+  }
+
+  public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep, int selectedStep) {
+    fatherStep.addChildrenStep(childrenStep, selectedStep);
+    int flowIndex = flow.indexOf(fatherStep) + selectedStep + 1;
+    addChildrenToFlow(childrenStep, flowIndex);
   }
 
   public void removeChildrenStep(UmlStep selectedStep, int selectedAlternativeStep) {
     selectedStep.removeChildrenStepByPosition(selectedAlternativeStep);
+    flow.remove(selectedStep);
   }
 }
