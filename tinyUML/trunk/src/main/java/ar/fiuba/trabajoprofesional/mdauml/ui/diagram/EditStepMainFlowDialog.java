@@ -56,6 +56,10 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
   private JPanel entitiesPanel;
 
+  private JButton editStep;
+
+  private JButton saveStep;
+
   /**
    * Creates new form EditUseCaseDialog
    *
@@ -148,64 +152,82 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     JScrollPane scrollPaneStep = new JScrollPane();
 
-    JButton saveStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.save"));
+    saveStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.save"));
     saveStep.addActionListener(new ActionListener() {
       @SuppressWarnings({"unchecked", "rawtypes"})
       public void actionPerformed(ActionEvent arg0) {
 
         StepType stepType = getStepType();
-        if (stepType.equals(StepType.IF)) {
-          textFieldCondition.setEnabled(false);
-        } else {
-          // Remove all entities
-          entities.setModel(new DefaultListModel<String>());
+        switch (stepType) {
+          case IF:
+          case WHILE: {
+            textFieldCondition.setEnabled(false);
+            break;
+          }
+          case REGULAR: {
+            entities.setModel(new DefaultListModel<String>());
 
-          List<String> entityModel = new ArrayList<String>();
-          String description = stepDescription.getText();
-          String[] split = description.split(" ");
+            List<String> entityModel = new ArrayList<String>();
+            String description = stepDescription.getText();
+            String[] split = description.split(" ");
 
-          List<String> entitiesList = Arrays.asList(split);
-          List<String> entitiesSelected = new ArrayList<String>();
+            List<String> entitiesList = Arrays.asList(split);
+            List<String> entitiesSelected = new ArrayList<String>();
 
-          for (String entity : entitiesList) {
+            for (String entity : entitiesList) {
 
-            if (entity.startsWith("@")) {
-              String entityFormatedSelected =
-                  entity.substring(1, 2).toUpperCase() + entity.substring(2);
-              if (!entitiesSelected.contains(entityFormatedSelected)) {
-                entitiesSelected.add(entityFormatedSelected);
-              }
-            } else {
-              String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+              if (entity.startsWith("@")) {
+                String entityFormatedSelected =
+                    entity.substring(1, 2).toUpperCase() + entity.substring(2);
+                if (!entitiesSelected.contains(entityFormatedSelected)) {
+                  entitiesSelected.add(entityFormatedSelected);
+                }
+              } else {
+                String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
 
-              if (!entityModel.contains(entityFormated)) {
-                entityModel.add(entityFormated);
+                if (!entityModel.contains(entityFormated)) {
+                  entityModel.add(entityFormated);
+                }
               }
             }
-          }
 
-          Collections.sort(entityModel);
-          Collections.sort(entitiesSelected);
-          comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
+            Collections.sort(entityModel);
+            Collections.sort(entitiesSelected);
+            comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
 
-          for (String entitySelect : entitiesSelected) {
-            ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
+            for (String entitySelect : entitiesSelected) {
+              ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
+            }
+            stepDescription.setEnabled(false);
+            break;
           }
-          stepDescription.setEnabled(false);
+          default: {
+            break;
+          }
 
         }
-
       }
     });
 
-    JButton editStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.edit"));
+    editStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.edit"));
     editStep.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         StepType stepType = getStepType();
-        if (stepType.equals(StepType.IF)) {
-          textFieldCondition.setEnabled(true);
-        } else {
-          stepDescription.setEnabled(true);
+
+        switch (stepType) {
+          case IF:
+          case WHILE: {
+            textFieldCondition.setEnabled(true);
+            break;
+          }
+          case REGULAR: {
+            stepDescription.setEnabled(true);
+            break;
+          }
+          default: {
+            break;
+          }
+
         }
       }
     });
@@ -227,19 +249,40 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       public void actionPerformed(ActionEvent e) {
 
         StepType selectedType = (StepType) comboTypesStep.getSelectedItem();
-        if (selectedType.equals(StepType.IF)) {
-          comboActorsStep.setEnabled(false);
-          stepDescription.setVisible(false);
-          lblCondition.setVisible(true);
-          textFieldCondition.setVisible(true);
-          textFieldCondition.setEnabled(true);
-          entitiesPanel.setVisible(false);
-        } else {
-          comboActorsStep.setEnabled(true);
-          stepDescription.setVisible(true);
-          lblCondition.setVisible(false);
-          textFieldCondition.setVisible(false);
-          entitiesPanel.setVisible(true);
+
+        switch (selectedType) {
+          case IF:
+          case WHILE: {
+            comboActorsStep.setEnabled(false);
+            stepDescription.setVisible(false);
+            lblCondition.setVisible(true);
+            textFieldCondition.setVisible(true);
+            textFieldCondition.setEnabled(true);
+            entitiesPanel.setVisible(false);
+            saveStep.setVisible(true);
+            editStep.setVisible(true);
+            break;
+          }
+          case ENDIF: {
+            comboActorsStep.setEnabled(false);
+            stepDescription.setVisible(false);
+            lblCondition.setVisible(false);
+            textFieldCondition.setVisible(false);
+            entitiesPanel.setVisible(false);
+            saveStep.setVisible(false);
+            editStep.setVisible(false);
+            break;
+          }
+          default: {
+            comboActorsStep.setEnabled(true);
+            stepDescription.setVisible(true);
+            lblCondition.setVisible(false);
+            textFieldCondition.setVisible(false);
+            entitiesPanel.setVisible(true);
+            saveStep.setVisible(true);
+            editStep.setVisible(true);
+          }
+
         }
 
       }
@@ -467,51 +510,78 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
   private void setDescription(UmlMainStep step) {
     StepType stepType = getStepType();
-    if (stepType.equals(StepType.IF)) {
-      textFieldCondition.setText(step.getDescription());
-    } else {
-      stepDescription.setText(step.getDescription());
+
+    switch (stepType) {
+      case IF:
+      case WHILE: {
+        textFieldCondition.setText(step.getDescription());
+        break;
+      }
+      case REGULAR: {
+        stepDescription.setText(step.getDescription());
+        break;
+      }
+      default:
+        break;
+
     }
   }
 
   private void setEntities(String description, Set<String> entities) {
 
     StepType stepType = getStepType();
-    if (stepType.equals(StepType.IF)) {
-      return;
-    }
 
-    // Guardo lista de Entidades Posibles
-    String[] split = description.split(" ");
-    List<String> entitiesList = Arrays.asList(split);
-    List<String> entityListFinal = new ArrayList<String>();
-    for (String entity : entitiesList) {
-
-      if (entity.startsWith("@")) {
-        continue;
+    switch (stepType) {
+      case IF:
+      case WHILE: {
+        return;
       }
+      case REGULAR: {
+        // Guardo lista de Entidades Posibles
+        String[] split = description.split(" ");
+        List<String> entitiesList = Arrays.asList(split);
+        List<String> entityListFinal = new ArrayList<String>();
+        for (String entity : entitiesList) {
 
-      String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
-      if (!entityListFinal.contains(entityFormated)) {
-        entityListFinal.add(entityFormated);
+          if (entity.startsWith("@")) {
+            continue;
+          }
+
+          String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+          if (!entityListFinal.contains(entityFormated)) {
+            entityListFinal.add(entityFormated);
+          }
+        }
+        Collections.sort(entityListFinal);
+        comboEntities.setModel(new DefaultComboBoxModel(entityListFinal.toArray()));
+
+        // Guardo las entidades seleccionadas
+        DefaultListModel<String> model = (DefaultListModel<String>) this.entities.getModel();
+        for (String entity : entities) {
+          model.addElement(entity);
+        }
+        break;
       }
-    }
-    Collections.sort(entityListFinal);
-    comboEntities.setModel(new DefaultComboBoxModel(entityListFinal.toArray()));
+      default:
+        break;
 
-    // Guardo las entidades seleccionadas
-    DefaultListModel<String> model = (DefaultListModel<String>) this.entities.getModel();
-    for (String entity : entities) {
-      model.addElement(entity);
     }
   }
 
   public String getDescription() {
     StepType stepType = getStepType();
-    if (stepType.equals(StepType.IF)) {
-      return this.textFieldCondition.getText();
-    } else {
-      return this.stepDescription.getText();
+
+    switch (stepType) {
+      case IF:
+      case WHILE: {
+        return this.textFieldCondition.getText();
+      }
+      case REGULAR: {
+        return this.stepDescription.getText();
+      }
+      default:
+        return "";
+
     }
   }
 

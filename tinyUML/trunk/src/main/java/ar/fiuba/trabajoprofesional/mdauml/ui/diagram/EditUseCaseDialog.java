@@ -223,6 +223,17 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     return father;
   }
 
+  private void removeFathers(UmlMainStep umlsMainStep) {
+    if (umlsMainStep.isFatherType()) {
+      fathers.remove(umlsMainStep);
+    }
+
+    for (UmlStep umlStep : umlsMainStep.getChildrens()) {
+      removeFathers((UmlMainStep) umlStep);
+    }
+
+  }
+
   private void initComponents() {
     setResizable(false);
     setSize(new Dimension(469, 700));
@@ -502,33 +513,49 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
         if (dialog.isOk()) {
 
-
-          String stepDescription = dialog.getDescription();
           StepType stepType = dialog.getStepType();
+          String stepDescription = dialog.getDescription();
+          UmlStep step = null;
 
-          UmlStep step;
-          if (stepType.equals(StepType.REGULAR)) {
-            String actor = dialog.getActor();
-            Set<String> entities = dialog.getEntities();
-            step = new UmlMainStep(stepDescription, actor, stepType, entities);
+          Boolean isCloseStep = Boolean.FALSE;
+
+          switch (stepType) {
+            case REGULAR: {
+              String actor = dialog.getActor();
+              Set<String> entities = dialog.getEntities();
+              step = new UmlMainStep(stepDescription, actor, stepType, entities);
+              break;
+            }
+            case IF:
+            case WHILE: {
+              step = new UmlMainStep(stepDescription, stepType);
+              break;
+            }
+            case ENDIF: {
+              isCloseStep = Boolean.TRUE;
+              break;
+            }
+            default:
+              break;
+          }
+
+          if (isCloseStep) {
+            fathers.pop();
           } else {
-            step = new UmlMainStep(stepDescription, stepType);
+            if (father != null) {
+              mainFlow.addChildrenStep(father, step);
+            } else {
+              mainFlow.addStep(step);
+            }
+
+            UmlMainStep umlMainStep = (UmlMainStep) step;
+            if (umlMainStep.isFatherType()) {
+              fathers.push(umlMainStep);
+            }
+
+            String informationStep = step.showDescription();
+            ((DefaultListModel<String>) mainFlowStepList.getModel()).addElement(informationStep);
           }
-
-          if (father != null) {
-            mainFlow.addChildrenStep(father, step);
-          } else {
-            mainFlow.addStep(step);
-          }
-
-          UmlMainStep umlMainStep = (UmlMainStep) step;
-          if (umlMainStep.isFatherType()) {
-            fathers.push(umlMainStep);
-          }
-
-          String informationStep = step.showDescription();
-          ((DefaultListModel<String>) mainFlowStepList.getModel()).addElement(informationStep);
-
         }
       }
     });
@@ -562,6 +589,9 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           StepType stepType = dialog.getStepType();
 
 
+          int indexReal = step.getIndex();
+          int indexFlow = mainFlow.getFlowIndex(step, 0);
+
           if (father != null) {
             selectedStep = selectedStep - mainFlow.getFlow().indexOf(father) - 1;
           }
@@ -582,7 +612,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           if (father != null) {
             mainFlow.addChildrenStep(father, newStep, selectedStep);
           } else {
-            mainFlow.addStep(newStep, selectedStep);
+            mainFlow.addStep(newStep, indexReal, indexFlow);
           }
 
           // Add Children
@@ -593,8 +623,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           UmlMainStep umlMainStep = (UmlMainStep) newStep;
           if (umlMainStep.isFatherType()) {
             int index = fathers.indexOf(step);
-            fathers.remove(index);
-            fathers.insertElementAt(umlMainStep, index);
+            if (index != -1) {
+              fathers.remove(index);
+              fathers.insertElementAt(umlMainStep, index);
+            }
           }
 
           refreshMainFlow(listModel);
@@ -623,13 +655,13 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
 
         UmlMainStep umlMainStep = (UmlMainStep) step;
-        if (umlMainStep.isFatherType()) {
-          fathers.remove(umlMainStep);
-        }
+        removeFathers(umlMainStep);
 
         refreshMainFlow(listModel);
       }
     });
+
+
 
     GroupLayout mainFlowGP = new GroupLayout(mainFlowPanel);
     mainFlowGP.setHorizontalGroup(mainFlowGP.createParallelGroup(Alignment.TRAILING).addGroup(
@@ -1016,7 +1048,6 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     getContentPane().setLayout(groupLayout);
 
   }
-
 
 
 }

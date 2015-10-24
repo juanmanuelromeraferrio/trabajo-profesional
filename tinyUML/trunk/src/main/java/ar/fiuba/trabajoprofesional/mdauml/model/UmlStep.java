@@ -9,6 +9,7 @@ public abstract class UmlStep {
   protected UmlStep father;
   protected List<UmlStep> childrens;
   protected Integer index;
+
   protected String description;
 
   protected UmlStep(String description) {
@@ -24,6 +25,17 @@ public abstract class UmlStep {
     return father;
   }
 
+  public Integer getIndex() {
+    return index;
+  }
+
+  public Integer getRealIndex() {
+    if (father != null) {
+      return father.getRealIndex() + index;
+    } else {
+      return index;
+    }
+  }
 
   public void setDescription(String description) {
     this.description = description;

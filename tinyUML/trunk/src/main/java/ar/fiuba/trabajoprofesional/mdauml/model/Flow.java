@@ -14,18 +14,30 @@ public class Flow {
     this.flow = new ArrayList<UmlStep>(flow);
   }
 
+
   public void addStep(UmlStep step) {
-    int size = flow.size();
-    step.setIndex(size + 1);
+    int index = getIndex();
+    step.setIndex(index + 1);
     flow.add(step);
   }
 
-  public void addStep(UmlStep step, int index) {
-    step.setIndex(index + 1);
-    flow.add(index, step);
+  private int getIndex() {
+    int index = 0;
+    for (UmlStep step : flow) {
+      if (step.getFather() == null) {
+        index = step.getIndex();
+      }
+    }
+
+    return index;
+  }
+
+  public void addStep(UmlStep step, int indexReal, int indexFlow) {
+    step.setIndex(indexReal);
+    flow.add(indexFlow, step);
 
     UmlStep father = step.getFather();
-    for (int i = index + 1; i < flow.size(); i++) {
+    for (int i = indexReal; i < flow.size(); i++) {
       // Si tienen Padre solo incremento el index de
       // los que son hijos del mismo padre.
       if (father == null) {
@@ -46,7 +58,6 @@ public class Flow {
     int index = flow.indexOf(step);
     UmlStep father = step.getFather();
     for (int i = index + 1; i < flow.size(); i++) {
-
       // Si no tiene padre Decremento el index
       if (father == null) {
         UmlStep umlStep = flow.get(i);
@@ -90,20 +101,48 @@ public class Flow {
   private void addChildrenToFlow(UmlStep umlStep, int selectedStep) {
     flow.add(selectedStep, umlStep);
     for (UmlStep childrenStep : umlStep.getChildrens()) {
-      addChildrenToFlow(childrenStep);
-    }
-  }
-
-  private void addChildrenToFlow(UmlStep umlStep) {
-    flow.add(umlStep);
-    for (UmlStep childrenStep : umlStep.getChildrens()) {
-      addChildrenToFlow(childrenStep);
+      int index = getFlowIndexForChildrenStep(childrenStep);// childrenStep.getRealIndex() - 1;
+      addChildrenToFlow(childrenStep, index);
     }
   }
 
   public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep) {
     fatherStep.addChildrenStep(childrenStep);
-    addChildrenToFlow(childrenStep);
+    int index = getFlowIndexForChildrenStep(childrenStep);// childrenStep.getRealIndex() - 1;
+    addChildrenToFlow(childrenStep, index);
+  }
+
+  private int getFlowIndexForChildrenStep(UmlStep searchStep) {
+    UmlStep father = searchStep.getFather();
+    int fatherIndex = flow.indexOf(father);
+    return indexOfStep(searchStep, father, fatherIndex);
+  }
+
+
+  public int getFlowIndex(UmlStep searchStep, int start) {
+    int index = start;
+    for (UmlStep umlStep : flow) {
+      if (umlStep.equals(searchStep)) {
+        return index;
+      }
+
+      index++;
+      index = getFlowIndex(searchStep, start);
+    }
+
+    return index;
+  }
+
+  private int indexOfStep(UmlStep searchStep, UmlStep father, int start) {
+    int result = start;
+    for (UmlStep children : father.getChildrens()) {
+      if (children.equals(searchStep)) {
+        return result + 1;
+      }
+      result++;
+      result = indexOfStep(searchStep, children, result);
+    }
+    return result;
   }
 
   public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep, int selectedStep) {
