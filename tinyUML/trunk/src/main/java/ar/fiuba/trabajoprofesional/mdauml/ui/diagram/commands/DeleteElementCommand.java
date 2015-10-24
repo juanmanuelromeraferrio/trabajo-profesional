@@ -19,14 +19,12 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
@@ -44,7 +42,7 @@ import java.util.List;
 public class DeleteElementCommand extends AbstractUndoableEdit implements Command {
 
     private Collection<DiagramElement> elements;
-    private DiagramEditorNotification notification;
+    private DiagramEditor editor;
     private List<ParentChildRelation> parentChildRelations = new ArrayList<ParentChildRelation>();
 
 
@@ -54,9 +52,9 @@ public class DeleteElementCommand extends AbstractUndoableEdit implements Comman
      * @param aNotification the DiagramEditorNotification object
      * @param theElements   the DiagramElements to remove, each must have a parent
      */
-    public DeleteElementCommand(DiagramEditorNotification aNotification,
+    public DeleteElementCommand(DiagramEditor aNotification,
         Collection<DiagramElement> theElements) {
-        notification = aNotification;
+        editor = aNotification;
         elements = theElements;
         for (DiagramElement elem : elements) {
             parentChildRelations.add(new ParentChildRelation(elem, elem.getParent()));
@@ -78,8 +76,19 @@ public class DeleteElementCommand extends AbstractUndoableEdit implements Comman
                         ((PackageableUmlModelElement) model).removePackageListener((PackageListener) element);
                 }
             }
+
+
             element.getParent().removeChild(element);
-            notification.notifyElementRemoved(element);
+            editor.notifyElementRemoved(element);
+
+
+
+            if (element instanceof AbstractCompositeNode){
+                editor.execute(new DeleteElementCommand(editor, ((AbstractCompositeNode) element).getChildren()));
+            }
+
+
+
         }
     }
 
@@ -103,7 +112,7 @@ public class DeleteElementCommand extends AbstractUndoableEdit implements Comman
                 reattachNodeConnections((Node) relation.element);
             }
             relation.parent.addChild(relation.element);
-            notification.notifyElementAdded(relation.element);
+            editor.notifyElementAdded(relation.element);
         }
     }
 

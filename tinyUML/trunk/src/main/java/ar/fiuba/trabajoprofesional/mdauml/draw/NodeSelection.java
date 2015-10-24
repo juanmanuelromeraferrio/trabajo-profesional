@@ -19,6 +19,11 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
 import java.awt.*;
@@ -216,8 +221,27 @@ public class NodeSelection implements Selection, NodeChangeListener {
     private void moveOutOfParent() {
         CompositeNode lastParent=node.getLastParent();
         MoveNodeOperation op = new MoveNodeOperation(node, node.getDiagram(), tmpPos);
-        editor.moveElements(new Command[] {op});
-        node.getDiagram().getEditor().addNestConnectionToParent(node,lastParent);
+        editor.moveElements(new Command[]{op});
+        if(isNestingCondition(node,lastParent))
+            node.getDiagram().getEditor().addNestConnectionToParent(node,lastParent);
+    }
+
+    private boolean isNestingCondition(Node child,Node parent){
+        if(child instanceof UmlNode) {
+            UmlModelElement model = ((UmlNode) child).getModelElement();
+            UmlPackage pkg=null;
+            if(model instanceof PackageableUmlModelElement)
+                pkg=((PackageableUmlModelElement) model).getPackage();
+            if(pkg==null)
+                return true;
+            if(parent instanceof PackageElement){
+                UmlModelElement parentPkg = ((PackageElement) parent).getModelElement();
+                if(( parentPkg!=null && parentPkg==pkg ))
+                    return true;
+            }
+
+        }
+        return false;
     }
 
     /**

@@ -22,6 +22,8 @@ package test.mdauml.ui.diagram.commands;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
@@ -37,7 +39,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DiagramEditorNotif
  * @version 1.0
  */
 public class DeleteElementCommandTest extends MockObjectTestCase {
-  private Mock mockNotification = mock(DiagramEditorNotification.class);
+  private Mock mockNotification = mock(DiagramEditor.class);
   private Mock mockNode1 = mock(Node.class), mockNode2 = mock(Node.class);
   private Mock mockConnection = mock(Connection.class);
   private Mock mockParent = mock(CompositeNode.class);
@@ -58,10 +60,10 @@ public class DeleteElementCommandTest extends MockObjectTestCase {
     
     List<DiagramElement> connectionsToRemove = new ArrayList<DiagramElement>();
     connectionsToRemove.add((DiagramElement) mockConnection.proxy());
-    removeNodeCommand = new DeleteElementCommand((DiagramEditorNotification)
-      mockNotification.proxy(), nodesToRemove);
+    removeNodeCommand = new DeleteElementCommand(
+            (DiagramEditor) mockNotification.proxy(), nodesToRemove);
     removeConnectionCommand = new DeleteElementCommand(
-      (DiagramEditorNotification) mockNotification.proxy(),
+            (DiagramEditor) mockNotification.proxy(),
       connectionsToRemove);
     connections.add((Connection) mockConnection.proxy());
   }

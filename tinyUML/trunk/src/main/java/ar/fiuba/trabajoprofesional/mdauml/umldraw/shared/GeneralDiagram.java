@@ -444,12 +444,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
             resizeToNode((Node) child);
         }
 
-        if (child instanceof UmlNode) {
-            UmlNode umlnode = (UmlNode) child;
-            if (umlnode.getModelElement() != null) {
-                umlmodel.addElement(umlnode.getModelElement(), this);
-            }
-        }
+
     }
 
     /**

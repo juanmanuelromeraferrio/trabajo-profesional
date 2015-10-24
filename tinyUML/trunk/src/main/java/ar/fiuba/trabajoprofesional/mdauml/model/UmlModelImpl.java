@@ -123,7 +123,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
 
         if (mapMainElementsCounts.containsKey(anElement)) {
             Long count = mapMainElementsCounts.get(anElement);
-            if (count.compareTo(1L) == 0) {
+            if (count == 1) {
                 mapMainElementsCounts.remove(anElement);
             } else {
                 Long newCount = count - 1;

@@ -272,7 +272,13 @@ public class DiagramTreeModel extends DefaultTreeModel
         for (int i = 0; i < folder.getChildCount(); i++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) folder.getChildAt(i);
             if (node.getUserObject() == element) {
+                DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
                 removeNodeFromParent(node);
+                for(int j=0; j< node.getChildCount();j++){
+                    DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(j);
+                    insertNodeInto(child, parent, parent.getChildCount());
+                }
+
             }
             removeFromFolder(node,element);
         }

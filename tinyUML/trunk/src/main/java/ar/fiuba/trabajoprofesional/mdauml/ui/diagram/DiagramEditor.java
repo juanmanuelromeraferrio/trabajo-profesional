@@ -684,6 +684,12 @@ public abstract class DiagramEditor extends JComponent
         for (EditorStateListener l : editorListeners) {
             l.elementAdded(this);
         }
+        if (element instanceof UmlNode) {
+            UmlNode umlnode = (UmlNode) element;
+            if (umlnode.getModelElement() != null) {
+                AppFrame.get().getAppState().getUmlModel().addElement(umlnode.getModelElement(), getDiagram());
+            }
+        }
         repaint();
     }
 
@@ -699,7 +705,7 @@ public abstract class DiagramEditor extends JComponent
         if (element instanceof UmlNode) {
             UmlNode umlnode = (UmlNode) element;
             if (umlnode.getModelElement() != null) {
-                AppFrame.get().getAppState().getUmlModel().removeElement(umlnode.getModelElement(), element.getDiagram());
+                AppFrame.get().getAppState().getUmlModel().removeElement(umlnode.getModelElement(), getDiagram());
             }
         }
         repaint();
@@ -787,24 +793,20 @@ public abstract class DiagramEditor extends JComponent
                 if(nest.getNode1().equals(nesting) &&
                 nest.getNode2().equals(node))
                     return;
-
-
             }
         }
 
         UmlConnection conn = null;
         try {
-            conn = getDiagram().getElementFactory()
-                    .createConnection(RelationType.NEST, (UmlNode) nesting, (UmlNode) node);
+            conn = getDiagram().getElementFactory().createConnection(RelationType.NEST, (UmlNode) nesting, (UmlNode) node);
         } catch (AddConnectionException e) {
             e.printStackTrace();
         }
         LineConnectMethod connectMethod = getDiagram().getElementFactory().getConnectMethod(RelationType.NEST);
-        Point2D pos= new Point2D.Double(node.getAbsCenterX(),node.getAbsCenterY());
-        connectMethod
-                .generateAndSetPointsToConnection(conn, nesting, (UmlNode) node, new Point2D.Double(), pos);
-        AddConnectionCommand command =
-                new AddConnectionCommand(this, getDiagram(), conn);
+        Point2D dest= new Point2D.Double(node.getAbsCenterX(),node.getAbsCenterY());
+        Point2D orig= new Point2D.Double(nesting.getAbsCenterX(),nesting.getAbsCenterY());
+        connectMethod.generateAndSetPointsToConnection(conn, nesting, node, orig, dest);
+        AddConnectionCommand command = new AddConnectionCommand(this, getDiagram(), conn);
         execute(command);
         redraw();
     }
