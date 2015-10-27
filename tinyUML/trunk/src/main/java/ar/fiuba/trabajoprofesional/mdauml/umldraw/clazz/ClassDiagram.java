@@ -24,7 +24,6 @@ import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlComponent;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
@@ -66,12 +65,6 @@ public class ClassDiagram extends GeneralDiagram {
         pkgPrototype.setModelElement(pkg);
         elementPrototypes.put(ElementType.PACKAGE, pkgPrototype);
 
-        // add component prototype
-        UmlComponent comp = (UmlComponent) UmlComponent.getPrototype().clone();
-        ComponentElement compElem = (ComponentElement) ComponentElement.getPrototype().clone();
-        compElem.setModelElement(comp);
-        compElem.addNodeChangeListener(this);
-        elementPrototypes.put(ElementType.COMPONENT, compElem);
 
         // Add class prototype
         UmlClass clss = (UmlClass) UmlClass.getPrototype().clone();

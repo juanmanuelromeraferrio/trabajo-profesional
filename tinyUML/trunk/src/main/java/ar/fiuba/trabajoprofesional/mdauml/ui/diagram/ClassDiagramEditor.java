@@ -63,9 +63,6 @@ public class ClassDiagramEditor extends DiagramEditor {
             selectorMap.put("CREATE_PACKAGE", new MethodCall(
                 ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.PACKAGE));
-            selectorMap.put("CREATE_COMPONENT", new MethodCall(
-                ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
-                ElementType.COMPONENT));
             selectorMap.put("CREATE_CLASS", new MethodCall(
                 ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.CLASS));

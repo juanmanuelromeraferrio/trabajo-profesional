@@ -25,7 +25,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  */
 public enum ElementType {
     CLASS("Class"),
-    COMPONENT("Component"),
     PACKAGE("Package"),
     NOTE("Note"),
     ACTOR("Actor"),

@@ -132,11 +132,6 @@ public class CreationHandlerTest extends MockObjectTestCase {
     handler.setElementType(ElementType.PACKAGE);
     handler.mousePressed((EditorMouseEvent) mockEvent.proxy());
 
-    // create component
-    mockFactory.expects(once()).method("createNode")
-      .will(returnValue(mockNode.proxy()));
-    handler.setElementType(ElementType.COMPONENT);
-    handler.mousePressed((EditorMouseEvent) mockEvent.proxy());
 
     // create note
     mockFactory.expects(once()).method("createNode")
@@ -176,12 +171,6 @@ public class CreationHandlerTest extends MockObjectTestCase {
     mockFactory.expects(once()).method("createNode")
       .will(returnValue(mockNode.proxy()));
     handler.setElementType(ElementType.PACKAGE);
-    handler.mousePressed((EditorMouseEvent) mockEvent.proxy());
-
-    // create component
-    mockFactory.expects(once()).method("createNode")
-      .will(returnValue(mockNode.proxy()));
-    handler.setElementType(ElementType.COMPONENT);
     handler.mousePressed((EditorMouseEvent) mockEvent.proxy());
 
     // create note

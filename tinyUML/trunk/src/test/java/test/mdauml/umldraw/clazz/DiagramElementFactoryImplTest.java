@@ -78,7 +78,6 @@ public class DiagramElementFactoryImplTest extends MockObjectTestCase {
   public void testCreateNode() {
     assertNotNull(factory.createNode(ElementType.NOTE));
     checkStdCreationConditions(factory.createNode(ElementType.PACKAGE));
-    checkStdCreationConditions(factory.createNode(ElementType.COMPONENT));
     checkStdCreationConditions(factory.createNode(ElementType.CLASS));
   }
 

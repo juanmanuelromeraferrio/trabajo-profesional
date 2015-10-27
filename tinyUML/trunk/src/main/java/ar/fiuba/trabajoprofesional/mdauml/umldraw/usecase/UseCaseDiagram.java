@@ -18,8 +18,6 @@ public class UseCaseDiagram extends GeneralDiagram {
     public UseCaseDiagram() {
     }
 
-
-
     /**
      * Constructor.
      *
