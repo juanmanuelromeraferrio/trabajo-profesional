@@ -17,16 +17,13 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import java.io.Serializable;
-
 /**
- * An element with a name. This is the root of UML model elements. Note that all elements which
- * implement this interface are Serializable and need to follow the Serializable protocol.
+ * An element with a name. This is the root of UML model elements.
  *
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface NamedElement extends Serializable, Cloneable {
+public interface NamedElement extends  Cloneable {
 
     /**
      * Returns the name attribute.

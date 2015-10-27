@@ -44,34 +44,6 @@ public final class ModelReader extends FileHandler {
         return instance;
     }
 
-    /**
-     * Reads a Project object from a file.
-     *
-     * @param file the file
-     * @return the Project object
-     * @throws java.io.IOException if I/O error occurred
-     */
-    public Project readModel(File file) throws IOException {
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        ObjectInputStream in = null;
-        try {
-            fis = new FileInputStream(file);
-            bis = new BufferedInputStream(fis);
-            in = new ObjectInputStream(bis);
-            return (Project) in.readObject();
-        } catch (ClassNotFoundException ex) {
-            throw new IOException(
-                ApplicationResources.getInstance().getString("error.readfile.message"));
-        } finally {
-            if (in != null)
-                in.close();
-            if (bis != null)
-                bis.close();
-            if (fis != null)
-                fis.close();
-        }
-    }
 
     /**
      * {@inheritDoc}

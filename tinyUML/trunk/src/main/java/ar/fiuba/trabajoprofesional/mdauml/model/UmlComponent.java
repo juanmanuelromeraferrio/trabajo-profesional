@@ -27,7 +27,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  */
 public final class UmlComponent extends AbstractUmlModelElement {
 
-    private static final long serialVersionUID = -3174177772377718441L;
     private static UmlComponent prototype;
 
     /**

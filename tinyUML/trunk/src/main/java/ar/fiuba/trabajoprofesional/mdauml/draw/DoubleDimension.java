@@ -30,9 +30,8 @@ import java.io.Serializable;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class DoubleDimension extends Dimension2D implements Serializable {
+public class DoubleDimension extends Dimension2D   {
 
-    private static final long serialVersionUID = -4062411314479728855L;
     private double width, height;
 
     /**

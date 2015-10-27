@@ -25,9 +25,6 @@ import java.util.List;
 public final class ActorElement extends AbstractCompositeNode
     implements LabelSource, UmlNode, UmlModelElementListener,PackageListener {
 
-    private static final long serialVersionUID = 8767029215902619069L;
-
-
     private static final double DEFAULT_WIDHT = 40;
     private static final double DEFAULT_HEIGHT = 70;
     private static final double LABEL_MARGIN_TOP = 5;

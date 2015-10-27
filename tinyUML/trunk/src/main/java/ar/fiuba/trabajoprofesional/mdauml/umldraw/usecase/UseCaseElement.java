@@ -21,8 +21,6 @@ import java.awt.geom.Dimension2D;
 public final class UseCaseElement extends AbstractCompositeNode
     implements LabelSource, UmlNode, UmlModelElementListener,PackageListener {
 
-    private static final long serialVersionUID = 8767029215902619069L;
-
     private static final Color BACKGROUND = Color.WHITE;
     private static final double DEFAULT_HEIGHT = 40;
     private static final double DEFAULT_WIDHT = 70;

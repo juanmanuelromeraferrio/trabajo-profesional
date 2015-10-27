@@ -1,18 +1,15 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
-import java.io.Serializable;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 
-public class ElementNameGenerator implements Serializable {
+public class ElementNameGenerator {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -6984115003747185226L;
+
 
     private static transient UmlModel umlModel;
     private static Map<ElementType, Integer> nameMap = new HashMap<ElementType, Integer>();

@@ -31,7 +31,6 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
  */
 public final class NoteConnection extends BaseConnection {
 
-    private static final long serialVersionUID = 5536230656063402250L;
     private static NoteConnection prototype;
 
     /**

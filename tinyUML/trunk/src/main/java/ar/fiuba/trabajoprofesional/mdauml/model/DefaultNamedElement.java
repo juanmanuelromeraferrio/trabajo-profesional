@@ -31,7 +31,6 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
  */
 public class DefaultNamedElement implements NamedElement {
 
-    private static final long serialVersionUID = 6141569974727644801L;
     private transient Collection<NameChangeListener> nameChangeListeners =
         new HashSet<NameChangeListener>();
 
@@ -72,8 +71,6 @@ public class DefaultNamedElement implements NamedElement {
             name = oldName;
             throw e;
         }
-
-
     }
 
     /**

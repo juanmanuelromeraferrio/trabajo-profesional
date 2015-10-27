@@ -33,7 +33,6 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
  */
 public final class Dependency extends BaseConnection {
 
-    private static final long serialVersionUID = -4618365497931544032L;
     private static Dependency prototype;
 
     /**

@@ -22,7 +22,6 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.model;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,9 +32,8 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class Project implements Serializable {
+public class Project {
 
-    private static final long serialVersionUID = -7416279147552646801L;
     private UmlModel model;
     private List<UmlDiagram> openDiagrams;
 

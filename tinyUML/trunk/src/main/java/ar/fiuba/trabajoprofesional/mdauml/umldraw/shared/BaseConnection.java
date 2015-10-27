@@ -39,7 +39,6 @@ import java.util.List;
  */
 public class BaseConnection implements UmlConnection {
 
-    private static final long serialVersionUID = 4796693000723361980L;
     protected Relation relation;
     private Connection connection;
     private GeneralDiagram diagram;

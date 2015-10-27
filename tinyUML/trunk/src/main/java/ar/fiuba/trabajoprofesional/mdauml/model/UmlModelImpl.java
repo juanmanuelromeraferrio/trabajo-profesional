@@ -37,7 +37,6 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
  */
 public class UmlModelImpl implements UmlModel, NameChangeListener {
 
-    private static final long serialVersionUID = -3440413376365267032L;
     // The list of main elements. Top-level elements go here. A top-level element
     // is an element without a parent namespace (package).
     private Map<UmlModelElement, Long> mapMainElementsCounts = new HashMap<UmlModelElement, Long>();
@@ -50,30 +49,6 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
     public UmlModelImpl() {
     }
 
-    /**
-     * Writes the instance variables to the stream.
-     *
-     * @param stream an ObjectOutputStream
-     * @throws java.io.IOException if I/O error occured
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        // listeners should not be written
-        stream.writeObject(mapMainElementsCounts);
-        stream.writeObject(diagrams);
-    }
-
-    /**
-     * Reset the transient values for serialization.
-     *
-     * @param stream an ObjectInputStream
-     * @throws java.io.IOException    if I/O error occured
-     * @throws ClassNotFoundException if class was not found
-     */
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        modelListeners = new HashSet<UmlModelListener>();
-        mapMainElementsCounts = (Map<UmlModelElement, Long>) stream.readObject();
-        diagrams = (List<UmlDiagram>) stream.readObject();
-    }
 
     /**
      * {@inheritDoc}

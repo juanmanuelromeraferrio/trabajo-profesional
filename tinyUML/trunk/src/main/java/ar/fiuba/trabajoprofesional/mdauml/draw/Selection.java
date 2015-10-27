@@ -27,8 +27,7 @@ import java.util.List;
  * kind of selection. The Selection interface is member of the draw package,
  * because every DiagramElement has a selection property. Implementing classes
  * could and should possibly be in a different package.
- * Serialization note: Selections should not be persisted and therefore do not
- * inherit from Serializable.
+ * Serialization note: Selections should not be persisted
  *
  * @author Wei-ju Wu
  * @version 1.0

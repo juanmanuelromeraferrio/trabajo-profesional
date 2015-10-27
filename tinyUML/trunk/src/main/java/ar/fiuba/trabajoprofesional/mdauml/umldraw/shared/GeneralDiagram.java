@@ -87,41 +87,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
         return umlmodel;
     }
 
-    /**
-     * Writes the instance variables to the stream.
-     *
-     * @param stream an ObjectOutputStream
-     * @throws java.io.IOException if I/O error occured
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeInt(gridSize);
-        stream.writeUTF(name);
-        stream.writeObject(connections);
-        stream.writeObject(nameLabel);
-        stream.writeObject(umlmodel);
-    }
 
-    /**
-     * Reads the instance variables from the specified stream.
-     *
-     * @param stream an ObjectInputStream
-     * @throws java.io.IOException    if I/O error occured
-     * @throws ClassNotFoundException if class was not found
-     */
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        gridSize = stream.readInt();
-        name = stream.readUTF();
-        connections = (List<Connection>) stream.readObject();
-        nameLabel = (Label) stream.readObject();
-        umlmodel = (UmlModel) stream.readObject();
-
-        gridVisible = true;
-        snapToGrid = true;
-        nameChangeListeners = new ArrayList<NameChangeListener>();
-        nodeChangeListeners = new HashSet<NodeChangeListener>();
-        elementPrototypes = setupElementPrototypeMap();
-        connectionPrototypes = setupConnectionPrototypeMap();
-    }
 
     /**
      * Returns the element factory.

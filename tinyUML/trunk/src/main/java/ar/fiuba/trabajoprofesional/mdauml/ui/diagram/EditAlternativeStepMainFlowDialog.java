@@ -37,12 +37,6 @@ import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4748892124691187498L;
-
-
   private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;
   private JComboBox<String> comboEntities;

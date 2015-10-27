@@ -19,7 +19,6 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.util.regex.Pattern;
 
@@ -30,10 +29,9 @@ import java.util.regex.Pattern;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class Multiplicity implements Serializable {
+public final class Multiplicity   {
 
     public static final Multiplicity ONE = new Multiplicity();
-    private static final long serialVersionUID = -8450628964473567522L;
     private int lowerBound = 1, upperBound = 1;
     private boolean noUpperLimit = false;
     // Default multiplicities which are used most frequently

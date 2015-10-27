@@ -12,11 +12,6 @@ import java.util.Set;
  */
 public class UmlActor extends PackageableUmlModelElement{
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 5066199446764326666L;
-
     private static UmlActor prototype;
     private String description;
     private InheritanceRelation parentRel;

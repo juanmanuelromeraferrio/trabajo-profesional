@@ -6,10 +6,6 @@ import java.awt.geom.Point2D;
 
 public class EllipseCompartment extends Compartment {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -2369958280146344805L;
 
     private Alignment alignment = Alignment.CENTERED;
 

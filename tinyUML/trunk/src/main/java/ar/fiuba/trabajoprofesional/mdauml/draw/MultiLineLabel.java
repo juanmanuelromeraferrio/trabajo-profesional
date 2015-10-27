@@ -37,31 +37,8 @@ import java.io.ObjectOutputStream;
  */
 public class MultiLineLabel extends SimpleLabel {
 
-    private static final long serialVersionUID = 3993300155345177335L;
+
     private transient MultilineLayout layout;
-
-    /**
-     * Writes the instance variables to the stream.
-     *
-     * @param stream an ObjectOutputStream
-     * @throws java.io.IOException if I/O error occured
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter") private void writeObject(
-        ObjectOutputStream stream) throws IOException {
-        // layout should not be written
-    }
-
-    /**
-     * Reset the transient values for serialization.
-     *
-     * @param stream an ObjectInputStream
-     * @throws java.io.IOException    if I/O error occured
-     * @throws ClassNotFoundException if class was not found
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        layout = null;
-    }
 
     /**
      * {@inheritDoc}

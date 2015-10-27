@@ -39,7 +39,6 @@ import java.util.List;
 public abstract class AbstractConnection implements Connection {
 
     protected static final double DELTA = 3.0;
-    private static final long serialVersionUID = -1014584869536016852L;
     private Node node1, node2;
     private CompositeNode parent;
     private boolean isValid;

@@ -22,7 +22,7 @@ package ar.fiuba.trabajoprofesional.mdauml.draw;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 import java.awt.geom.Rectangle2D;
-import java.io.Serializable;
+
 
 /**
  * This interface generalizes a visible element within the MDAUML editor.

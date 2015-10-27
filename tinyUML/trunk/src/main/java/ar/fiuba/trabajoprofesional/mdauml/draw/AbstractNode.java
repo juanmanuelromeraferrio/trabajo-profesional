@@ -69,41 +69,6 @@ public abstract class AbstractNode implements Node{
         this.diagram = diagram;
     }
 
-    /**
-     * Writes the instance variables to the stream.
-     *
-     * @param stream an ObjectOutputStream
-     * @throws java.io.IOException if I/O error occured
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(origin);
-        stream.writeObject(size);
-        stream.writeObject(minimumSize);
-        stream.writeObject(parent);
-        if (selection != null)
-            changeListeners.remove(selection);
-        stream.writeObject(changeListeners);
-        if (selection != null)
-            changeListeners.add(selection);
-        stream.writeObject(connections);
-    }
-
-    /**
-     * Reset the transient values for serialization.
-     *
-     * @param stream an ObjectInputStream
-     * @throws java.io.IOException    if I/O error occured
-     * @throws ClassNotFoundException if class was not found
-     */
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        origin = (Point2D) stream.readObject();
-        size = (Dimension2D) stream.readObject();
-        minimumSize = (Dimension2D) stream.readObject();
-        parent = (CompositeNode) stream.readObject();
-        changeListeners = (List<NodeChangeListener>) stream.readObject();
-        connections = (List<Connection>) stream.readObject();
-        selection = null;
-    }
 
     /**
      * {@inheritDoc}

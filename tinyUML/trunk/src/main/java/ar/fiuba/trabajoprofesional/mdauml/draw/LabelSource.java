@@ -19,7 +19,6 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
-import java.io.Serializable;
 
 /**
  * Implements an interface that returns a text source for a Label object.
@@ -27,7 +26,7 @@ import java.io.Serializable;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface LabelSource extends Serializable {
+public interface LabelSource   {
 
     /**
      * Returns the text.

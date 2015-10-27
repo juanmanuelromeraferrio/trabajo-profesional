@@ -19,10 +19,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
 
 public class EditListAction extends AbstractAction {
-  /**
-     *
-     */
-  private static final long serialVersionUID = 1L;
+
 
   private JList<String> list;
 

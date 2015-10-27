@@ -25,7 +25,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Collection;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;

@@ -49,6 +49,7 @@ public class ClassEditorToolbarManager extends AbstractToolbarManager {
         toolbar.add(createToggleButtonWithName(buttongroup, "composition"));
         toolbar.add(createToggleButtonWithName(buttongroup, "inheritance"));
         toolbar.add(createToggleButtonWithName(buttongroup, "interfreal"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "nest"));
         toolbar.addSeparator(new Dimension(10, 10));
         toolbar.add(createToggleButtonWithName(buttongroup, "note"));
         toolbar.add(createToggleButtonWithName(buttongroup, "noteconnector"));

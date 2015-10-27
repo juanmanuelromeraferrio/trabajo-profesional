@@ -60,17 +60,6 @@ public class EditorPanel extends JPanel implements EditorStateListener {
         add(toolbar, BorderLayout.NORTH);
     }
 
-    /**
-     * Reset the transient values for serialization.
-     *
-     * @param stream an ObjectInputStream
-     * @throws java.io.IOException    if I/O error occured
-     * @throws ClassNotFoundException if class was not found
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        toolbarManager = null;
-    }
 
     /**
      * Returns the wrapped DiagramEditor instance.

@@ -31,7 +31,6 @@ public final class Scaling {
     public static final Scaling SCALING_75 = new Scaling(0.75);
     public static final Scaling SCALING_100 = new Scaling(1.0);
     public static final Scaling SCALING_150 = new Scaling(1.5);
-    private static final long serialVersionUID = 6922910336017674609L;
     private double scaleFactor;
 
     /**

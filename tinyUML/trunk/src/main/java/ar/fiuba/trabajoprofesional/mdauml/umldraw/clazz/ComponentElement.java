@@ -41,7 +41,6 @@ import java.awt.geom.Dimension2D;
  */
 public final class ComponentElement extends AbstractCompositeNode implements LabelSource, UmlNode {
 
-    private static final long serialVersionUID = 8283477017445253523L;
     private static final double MIN_WIDTH = 120;
     private static final double MIN_HEIGHT = 40;
     private static final double MARGIN_TOP = 20;

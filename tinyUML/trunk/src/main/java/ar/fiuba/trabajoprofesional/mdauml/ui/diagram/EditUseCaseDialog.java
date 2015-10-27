@@ -49,10 +49,6 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
  */
 public class EditUseCaseDialog extends javax.swing.JDialog {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 8629670441776556412L;
 
   private UseCaseElement useCaseElement;
 

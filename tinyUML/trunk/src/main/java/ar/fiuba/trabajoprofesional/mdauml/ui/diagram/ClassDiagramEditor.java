@@ -39,10 +39,7 @@ import java.util.Map;
  */
 public class ClassDiagramEditor extends DiagramEditor {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 4987996389568977989L;
+
     private static Map<String, MethodCall> selectorMap = new HashMap<String, MethodCall>();
 
     static {
@@ -91,6 +88,9 @@ public class ClassDiagramEditor extends DiagramEditor {
                 ClassDiagramEditor.class
                     .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.INTERFACE_REALIZATION));
+            selectorMap.put("CREATE_NEST", new MethodCall(ClassDiagramEditor.class
+                    .getMethod("setCreateConnectionMode", RelationType.class),
+                    RelationType.NEST));
 
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();

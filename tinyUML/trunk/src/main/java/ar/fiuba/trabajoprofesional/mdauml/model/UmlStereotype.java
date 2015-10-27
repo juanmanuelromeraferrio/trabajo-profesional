@@ -27,7 +27,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  */
 public final class UmlStereotype extends AbstractUmlModelElement {
 
-    private static final long serialVersionUID = -1256746951736568485L;
     private static UmlStereotype prototype;
 
     /**

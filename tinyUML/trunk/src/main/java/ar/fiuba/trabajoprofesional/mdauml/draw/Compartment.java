@@ -35,7 +35,6 @@ import java.util.List;
  */
 public class Compartment extends AbstractCompositeNode implements CompositeNode {
 
-    private static final long serialVersionUID = 160961297210956777L;
     private static final double MIN_WIDTH = 80;
 
 

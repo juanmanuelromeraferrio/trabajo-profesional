@@ -22,7 +22,6 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 import ar.fiuba.trabajoprofesional.mdauml.draw.LabelSource;
 import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
 
-import java.io.Serializable;
 
 /**
  * This class decorates an UmlProperty with the Label source interface.
@@ -30,9 +29,8 @@ import java.io.Serializable;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class UmlModelElementLabelSource implements LabelSource, Serializable {
+public class UmlModelElementLabelSource implements LabelSource {
 
-    private static final long serialVersionUID = 8535923074605287093L;
     private NamedElement namedElement;
 
     /**

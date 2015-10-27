@@ -21,10 +21,6 @@ import java.util.Map;
  */
 public class UseCaseDiagramEditor extends DiagramEditor {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 133830961841442513L;
     private static Map<String, MethodCall> selectorMap = new HashMap<String, MethodCall>();
 
     static {

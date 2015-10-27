@@ -35,7 +35,6 @@ import java.util.List;
  */
 public abstract class AbstractCompositeNode extends AbstractNode implements CompositeNode {
 
-    private static final long serialVersionUID = 3667605559862445493L;
     private List<DiagramElement> children = new ArrayList<DiagramElement>();
 
 

@@ -36,7 +36,6 @@ import java.util.List;
  */
 public final class PackageElement extends AbstractCompositeNode implements LabelSource, UmlNode {
 
-    private static final long serialVersionUID = -601178725325007248L;
     private static final double TAB_MIN_WIDTH = 30;
     private static final double TAB_MIN_HEIGHT = 12;
     // This is a nice background color for a package

@@ -43,10 +43,6 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
  */
 public class DiagramTree extends JTree implements MouseListener, MouseMotionListener {
 
-    /**
-     * Do not worry about serializing this component, we won't.
-     */
-    private static final long serialVersionUID = 1L;
     private transient ApplicationState appState;
 
     private transient Collection<TreeDraggerListener> treeDraggerListener =
@@ -66,18 +62,6 @@ public class DiagramTree extends JTree implements MouseListener, MouseMotionList
         setRootVisible(false);
         setShowsRootHandles(true);
         setCellRenderer(new DiagramTreeRenderer());
-    }
-
-    /**
-     * Reset the transient values for serialization.
-     *
-     * @param stream an ObjectInputStream
-     * @throws java.io.IOException    if I/O error occured
-     * @throws ClassNotFoundException if class was not found
-     */
-    @SuppressWarnings("PMD.UnusedFormalParameter") private void readObject(ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        appState = null;
     }
 
     /**

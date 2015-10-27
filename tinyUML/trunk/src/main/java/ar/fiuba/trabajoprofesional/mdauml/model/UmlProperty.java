@@ -27,7 +27,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  */
 public final class UmlProperty extends DefaultNamedElement {
 
-    private static final long serialVersionUID = 5948979417525031741L;
     private static UmlProperty prototype;
 
     /**

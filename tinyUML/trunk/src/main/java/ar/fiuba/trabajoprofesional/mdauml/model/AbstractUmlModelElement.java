@@ -31,7 +31,6 @@ import java.util.HashSet;
 public abstract class AbstractUmlModelElement extends DefaultNamedElement
     implements UmlModelElement {
 
-    private static final long serialVersionUID = -2557948517888179174L;
     private Collection<UmlModelElementListener> modelListeners =
         new HashSet<UmlModelElementListener>();
 

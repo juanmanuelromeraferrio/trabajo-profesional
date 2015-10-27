@@ -28,9 +28,8 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class UmlClass extends AbstractUmlModelElement {
+public final class UmlClass extends PackageableUmlModelElement {
 
-    private static final long serialVersionUID = -4204388361763579938L;
     private static UmlClass prototype;
     private boolean isAbstract;
     private List<UmlProperty> attributes = new ArrayList<UmlProperty>();

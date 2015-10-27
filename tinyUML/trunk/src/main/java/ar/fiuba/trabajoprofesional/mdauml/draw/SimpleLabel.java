@@ -29,7 +29,6 @@ import java.awt.*;
  */
 public class SimpleLabel extends AbstractNode implements Label {
 
-    private static final long serialVersionUID = 45848345687785401L;
     private LabelSource source;
     private FontType fontType = FontType.DEFAULT;
     private boolean valid;

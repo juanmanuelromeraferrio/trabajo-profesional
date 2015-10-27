@@ -34,7 +34,6 @@ import java.util.List;
  */
 public class SimpleConnection extends AbstractConnection {
 
-    private static final long serialVersionUID = -8016036142125462914L;
 
     /**
      * Constructor.

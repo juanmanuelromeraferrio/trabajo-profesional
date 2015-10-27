@@ -1,8 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.persistence.serializer;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.*;
+
 import java.util.List;
 import java.util.Map;
 

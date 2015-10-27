@@ -43,38 +43,6 @@ public final class ModelWriter extends FileWriter {
         return instance;
     }
 
-    /**
-     * Writes the specified UmlModel to a file.
-     *
-     * @param comp    the parent component for the confirmation dialog
-     * @param file    the file
-     * @param project the project to write
-     * @return the file that was actually written
-     * @throws java.io.IOException if error occurred
-     */
-    public File writeProject(Component comp, File file, Project project) throws IOException {
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        ObjectOutputStream os = null;
-        File theFile = getFileWithExtension(file);
-        if (canWrite(comp, theFile)) {
-            try {
-                fos = new FileOutputStream(theFile);
-                bos = new BufferedOutputStream(fos);
-                os = new ObjectOutputStream(bos);
-                os.writeObject(project);
-                os.flush();
-            } finally {
-                if (os != null)
-                    os.close();
-                if (bos != null)
-                    bos.close();
-                if (fos != null)
-                    fos.close();
-            }
-        }
-        return theFile;
-    }
 
     /**
      * {@inheritDoc}

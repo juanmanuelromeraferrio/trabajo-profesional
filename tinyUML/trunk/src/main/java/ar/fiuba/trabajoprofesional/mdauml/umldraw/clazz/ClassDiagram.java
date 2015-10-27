@@ -127,6 +127,10 @@ public class ClassDiagram extends GeneralDiagram {
         connectionPrototypes.put(RelationType.INTERFACE_REALIZATION, interfRealPrototype);
 
         connectionPrototypes.put(RelationType.NOTE_CONNECTOR, NoteConnection.getPrototype());
+
+        Nest nestPrototype = (Nest) Nest.getPrototype().clone();
+        connectionPrototypes.put(RelationType.NEST, nestPrototype);
+
         return connectionPrototypes;
     }
 }

@@ -33,7 +33,6 @@ import java.awt.*;
  */
 public final class Inheritance extends ArrowConnection {
 
-    private static final long serialVersionUID = 3261336029815928290L;
     private static Inheritance prototype;
 
     /**

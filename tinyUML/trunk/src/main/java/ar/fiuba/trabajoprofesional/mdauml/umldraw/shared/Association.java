@@ -41,11 +41,8 @@ import java.util.List;
  */
 public abstract class Association extends BaseConnection {
 
-    private static final long serialVersionUID = 1866495594812659939L;
     private AssociationType associationType = AssociationType.UNSPECIFIED;
 
-
-    ;
     private Label multiplicity1Label;
     private Label multiplicity2Label;
     private AssociationNameLabel nameLabel;

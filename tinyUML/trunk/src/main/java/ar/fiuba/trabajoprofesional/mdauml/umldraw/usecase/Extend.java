@@ -16,7 +16,6 @@ import java.awt.geom.Point2D;
 
 public class Extend extends ArrowConnection {
 
-    private static final long serialVersionUID = 3261336029815928290L;
     private static Extend prototype;
     private ConnectionNameLabel nameLabel;
 

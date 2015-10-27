@@ -28,9 +28,8 @@ import java.io.Serializable;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class Defaults implements Serializable {
+public final class Defaults  {
 
-    private static final long serialVersionUID = -7192992504021225602L;
     private static final double DEFAULT_MARGIN = 5;
     private static Defaults instance = new Defaults();
 

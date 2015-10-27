@@ -233,7 +233,7 @@ public class NodeSelection implements Selection, NodeChangeListener {
             if(model instanceof PackageableUmlModelElement)
                 pkg=((PackageableUmlModelElement) model).getPackage();
             if(pkg==null)
-                return true;
+                return false;
             if(parent instanceof PackageElement){
                 UmlModelElement parentPkg = ((PackageElement) parent).getModelElement();
                 if(( parentPkg!=null && parentPkg==pkg ))

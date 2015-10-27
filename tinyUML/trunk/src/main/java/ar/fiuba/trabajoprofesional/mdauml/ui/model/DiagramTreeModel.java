@@ -40,10 +40,6 @@ import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 public class DiagramTreeModel extends DefaultTreeModel
     implements UmlModelListener, NameChangeListener {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -3100105764720456764L;
 
     private UmlModel model;
     private DefaultMutableTreeNode classFolder, useCaseFolder, modelFolder;

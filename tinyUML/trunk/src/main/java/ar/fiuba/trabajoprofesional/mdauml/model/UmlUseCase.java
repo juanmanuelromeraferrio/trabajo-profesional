@@ -15,10 +15,6 @@ import java.util.Set;
 public class UmlUseCase extends PackageableUmlModelElement {
 
 
-  /**
-     *
-     */
-  private static final long serialVersionUID = -8599134739003834715L;
   private static UmlUseCase prototype;
   private String description = "";
   private Set<UmlActor> mainActors = new HashSet<UmlActor>();

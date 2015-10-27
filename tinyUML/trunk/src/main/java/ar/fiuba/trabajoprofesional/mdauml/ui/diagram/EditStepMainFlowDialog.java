@@ -36,10 +36,6 @@ import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4748892124691187498L;
 
   private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;

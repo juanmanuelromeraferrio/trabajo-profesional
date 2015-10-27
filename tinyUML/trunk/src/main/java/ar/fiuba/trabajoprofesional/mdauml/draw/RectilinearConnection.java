@@ -33,7 +33,6 @@ import java.util.List;
  */
 public class RectilinearConnection extends AbstractConnection {
 
-    private static final long serialVersionUID = -1969143695568555407L;
     private Point2D node1ConnectPoint, node2ConnectPoint;
 
     /**

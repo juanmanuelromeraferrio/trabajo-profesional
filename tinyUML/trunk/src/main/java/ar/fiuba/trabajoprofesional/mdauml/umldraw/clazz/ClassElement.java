@@ -20,11 +20,15 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Nest;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlModelElementLabelSource;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Compartment.Alignment;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.geom.Dimension2D;
 
@@ -36,9 +40,8 @@ import java.awt.geom.Dimension2D;
  * @version 1.0
  */
 public final class ClassElement extends AbstractCompositeNode
-    implements LabelSource, UmlNode, UmlModelElementListener {
+    implements LabelSource, UmlNode, UmlModelElementListener,PackageListener {
 
-    private static final long serialVersionUID = 8767029215902619069L;
     private static ClassElement prototype;
     private UmlClass classData;
     private Compartment mainCompartment;
@@ -563,5 +566,44 @@ public final class ClassElement extends AbstractCompositeNode
      */
     @Override public boolean isNestable() {
         return true;
+    }
+
+    @Override public void addConnection(Connection conn) throws AddConnectionException {
+
+        UmlConnection umlConn = (UmlConnection) conn;
+        Relation relation = (Relation) umlConn.getModelElement();
+
+        UmlModelElement element1 = relation.getElement1();
+        UmlModelElement element2 = relation.getElement2();
+
+        if(conn instanceof Nest){
+            addNest((Nest) conn, element1, element2);
+            super.addConnection(conn);
+
+
+        }else
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.class.invalidConnectionType"));
+
+    }
+
+    private void addNest(Nest nest, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
+        if(element1 == classData)
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.invalid"));
+
+        if(! (element1 instanceof UmlPackage ) )
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.class.nest.withoutPkg"));
+
+        classData.setPackageRelation((NestRelation) nest.getModelElement());
+    }
+
+    @Override
+    public void removeFromPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+        if(this.getModelElement()==packageableUmlModelElement)
+            removeExistingConnection(Nest.class);
+    }
+
+    @Override
+    public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
+
     }
 }

@@ -27,7 +27,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  */
 public class UmlRelation extends AbstractUmlModelElement implements Relation {
 
-    private static final long serialVersionUID = 6222870683430074995L;
     private UmlModelElement element1, element2;
     private boolean navigableToElement1, navigableToElement2;
     private boolean canSetElement1Navigability, canSetElement2Navigability;

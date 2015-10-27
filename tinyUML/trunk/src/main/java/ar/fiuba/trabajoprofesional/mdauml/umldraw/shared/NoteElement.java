@@ -37,7 +37,6 @@ import java.awt.geom.GeneralPath;
  */
 public final class NoteElement extends AbstractCompositeNode implements UmlNode, LabelSource {
 
-    private static final long serialVersionUID = -4403380938254940682L;
     private static final int CORNER_SIZE = 10;
     private static final double MARGIN_TOP = CORNER_SIZE + 2;
     private static final Color FILL_COLOR = new Color(249, 249, 145);

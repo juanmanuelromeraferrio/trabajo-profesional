@@ -17,7 +17,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import java.io.Serializable;
+
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +29,7 @@ import java.util.Set;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface UmlModel extends Serializable {
+public interface UmlModel {
 
     /**
      * Adds the specified element.

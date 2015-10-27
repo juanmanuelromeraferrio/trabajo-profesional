@@ -25,7 +25,6 @@ import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Dimension2D;
-import java.io.Serializable;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.HashMap;
@@ -99,8 +98,8 @@ public final class MultilineLayouter {
     /**
      * Represents the result of a layout operation.
      */
-    public static class MultilineLayout implements Serializable {
-        private static final long serialVersionUID = -3976357437019657274L;
+    public static class MultilineLayout  {
+
         private List<TextLayout> lines = new LinkedList<TextLayout>();
         private Dimension2D size = new DoubleDimension();
 
