@@ -37,6 +37,11 @@ import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -7124053842249491277L;
+
   private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;
   private JComboBox<String> comboEntities;
@@ -156,7 +161,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         StepType stepType = getStepType();
         switch (stepType) {
           case IF:
-          case WHILE: {
+          case WHILE:
+          case FOR: {
             textFieldCondition.setEnabled(false);
             break;
           }
@@ -212,7 +218,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
         switch (stepType) {
           case IF:
-          case WHILE: {
+          case WHILE:
+          case FOR: {
             textFieldCondition.setEnabled(true);
             break;
           }
@@ -248,7 +255,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
         switch (selectedType) {
           case IF:
-          case WHILE: {
+          case WHILE:
+          case FOR: {
             comboActorsStep.setEnabled(false);
             stepDescription.setVisible(false);
             lblCondition.setVisible(true);
@@ -259,7 +267,9 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
             editStep.setVisible(true);
             break;
           }
-          case ENDIF: {
+          case ENDIF:
+          case ENDWHILE:
+          case ENDFOR: {
             comboActorsStep.setEnabled(false);
             stepDescription.setVisible(false);
             lblCondition.setVisible(false);
@@ -509,7 +519,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     switch (stepType) {
       case IF:
-      case WHILE: {
+      case WHILE:
+      case FOR: {
         textFieldCondition.setText(step.getDescription());
         break;
       }
@@ -529,7 +540,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     switch (stepType) {
       case IF:
-      case WHILE: {
+      case WHILE:
+      case FOR: {
         return;
       }
       case REGULAR: {
@@ -569,7 +581,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     switch (stepType) {
       case IF:
-      case WHILE: {
+      case WHILE:
+      case FOR: {
         return this.textFieldCondition.getText();
       }
       case REGULAR: {

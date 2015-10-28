@@ -516,18 +516,22 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           Boolean isCloseStep = Boolean.FALSE;
 
           switch (stepType) {
-            case REGULAR: {
+            case REGULAR:
+            case ELSE: {
               String actor = dialog.getActor();
               Set<String> entities = dialog.getEntities();
               step = new UmlMainStep(stepDescription, actor, stepType, entities);
               break;
             }
             case IF:
-            case WHILE: {
+            case WHILE:
+            case FOR: {
               step = new UmlMainStep(stepDescription, stepType);
               break;
             }
-            case ENDIF: {
+            case ENDIF:
+            case ENDWHILE:
+            case ENDFOR: {
               isCloseStep = Boolean.TRUE;
               break;
             }
@@ -597,7 +601,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
           // Creo uno nuevo
           UmlStep newStep;
-          if (stepType.equals(StepType.REGULAR)) {
+          if (stepType.equals(StepType.REGULAR) || stepType.equals(StepType.ELSE)) {
             String actor = dialog.getActor();
             Set<String> entities = dialog.getEntities();
             newStep = new UmlMainStep(stepDescription, actor, stepType, entities);

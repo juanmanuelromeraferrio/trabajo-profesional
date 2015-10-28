@@ -50,8 +50,7 @@ public enum StepType {
   }
 
   public static StepType[] getValidTypesWithoutFather() {
-    StepType[] values =
-        {StepType.REGULAR, StepType.IF, StepType.ELSE, StepType.WHILE, StepType.FOR};
+    StepType[] values = {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
     return values;
   }
 }
