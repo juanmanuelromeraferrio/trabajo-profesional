@@ -22,10 +22,7 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Nest;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlModelElementLabelSource;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Compartment.Alignment;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
@@ -572,6 +569,8 @@ public final class ClassElement extends AbstractCompositeNode
 
         UmlConnection umlConn = (UmlConnection) conn;
         Relation relation = (Relation) umlConn.getModelElement();
+        if(conn instanceof NoteConnection)
+            return;
 
         UmlModelElement element1 = relation.getElement1();
         UmlModelElement element2 = relation.getElement2();
@@ -579,7 +578,6 @@ public final class ClassElement extends AbstractCompositeNode
         if(conn instanceof Nest){
             addNest((Nest) conn, element1, element2);
             super.addConnection(conn);
-
 
         }else
             throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.class.invalidConnectionType"));

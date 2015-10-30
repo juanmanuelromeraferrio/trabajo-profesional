@@ -19,6 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.ConnectionVisitor;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
@@ -30,17 +31,6 @@ import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface UmlNode extends Node, UmlDiagramElement {
+public interface UmlNode extends Node, UmlDiagramElement,ConnectionVisitor {
 
-    /**
-     * Determines whether this Node accepts a connection of the specified type
-     * with the specified node and the specified end type. The <i>with</i>
-     * parameter can be omitted.
-     *
-     * @param associationType the AssociationType for the connection
-     * @param as              the association end type, can be UNSPECIFIED, SOURCE OR TARGET
-     * @param with            the other end node if available
-     * @return true if connection is accepted, false otherwise
-     */
-    boolean acceptsConnection(RelationType associationType, RelationEndType as, UmlNode with);
 }

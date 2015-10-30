@@ -34,6 +34,10 @@ public class UseCaseDiagram extends GeneralDiagram {
         Map<ElementType, UmlDiagramElement> elementPrototypes =
             new HashMap<ElementType, UmlDiagramElement>();
 
+        // Add a note
+        NoteElement notePrototype = (NoteElement) NoteElement.getPrototype().clone();
+        elementPrototypes.put(ElementType.NOTE, notePrototype);
+
         // Add actor prototype
         UmlActor actor = (UmlActor) UmlActor.getPrototype().clone();
         ActorElement actorPrototype = (ActorElement) ActorElement.getPrototype().clone();
@@ -90,6 +94,9 @@ public class UseCaseDiagram extends GeneralDiagram {
 
         Nest nestPrototype = (Nest) Nest.getPrototype().clone();
         connectionPrototypes.put(RelationType.NEST, nestPrototype);
+
+
+        connectionPrototypes.put(RelationType.NOTE_CONNECTOR, NoteConnection.getPrototype());
 
         return connectionPrototypes;
     }

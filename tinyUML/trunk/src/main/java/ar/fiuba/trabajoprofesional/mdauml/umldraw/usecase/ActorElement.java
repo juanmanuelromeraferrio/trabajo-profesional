@@ -227,14 +227,12 @@ public final class ActorElement extends AbstractCompositeNode
 
     }
 
-    @Override public boolean acceptsConnection(RelationType associationType, RelationEndType as,
-        UmlNode with) {
-        return true;
-    }
 
     @Override public void addConnection(Connection connection) throws AddConnectionException{
         UmlConnection umlConn = (UmlConnection) connection;
         Relation relation = (Relation) umlConn.getModelElement();
+        if(connection instanceof NoteConnection)
+            return;
 
         UmlModelElement element1 = relation.getElement1();
         UmlModelElement element2 = relation.getElement2();

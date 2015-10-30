@@ -92,29 +92,7 @@ public class LineHandler implements EditorMode {
         isDragging = false;
     }
 
-    /**
-     * Determines whether the specified element is a valid s ource for the
-     * connection.
-     *
-     * @param elem the target element
-     * @return true if valid source, false otherwise
-     */
-    private boolean isValidSource(DiagramElement elem) {
-        return elem instanceof UmlNode && ((UmlNode) elem)
-            .acceptsConnection(relationType, RelationEndType.SOURCE, null);
-    }
 
-    /**
-     * Determines whether the specified element is a valid target for the
-     * connection.
-     *
-     * @param elem the target element
-     * @return true if valid, false otherwise
-     */
-    private boolean isValidTarget(DiagramElement elem) {
-        return elem instanceof UmlNode && elem != source &&
-            ((UmlNode) elem).acceptsConnection(relationType, RelationEndType.TARGET, source);
-    }
 
     /**
      * {@inheritDoc}
@@ -122,11 +100,11 @@ public class LineHandler implements EditorMode {
     public void mousePressed(EditorMouseEvent event) {
         double mx = event.getX(), my = event.getY();
         DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
-        if (isValidSource(elem)) {
-            anchor.setLocation(mx, my);
-            isDragging = true;
-            source = (UmlNode) elem;
-        }
+
+        anchor.setLocation(mx, my);
+        isDragging = true;
+        source = (UmlNode) elem;
+
     }
 
     /**
@@ -135,7 +113,7 @@ public class LineHandler implements EditorMode {
     public void mouseReleased(EditorMouseEvent event) {
         double mx = event.getX(), my = event.getY();
         DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
-        if (source != null && isValidTarget(elem)) {
+        if (source != null ) {
             try {
                 UmlConnection conn = editor.getDiagram().getElementFactory()
                         .createConnection(relationType, (UmlNode) source, (UmlNode) elem);

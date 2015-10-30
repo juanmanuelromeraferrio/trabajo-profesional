@@ -22,9 +22,10 @@ import ar.fiuba.trabajoprofesional.mdauml.model.PackageListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Nest;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Include;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Line2D;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public abstract class AbstractNode implements Node{
+public abstract class AbstractNode implements Node, ConnectionVisitor{
 
     private Point2D origin = new Point2D.Double(0, 0);
     private Dimension2D size = new DoubleDimension(40, 20);
@@ -438,19 +439,45 @@ public abstract class AbstractNode implements Node{
         return connections;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void addConnection(Connection conn) throws AddConnectionException {
+        if(!allowsConnection(conn))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+        addConcreteConnection(conn);
         connections.add(conn);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void removeConnection(Connection conn) {
-        connections.remove(conn);
+    @Override
+    public void removeConnection(Connection connection){
+        removeConcreteConnection(connection);
+        connections.remove(connection);
     }
+
+    @Override public boolean allowsConnection(Connection connection){return false;}
+    @Override public boolean allowsConnection(Nest connection){return false;}
+    @Override public boolean allowsConnection(Inheritance connection){return false;}
+    @Override public boolean allowsConnection(Include connection){return false;}
+    @Override public boolean allowsConnection(Association connection){return false;}
+    @Override public boolean allowsConnection(Extend connection){return false;}
+    @Override public boolean allowsConnection(NoteConnection connection){return false;}
+
+    @Override public void addConcreteConnection(Connection connection)throws AddConnectionException{}
+    @Override public void addConcreteConnection(Nest connection) throws AddConnectionException{}
+    @Override public void addConcreteConnection(Inheritance connection) throws AddConnectionException{}
+    @Override public void addConcreteConnection(Association connection) throws AddConnectionException{}
+    @Override public void addConcreteConnection(Extend connection) throws AddConnectionException{}
+    @Override public void addConcreteConnection(Include connection) throws AddConnectionException{}
+    @Override public void addConcreteConnection(NoteConnection connection) throws AddConnectionException{}
+
+    @Override public void removeConcreteConnection(Connection connection){}
+    @Override public void removeConcreteConnection(Nest connection){}
+    @Override public void removeConcreteConnection(Inheritance connection){}
+    @Override public void removeConcreteConnection(Association connection){}
+    @Override public void removeConcreteConnection(Extend connection){}
+    @Override public void removeConcreteConnection(Include connection){}
+    @Override public void removeConcreteConnection(NoteConnection connection){}
+
+
 
     // *************************************************************************
     // ***** Nesting

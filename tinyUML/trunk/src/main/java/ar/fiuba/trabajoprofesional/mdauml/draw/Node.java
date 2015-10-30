@@ -183,17 +183,7 @@ public interface Node extends DiagramElement {
      */
     Collection<? extends Connection> getConnections();
 
-    /**
-     * Adds the specified connection to this node.
-     *
-     * @param conn the connection to add
-     */
-    void addConnection(Connection conn) throws AddConnectionException;
+    void addConnection(Connection connection) throws AddConnectionException;
+    void removeConnection(Connection connection);
 
-    /**
-     * Removes the specified connection from this node.
-     *
-     * @param conn the connection to remove
-     */
-    void removeConnection(Connection conn);
 }

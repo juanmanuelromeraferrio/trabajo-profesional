@@ -29,6 +29,9 @@ public class UseCaseEditorToolbarManager extends AbstractToolbarManager {
         toolbar.add(createToggleButtonWithName(buttongroup, "extend"));
         toolbar.add(createToggleButtonWithName(buttongroup, "include"));
         toolbar.add(createToggleButtonWithName(buttongroup, "nest"));
+        toolbar.addSeparator(new Dimension(10, 10));
+        toolbar.add(createToggleButtonWithName(buttongroup, "note"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "noteconnector"));
         doClick("SELECT_MODE");
     }
 
