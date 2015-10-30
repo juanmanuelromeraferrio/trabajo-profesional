@@ -65,6 +65,8 @@ public class UmlMainStep extends UmlStep {
     switch (type) {
       case IF:
       case WHILE:
+      case FOR:
+      case ELSE:
         return getIndexAndSpaces() + ". " + type.toString() + " " + super.getDescription();
       case REGULAR:
         return getIndexAndSpaces() + ". " + actor + ": " + super.getDescription().replace("@", "");
