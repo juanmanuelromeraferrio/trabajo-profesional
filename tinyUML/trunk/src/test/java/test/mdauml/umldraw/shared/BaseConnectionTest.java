@@ -25,17 +25,11 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
-import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramOperations;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
-import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Selection;
-import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
@@ -49,6 +43,13 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnectionSelection;
 public class BaseConnectionTest extends MockObjectTestCase {
 
   class MyBaseConnection extends BaseConnection {
+    @Override
+    public void acceptNode(ConnectionVisitor node) {
+      node.addConcreteConnection(this);
+    }
+    @Override public void cancelNode(ConnectionVisitor node){
+      node.removeConcreteConnection(this);
+    }
   }
   private BaseConnection connection;
   private Mock mockConnection = mock(Connection.class);

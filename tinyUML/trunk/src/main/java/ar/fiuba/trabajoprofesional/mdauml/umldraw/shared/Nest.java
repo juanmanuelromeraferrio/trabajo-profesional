@@ -1,6 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.NestRelation;
 
 import java.awt.*;
@@ -117,6 +118,14 @@ public class Nest extends BaseConnection {
 
     private boolean doubleEqual(double d1, double d2){
         return Math.abs(d1-d2) <  0.2;
+    }
+
+
+    @Override public void acceptNode(ConnectionVisitor node) {
+        node.addConcreteConnection(this);
+    }
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
     }
 
 

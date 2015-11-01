@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
  * implements drawing method for diferent kinds of arrows
  */
 
-public class ArrowConnection extends BaseConnection{
+public abstract class ArrowConnection extends BaseConnection{
 
     private boolean openHead = true;
     private Color headColor = Color.WHITE;

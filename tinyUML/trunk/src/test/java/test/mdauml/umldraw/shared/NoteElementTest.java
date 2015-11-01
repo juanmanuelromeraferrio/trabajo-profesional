@@ -67,22 +67,7 @@ public class NoteElementTest extends MockObjectTestCase {
     assertTrue(cloned.getLabelAt(20.0, 20.0).getSource() == cloned);
     assertTrue(cloned.getLabelAt(20.0, 20.0).getParent() == cloned);
   }
-  
-  /**
-   * Tests the acceptsConnection() method.
-   */
-  public void testAcceptsConnection() {
-    NoteElement note = NoteElement.getPrototype();
-    ClassElement anyumlnode = ClassElement.getPrototype();
-    assertTrue(note.acceptsConnection(RelationType.NOTE_CONNECTOR,
-      RelationEndType.UNSPECIFIED, anyumlnode));
-    assertTrue(note.acceptsConnection(RelationType.NOTE_CONNECTOR,
-      RelationEndType.SOURCE, anyumlnode));
-    assertTrue(note.acceptsConnection(RelationType.NOTE_CONNECTOR,
-      RelationEndType.TARGET, anyumlnode));
-    assertFalse(note.acceptsConnection(RelationType.DEPENDENCY,
-      RelationEndType.UNSPECIFIED, anyumlnode));
-  }
+
   
   /**
    * Tests the NoteConnection class.

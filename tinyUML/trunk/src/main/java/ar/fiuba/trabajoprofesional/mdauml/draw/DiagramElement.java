@@ -19,7 +19,9 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 
 import java.awt.geom.Rectangle2D;
 
@@ -178,4 +180,6 @@ public interface DiagramElement extends Cloneable {
 
     GeneralDiagram getDiagram();
     void setDiagram(GeneralDiagram d);
+
+
 }

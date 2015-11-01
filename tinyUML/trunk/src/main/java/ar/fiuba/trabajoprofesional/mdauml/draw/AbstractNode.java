@@ -20,8 +20,10 @@ package ar.fiuba.trabajoprofesional.mdauml.draw;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageListener;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Dependency;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Include;
@@ -37,6 +39,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * This class implements an abstract Node class.
@@ -441,33 +444,27 @@ public abstract class AbstractNode implements Node, ConnectionVisitor{
 
     @Override
     public void addConnection(Connection conn) throws AddConnectionException {
-        if(!allowsConnection(conn))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
-        addConcreteConnection(conn);
+        conn.acceptNode(this);
         connections.add(conn);
     }
 
     @Override
     public void removeConnection(Connection connection){
-        removeConcreteConnection(connection);
+        connection.cancelNode(this);
         connections.remove(connection);
     }
 
-    @Override public boolean allowsConnection(Connection connection){return false;}
-    @Override public boolean allowsConnection(Nest connection){return false;}
-    @Override public boolean allowsConnection(Inheritance connection){return false;}
-    @Override public boolean allowsConnection(Include connection){return false;}
-    @Override public boolean allowsConnection(Association connection){return false;}
-    @Override public boolean allowsConnection(Extend connection){return false;}
-    @Override public boolean allowsConnection(NoteConnection connection){return false;}
 
-    @Override public void addConcreteConnection(Connection connection)throws AddConnectionException{}
-    @Override public void addConcreteConnection(Nest connection) throws AddConnectionException{}
-    @Override public void addConcreteConnection(Inheritance connection) throws AddConnectionException{}
-    @Override public void addConcreteConnection(Association connection) throws AddConnectionException{}
-    @Override public void addConcreteConnection(Extend connection) throws AddConnectionException{}
-    @Override public void addConcreteConnection(Include connection) throws AddConnectionException{}
-    @Override public void addConcreteConnection(NoteConnection connection) throws AddConnectionException{}
+
+    @Override public void addConcreteConnection(Connection connection)  {}
+    @Override public void addConcreteConnection(Nest connection)  {}
+    @Override public void addConcreteConnection(Inheritance connection)  {}
+    @Override public void addConcreteConnection(Association connection)  {}
+    @Override public void addConcreteConnection(Extend connection)  {}
+    @Override public void addConcreteConnection(Include connection)  {}
+    @Override public void addConcreteConnection(NoteConnection connection)  {}
+    @Override public void addConcreteConnection(Dependency connection) {}
+
 
     @Override public void removeConcreteConnection(Connection connection){}
     @Override public void removeConcreteConnection(Nest connection){}
@@ -476,6 +473,17 @@ public abstract class AbstractNode implements Node, ConnectionVisitor{
     @Override public void removeConcreteConnection(Extend connection){}
     @Override public void removeConcreteConnection(Include connection){}
     @Override public void removeConcreteConnection(NoteConnection connection){}
+    @Override public void removeConcreteConnection(Dependency connection){}
+
+    @Override
+    public boolean acceptsConnectionAsSource(RelationType relationType) {
+        return false;
+    }
+
+    @Override
+    public void validateConnectionAsTarget(RelationType relationType, UmlNode node) throws AddConnectionException {
+        throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+    }
 
 
 

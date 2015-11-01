@@ -2,6 +2,7 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.ExtendRelation;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.ArrowConnection;
@@ -87,5 +88,10 @@ public class Extend extends ArrowConnection {
         nameLabel.setAbsolutePos(x, y);
     }
 
-
+    @Override public void acceptNode(ConnectionVisitor node) {
+        node.addConcreteConnection(this);
+    }
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
+    }
 }

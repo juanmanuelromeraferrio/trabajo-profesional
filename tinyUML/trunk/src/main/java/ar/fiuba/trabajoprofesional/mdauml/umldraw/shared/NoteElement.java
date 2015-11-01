@@ -21,9 +21,11 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
@@ -167,11 +169,22 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean acceptsConnection(RelationType associationType, RelationEndType as,
-        UmlNode with) {
-        return associationType == RelationType.NOTE_CONNECTOR;
+    @Override
+    public boolean acceptsConnectionAsSource(RelationType relationType) {
+        switch(relationType){
+            case NOTE_CONNECTOR:
+                return true;
+            default: return false;
+        }
+    }
+    @Override
+    public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
+        if(!source.acceptsConnectionAsSource(relationType))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+        switch(relationType){
+            case NOTE_CONNECTOR:
+                    break;
+            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+        }
     }
 }

@@ -21,6 +21,7 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 
 import java.awt.*;
@@ -368,5 +369,12 @@ public abstract class Association extends BaseConnection {
      */
     private enum Direction {
         NORTH, SOUTH, EAST, WEST
+    }
+
+    @Override public void acceptNode(ConnectionVisitor node) {
+        node.addConcreteConnection(this);
+    }
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
     }
 }

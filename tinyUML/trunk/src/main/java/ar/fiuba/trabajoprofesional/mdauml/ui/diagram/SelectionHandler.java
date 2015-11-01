@@ -200,6 +200,11 @@ public class SelectionHandler implements EditorMode {
      */
     public void mouseReleased(EditorMouseEvent e) {
         handleSelectionOnMouseReleased(e);
+        if (e.isPopupTrigger()) {
+            displayContextMenu(e);
+
+        }
+        editor.redraw();
 
     }
 
@@ -219,8 +224,12 @@ public class SelectionHandler implements EditorMode {
                 currentSelection = currentDragged;
             }
             editor.redraw();
-        }
+        }else if(e.isPopupTrigger())
+                currentSelection = getSelection(mx, my);
+
         currentDragged = NullSelection.getInstance();
+
+
         // notify selection listeners
         notifyListeners();
     }
@@ -258,11 +267,13 @@ public class SelectionHandler implements EditorMode {
      * {@inheritDoc}
      */
     public void mouseDragged(EditorMouseEvent e) {
-        currentDragged.startDragging();
-        double mx = e.getX(), my = e.getY();
-        if (currentDragged.isDragging()) {
-            currentDragged.updatePosition(mx, my);
-            editor.repaint();
+        if(!e.isPopupTrigger()) {
+            currentDragged.startDragging();
+            double mx = e.getX(), my = e.getY();
+            if (currentDragged.isDragging()) {
+                currentDragged.updatePosition(mx, my);
+                editor.repaint();
+            }
         }
     }
 

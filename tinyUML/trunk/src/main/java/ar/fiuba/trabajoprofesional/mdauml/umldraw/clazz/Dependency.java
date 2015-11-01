@@ -19,9 +19,11 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.ConnectionVisitor;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleArrowTip;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
 
 /**
@@ -61,5 +63,13 @@ public final class Dependency extends BaseConnection {
         super.draw(drawingContext);
         // Draw the arrow here, has to be rotated around the tip
         new SimpleArrowTip().draw(drawingContext, getEndPoint2(), calculateRotationInEndPoint2());
+    }
+
+    @Override
+    public void acceptNode(ConnectionVisitor node) {
+        node.addConcreteConnection(this);
+    }
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
     }
 }

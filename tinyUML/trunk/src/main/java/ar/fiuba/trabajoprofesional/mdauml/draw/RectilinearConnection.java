@@ -20,6 +20,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.GeometryUtil.Orientation;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -184,4 +185,6 @@ public class RectilinearConnection extends AbstractConnection {
         setPoints(
             RectilinearLineBuilder.getInstance().calculateLineSegments(getNode1(), getNode2()));
     }
+
+
 }

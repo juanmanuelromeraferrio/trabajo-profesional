@@ -228,68 +228,62 @@ public final class ActorElement extends AbstractCompositeNode
     }
 
 
-    @Override public void addConnection(Connection connection) throws AddConnectionException{
-        UmlConnection umlConn = (UmlConnection) connection;
-        Relation relation = (Relation) umlConn.getModelElement();
-        if(connection instanceof NoteConnection)
-            return;
-
-        UmlModelElement element1 = relation.getElement1();
-        UmlModelElement element2 = relation.getElement2();
-        if(connection instanceof Inheritance)
-            addInheritance((Inheritance) connection,element1,element2);
-        else if(connection instanceof Association)
-            addAssociation((Association) connection, element1, element2);
-        else if(connection instanceof Nest)
-            addNest((Nest) connection,element1,element2);
-        else
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.invalidConnection"));
-
-        super.addConnection(connection);
-
-
-    }
-
-    private void addNest(Nest connection, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
-        if(element1 == actor)
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.invalid"));
-
-        if(! (element1 instanceof UmlPackage ) )
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.nest.withoutPkg"));
-
+    @Override public void addConcreteConnection(Nest connection){
         actor.setPackageRelation((NestRelation) connection.getModelElement());
     }
+    @Override public void addConcreteConnection(Inheritance inheritance){
+        Relation relation = (Relation) inheritance.getModelElement();
 
-    private void addAssociation(Association association, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
-        if (element1 instanceof UmlUseCase || element2 instanceof UmlUseCase)
-            return;//managed by usecase
-        throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase"));
-    }
-
-    private void addInheritance(Inheritance inheritance, UmlModelElement e1, UmlModelElement e2) throws AddConnectionException {
+        UmlModelElement e1 = relation.getElement1();
         if(this.actor!=e1)
             return;
-        if(! (e2 instanceof UmlActor))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.noactorinheritance"));
-        if(e1 == e2)
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.autoref"));
         removeExistingConnection(Inheritance.class);
         actor.addParent((InheritanceRelation) inheritance.getModelElement());
-        super.addConnection(inheritance);
     }
 
-    @Override public void removeConnection(Connection connection){
-        if(connection instanceof Inheritance){
-            if(connection.getNode1()==this)
-                this.actor.removeParent();
-        }else if(connection instanceof Nest)
-            removeNest();
-        super.removeConnection(connection);
+
+    @Override public void removeConcreteConnection(Inheritance connection){
+        if(connection.getNode1()==this)
+            this.actor.removeParent();
     }
 
-    private void removeNest() {
-
+    @Override
+    public boolean acceptsConnectionAsSource(RelationType relationType) {
+        switch(relationType){
+            case ASSOCIATION:
+            case INHERITANCE:
+            case NOTE_CONNECTOR:
+                return true;
+            default: return false;
+        }
     }
+    @Override
+    public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
+        if(!source.acceptsConnectionAsSource(relationType))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+        switch(relationType){
+            case ASSOCIATION:
+                if(source instanceof UseCaseElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase"));
+            case INHERITANCE:
+                if(source.getModelElement() == actor)
+                    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.selfref"));
+                if(source instanceof ActorElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.error.connection.actor.noactorinheritance"));
+            case NEST:
+                if(source instanceof PackageElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.withoutPkg"));
+            case NOTE_CONNECTOR:
+                if( source instanceof NoteElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.noteConnection.withoutNote"));
+            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+        }
+    }
+
 
 
     public UmlActor getActor() {

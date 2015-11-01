@@ -210,104 +210,46 @@ public final class UseCaseElement extends AbstractCompositeNode
 
 
     @Override
-    public void addConcreteConnection(Nest nest) throws AddConnectionException {
-        Relation relation = (Relation) nest.getModelElement();
-
-        UmlModelElement element1 = relation.getElement1();
-
-        if(element1 == useCase)
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.invalid"));
-
-        if(! (element1 instanceof UmlPackage ) )
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.nest.withoutPkg"));
-
+    public void addConcreteConnection(Nest nest)  {
         useCase.setPackageRelation((NestRelation) nest.getModelElement());
-
     }
 
 
     @Override
-    public void addConcreteConnection(Association association) throws AddConnectionException {
+    public void addConcreteConnection(Association association)  {
         Relation relation = (Relation) association.getModelElement();
 
         UmlModelElement element1 = relation.getElement1();
         UmlModelElement element2 = relation.getElement2();
 
-        if (element1 != this.useCase && element1 instanceof UmlActor) {
+        if (element1 != this.useCase)
             this.useCase.addUmlActor((UmlActor) element1);
-
-        } else if (element2 != this.useCase && element2 instanceof UmlActor) {
+        else
             this.useCase.addUmlActor((UmlActor) element2);
-
-        }else
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.association.withoutactor"));
 
     }
 
     @Override
-    public void addConcreteConnection(Extend extend) throws AddConnectionException {
+    public void addConcreteConnection(Extend extend)  {
         Relation relation = (Relation) extend.getModelElement();
 
         UmlModelElement element1 = relation.getElement1();
-        UmlModelElement element2 = relation.getElement2();
 
-        if(element1==this.useCase && element2 instanceof UmlUseCase) {
-            if(element2 == this.useCase)
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.autoreferencial"));
+        if(element1==this.useCase)
             this.useCase.addExtend((ExtendRelation) extend.getModelElement());
-        }
-        else if(element2!=this.useCase || !(element1 instanceof UmlUseCase))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.withoutUsecase"));
 
     }
 
     @Override
-    public void addConcreteConnection(Include include) throws AddConnectionException {
+    public void addConcreteConnection(Include include)  {
         Relation relation = (Relation) include.getModelElement();
 
         UmlModelElement element1 = relation.getElement1();
-        UmlModelElement element2 = relation.getElement2();
 
-        if(element1==this.useCase && element2 instanceof UmlUseCase) {
-            if(element2 == this.useCase)
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.autoreferencial"));
+        if(element1==this.useCase )
             this.useCase.addInclude((IncludeRelation) include.getModelElement());
-        }
-        else if(element2!=this.useCase || !(element1 instanceof UmlUseCase))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.withoutUsecase"));
 
     }
-
-    @Override
-    public void addConcreteConnection(NoteConnection connection) throws AddConnectionException {
-
-    }
-
-    @Override
-    public boolean allowsConnection(Nest connection) {
-        return true;
-    }
-
-    @Override
-    public boolean allowsConnection(Include connection) {
-        return true;
-    }
-
-    @Override
-    public boolean allowsConnection(Association connection) {
-        return true;
-    }
-
-    @Override
-    public boolean allowsConnection(Extend connection) {
-        return true;
-    }
-
-    @Override
-    public boolean allowsConnection(NoteConnection connection) {
-        return true;
-    }
-
 
     @Override public void removeConcreteConnection(Include include) {
 
@@ -318,7 +260,6 @@ public final class UseCaseElement extends AbstractCompositeNode
             useCase.removeInclude((IncludeRelation) include.getModelElement());
 
     }
-
     @Override public void removeConcreteConnection(Extend extend) {
 
         Relation relation = (Relation) extend.getModelElement();
@@ -336,13 +277,60 @@ public final class UseCaseElement extends AbstractCompositeNode
         UmlModelElement element1 = relation.getElement1();
         UmlModelElement element2 = relation.getElement2();
 
-        if (element1 != this.useCase && element1 instanceof UmlActor) {
+        if (element1 != this.useCase)
             this.useCase.removeUmlActor((UmlActor) element1);
-        } else if (element2 != this.useCase && element2 instanceof UmlActor) {
+        else
             this.useCase.removeUmlActor((UmlActor) element2);
-        }
+
 
     }
+
+    @Override
+    public boolean acceptsConnectionAsSource(RelationType relationType) {
+        switch(relationType){
+            case ASSOCIATION:
+            case EXTEND:
+            case INCLUDE:
+            case NOTE_CONNECTOR:
+                return true;
+            default: return false;
+        }
+    }
+    @Override
+    public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
+        if(!source.acceptsConnectionAsSource(relationType))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+        switch(relationType){
+            case ASSOCIATION:
+                if(source instanceof ActorElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.association.withoutactor"));
+            case EXTEND:
+                if(!(source instanceof UseCaseElement))
+                    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.withoutUsecase"));
+                if(source.getModelElement() != getModelElement())
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.selfreferential"));
+
+            case INCLUDE:
+                if(!(source instanceof UseCaseElement))
+                    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.withoutUsecase"));
+                if(source.getModelElement() != getModelElement())
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.selfreferential"));
+            case NEST:
+                if(source instanceof PackageElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.withoutPkg"));
+            case NOTE_CONNECTOR:
+                if( source instanceof NoteElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.noteConnection.withoutNote"));
+            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+        }
+    }
+
+
 
 
     @Override

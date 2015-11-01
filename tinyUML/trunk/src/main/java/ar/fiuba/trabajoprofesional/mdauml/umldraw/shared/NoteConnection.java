@@ -19,7 +19,9 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.ConnectionVisitor;
 import ar.fiuba.trabajoprofesional.mdauml.draw.SimpleConnection;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 
@@ -63,5 +65,14 @@ public final class NoteConnection extends BaseConnection {
      */
     @Override public UmlModelElement getModelElement() {
         return null;
+    }
+
+    @Override
+    public void acceptNode(ConnectionVisitor node){
+        node.addConcreteConnection(this);
+    }
+
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
     }
 }

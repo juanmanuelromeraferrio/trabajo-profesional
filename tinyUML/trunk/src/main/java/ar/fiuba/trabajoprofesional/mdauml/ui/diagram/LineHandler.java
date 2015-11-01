@@ -19,11 +19,11 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.ConnectionVisitor;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationEndType;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddConnectionCommand;
@@ -92,6 +92,17 @@ public class LineHandler implements EditorMode {
         isDragging = false;
     }
 
+    /**
+     * Determines whether the specified element is a valid s ource for the
+     * connection.
+     *
+     * @param elem the target element
+     * @return true if valid source, false otherwise
+     */
+    private boolean isValidSource(DiagramElement elem) {
+        return elem instanceof ConnectionVisitor && ((ConnectionVisitor) elem)
+                .acceptsConnectionAsSource(relationType);
+    }
 
 
     /**
@@ -101,9 +112,9 @@ public class LineHandler implements EditorMode {
         double mx = event.getX(), my = event.getY();
         DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
 
-        anchor.setLocation(mx, my);
-        isDragging = true;
-        source = (UmlNode) elem;
+            anchor.setLocation(mx, my);
+            isDragging = true;
+            source = (UmlNode) elem;
 
     }
 
@@ -111,23 +122,26 @@ public class LineHandler implements EditorMode {
      * {@inheritDoc}
      */
     public void mouseReleased(EditorMouseEvent event) {
-        double mx = event.getX(), my = event.getY();
-        DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
-        if (source != null ) {
-            try {
+        try {
+            double mx = event.getX(), my = event.getY();
+            DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
+            if ( source != null && elem instanceof ConnectionVisitor ) {
+                ((ConnectionVisitor) elem).validateConnectionAsTarget(relationType, source);
+
                 UmlConnection conn = editor.getDiagram().getElementFactory()
-                        .createConnection(relationType, (UmlNode) source, (UmlNode) elem);
+                        .createConnection(relationType, source, (UmlNode) elem);
                 connectMethod
                         .generateAndSetPointsToConnection(conn, source, (UmlNode) elem, anchor, tmpPos);
                 AddConnectionCommand command =
                         new AddConnectionCommand(editor, editor.getDiagram(), conn);
                 editor.execute(command);
-            }catch (AddConnectionException e){
-                JOptionPane.showMessageDialog(AppFrame.get(), e.getMessage(),
-                        ApplicationResources.getInstance().getString("error.connection.title")
-                        , JOptionPane.ERROR_MESSAGE);
 
             }
+        }catch (AddConnectionException e){
+            JOptionPane.showMessageDialog(AppFrame.get(), e.getMessage(),
+                    ApplicationResources.getInstance().getString("error.connection.title")
+                    , JOptionPane.ERROR_MESSAGE);
+
         }
         isDragging = false;
         editor.redraw();

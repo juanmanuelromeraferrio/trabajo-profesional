@@ -19,6 +19,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -165,4 +167,8 @@ public interface Connection extends DiagramElement,NodeChangeListener {
      * @return the LineConnectMethod
      */
     LineConnectMethod getConnectMethod();
+
+    void acceptNode(ConnectionVisitor node);
+    void cancelNode(ConnectionVisitor node);
+
 }

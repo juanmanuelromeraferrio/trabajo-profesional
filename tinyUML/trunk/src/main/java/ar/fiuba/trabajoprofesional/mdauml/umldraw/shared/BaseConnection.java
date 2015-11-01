@@ -37,7 +37,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class BaseConnection implements UmlConnection {
+public abstract class BaseConnection implements UmlConnection {
 
     protected Relation relation;
     private Connection connection;

@@ -19,8 +19,10 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
+import ar.fiuba.trabajoprofesional.mdauml.draw.ConnectionVisitor;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.RectilinearConnection;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.InheritanceRelation;
 
 import java.awt.*;
@@ -64,4 +66,10 @@ public final class Inheritance extends ArrowConnection {
         super.draw(drawingContext);
     }
 
+    @Override public void acceptNode(ConnectionVisitor node)  {
+        node.addConcreteConnection(this);
+    }
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
+    }
 }

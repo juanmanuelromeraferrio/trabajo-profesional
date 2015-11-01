@@ -19,6 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 
 import java.awt.geom.AffineTransform;
@@ -424,4 +425,14 @@ public abstract class AbstractConnection implements Connection {
     public boolean canNestElements() {
         return false;
     }
+
+    @Override public void acceptNode(ConnectionVisitor node){
+        node.addConcreteConnection(this);
+    }
+
+    @Override public void cancelNode(ConnectionVisitor node){
+        node.removeConcreteConnection(this);
+    }
+
+
 }

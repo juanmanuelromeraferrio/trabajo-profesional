@@ -21,8 +21,11 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.shared;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
+import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -244,13 +247,6 @@ public final class PackageElement extends AbstractCompositeNode implements Label
         tabCompartment.invalidate();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean acceptsConnection(RelationType associationType, RelationEndType as,
-        UmlNode with) {
-        return true;
-    }
 
     /**
      * {@inheritDoc}
@@ -295,4 +291,31 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     @Override public boolean isNestable() {
         return true;
     }
+
+
+
+
+    @Override
+    public boolean acceptsConnectionAsSource(RelationType relationType) {
+        switch(relationType){
+            case NEST:
+            case NOTE_CONNECTOR:
+                return true;
+            default: return false;
+        }
+    }
+    @Override
+    public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
+        if(!source.acceptsConnectionAsSource(relationType))
+            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+        switch(relationType){
+            case NOTE_CONNECTOR:
+                if( source instanceof NoteElement)
+                    break;
+                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.noteConnection.withoutNote"));
+            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+        }
+    }
+
+
 }
