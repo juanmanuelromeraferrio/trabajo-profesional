@@ -37,7 +37,7 @@ public class Flow {
     flow.add(indexFlow, step);
 
     UmlStep father = step.getFather();
-    for (int i = indexReal; i < flow.size(); i++) {
+    for (int i = indexFlow + 1; i < flow.size(); i++) {
       // Si tienen Padre solo incremento el index de
       // los que son hijos del mismo padre.
       if (father == null) {
@@ -51,7 +51,18 @@ public class Flow {
   }
 
   public UmlStep getStep(int index) {
-    return flow.get(index);
+    UmlStep stepResult = null;
+    int size = 0;
+    for (UmlStep step : flow) {
+      int totalSize = size + step.getTotalSize();
+      if (totalSize <= index) {
+        size = totalSize;
+        continue;
+      }
+      return step.findByIndex(index, size);
+    }
+
+    return stepResult;
   }
 
   public void removeStep(UmlStep step) {
@@ -99,11 +110,11 @@ public class Flow {
   }
 
   private void addChildrenToFlow(UmlStep umlStep, int selectedStep) {
-    flow.add(selectedStep, umlStep);
-    for (UmlStep childrenStep : umlStep.getChildrens()) {
-      int index = getFlowIndexForChildrenStep(childrenStep);// childrenStep.getRealIndex() - 1;
-      addChildrenToFlow(childrenStep, index);
-    }
+    // flow.add(selectedStep, umlStep);
+    // for (UmlStep childrenStep : umlStep.getChildrens()) {
+    // int index = getFlowIndexForChildrenStep(childrenStep);// childrenStep.getRealIndex() - 1;
+    // addChildrenToFlow(childrenStep, index);
+    // }
   }
 
   public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep) {
@@ -119,18 +130,20 @@ public class Flow {
   }
 
 
-  public int getFlowIndex(UmlStep searchStep, int start) {
-    int index = start;
-    for (UmlStep umlStep : flow) {
-      if (umlStep.equals(searchStep)) {
-        return index;
-      }
+  public int getFlowIndex(UmlStep searchStep) {
 
-      index++;
-      index = getFlowIndex(searchStep, start);
-    }
-
-    return index;
+    return flow.indexOf(searchStep);
+    // int index = start;
+    // for (UmlStep umlStep : flow) {
+    // if (umlStep.equals(searchStep)) {
+    // return index;
+    // }
+    //
+    // index++;
+    // index = getFlowIndex(searchStep, start);
+    // }
+    //
+    // return index;
   }
 
   private int indexOfStep(UmlStep searchStep, UmlStep father, int start) {

@@ -95,9 +95,9 @@ public class UmlMainStep extends UmlStep {
 
     List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.childrens.size());
     for (UmlStep step : this.childrens) {
-      if (step instanceof UmlAlternativeStep) {
-        UmlAlternativeStep umlAltStep = (UmlAlternativeStep) step;
-        cloneChildren.add(umlAltStep.clone(cloned));
+      if (step instanceof UmlMainStep) {
+        UmlMainStep umlMainStep = (UmlMainStep) step;
+        cloneChildren.add(umlMainStep.clone(cloned));
       }
     }
 
@@ -105,8 +105,33 @@ public class UmlMainStep extends UmlStep {
     return cloned;
   }
 
+  public UmlStep clone(UmlStep father) {
+
+    Set<String> cloneEntities = new HashSet<String>(this.entities.size());
+    for (String entity : this.entities) {
+      cloneEntities.add(entity);
+    }
+    
+    UmlStep cloned = new UmlMainStep(this.description, this.actor, this.type, cloneEntities);
+    cloned.father = father;
+    cloned.index = this.index;
+
+    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.childrens.size());
+    for (UmlStep step : this.childrens) {
+      if (step instanceof UmlMainStep) {
+        UmlMainStep umlMainStep = (UmlMainStep) step;
+        cloneChildren.add(umlMainStep.clone(cloned));
+      }
+    }
+
+
+    cloned.childrens = cloneChildren;
+    return cloned;
+  }
+
   public boolean isFatherType() {
-    if (type.equals(StepType.IF) || type.equals(StepType.WHILE) || type.equals(StepType.FOR)) {
+    if (type.equals(StepType.IF) || type.equals(StepType.WHILE) || type.equals(StepType.FOR)
+        || type.equals(StepType.ELSE)) {
       return true;
     }
 

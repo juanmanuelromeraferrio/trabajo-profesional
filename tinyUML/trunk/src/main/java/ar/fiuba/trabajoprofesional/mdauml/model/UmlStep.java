@@ -121,6 +121,45 @@ public abstract class UmlStep {
   @Override
   public abstract UmlStep clone();
 
+  public List<String> getCompleteDescription() {
+    List<String> result = new ArrayList<String>();
+    result.add(showDescription());
+    for (UmlStep umlStep : childrens) {
+      result.addAll(umlStep.getCompleteDescription());
+    }
+
+    return result;
+
+  }
+
+
+  public UmlStep findByIndex(int index, int count) {
+    if (index == count) {
+      return this;
+    }
+
+    count++;
+
+    for (UmlStep step : childrens) {
+      int totalSize = count + step.getTotalSize();
+      if (totalSize <= index) {
+        count = totalSize;
+        continue;
+      }
+      return step.findByIndex(index, count);
+    }
+
+    return null;
+  }
+
+  public int getTotalSize() {
+    int size = 1;
+    for (UmlStep step : childrens) {
+      size += step.getTotalSize();
+    }
+
+    return size;
+  }
 
 
 }

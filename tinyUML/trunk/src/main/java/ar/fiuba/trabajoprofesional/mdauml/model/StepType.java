@@ -19,28 +19,57 @@ public enum StepType {
     return ApplicationResources.getInstance().getString(value);
   }
 
-  public static StepType[] getValidTypesFor(StepType type) {
+  public static StepType[] getValidTypesFor(StepType type, int childrens) {
 
     switch (type) {
 
       case ELSE:
-        StepType[] valuesElse =
-            {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR, StepType.ENDIF};
+        StepType[] valuesElse;
+        if (childrens > 0) {
+          valuesElse =
+              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR,
+                  StepType.ENDIF};
+        } else {
+          valuesElse = new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
+        }
         return valuesElse;
       case FOR:
-        StepType[] valuesFor =
-            {StepType.REGULAR, StepType.IF, StepType.ELSE, StepType.WHILE, StepType.FOR,
-                StepType.ENDFOR};
+        StepType[] valuesFor;
+
+        if (childrens > 0) {
+          valuesFor =
+              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR,
+                  StepType.ENDFOR};
+        } else {
+          valuesFor = new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
+        }
+
+
         return valuesFor;
       case IF:
-        StepType[] valuesIF =
-            {StepType.REGULAR, StepType.IF, StepType.ELSE, StepType.WHILE, StepType.FOR,
-                StepType.ENDIF};
+        StepType[] valuesIF;
+
+        if (childrens > 0) {
+          valuesIF =
+              new StepType[] {StepType.REGULAR, StepType.IF, StepType.ELSE, StepType.WHILE,
+                  StepType.FOR, StepType.ENDIF};
+        } else {
+          valuesIF = new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
+        }
+
         return valuesIF;
       case WHILE:
-        StepType[] valuesWhile =
-            {StepType.REGULAR, StepType.IF, StepType.ELSE, StepType.WHILE, StepType.FOR,
-                StepType.ENDWHILE};
+        StepType[] valuesWhile;
+
+        if (childrens > 0) {
+          valuesWhile =
+              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR,
+                  StepType.ENDWHILE};
+        } else {
+          valuesWhile =
+              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
+        }
+
         return valuesWhile;
       default:
         return null;

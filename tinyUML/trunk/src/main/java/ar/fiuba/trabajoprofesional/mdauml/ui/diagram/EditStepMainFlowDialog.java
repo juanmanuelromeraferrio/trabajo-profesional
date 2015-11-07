@@ -54,12 +54,11 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private JTextField textFieldCondition;
 
   private JLabel lblCondition;
-
   private JPanel entitiesPanel;
-
   private JButton editStep;
-
   private JButton saveStep;
+
+  private Boolean isEditMode = Boolean.FALSE;
 
   /**
    * Creates new form EditUseCaseDialog
@@ -78,6 +77,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
     this.step = step;
+    this.isEditMode = Boolean.TRUE;
     initComponents();
     myPostInit();
   }
@@ -126,26 +126,21 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     });
 
     GroupLayout groupLayout = new GroupLayout(getContentPane());
-    groupLayout.setHorizontalGroup(
-      groupLayout.createParallelGroup(Alignment.TRAILING)
-        .addGroup(groupLayout.createSequentialGroup()
-          .addContainerGap(394, Short.MAX_VALUE)
-          .addComponent(btnOk)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(btnCancel)
-          .addContainerGap())
-        .addComponent(mainScrollPanel)
-    );
-    groupLayout.setVerticalGroup(
-      groupLayout.createParallelGroup(Alignment.LEADING)
-        .addGroup(groupLayout.createSequentialGroup()
-          .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 322, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-            .addComponent(btnCancel)
-            .addComponent(btnOk))
-          .addContainerGap())
-    );
+    groupLayout.setHorizontalGroup(groupLayout
+        .createParallelGroup(Alignment.TRAILING)
+        .addGroup(
+            groupLayout.createSequentialGroup().addContainerGap(394, Short.MAX_VALUE)
+                .addComponent(btnOk).addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(btnCancel).addContainerGap()).addComponent(mainScrollPanel));
+    groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
+        groupLayout
+            .createSequentialGroup()
+            .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 322,
+                GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(ComponentPlacement.RELATED)
+            .addGroup(
+                groupLayout.createParallelGroup(Alignment.LEADING).addComponent(btnCancel)
+                    .addComponent(btnOk)).addContainerGap()));
 
     JPanel generalPanel = new JPanel();
     mainScrollPanel.setViewportView(generalPanel);
@@ -166,7 +161,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         switch (stepType) {
           case IF:
           case WHILE:
-          case FOR: {
+          case FOR:
+          case ELSE: {
             textFieldCondition.setEnabled(false);
             break;
           }
@@ -223,7 +219,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         switch (stepType) {
           case IF:
           case WHILE:
-          case FOR: {
+          case FOR:
+          case ELSE: {
             textFieldCondition.setEnabled(true);
             break;
           }
@@ -243,12 +240,22 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.type.label"));
 
     ComboBoxModel<StepType> typeComboBoxModel;
-    if (father != null) {
-      StepType[] values = StepType.getValidTypesFor(father.getType());
+
+    if (isEditMode) {
+      StepType[] values = new StepType[] {step.getType()};
       typeComboBoxModel = new DefaultComboBoxModel<StepType>(values);
     } else {
-      typeComboBoxModel = new DefaultComboBoxModel<StepType>(StepType.getValidTypesWithoutFather());
+      if (father != null) {
+        StepType[] values =
+            StepType.getValidTypesFor(father.getType(), father.getChildrens().size());
+        typeComboBoxModel = new DefaultComboBoxModel<StepType>(values);
+      } else {
+        typeComboBoxModel =
+            new DefaultComboBoxModel<StepType>(StepType.getValidTypesWithoutFather());
+      }
     }
+
+
 
     comboTypesStep = new JComboBox<StepType>();
     comboTypesStep.setModel(typeComboBoxModel);
@@ -260,7 +267,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         switch (selectedType) {
           case IF:
           case WHILE:
-          case FOR: {
+          case FOR:
+          case ELSE: {
             comboActorsStep.setEnabled(false);
             stepDescription.setVisible(false);
             lblCondition.setVisible(true);
@@ -404,24 +412,21 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         "editstepmainflow.entities.label"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     GroupLayout firstLayout = new GroupLayout(generalPanel);
-    firstLayout.setHorizontalGroup(
-      firstLayout.createParallelGroup(Alignment.TRAILING)
-        .addGroup(firstLayout.createSequentialGroup()
-          .addContainerGap()
-          .addGroup(firstLayout.createParallelGroup(Alignment.TRAILING)
-            .addComponent(entitiesPanel, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-            .addComponent(stepPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE))
-          .addGap(18))
-    );
-    firstLayout.setVerticalGroup(
-      firstLayout.createParallelGroup(Alignment.LEADING)
-        .addGroup(firstLayout.createSequentialGroup()
-          .addGap(6)
-          .addComponent(stepPanel, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
-          .addGap(18)
-          .addComponent(entitiesPanel, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-          .addContainerGap())
-    );
+    firstLayout.setHorizontalGroup(firstLayout.createParallelGroup(Alignment.TRAILING).addGroup(
+        firstLayout
+            .createSequentialGroup()
+            .addContainerGap()
+            .addGroup(
+                firstLayout
+                    .createParallelGroup(Alignment.TRAILING)
+                    .addComponent(entitiesPanel, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                    .addComponent(stepPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 490,
+                        Short.MAX_VALUE)).addGap(18)));
+    firstLayout.setVerticalGroup(firstLayout.createParallelGroup(Alignment.LEADING).addGroup(
+        firstLayout.createSequentialGroup().addGap(6)
+            .addComponent(stepPanel, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
+            .addGap(18).addComponent(entitiesPanel, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+            .addContainerGap()));
 
     JScrollPane scrollPaneEntity = new JScrollPane();
 
@@ -460,34 +465,47 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
     GroupLayout groupLayoutEntityPanel = new GroupLayout(entitiesPanel);
-    groupLayoutEntityPanel.setHorizontalGroup(
-      groupLayoutEntityPanel.createParallelGroup(Alignment.TRAILING)
-        .addGroup(groupLayoutEntityPanel.createSequentialGroup()
-          .addContainerGap()
-          .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addGroup(groupLayoutEntityPanel.createParallelGroup(Alignment.LEADING)
-            .addGroup(groupLayoutEntityPanel.createSequentialGroup()
-              .addComponent(comboEntities, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-              .addPreferredGap(ComponentPlacement.RELATED)
-              .addComponent(addEntity, GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
-            .addComponent(deleteEntity, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addContainerGap())
-    );
-    groupLayoutEntityPanel.setVerticalGroup(
-      groupLayoutEntityPanel.createParallelGroup(Alignment.LEADING)
-        .addGroup(groupLayoutEntityPanel.createSequentialGroup()
-          .addGap(6)
-          .addGroup(groupLayoutEntityPanel.createParallelGroup(Alignment.BASELINE)
-            .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-            .addGroup(groupLayoutEntityPanel.createSequentialGroup()
-              .addGroup(groupLayoutEntityPanel.createParallelGroup(Alignment.BASELINE)
-                .addComponent(comboEntities, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addComponent(addEntity))
-              .addGap(8)
-              .addComponent(deleteEntity)))
-          .addContainerGap(15, Short.MAX_VALUE))
-    );
+    groupLayoutEntityPanel.setHorizontalGroup(groupLayoutEntityPanel.createParallelGroup(
+        Alignment.TRAILING)
+        .addGroup(
+            groupLayoutEntityPanel
+                .createSequentialGroup()
+                .addContainerGap()
+                .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(
+                    groupLayoutEntityPanel
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                            groupLayoutEntityPanel
+                                .createSequentialGroup()
+                                .addComponent(comboEntities, GroupLayout.PREFERRED_SIZE, 120,
+                                    GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(addEntity, GroupLayout.DEFAULT_SIZE, 69,
+                                    Short.MAX_VALUE))
+                        .addComponent(deleteEntity, GroupLayout.DEFAULT_SIZE,
+                            GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
+    groupLayoutEntityPanel
+        .setVerticalGroup(groupLayoutEntityPanel.createParallelGroup(Alignment.LEADING).addGroup(
+            groupLayoutEntityPanel
+                .createSequentialGroup()
+                .addGap(6)
+                .addGroup(
+                    groupLayoutEntityPanel
+                        .createParallelGroup(Alignment.BASELINE)
+                        .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 69,
+                            GroupLayout.PREFERRED_SIZE)
+                        .addGroup(
+                            groupLayoutEntityPanel
+                                .createSequentialGroup()
+                                .addGroup(
+                                    groupLayoutEntityPanel
+                                        .createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(comboEntities, GroupLayout.PREFERRED_SIZE,
+                                            GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(addEntity)).addGap(8)
+                                .addComponent(deleteEntity))).addContainerGap(15, Short.MAX_VALUE)));
 
     entities = new JList<>(new DefaultListModel<String>());
     entities.setVisibleRowCount(3);
@@ -505,7 +523,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     switch (stepType) {
       case IF:
       case WHILE:
-      case FOR: {
+      case FOR:
+      case ELSE: {
         textFieldCondition.setText(step.getDescription());
         break;
       }
@@ -526,7 +545,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     switch (stepType) {
       case IF:
       case WHILE:
-      case FOR: {
+      case FOR:
+      case ELSE: {
         return;
       }
       case REGULAR: {
@@ -567,7 +587,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     switch (stepType) {
       case IF:
       case WHILE:
-      case FOR: {
+      case FOR:
+      case ELSE: {
         return this.textFieldCondition.getText();
       }
       case REGULAR: {
