@@ -1,5 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.ui.model.StringTableModel;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class UmlUseCase extends PackageableUmlModelElement {
 
   private Set<ExtendRelation> extendRelations = new HashSet<>();
   private Set<IncludeRelation> includeRelations = new HashSet<>();
+
+  private String mainEntity;  //For conversion purpose
 
 
   /**
@@ -226,5 +229,15 @@ public class UmlUseCase extends PackageableUmlModelElement {
     return !includeRelations.isEmpty();
   }
 
+  public String getMainEntity() {
+    return mainEntity;
+  }
 
+  public void setMainEntity(String mainEntity) {
+    this.mainEntity = mainEntity;
+  }
+
+  public Set<String> getAllEntities(){
+    return mainFlow.getAllEntities();
+  }
 }

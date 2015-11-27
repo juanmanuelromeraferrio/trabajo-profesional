@@ -1,7 +1,11 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.conversion.model.Entity;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Flow {
   private List<UmlStep> flow = new ArrayList<UmlStep>();
@@ -167,5 +171,20 @@ public class Flow {
   public void removeChildrenStep(UmlStep selectedStep, int selectedAlternativeStep) {
     selectedStep.removeChildrenStepByPosition(selectedAlternativeStep);
     flow.remove(selectedStep);
+  }
+
+  public Set<String> getAllEntities() {
+    return getAllEntities(flow);
+  }
+  public Set<String> getAllEntities(List<UmlStep> steps) {
+    Set<String> allEntities = new HashSet<>();
+    for (UmlStep step : steps){
+      if(step instanceof UmlMainStep){
+        Set<String> stepEntites = ((UmlMainStep)step).getEntities();
+        allEntities.addAll(stepEntites);
+      }
+      allEntities.addAll(getAllEntities(step.getChildrens()));
+    }
+    return allEntities;
   }
 }
