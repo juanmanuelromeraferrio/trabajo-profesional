@@ -26,7 +26,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.UseCaseDiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class EditorFactory {
     public EditorPanel openNewClassEditor(UmlModel umlModel) {
         GeneralDiagram diagram = new ClassDiagram(umlModel);
         diagram.setLabelText(
-            ApplicationResources.getInstance().getString("stdcaption.classdiagram") + " "
+            Msg.get("stdcaption.classdiagram") + " "
                 + (classCounter++));
         umlModel.addDiagram(diagram);
         return createEditorPanel(new ClassDiagramEditor( diagram),
@@ -138,7 +138,7 @@ public class EditorFactory {
     public EditorPanel openNewUseCaseEditor(UmlModel umlModel) {
         GeneralDiagram diagram = new UseCaseDiagram(umlModel);
         diagram.setLabelText(
-            ApplicationResources.getInstance().getString("stdcaption.usecasediagram") + " "
+            Msg.get("stdcaption.usecasediagram") + " "
                 + (useCaseCounter++));
         umlModel.addDiagram(diagram);
         return createEditorPanel(new UseCaseDiagramEditor( diagram),

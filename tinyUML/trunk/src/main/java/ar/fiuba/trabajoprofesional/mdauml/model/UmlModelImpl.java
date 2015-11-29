@@ -179,6 +179,17 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
     }
 
     @Override
+    public Set<? extends UmlModelElement> getAll(Class<? extends UmlModelElement> clazz) {
+        Set allClazz = new HashSet<>();
+        for(UmlModelElement element : getElements())
+            if(clazz.isAssignableFrom(element.getClass()))
+                allClazz.add(clazz.cast(element));
+
+        return allClazz;
+
+    }
+
+    @Override
     public void reset() {
         mapMainElementsCounts = new HashMap<UmlModelElement, Long>();
         diagrams = new ArrayList<UmlDiagram>();

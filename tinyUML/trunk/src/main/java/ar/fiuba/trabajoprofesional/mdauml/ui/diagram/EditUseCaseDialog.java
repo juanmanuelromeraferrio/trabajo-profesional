@@ -39,8 +39,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
-
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 
 /**
@@ -645,28 +644,28 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           switch (((UmlMainStep) father).getType()) {
             case ELSE:
               msg =
-                  ApplicationResources.getInstance().getString(
+                  Msg.get(
                       "editstepmainflow.error.delete.else.step.text");
               break;
             case FOR:
               msg =
-                  ApplicationResources.getInstance().getString(
+                  Msg.get(
                       "editstepmainflow.error.delete.for.step.text");
               break;
             case IF:
               msg =
-                  ApplicationResources.getInstance().getString(
+                  Msg.get(
                       "editstepmainflow.error.delete.if.step.text");
               break;
             case WHILE:
               msg =
-                  ApplicationResources.getInstance().getString(
+                  Msg.get(
                       "editstepmainflow.error.delete.while.step.text");
               break;
           }
 
           JOptionPane.showMessageDialog(parent, msg,
-              ApplicationResources.getInstance().getString("editstepmainflow.error.title"),
+              Msg.get("editstepmainflow.error.title"),
               JOptionPane.INFORMATION_MESSAGE);
 
           return;

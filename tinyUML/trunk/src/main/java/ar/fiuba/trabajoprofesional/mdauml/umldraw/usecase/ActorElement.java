@@ -4,15 +4,14 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
+
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 /**
@@ -260,27 +259,27 @@ public final class ActorElement extends AbstractCompositeNode
     @Override
     public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
         if(!source.acceptsConnectionAsSource(relationType))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+            throw new AddConnectionException(Msg.get("error.connection.invalidSource"));
         switch(relationType){
             case ASSOCIATION:
                 if(source instanceof UseCaseElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.associationWithoutUseCase"));
+                throw new AddConnectionException(Msg.get("error.connection.actor.associationWithoutUseCase"));
             case INHERITANCE:
                 if(source.getModelElement() == actor)
-                    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.selfref"));
+                    throw new AddConnectionException(Msg.get("error.connection.actor.selfref"));
                 if(source instanceof ActorElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.actor.error.connection.actor.noactorinheritance"));
+                throw new AddConnectionException(Msg.get("error.connection.actor.error.connection.actor.noactorinheritance"));
             case NEST:
                 if(source instanceof PackageElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.withoutPkg"));
+                throw new AddConnectionException(Msg.get("error.connection.nest.withoutPkg"));
             case NOTE_CONNECTOR:
                 if( source instanceof NoteElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.noteConnection.withoutNote"));
-            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+                throw new AddConnectionException(Msg.get("error.connection.noteConnection.withoutNote"));
+            default:    throw new AddConnectionException(Msg.get("error.connection.invalidConnection"));
         }
     }
 

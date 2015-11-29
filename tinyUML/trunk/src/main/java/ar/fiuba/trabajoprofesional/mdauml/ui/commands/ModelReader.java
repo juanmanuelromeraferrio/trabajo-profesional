@@ -19,10 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.commands;
 
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
-import java.io.*;
 
 /**
  * Reads a model from a file. Models are stored and retrieved using

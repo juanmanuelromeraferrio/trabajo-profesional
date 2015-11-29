@@ -24,7 +24,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlProperty;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStereotype;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.StringTableModel;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -299,11 +299,11 @@ import java.util.List;
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(ApplicationResources.getInstance().getString("dialog.classproperties.title"));
+        setTitle(Msg.get("dialog.classproperties.title"));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(
-            ApplicationResources.getInstance().getString("stdcaption.attributes")));
+            Msg.get("stdcaption.attributes")));
         attribMoveUpButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.moveup"));
+            .setText(Msg.get("stdcaption.moveup"));
         attribMoveUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveUpSelectedAttribute(evt);
@@ -311,16 +311,16 @@ import java.util.List;
         });
 
         attribMoveDownButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.movedown"));
+            .setText(Msg.get("stdcaption.movedown"));
         attribMoveDownButton
-            .setActionCommand(ApplicationResources.getInstance().getString("dialog.text.movedown"));
+            .setActionCommand(Msg.get("dialog.text.movedown"));
         attribMoveDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveDownSelectedAttribute(evt);
             }
         });
 
-        attribAddButton.setText(ApplicationResources.getInstance().getString("stdcaption.add"));
+        attribAddButton.setText(Msg.get("stdcaption.add"));
         attribAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addAttribute(evt);
@@ -328,7 +328,7 @@ import java.util.List;
         });
 
         attribDeleteButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.delete"));
+            .setText(Msg.get("stdcaption.delete"));
         attribDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSelectedAttribute(evt);
@@ -336,10 +336,10 @@ import java.util.List;
         });
 
         attributeVisibilityCb
-            .setText(ApplicationResources.getInstance().getString("dialog.visible.text"));
+            .setText(Msg.get("dialog.visible.text"));
         attributeVisibilityCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         attributeVisibilityCb
-            .setLabel(ApplicationResources.getInstance().getString("stdcaption.visible"));
+            .setLabel(Msg.get("stdcaption.visible"));
         attributeVisibilityCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -391,13 +391,13 @@ import java.util.List;
                     .addContainerGap()));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(
-            ApplicationResources.getInstance().getString("stdcaption.methods")));
+            Msg.get("stdcaption.methods")));
         methodVisibilityCb.setSelected(true);
         methodVisibilityCb
-            .setText(ApplicationResources.getInstance().getString("dialog.visible.text"));
+            .setText(Msg.get("dialog.visible.text"));
         methodVisibilityCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         methodVisibilityCb
-            .setLabel(ApplicationResources.getInstance().getString("stdcaption.visible"));
+            .setLabel(Msg.get("stdcaption.visible"));
         methodVisibilityCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -405,7 +405,7 @@ import java.util.List;
         jScrollPane2.setViewportView(methodTable);
 
         methodMoveUpButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.moveup"));
+            .setText(Msg.get("stdcaption.moveup"));
         methodMoveUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveUpSelectedMethod(evt);
@@ -413,14 +413,14 @@ import java.util.List;
         });
 
         methodMoveDownButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.movedown"));
+            .setText(Msg.get("stdcaption.movedown"));
         methodMoveDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveDownSelectedMethod(evt);
             }
         });
 
-        methodAddButton.setText(ApplicationResources.getInstance().getString("stdcaption.add"));
+        methodAddButton.setText(Msg.get("stdcaption.add"));
         methodAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMethod(evt);
@@ -428,7 +428,7 @@ import java.util.List;
         });
 
         methodDeleteButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.delete"));
+            .setText(Msg.get("stdcaption.delete"));
         methodDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSelectedMethod(evt);
@@ -482,11 +482,11 @@ import java.util.List;
                                 .addComponent(methodMoveDownButton)))
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
-        abstractCb.setText(ApplicationResources.getInstance().getString("stdcaption.abstract"));
+        abstractCb.setText(Msg.get("stdcaption.abstract"));
         abstractCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         abstractCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        jLabel1.setText(ApplicationResources.getInstance().getString("stdcaption.name"));
+        jLabel1.setText(Msg.get("stdcaption.name"));
 
         javax.swing.GroupLayout propertyPanelLayout = new javax.swing.GroupLayout(propertyPanel);
         propertyPanel.setLayout(propertyPanelLayout);
@@ -524,7 +524,7 @@ import java.util.List;
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(abstractCb)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-        tabbedPane.addTab(ApplicationResources.getInstance().getString("stdcaption.properties"),
+        tabbedPane.addTab(Msg.get("stdcaption.properties"),
             propertyPanel);
 
         stereoScrollPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -532,7 +532,7 @@ import java.util.List;
         stereoScrollPane.setViewportView(stereotypeTable);
 
         stereotypeMoveUpButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.moveup"));
+            .setText(Msg.get("stdcaption.moveup"));
         stereotypeMoveUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveUpSelectedStereotype(evt);
@@ -540,7 +540,7 @@ import java.util.List;
         });
 
         stereotypeMoveDownButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.movedown"));
+            .setText(Msg.get("stdcaption.movedown"));
         stereotypeMoveDownButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveDownSelectedStereotype(evt);
@@ -548,14 +548,14 @@ import java.util.List;
         });
 
         deleteStereotypeButton
-            .setText(ApplicationResources.getInstance().getString("stdcaption.delete"));
+            .setText(Msg.get("stdcaption.delete"));
         deleteStereotypeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSelectedStereotype(evt);
             }
         });
 
-        addStereotypeButton.setText(ApplicationResources.getInstance().getString("stdcaption.add"));
+        addStereotypeButton.setText(Msg.get("stdcaption.add"));
         addStereotypeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addStereotype(evt);
@@ -563,7 +563,7 @@ import java.util.List;
         });
 
         stereotypeVisibilityCb
-            .setText(ApplicationResources.getInstance().getString("stdcaption.visible"));
+            .setText(Msg.get("stdcaption.visible"));
         stereotypeVisibilityCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         stereotypeVisibilityCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
@@ -607,11 +607,11 @@ import java.util.List;
                     jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(deleteStereotypeButton).addComponent(addStereotypeButton))
                     .addContainerGap(315, Short.MAX_VALUE)));
-        tabbedPane.addTab(ApplicationResources.getInstance().getString("stdcaption.stereotypes"),
+        tabbedPane.addTab(Msg.get("stdcaption.stereotypes"),
             jPanel3);
 
         docVisibilityCb
-            .setText(ApplicationResources.getInstance().getString("stdcaption.documentation"));
+            .setText(Msg.get("stdcaption.documentation"));
         docVisibilityCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         docVisibilityCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
@@ -636,17 +636,17 @@ import java.util.List;
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 172,
                         javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(301, Short.MAX_VALUE)));
-        tabbedPane.addTab(ApplicationResources.getInstance().getString("stdcaption.documentation"),
+        tabbedPane.addTab(Msg.get("stdcaption.documentation"),
             jPanel4);
 
-        okButton.setText(ApplicationResources.getInstance().getString("stdcaption.ok"));
+        okButton.setText(Msg.get("stdcaption.ok"));
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeDialog(evt);
             }
         });
 
-        cancelButton.setText(ApplicationResources.getInstance().getString("stdcaption.cancel"));
+        cancelButton.setText(Msg.get("stdcaption.cancel"));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelDialog(evt);

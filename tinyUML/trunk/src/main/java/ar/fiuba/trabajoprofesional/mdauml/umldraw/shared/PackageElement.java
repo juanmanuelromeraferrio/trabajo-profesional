@@ -24,8 +24,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -307,13 +306,13 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     @Override
     public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
         if(!source.acceptsConnectionAsSource(relationType))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+            throw new AddConnectionException(Msg.get("error.connection.invalidSource"));
         switch(relationType){
             case NOTE_CONNECTOR:
                 if( source instanceof NoteElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.noteConnection.withoutNote"));
-            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+                throw new AddConnectionException(Msg.get("error.connection.noteConnection.withoutNote"));
+            default:    throw new AddConnectionException(Msg.get("error.connection.invalidConnection"));
         }
     }
 

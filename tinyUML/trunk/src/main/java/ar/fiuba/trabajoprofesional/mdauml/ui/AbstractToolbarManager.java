@@ -20,8 +20,8 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.IconLoader;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,14 +98,14 @@ public abstract class AbstractToolbarManager implements ToolbarManager, ActionLi
      */
     protected JToggleButton createToggleButton(ButtonGroup aButtonGroup, String prefix) {
         JToggleButton button = new JToggleButton(
-            IconLoader.getInstance().getIcon(getResourceString(prefix + ".icon")));
+            IconLoader.getInstance().getIcon(Msg.get(prefix + ".icon")));
         button.setMargin(new Insets(1, 1, 1, 1));
         button.setFocusable(false);
-        String actionCommand = getResourceString(prefix + ".command");
+        String actionCommand = Msg.get(prefix + ".command");
         button.setActionCommand(actionCommand);
         button.addActionListener(this);
         toolbar.add(button);
-        button.setToolTipText(getResourceString(prefix + ".tooltip"));
+        button.setToolTipText(Msg.get(prefix + ".tooltip"));
         buttonMap.put(actionCommand, button);
         if (aButtonGroup != null) {
             aButtonGroup.add(button);
@@ -121,27 +121,18 @@ public abstract class AbstractToolbarManager implements ToolbarManager, ActionLi
      */
     protected JButton createButton(String prefix) {
         JButton button =
-            new JButton(IconLoader.getInstance().getIcon(getResourceString(prefix + ".icon")));
+            new JButton(IconLoader.getInstance().getIcon(Msg.get(prefix + ".icon")));
         button.setFocusable(false);
         button.setMargin(new Insets(1, 1, 1, 1));
-        String command = getResourceString(prefix + ".command");
+        String command = Msg.get(prefix + ".command");
         button.setActionCommand(command);
         button.addActionListener(this);
         buttonMap.put(command, button);
         toolbar.add(button);
-        button.setToolTipText(getResourceString(prefix + ".tooltip"));
+        button.setToolTipText(Msg.get(prefix + ".tooltip"));
         return button;
     }
 
-    /**
-     * Returns the specified resource as a String object.
-     *
-     * @param property the property name
-     * @return the property value or null if not found
-     */
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
 
 
 }

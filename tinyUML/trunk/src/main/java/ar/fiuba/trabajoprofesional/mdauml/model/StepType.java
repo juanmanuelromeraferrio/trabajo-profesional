@@ -1,6 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 public enum StepType {
   REGULAR("editstepmainflow.regular.type"), IF("editstepmainflow.if.type"), ELSE(
@@ -16,7 +16,7 @@ public enum StepType {
 
   @Override
   public String toString() {
-    return ApplicationResources.getInstance().getString(value);
+    return Msg.get(value);
   }
 
   public static StepType[] getValidTypesFor(StepType type, int childrens) {

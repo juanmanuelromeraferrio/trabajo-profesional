@@ -22,6 +22,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.IconLoader;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -146,7 +147,7 @@ public class MenuManager implements ActionListener {
      */
     private JMenu createMenu(String name) {
         String prefix = "menu." + name;
-        JMenu menu = new JMenu(getResourceString(prefix + ".name"));
+        JMenu menu = new JMenu(Msg.get(prefix + ".name"));
         menu.setMnemonic(getResourceChar(prefix + ".mnemonic"));
         return menu;
     }
@@ -161,7 +162,7 @@ public class MenuManager implements ActionListener {
      */
     private JMenuItem createMenuItem(JMenu menu, String name) {
         String prefix = "menuitem." + name;
-        JMenuItem menuitem = new JMenuItem(getResourceString(prefix + ".name"));
+        JMenuItem menuitem = new JMenuItem(Msg.get(prefix + ".name"));
         addMenuItemInformation(menuitem, prefix);
         menu.add(menuitem);
         return menuitem;
@@ -177,7 +178,7 @@ public class MenuManager implements ActionListener {
     private JRadioButtonMenuItem createRadioMenuItem(JMenu menu, String name) {
         String prefix = "menuitem." + name;
         JRadioButtonMenuItem menuitem =
-            new JRadioButtonMenuItem(getResourceString(prefix + ".name"));
+            new JRadioButtonMenuItem(Msg.get(prefix + ".name"));
         addMenuItemInformation(menuitem, prefix);
         menu.add(menuitem);
         return menuitem;
@@ -192,7 +193,7 @@ public class MenuManager implements ActionListener {
      */
     private JCheckBoxMenuItem createCheckBoxMenuItem(JMenu menu, String name) {
         String prefix = "menuitem." + name;
-        JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(getResourceString(prefix + ".name"));
+        JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(Msg.get(prefix + ".name"));
         addMenuItemInformation(menuitem, prefix);
         menu.add(menuitem);
         return menuitem;
@@ -209,17 +210,17 @@ public class MenuManager implements ActionListener {
         if (mnemonic > 0) {
             menuitem.setMnemonic(mnemonic);
         }
-        String accel = getResourceString(prefix + ".accelerator");
+        String accel = Msg.get(prefix + ".accelerator");
         if (accel != null) {
             menuitem.setAccelerator(KeyStroke.getKeyStroke(accel));
         }
-        String actionCommand = getResourceString(prefix + ".command");
+        String actionCommand = Msg.get(prefix + ".command");
         menuitem.setActionCommand(actionCommand);
         itemMap.put(actionCommand, menuitem);
         menuitem.addActionListener(this);
 
         // icon
-        String iconType = getResourceString(prefix + ".icon");
+        String iconType = Msg.get(prefix + ".icon");
         if (iconType != null) {
             menuitem.setIcon(IconLoader.getInstance().getIcon(iconType));
         }
@@ -252,15 +253,6 @@ public class MenuManager implements ActionListener {
         return menubar;
     }
 
-    /**
-     * Returns the specified resource as a String object.
-     *
-     * @param property the property name
-     * @return the property value or null if not found
-     */
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
 
     /**
      * Returns the first character of a resource property.

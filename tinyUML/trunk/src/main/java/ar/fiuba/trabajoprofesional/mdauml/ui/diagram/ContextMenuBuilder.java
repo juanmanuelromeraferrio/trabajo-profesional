@@ -28,8 +28,8 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.IconLoader;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -97,7 +97,7 @@ public class ContextMenuBuilder implements ActionListener {
             createMenuItem(menu, "editproperties");
         }
         JMenu drawOrderMenu =
-            new JMenu(ApplicationResources.getInstance().getString("submenu.draworder.name"));
+            new JMenu(Msg.get("submenu.draworder.name"));
         menu.add(drawOrderMenu);
         createMenuItem(drawOrderMenu, "draworder.tofront");
         createMenuItem(drawOrderMenu, "draworder.toback");
@@ -142,7 +142,7 @@ public class ContextMenuBuilder implements ActionListener {
         JMenu submenu = null;
         if (relation.canSetElement1Navigability() || relation.canSetElement2Navigability()) {
             submenu =
-                new JMenu(ApplicationResources.getInstance().getString("submenu.navigableto.name"));
+                new JMenu(Msg.get("submenu.navigableto.name"));
             menu.add(submenu);
         }
         if (relation.canSetElement1Navigability()) {
@@ -168,15 +168,7 @@ public class ContextMenuBuilder implements ActionListener {
         }
     }
 
-    /**
-     * Returns the specified resource as a String object.
-     *
-     * @param property the property name
-     * @return the property value or null if not found
-     */
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
+
 
     /**
      * {@inheritDoc}
@@ -197,15 +189,15 @@ public class ContextMenuBuilder implements ActionListener {
      */
     private JMenuItem createMenuItem(JComponent menu, String name) {
         String prefix = "menuitem." + name;
-        JMenuItem menuitem = new JMenuItem(getResourceString(prefix + ".name"));
+        JMenuItem menuitem = new JMenuItem(Msg.get(prefix + ".name"));
 
         // Command
-        String actionCommand = getResourceString(prefix + ".command");
+        String actionCommand = Msg.get(prefix + ".command");
         menuitem.setActionCommand(actionCommand);
         menuitem.addActionListener(this);
 
         // icon
-        String iconType = getResourceString(prefix + ".icon");
+        String iconType = Msg.get(prefix + ".icon");
         if (iconType != null) {
             menuitem.setIcon(IconLoader.getInstance().getIcon(iconType));
         }
@@ -223,10 +215,10 @@ public class ContextMenuBuilder implements ActionListener {
      */
     private JCheckBoxMenuItem createCheckBoxMenuItem(JComponent menu, String name) {
         String prefix = "menuitem." + name;
-        JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(getResourceString(prefix + ".name"));
+        JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(Msg.get(prefix + ".name"));
 
         // Command
-        String actionCommand = getResourceString(prefix + ".command");
+        String actionCommand = Msg.get(prefix + ".command");
         menuitem.setActionCommand(actionCommand);
         menuitem.addActionListener(this);
         menu.add(menuitem);

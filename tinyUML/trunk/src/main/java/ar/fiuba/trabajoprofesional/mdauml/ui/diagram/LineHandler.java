@@ -29,7 +29,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddConnectionCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.geom.Point2D;
@@ -139,7 +139,7 @@ public class LineHandler implements EditorMode {
             }
         }catch (AddConnectionException e){
             JOptionPane.showMessageDialog(AppFrame.get(), e.getMessage(),
-                    ApplicationResources.getInstance().getString("error.connection.title")
+                    Msg.get("error.connection.title")
                     , JOptionPane.ERROR_MESSAGE);
 
         }

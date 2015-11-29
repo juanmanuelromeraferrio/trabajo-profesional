@@ -30,8 +30,8 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
@@ -124,8 +124,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     private boolean canCreateNewModel() {
         if (appState.isModified()) {
             return JOptionPane.showConfirmDialog(getShellComponent(),
-                ApplicationResources.getInstance().getString("confirm.new.message"),
-                ApplicationResources.getInstance().getString("confirm.new.title"),
+                Msg.get("confirm.new.message"),
+                Msg.get("confirm.new.title"),
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
         }
         return true;
@@ -179,7 +179,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
      */
     public void exportGfx() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle(getResourceString("dialog.exportgfx.title"));
+        fileChooser.setDialogTitle(Msg.get("dialog.exportgfx.title"));
         FileNameExtensionFilter svgFilter =
             new FileNameExtensionFilter("Scalable Vector Graphics file (*.svg)", "svg");
         FileNameExtensionFilter pngFilter =
@@ -194,7 +194,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
                     exporter.writeSVG(appState.getCurrentEditor(), fileChooser.getSelectedFile());
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(getShellComponent(), ex.getMessage(),
-                        getResourceString("error.exportgfx.title"), JOptionPane.ERROR_MESSAGE);
+                        Msg.get("error.exportgfx.title"), JOptionPane.ERROR_MESSAGE);
                 }
             } else if (fileChooser.getFileFilter() == pngFilter) {
                 try {
@@ -202,7 +202,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
                     exporter.writePNG(appState.getCurrentEditor(), fileChooser.getSelectedFile());
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(getShellComponent(), ex.getMessage(),
-                        getResourceString("error.exportgfx.title"), JOptionPane.ERROR_MESSAGE);
+                        Msg.get("error.exportgfx.title"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -223,7 +223,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     public void openModel() {
         if (canOpen()) {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle(getResourceString("dialog.openmodel.title"));
+            fileChooser.setDialogTitle(Msg.get("dialog.openmodel.title"));
             fileChooser.addChoosableFileFilter(createModelFileFilter());
             if (fileChooser.showOpenDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
                 try {
@@ -234,10 +234,10 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
                     appState.setCurrentFile(currentFile);
                 } catch (ProjectSerializerException e) {
                     JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
-                        getResourceString("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
+                        Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
                 } catch (ObjectSerializerException e) {
                     JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
-                            getResourceString("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
+                            Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -251,8 +251,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     private boolean canOpen() {
         if (appState.isModified()) {
             return JOptionPane.showConfirmDialog(getShellComponent(),
-                ApplicationResources.getInstance().getString("confirm.open.message"),
-                ApplicationResources.getInstance().getString("confirm.open.title"),
+                Msg.get("confirm.open.message"),
+                Msg.get("confirm.open.title"),
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
         }
         return true;
@@ -263,7 +263,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
      */
     public void saveAs() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle(getResourceString("dialog.saveas.title"));
+        fileChooser.setDialogTitle(Msg.get("dialog.saveas.title"));
         fileChooser.addChoosableFileFilter(createModelFileFilter());
         if (fileChooser.showSaveDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
@@ -303,11 +303,11 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
 
         } catch (ProjectSerializerException e) {
             JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
-                getResourceString("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
+                Msg.get("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
             return null;
         } catch (ObjectSerializerException e) {
             JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
-                    getResourceString("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
+                    Msg.get("error.saveproject.title"), JOptionPane.ERROR_MESSAGE);
         }
         return file;
     }
@@ -355,8 +355,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
      * Shows the about dialog.
      */
     public void about() {
-        JOptionPane.showMessageDialog(getShellComponent(), getResourceString("dialog.about.text"),
-            getResourceString("dialog.about.title"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(getShellComponent(), Msg.get("dialog.about.text"),
+            Msg.get("dialog.about.title"), JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -368,8 +368,8 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
             Desktop.getDesktop().browse(helpUri);
         } catch (IOException ex) {
             JOptionPane
-                .showMessageDialog(getShellComponent(), getResourceString("error.nohelp.message"),
-                    getResourceString("error.nohelp.title"), JOptionPane.ERROR_MESSAGE);
+                .showMessageDialog(getShellComponent(), Msg.get("error.nohelp.message"),
+                    Msg.get("error.nohelp.title"), JOptionPane.ERROR_MESSAGE);
         } catch (URISyntaxException ignore) {
             ignore.printStackTrace();
         }
@@ -388,13 +388,5 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
         return AppFrame.get();
     }
 
-    /**
-     * Returns the specified resource as a String object.
-     *
-     * @param property the property name
-     * @return the property value
-     */
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
+
 }

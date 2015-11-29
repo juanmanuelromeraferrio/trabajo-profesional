@@ -22,8 +22,8 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.Multiplicity;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation.ReadingDirection;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.text.ParseException;
@@ -214,23 +214,23 @@ import java.text.ParseException;
         showMultiplicitiesCb = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(ApplicationResources.getInstance().getString("dialog.assocproperties.title"));
+        setTitle(Msg.get("dialog.assocproperties.title"));
         nameVisibilityCb
-            .setText(ApplicationResources.getInstance().getString("stdcaption.visible"));
+            .setText(Msg.get("stdcaption.visible"));
         nameVisibilityCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         nameVisibilityCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         associationNameLabel
-            .setText(ApplicationResources.getInstance().getString("stdcaption.name"));
+            .setText(Msg.get("stdcaption.name"));
 
-        cancelButton.setText(ApplicationResources.getInstance().getString("stdcaption.cancel"));
+        cancelButton.setText(Msg.get("stdcaption.cancel"));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        okButton.setText(ApplicationResources.getInstance().getString("stdcaption.ok"));
+        okButton.setText(Msg.get("stdcaption.ok"));
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -238,23 +238,23 @@ import java.text.ParseException;
         });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(
-            ApplicationResources.getInstance().getString("dialog.assocdirection.title")));
+            Msg.get("dialog.assocdirection.title")));
         directionButtonGroup.add(noDirectionRadioButton);
         noDirectionRadioButton.setSelected(true);
         noDirectionRadioButton
-            .setText(ApplicationResources.getInstance().getString("dialog.assocdirection.none"));
+            .setText(Msg.get("dialog.assocdirection.none"));
         noDirectionRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         noDirectionRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         directionButtonGroup.add(l2rRadioButton);
         l2rRadioButton.setText(
-            ApplicationResources.getInstance().getString("dialog.assocdirection.leftright"));
+            Msg.get("dialog.assocdirection.leftright"));
         l2rRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         l2rRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         directionButtonGroup.add(r2lRadioButton);
         r2lRadioButton.setText(
-            ApplicationResources.getInstance().getString("dialog.assocdirection.rightleft"));
+            Msg.get("dialog.assocdirection.rightleft"));
         r2lRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         r2lRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
@@ -275,10 +275,10 @@ import java.text.ParseException;
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(
-            ApplicationResources.getInstance().getString("dialog.assoc.elementa.title")));
-        jLabel1.setText(ApplicationResources.getInstance().getString("dialog.assoc.role"));
+            Msg.get("dialog.assoc.elementa.title")));
+        jLabel1.setText(Msg.get("dialog.assoc.role"));
 
-        jLabel2.setText(ApplicationResources.getInstance().getString("dialog.assoc.multiplicity"));
+        jLabel2.setText(Msg.get("dialog.assoc.multiplicity"));
 
         multiplicityACb.setEditable(true);
         multiplicityACb.setModel(
@@ -315,10 +315,10 @@ import java.text.ParseException;
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(
-            ApplicationResources.getInstance().getString("dialog.assoc.elementb.title")));
-        jLabel3.setText(ApplicationResources.getInstance().getString("dialog.assoc.role"));
+            Msg.get("dialog.assoc.elementb.title")));
+        jLabel3.setText(Msg.get("dialog.assoc.role"));
 
-        jLabel4.setText(ApplicationResources.getInstance().getString("dialog.assoc.multiplicity"));
+        jLabel4.setText(Msg.get("dialog.assoc.multiplicity"));
 
         multiplicityBCb.setEditable(true);
         multiplicityBCb.setModel(
@@ -355,12 +355,12 @@ import java.text.ParseException;
                             javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
-        showRolesCb.setText(ApplicationResources.getInstance().getString("dialog.assoc.showroles"));
+        showRolesCb.setText(Msg.get("dialog.assoc.showroles"));
         showRolesCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         showRolesCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         showMultiplicitiesCb.setText(
-            ApplicationResources.getInstance().getString("dialog.assoc.showmultiplicities"));
+            Msg.get("dialog.assoc.showmultiplicities"));
         showMultiplicitiesCb.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         showMultiplicitiesCb.setMargin(new java.awt.Insets(0, 0, 0, 0));
 

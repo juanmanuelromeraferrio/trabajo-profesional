@@ -19,7 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.commands;
 
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,10 +47,9 @@ public abstract class FileWriter extends FileHandler {
      */
     protected boolean canWrite(Component component, File file) {
         if (file.exists()) {
-            ApplicationResources resources = ApplicationResources.getInstance();
-            String message = resources.getString("dialog.replacefile.confirm.msg");
+            String message = Msg.get("dialog.replacefile.confirm.msg");
             message = MessageFormat.format(message, file.getName());
-            String title = resources.getString("dialog.replacefile.confirm.title");
+            String title = Msg.get("dialog.replacefile.confirm.title");
             return
                 JOptionPane.showConfirmDialog(component, message, title, JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION;

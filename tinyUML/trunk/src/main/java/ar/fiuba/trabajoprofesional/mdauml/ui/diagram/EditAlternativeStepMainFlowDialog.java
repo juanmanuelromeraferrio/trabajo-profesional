@@ -32,7 +32,7 @@ import javax.swing.border.TitledBorder;
 import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlAlternativeStep;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 
 public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
@@ -113,7 +113,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
   private void initComponents() {
     setResizable(false);
     setSize(new Dimension(480, 402));
-    setTitle(ApplicationResources.getInstance().getString("editstepalternativeflow.title"));
+    setTitle(Msg.get("editstepalternativeflow.title"));
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
     JScrollPane mainScrollPanel = new JScrollPane();
@@ -121,7 +121,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
     mainScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
     JButton btnCancel =
-        new JButton(ApplicationResources.getInstance().getString("stdcaption.cancel"));
+        new JButton(Msg.get("stdcaption.cancel"));
     btnCancel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = false;
@@ -129,7 +129,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-    JButton btnOk = new JButton(ApplicationResources.getInstance().getString("stdcaption.ok"));
+    JButton btnOk = new JButton(Msg.get("stdcaption.ok"));
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = true;
@@ -160,7 +160,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
 
     JPanel stepPanel = new JPanel();
     stepPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        ApplicationResources.getInstance().getString(
+        Msg.get(
             "editstepalternativeflow.alternativestep.label"), TitledBorder.LEADING,
         TitledBorder.TOP, null, null));
 
@@ -214,7 +214,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
 
 
     JLabel stepLabel =
-        new JLabel(ApplicationResources.getInstance().getString(
+        new JLabel(Msg.get(
             "editstepalternativeflow.step.label"));
 
 
@@ -336,7 +336,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
     stepPanel.setLayout(gropuLayoutStepPanel);
 
     JPanel entitiesPanel = new JPanel();
-    entitiesPanel.setBorder(new TitledBorder(null, ApplicationResources.getInstance().getString(
+    entitiesPanel.setBorder(new TitledBorder(null, Msg.get(
         "editstepmainflow.entities.label"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     GroupLayout firstLayout = new GroupLayout(generalPanel);
@@ -370,7 +370,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
 
     comboEntities = new JComboBox();
 
-    JButton addEntity = new JButton(ApplicationResources.getInstance().getString("stdcaption.add"));
+    JButton addEntity = new JButton(Msg.get("stdcaption.add"));
     addEntity.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         String selectedEntity = (String) comboEntities.getSelectedItem();
@@ -383,7 +383,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
     });
 
     JButton deleteEntity =
-        new JButton(ApplicationResources.getInstance().getString("stdcaption.delete"));
+        new JButton(Msg.get("stdcaption.delete"));
     deleteEntity.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
 

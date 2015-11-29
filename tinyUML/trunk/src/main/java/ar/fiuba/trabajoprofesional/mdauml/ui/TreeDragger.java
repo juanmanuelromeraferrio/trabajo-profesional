@@ -6,10 +6,8 @@ import java.awt.dnd.DragSource;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 
@@ -46,8 +44,8 @@ public class TreeDragger implements TreeDraggerListener {
                 //element = diagram.createNodeFromModel(draggerElement);
                 //element.addNodeChangeListener(diagram);
             }catch (IllegalArgumentException e){
-                JOptionPane.showMessageDialog(AppFrame.get(), getResourceString("error.dragger.wrongDiagram.message"),
-                        getResourceString("error.dragger.wrongDiagram.title"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(AppFrame.get(), Msg.get("error.dragger.wrongDiagram.message"),
+                        Msg.get("error.dragger.wrongDiagram.title"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -77,8 +75,5 @@ public class TreeDragger implements TreeDraggerListener {
 
     }
 
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
 
 }

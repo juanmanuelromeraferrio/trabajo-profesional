@@ -20,9 +20,9 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.draw.MultiLineLabel;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.SetLabelTextCommand;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.UndoableEditListener;
@@ -122,10 +122,8 @@ public class DiagramEditorEditHelper implements ActionListener, MouseListener, M
                 currentEditor.hideEditor();
                 diagramEditor.repaint();
             } catch (ElementNameAlreadyExist e) {
-                JOptionPane.showMessageDialog(diagramEditor, ApplicationResources.getInstance()
-                        .getString("error.elementnamealreadyexist.message"),
-                    ApplicationResources.getInstance()
-                        .getString("error.elementnamealreadyexist.title"),
+                JOptionPane.showMessageDialog(diagramEditor, Msg.get("error.elementnamealreadyexist.message"),
+                        Msg.get("error.elementnamealreadyexist.title"),
                     JOptionPane.ERROR_MESSAGE);
                 diagramEditor.editLabel(label);
             }

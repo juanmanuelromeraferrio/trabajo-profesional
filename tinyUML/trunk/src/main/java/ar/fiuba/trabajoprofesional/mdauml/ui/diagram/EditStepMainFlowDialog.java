@@ -32,7 +32,7 @@ import javax.swing.border.TitledBorder;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
@@ -101,7 +101,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private void initComponents() {
     setResizable(false);
     setSize(new Dimension(529, 400));
-    setTitle(ApplicationResources.getInstance().getString("editstepmainflow.title"));
+    setTitle(Msg.get("editstepmainflow.title"));
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
     JScrollPane mainScrollPanel = new JScrollPane();
@@ -109,7 +109,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     mainScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
     JButton btnCancel =
-        new JButton(ApplicationResources.getInstance().getString("stdcaption.cancel"));
+        new JButton(Msg.get("stdcaption.cancel"));
     btnCancel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = false;
@@ -117,7 +117,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-    JButton btnOk = new JButton(ApplicationResources.getInstance().getString("stdcaption.ok"));
+    JButton btnOk = new JButton(Msg.get("stdcaption.ok"));
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = true;
@@ -147,12 +147,12 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     final JPanel stepPanel = new JPanel();
     stepPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        ApplicationResources.getInstance().getString("editstepmainflow.step.label"),
+        Msg.get("editstepmainflow.step.label"),
         TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     JScrollPane scrollPaneStep = new JScrollPane();
 
-    saveStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.save"));
+    saveStep = new JButton(Msg.get("stdcaption.save"));
     saveStep.addActionListener(new ActionListener() {
       @SuppressWarnings({"unchecked", "rawtypes"})
       public void actionPerformed(ActionEvent arg0) {
@@ -211,7 +211,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-    editStep = new JButton(ApplicationResources.getInstance().getString("stdcaption.edit"));
+    editStep = new JButton(Msg.get("stdcaption.edit"));
     editStep.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         StepType stepType = getStepType();
@@ -237,7 +237,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     });
 
     JLabel typeLabel =
-        new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.type.label"));
+        new JLabel(Msg.get("editstepmainflow.type.label"));
 
     ComboBoxModel<StepType> typeComboBoxModel;
 
@@ -307,17 +307,17 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     });
 
     String[] actorItems =
-        {ApplicationResources.getInstance().getString("editstepmainflow.user.actor"),
-            ApplicationResources.getInstance().getString("editstepmainflow.system.actor")};
+        {Msg.get("editstepmainflow.user.actor"),
+            Msg.get("editstepmainflow.system.actor")};
 
     JLabel actorLabel =
-        new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.actor.label"));
+        new JLabel(Msg.get("editstepmainflow.actor.label"));
     ComboBoxModel<String> actorComboBoxModel = new DefaultComboBoxModel<String>(actorItems);
     comboActorsStep = new JComboBox<String>();
     comboActorsStep.setModel(actorComboBoxModel);
 
     lblCondition =
-        new JLabel(ApplicationResources.getInstance().getString("editstepmainflow.condition.label"));
+        new JLabel(Msg.get("editstepmainflow.condition.label"));
     lblCondition.setVisible(false);
     textFieldCondition = new JTextField();
     textFieldCondition.setColumns(10);
@@ -408,7 +408,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     stepPanel.setLayout(gropuLayoutStepPanel);
 
     entitiesPanel = new JPanel();
-    entitiesPanel.setBorder(new TitledBorder(null, ApplicationResources.getInstance().getString(
+    entitiesPanel.setBorder(new TitledBorder(null, Msg.get(
         "editstepmainflow.entities.label"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     GroupLayout firstLayout = new GroupLayout(generalPanel);
@@ -432,7 +432,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     comboEntities = new JComboBox();
 
-    JButton addEntity = new JButton(ApplicationResources.getInstance().getString("stdcaption.add"));
+    JButton addEntity = new JButton(Msg.get("stdcaption.add"));
     addEntity.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         String selectedEntity = (String) comboEntities.getSelectedItem();
@@ -445,7 +445,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     });
 
     JButton deleteEntity =
-        new JButton(ApplicationResources.getInstance().getString("stdcaption.delete"));
+        new JButton(Msg.get("stdcaption.delete"));
     deleteEntity.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
 

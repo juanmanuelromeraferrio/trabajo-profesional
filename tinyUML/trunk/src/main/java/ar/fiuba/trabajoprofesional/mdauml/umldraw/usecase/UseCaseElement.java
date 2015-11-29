@@ -6,7 +6,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -299,34 +299,34 @@ public final class UseCaseElement extends AbstractCompositeNode
     @Override
     public void validateConnectionAsTarget(RelationType relationType,UmlNode source) throws AddConnectionException {
         if(!source.acceptsConnectionAsSource(relationType))
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidSource"));
+            throw new AddConnectionException(Msg.get("error.connection.invalidSource"));
         switch(relationType){
             case ASSOCIATION:
                 if(source instanceof ActorElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.association.withoutactor"));
+                throw new AddConnectionException(Msg.get("error.connection.usecase.association.withoutactor"));
             case EXTEND:
                 if(!(source instanceof UseCaseElement))
-                    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.withoutUsecase"));
+                    throw new AddConnectionException(Msg.get("error.connection.usecase.extend.withoutUsecase"));
                 if(source.getModelElement() != getModelElement())
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.extend.selfreferential"));
+                throw new AddConnectionException(Msg.get("error.connection.usecase.extend.selfreferential"));
 
             case INCLUDE:
                 if(!(source instanceof UseCaseElement))
-                    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.withoutUsecase"));
+                    throw new AddConnectionException(Msg.get("error.connection.usecase.include.withoutUsecase"));
                 if(source.getModelElement() != getModelElement())
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.usecase.include.selfreferential"));
+                throw new AddConnectionException(Msg.get("error.connection.usecase.include.selfreferential"));
             case NEST:
                 if(source instanceof PackageElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.withoutPkg"));
+                throw new AddConnectionException(Msg.get("error.connection.nest.withoutPkg"));
             case NOTE_CONNECTOR:
                 if( source instanceof NoteElement)
                     break;
-                throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.noteConnection.withoutNote"));
-            default:    throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+                throw new AddConnectionException(Msg.get("error.connection.noteConnection.withoutNote"));
+            default:    throw new AddConnectionException(Msg.get("error.connection.invalidConnection"));
         }
     }
 

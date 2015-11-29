@@ -29,7 +29,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 /**
  * This class implements a TreeModel to display the diagrams.
@@ -50,24 +50,15 @@ public class DiagramTreeModel extends DefaultTreeModel
     public DiagramTreeModel() {
         super(new DefaultMutableTreeNode("Root node"));
         classFolder =
-            new DefaultMutableTreeNode(getResourceString("stdcaption.classdiagrams"));
-        useCaseFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.usecasediagrams"));
-        modelFolder = new DefaultMutableTreeNode(getResourceString("stdcaption.modelfolder"));
+            new DefaultMutableTreeNode(Msg.get("stdcaption.classdiagrams"));
+        useCaseFolder = new DefaultMutableTreeNode(Msg.get("stdcaption.usecasediagrams"));
+        modelFolder = new DefaultMutableTreeNode(Msg.get("stdcaption.modelfolder"));
 
         insertNodeInto(useCaseFolder, (DefaultMutableTreeNode) getRoot(), 0);
         insertNodeInto(classFolder, (DefaultMutableTreeNode) getRoot(), 1);
         insertNodeInto(modelFolder, (DefaultMutableTreeNode) getRoot(), 2);
     }
 
-    /**
-     * Returns a string from the resource bundle.
-     *
-     * @param property the property
-     * @return the value from the resource bundle
-     */
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
 
     /**
      * Sets the UmlModel.

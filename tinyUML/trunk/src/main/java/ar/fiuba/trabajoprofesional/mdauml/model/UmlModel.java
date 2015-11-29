@@ -114,5 +114,7 @@ public interface UmlModel {
      */
     boolean exist(String name);
 
+    Set<? extends UmlModelElement> getAll(Class<? extends UmlModelElement> clazz);
+
     void reset();
 }

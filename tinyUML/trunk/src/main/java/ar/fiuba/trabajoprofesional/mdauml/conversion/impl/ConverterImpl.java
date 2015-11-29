@@ -7,7 +7,7 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ValidateException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 import ar.fiuba.trabajoprofesional.mdauml.util.StringHelper;
 
 import java.util.*;
@@ -27,12 +27,12 @@ public class ConverterImpl implements Converter {
             try {
                 validator.validate(model);
             } catch (ValidateException e) {
-                throw new ConversionException(msg("error.conversion.validation") + e.getMessage(), e);
+                throw new ConversionException(Msg.get("error.conversion.validation") + e.getMessage(), e);
             }
             try {
                 compactedModel = compactor.compact(model);
             } catch (CompactorException e) {
-                throw new ConversionException(msg("error.conversion.compactor") + e.getMessage(), e);
+                throw new ConversionException(Msg.get("error.conversion.compactor") + e.getMessage(), e);
             }
 
 
@@ -49,22 +49,22 @@ public class ConverterImpl implements Converter {
                 diagramBuilder.buildClassDiagram(project, diagram, conversionModel);
             }
         }catch(Exception e){
-            throw new ConversionException(msg("error.conversion"+ e.getMessage()),e);
+            throw new ConversionException(Msg.get("error.conversion"+ e.getMessage()),e);
         }
     }
 
     private ConversionModel buildConversionModel(List<String> entities,Map<String, List<UmlUseCase>> mainEntityMap) {
         ConversionModel conversionModel = new ConversionModel();
         for(String mainEntity: entities){
-            Control control = conversionModel.getControl(StringHelper.toUpperCamelCase(mainEntity) + msg("conversion.names.control"));
+            Control control = conversionModel.getControl(StringHelper.toUpperCamelCase(mainEntity) + Msg.get("conversion.names.control"));
             for(UmlUseCase useCase : mainEntityMap.get(mainEntity)){
                 control.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
                 for(String entityName : useCase.getAllEntities()){
-                    Entity entity = conversionModel.getEntity(StringHelper.toUpperCamelCase(entityName) + msg("conversion.names.entity"));
+                    Entity entity = conversionModel.getEntity(StringHelper.toUpperCamelCase(entityName) + Msg.get("conversion.names.entity"));
                     conversionModel.addRelation(new SimpleRelation(control,entity));
                 }
                 for(UmlActor mainActor : useCase.getMainActors()){
-                    Boundary boundary = conversionModel.getBoundary(StringHelper.toUpperCamelCase(mainActor.getName()) + msg("conversion.names.boundary"));
+                    Boundary boundary = conversionModel.getBoundary(StringHelper.toUpperCamelCase(mainActor.getName()) + Msg.get("conversion.names.boundary"));
                     boundary.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
                     conversionModel.addRelation(new SimpleRelation(boundary,control));
                 }
@@ -94,7 +94,4 @@ public class ConverterImpl implements Converter {
         return  useCases;
     }
 
-    private String msg(String code){
-        return ApplicationResources.getInstance().getString(code);
-    }
 }

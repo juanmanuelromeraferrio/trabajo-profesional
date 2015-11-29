@@ -25,7 +25,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Compartment.Alignment;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import java.awt.geom.Dimension2D;
 
@@ -580,16 +580,16 @@ public final class ClassElement extends AbstractCompositeNode
             super.addConnection(conn);
 
         }else
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.class.invalidConnectionType"));
+            throw new AddConnectionException(Msg.get("error.connection.class.invalidConnectionType"));
 
     }
 
     private void addNest(Nest nest, UmlModelElement element1, UmlModelElement element2) throws AddConnectionException {
         if(element1 == classData)
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.nest.invalid"));
+            throw new AddConnectionException(Msg.get("error.connection.nest.invalid"));
 
         if(! (element1 instanceof UmlPackage ) )
-            throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.class.nest.withoutPkg"));
+            throw new AddConnectionException(Msg.get("error.connection.class.nest.withoutPkg"));
 
         classData.setPackageRelation((NestRelation) nest.getModelElement());
     }

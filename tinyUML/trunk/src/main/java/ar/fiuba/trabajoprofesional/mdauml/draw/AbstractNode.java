@@ -27,7 +27,8 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.Dependency;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Include;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
+
 
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Line2D;
@@ -482,7 +483,7 @@ public abstract class AbstractNode implements Node, ConnectionVisitor{
 
     @Override
     public void validateConnectionAsTarget(RelationType relationType, UmlNode node) throws AddConnectionException {
-        throw new AddConnectionException(ApplicationResources.getInstance().getString("error.connection.invalidConnection"));
+        throw new AddConnectionException(Msg.get("error.connection.invalidConnection"));
     }
 
 

@@ -13,12 +13,12 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 import org.w3c.dom.Element;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelImpl;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlHelper;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
 
 public abstract class ProjectSerializer implements Serializer {
 
@@ -83,7 +83,7 @@ public abstract class ProjectSerializer implements Serializer {
         return project;
 
         } catch (Exception e) {
-            String msg = ApplicationResources.getInstance().getString("error.loadproject.message");
+            String msg = Msg.get("error.loadproject.message");
             throw new ProjectSerializerException(msg + " \"" + projectPath + "\".", e);
     }
     }
@@ -112,7 +112,7 @@ public abstract class ProjectSerializer implements Serializer {
             viewXmlSerializer.write(project);
 
         } catch (Exception e) {
-            String msg = ApplicationResources.getInstance().getString("error.saveproject.message");
+            String msg = Msg.get("error.saveproject.message");
             throw new ProjectSerializerException(msg + " \"" + projectPath + "\".", e);
         }
 

@@ -238,6 +238,9 @@ public class UmlUseCase extends PackageableUmlModelElement {
   }
 
   public Set<String> getAllEntities(){
-    return mainFlow.getAllEntities();
+    Set<String> allEntities = mainFlow.getAllEntities();
+    if(mainEntity!=null && !mainEntity.isEmpty())
+      allEntities.add(mainEntity);
+    return allEntities;
   }
 }
