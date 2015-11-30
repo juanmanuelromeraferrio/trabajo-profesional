@@ -19,16 +19,16 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import ar.fiuba.trabajoprofesional.mdauml.conversion.impl.ConverterImpl;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionException;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
-import ar.fiuba.trabajoprofesional.mdauml.util.ApplicationResources;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 
 /**
  * This class implements the Application frame. The top-level UI elements are
@@ -56,7 +56,7 @@ public class AppFrame extends JFrame implements ApplicationShell {
      * Creates a new instance of AppFrame.
      */
     private AppFrame() {
-        setTitle(getResourceString("application.title"));
+        setTitle(Msg.get("application.title"));
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 
@@ -101,15 +101,6 @@ public class AppFrame extends JFrame implements ApplicationShell {
         return this;
     }
 
-    /**
-     * Returns the specified resource as a String object.
-     *
-     * @param property the property name
-     * @return the property value
-     */
-    private String getResourceString(String property) {
-        return ApplicationResources.getInstance().getString(property);
-    }
 
     // ************************************************************************
     // **** Event listeners
@@ -132,10 +123,15 @@ public class AppFrame extends JFrame implements ApplicationShell {
      * @return true if can quit safely, false otherwise
      */
     private boolean canQuit() {
+        try {
+            new ConverterImpl().convert(appState.createProjectForWrite());
+        } catch (ConversionException e) {
+            e.printStackTrace();
+        }
         if (appState.isModified()) {
             return JOptionPane.showConfirmDialog(this,
-                ApplicationResources.getInstance().getString("confirm.quit.message"),
-                ApplicationResources.getInstance().getString("confirm.quit.title"),
+                Msg.get("confirm.quit.message"),
+                Msg.get("confirm.quit.title"),
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
         }
         return true;
@@ -146,10 +142,10 @@ public class AppFrame extends JFrame implements ApplicationShell {
      */
     public void setTitle(File currentFile) {
         if (currentFile != null) {
-            setTitle(ApplicationResources.getInstance().getString("application.title") + " ["
+            setTitle(Msg.get("application.title") + " ["
                 + currentFile.getName() + "]");
         } else {
-            setTitle(ApplicationResources.getInstance().getString("application.title"));
+            setTitle(Msg.get("application.title"));
         }
     }
 
