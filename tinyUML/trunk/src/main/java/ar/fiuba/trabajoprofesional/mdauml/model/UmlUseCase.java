@@ -243,4 +243,10 @@ public class UmlUseCase extends PackageableUmlModelElement {
       allEntities.add(mainEntity);
     return allEntities;
   }
+  public void replaceEntity(String original,String replacement){
+    if(mainEntity!=null && mainEntity.equals(original))
+      mainEntity = replacement;
+    mainFlow.replaceEntity(original,replacement);
+  }
+
 }

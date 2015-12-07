@@ -1,6 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
 import ar.fiuba.trabajoprofesional.mdauml.conversion.model.Entity;
+import ar.fiuba.trabajoprofesional.mdauml.util.StringHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -186,5 +187,23 @@ public class Flow {
       allEntities.addAll(getAllEntities(step.getChildrens()));
     }
     return allEntities;
+  }
+  public void replaceEntity(String original, String replacement){
+    replaceEntity(original,replacement,flow);
+  }
+  public void replaceEntity(String original, String replacement, List<UmlStep> steps){
+    for(UmlStep step : steps){
+      if(step instanceof UmlMainStep) {
+        Set<String> replacedEntities = new HashSet<>();
+        for (String entity : ((UmlMainStep) step).getEntities()){
+          if(entity.equals(original))
+            replacedEntities.add(replacement);
+          else
+            replacedEntities.add(entity);
+        }
+        ((UmlMainStep) step).setEntities(replacedEntities);
+      }
+      replaceEntity(original,replacement,step.getChildrens());
+    }
   }
 }
