@@ -1,5 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.persistence.serializer;
 
+import java.awt.geom.Dimension2D;
 import java.beans.XMLDecoder;
 import java.io.*;
 import java.util.regex.Pattern;
@@ -60,8 +61,11 @@ public abstract class ProjectSerializer implements Serializer {
 
             for(UmlDiagram diagram : viewPersistence.getUmlDiagrams()) {
                 if(diagram instanceof GeneralDiagram) {
+                    Dimension2D size = ((GeneralDiagram) diagram).getSize();
+                    size = new DoubleDimension(size.getWidth(),size.getHeight());
                     GeneralDiagram generalDiagram = (GeneralDiagram) diagram;
                     generalDiagram.initialize(project.getModel());
+                    generalDiagram.setSize(size);
                     for(Connection connection: generalDiagram.getConnections()){
                         if(connection instanceof NodeChangeListener){
                             NodeChangeListener conn = (NodeChangeListener)connection;
