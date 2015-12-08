@@ -1,6 +1,7 @@
 package test.mdauml.persistence;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
+import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlObjectSerializer;
 import junit.framework.TestCase;
@@ -13,11 +14,9 @@ import java.util.List;
 public class SerializerTest extends TestCase {
 
 
-
-    public void before(){
+    public void before() {
         Registerer.clean();
     }
-
 
 
     public void testSerializeString() throws Exception {
@@ -75,8 +74,8 @@ public class SerializerTest extends TestCase {
 
     public void testArrayFields() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testArrayFields.xml");
-        int [] ia = {1,2,3};
-        String [] sa = {"a","b","c"};
+        int[] ia = {1, 2, 3};
+        String[] sa = {"a", "b", "c"};
         ArrayClass original = new ArrayClass();
         original.setArrayOfInt(ia);
         original.setArrayOfString(sa);
@@ -86,8 +85,6 @@ public class SerializerTest extends TestCase {
         ArrayClass primitives = (ArrayClass) s.readObject();
 
         assertEquals(original, primitives);
-
-
 
 
     }
@@ -127,9 +124,7 @@ public class SerializerTest extends TestCase {
         assertEquals(primitives, StaticFields.getStaticPrimitives());
 
 
-
     }
-
 
 
     public void testSingletonClass() throws Exception {
@@ -147,25 +142,25 @@ public class SerializerTest extends TestCase {
     public void testNonDefaultConstructorClass() throws Exception {
 
         XmlObjectSerializer s = new XmlObjectSerializer("testNonDefaultConstructorClass.xml");
-        int [] ia = {1,2};
-        String [] sa = {"a","b"};
-        String str = "hola" ;
+        int[] ia = {1, 2};
+        String[] sa = {"a", "b"};
+        String str = "hola";
         List<String> l = new ArrayList<String>();
 
-        NonDefaultConstructorClass original = new NonDefaultConstructorClass(5,2,ia,sa,str,l);
+        NonDefaultConstructorClass original = new NonDefaultConstructorClass(5, 2, ia, sa, str, l);
 
-        Object [] args = new Object[1];
+        Object[] args = new Object[1];
         original.ellipsis(args);
         s.writeObject(original);
 
         NonDefaultConstructorClass readed = (NonDefaultConstructorClass) s.readObject();
 
-        assertEquals(readed,original);
+        assertEquals(readed, original);
 
 
     }
 
-    public void testMap()throws Exception{
+    public void testMap() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testMap.xml");
         MapClass original = new MapClass();
         original.getMap().put("this", 4);
@@ -174,9 +169,10 @@ public class SerializerTest extends TestCase {
         original.getMap().put("map", 3);
         s.writeObject(original);
         MapClass readed = (MapClass) s.readObject();
-        assertEquals(readed,original);
+        assertEquals(readed, original);
     }
-    public void testSet()throws Exception{
+
+    public void testSet() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testSet.xml");
         SetClass original = new SetClass();
         original.getSet().add("this");
@@ -185,9 +181,10 @@ public class SerializerTest extends TestCase {
         original.getSet().add("set");
         s.writeObject(original);
         SetClass readed = (SetClass) s.readObject();
-        assertEquals(readed,original);
+        assertEquals(readed, original);
     }
-    public void testList()throws Exception{
+
+    public void testList() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testList.xml");
         ListClass original = new ListClass();
         original.getList().add("this");
@@ -196,21 +193,21 @@ public class SerializerTest extends TestCase {
         original.getList().add("list");
         s.writeObject(original);
         ListClass readed = (ListClass) s.readObject();
-        assertEquals(readed,original);
+        assertEquals(readed, original);
     }
 
-    public void testTransientField()throws Exception{
+    public void testTransientField() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testTransientField.xml");
         TransientField original = new TransientField();
         int firstValue = original.getDoNotPersist();
         original.setDoNotPersist(456);
         s.writeObject(original);
         TransientField readed = (TransientField) s.readObject();
-        assertEquals(readed.getDoNotPersist(),firstValue);
-        assertEquals(original.getDoNotPersist(),456);
+        assertEquals(readed.getDoNotPersist(), firstValue);
+        assertEquals(original.getDoNotPersist(), 456);
     }
 
-    public void testWrappedPrimitives()throws Exception{
+    public void testWrappedPrimitives() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testWrappedPrimitives.xml");
         WrappedPrimitives original = new WrappedPrimitives();
         original.setB((byte) 0x1F);
@@ -224,11 +221,11 @@ public class SerializerTest extends TestCase {
         original.setTr(true);
         s.writeObject(original);
         WrappedPrimitives readed = (WrappedPrimitives) s.readObject();
-        assertEquals(readed,original);
+        assertEquals(readed, original);
 
     }
 
-    public void testInnerClaas()throws Exception{
+    public void testInnerClaas() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testInnerClaas.xml");
         InnerClass original = new InnerClass();
         original.addChild("these");
@@ -240,17 +237,26 @@ public class SerializerTest extends TestCase {
                 original.new InnerWithoutConstructor());
         original.initialize();
         s.writeObject(original);
-        InnerClass readed = (InnerClass)s.readObject();
-        assertEquals(readed,original);
+        InnerClass readed = (InnerClass) s.readObject();
+        assertEquals(readed, original);
 
     }
 
-    public void testEnumObject()throws Exception{
+    public void testEnumObject() throws Exception {
         XmlObjectSerializer s = new XmlObjectSerializer("testEnumObject.xml");
         ElementType original = ElementType.ACTOR;
         s.writeObject(original);
-        ElementType readed = (ElementType)s.readObject();
-        assertEquals(readed,original);
+        ElementType readed = (ElementType) s.readObject();
+        assertEquals(readed, original);
+
+    }
+
+    public void testEnumContainer() throws Exception {
+        XmlObjectSerializer s = new XmlObjectSerializer("testEnumContainer.xml");
+        EnumContainer original = new EnumContainer(StepType.REGULAR);
+        s.writeObject(original);
+        EnumContainer readed = (EnumContainer) s.readObject();
+        assertEquals(readed.getType(), original.getType());
 
     }
 }

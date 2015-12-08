@@ -123,11 +123,11 @@ public class AppFrame extends JFrame implements ApplicationShell {
      * @return true if can quit safely, false otherwise
      */
     private boolean canQuit() {
-        try {
-            new ConverterImpl().convert(appState.createProjectForWrite());
-        } catch (ConversionException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            new ConverterImpl().convert(appState.createProjectForWrite());
+//        } catch (ConversionException e) {
+//            e.printStackTrace();
+//        }
         if (appState.isModified()) {
             return JOptionPane.showConfirmDialog(this,
                 Msg.get("confirm.quit.message"),

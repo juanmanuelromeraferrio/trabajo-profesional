@@ -30,8 +30,7 @@ public class MainEntityDialog extends JDialog {
         setContentPane(contentPane);
         problem.setText(Msg.get("conversion.dialog.mainEntity.title").replace("@USECASE",useCase.getName()));
         mainEntityMessage.setText(Msg.get("conversion.dialog.mainEntity.message"));
-        pack();
-        setResizable(false);
+
         setModal(true);
         setTitle(useCase.getName());
         getRootPane().setDefaultButton(buttonOK);
@@ -85,6 +84,9 @@ public class MainEntityDialog extends JDialog {
             entitiesCombo.setEnabled(false);
             newEntityField.setEnabled(true);
         }
+
+        pack();
+        setResizable(false);
     }
 
     private void onOK() {

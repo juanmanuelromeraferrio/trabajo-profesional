@@ -5,7 +5,10 @@
     <constraints>
       <xy x="48" y="54" width="712" height="319"/>
     </constraints>
-    <properties/>
+    <properties>
+      <doubleBuffered value="true"/>
+      <enabled value="true"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="94766" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -113,8 +116,8 @@
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false">
-                <minimum-size width="50" height="-1"/>
-                <maximum-size width="50" height="-1"/>
+                <minimum-size width="55" height="-1"/>
+                <maximum-size width="55" height="-1"/>
               </grid>
             </constraints>
             <properties/>

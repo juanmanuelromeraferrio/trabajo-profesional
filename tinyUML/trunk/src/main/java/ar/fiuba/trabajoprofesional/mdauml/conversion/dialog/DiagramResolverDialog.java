@@ -129,6 +129,8 @@ public class DiagramResolverDialog extends JDialog {
                 onRename();
             }
         });
+        pack();
+        setResizable(false);
     }
 
     private void onRename() {
@@ -172,6 +174,8 @@ public class DiagramResolverDialog extends JDialog {
 
     private void onRemove() {
         List<String> selected = diagramEntities.getSelectedValuesList();
+        if(selected.isEmpty())
+            return;
         for(String entity : selected){
             ((DefaultListModel)diagramEntities.getModel()).removeElement(entity);
         }
@@ -182,6 +186,8 @@ public class DiagramResolverDialog extends JDialog {
     private void onAdd() {
 
         List<String> newDiagramEntities = allEntities.getSelectedValuesList();
+        if(newDiagramEntities.isEmpty())
+            return;
         Enumeration enumeration = ((DefaultListModel) diagramEntities.getModel()).elements();
         while(enumeration.hasMoreElements()){
             String entity = (String) enumeration.nextElement();

@@ -29,7 +29,7 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ElementNameAlreadyExist;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public class DefaultNamedElement implements NamedElement {
+public class DefaultNamedElement implements NamedElement,Comparable<DefaultNamedElement> {
 
     private transient Collection<NameChangeListener> nameChangeListeners =
         new HashSet<NameChangeListener>();
@@ -97,5 +97,10 @@ public class DefaultNamedElement implements NamedElement {
      */
     public void removeNameChangeListener(NameChangeListener l) {
         nameChangeListeners.remove(l);
+    }
+
+    @Override
+    public int compareTo(DefaultNamedElement o) {
+        return this.name.compareTo(o.name);
     }
 }

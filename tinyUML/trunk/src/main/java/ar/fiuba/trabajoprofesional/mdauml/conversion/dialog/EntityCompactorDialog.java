@@ -22,9 +22,9 @@ public class EntityCompactorDialog extends JDialog {
     private JLabel mergedLabel;
     private JLabel mergingLabel;
     private JLabel messageLabel;
-    private Map<String,String> mergingMap = new HashMap<>();
-    private Map<String,String> originalMap = new HashMap<>();
-    private List<String> entities  = new ArrayList<>();
+    private Map<String,String> mergingMap;
+    private Map<String,String> originalMap;
+    private List<String> entities;
 
     public EntityCompactorDialog(Window parent, Map<String,String> mergingMap) {
         super(parent,ModalityType.APPLICATION_MODAL);
@@ -39,8 +39,10 @@ public class EntityCompactorDialog extends JDialog {
         buttonOK.setText(Msg.get("stdcaption.ok"));
         buttonCancel.setText(Msg.get("stdcaption.cancel"));
 
+
         this.mergingMap=mergingMap;
-        this.originalMap.putAll(mergingMap);
+        this.originalMap = new HashMap<>(mergingMap);
+        this.entities = new ArrayList<>();
         initEntityList();
         mergingEntities.setModel(new DefaultListModel());
 
@@ -120,6 +122,8 @@ public class EntityCompactorDialog extends JDialog {
 
             }
         });
+        pack();
+        setResizable(false);
     }
 
     private void doMerge(List<String> mergingElements, String merged) {
@@ -153,6 +157,7 @@ public class EntityCompactorDialog extends JDialog {
     }
 
 
+    private void createUIComponents() {
 
-
+    }
 }

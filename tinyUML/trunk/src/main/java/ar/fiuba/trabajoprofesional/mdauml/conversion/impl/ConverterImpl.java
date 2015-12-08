@@ -38,8 +38,10 @@ public class ConverterImpl implements Converter {
 
             Set<UmlUseCase> useCases = (Set<UmlUseCase>) compactedModel.getAll(UmlUseCase.class);
             Map<String, List<UmlUseCase>> mainEntityMap = buildMainEntityMap(useCases);
-            List<UmlPackage> packages = (List<UmlPackage>) compactedModel.getAll(UmlPackage.class);
-            Map<String, List<String>> diagramMap = resolver.resolveEntitiesByDiagram(mainEntityMap,packages);
+            Set<UmlPackage> packages = (Set<UmlPackage>) compactedModel.getAll(UmlPackage.class);
+            List<UmlPackage> packagesList = new ArrayList<>(packages);
+            Collections.sort(packagesList);
+            Map<String, List<String>> diagramMap = resolver.resolveEntitiesByDiagram(mainEntityMap,packagesList);
 
 
             for (String diagram : diagramMap.keySet()) {

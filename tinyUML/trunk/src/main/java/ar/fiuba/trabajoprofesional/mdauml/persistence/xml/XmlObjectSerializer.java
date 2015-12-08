@@ -3,6 +3,7 @@ package ar.fiuba.trabajoprofesional.mdauml.persistence.xml;
 
 import ar.fiuba.trabajoprofesional.mdauml.exception.RegisterExistentIdException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
+import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ObjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.Registerer;
 
@@ -137,6 +138,8 @@ public class XmlObjectSerializer implements ObjectSerializer{
                 return element.getTextContent();
 
 
+
+
             Class<? extends Object> clazz = Class.forName(
                 XmlHelper.getAttribute(element, CLASS_ATT));
 
@@ -213,9 +216,9 @@ public class XmlObjectSerializer implements ObjectSerializer{
         int minArg=9999;
         Constructor ctor = null;
         for (int i = 0; i < ctors.length; i++) {
-            if (minArg > ctors[i].getGenericParameterTypes().length ){
+            if (minArg > ctors[i].getParameterTypes().length ){
                 ctor = ctors[i];
-                minArg=ctor.getGenericParameterTypes().length;
+                minArg=ctor.getParameterTypes().length;
             }
         }
             if(ctor ==null)
@@ -242,8 +245,10 @@ public class XmlObjectSerializer implements ObjectSerializer{
                     initargs[i++]=0L;
                 } else if (type == Float.TYPE) {
                     initargs[i++]=0.0f;
-                } else if (type.isArray()){
-                    initargs[i++]=Array.newInstance(type.getComponentType(),0);
+                } else if (type.isArray()) {
+                    initargs[i++] = Array.newInstance(type.getComponentType(), 0);
+                }else if(type.isEnum()){
+                    initargs[i++] = null;
                 }else{
                     if(!enclosingSet && enclosing!=null && type.isAssignableFrom(enclosing.getClass()) )
                         initargs[i++]=enclosing;
@@ -722,7 +727,7 @@ public class XmlObjectSerializer implements ObjectSerializer{
 
             } else if (type.isEnum()) {
                 Element enumElement = XmlHelper.addChildElement(root, fieldElement, ENUM_TAG);
-                enumElement.setTextContent(field.get(obj).toString());
+                enumElement.setTextContent(((Enum)field.get(obj)).name());
 
             } else if (type.isArray()) {
                 Element arrayElement = XmlHelper.addChildElement(root, fieldElement, ARRAY_TAG);

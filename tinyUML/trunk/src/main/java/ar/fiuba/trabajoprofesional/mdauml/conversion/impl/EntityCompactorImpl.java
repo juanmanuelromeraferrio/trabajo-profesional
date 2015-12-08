@@ -17,7 +17,7 @@ public class EntityCompactorImpl implements EntityCompactor {
 
 
     @Override
-    public UmlModel compact(final UmlModel model) throws CompactorException {
+    public UmlModel compact( UmlModel model) throws CompactorException {
         Set<UmlUseCase> useCases = (Set<UmlUseCase>) model.getAll(UmlUseCase.class);
         Map<String,String> entities = new HashMap<>();
         for(UmlUseCase useCase: useCases){
@@ -25,11 +25,15 @@ public class EntityCompactorImpl implements EntityCompactor {
                 entities.put(entity,entity);
         }
         openCompactorDialog(entities);
-        return updateModel(model,entities);
+        updateModel(useCases,entities);
+        return model;
     }
 
-    private UmlModel updateModel(UmlModel model, Map<String, String> entities) {
-        return null;
+    private void updateModel(Set<UmlUseCase> useCases, Map<String, String> entities) {
+        for (UmlUseCase usecase:  useCases) {
+            for(String entity : entities.keySet())
+            usecase.replaceEntity(entity,entities.get(entity));
+        }
     }
 
     private void openCompactorDialog(Map<String, String> entities) {
