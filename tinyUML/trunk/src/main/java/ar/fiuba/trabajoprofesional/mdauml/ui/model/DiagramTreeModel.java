@@ -25,6 +25,7 @@ import javax.swing.tree.TreePath;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
@@ -38,7 +39,7 @@ import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
  * @version 1.0
  */
 public class DiagramTreeModel extends DefaultTreeModel
-    implements UmlModelListener, NameChangeListener {
+    implements UmlModelListener,PackageListener, NameChangeListener {
 
 
     private UmlModel model;
@@ -192,13 +193,23 @@ public class DiagramTreeModel extends DefaultTreeModel
         } else if (diagram instanceof UseCaseDiagram) {
             insertNodeInto(child, useCaseFolder, useCaseFolder.getChildCount());
         }
+
         for(UmlDiagramElement diagElement : diagram.getElements()){
             if(diagElement instanceof UmlConnection)
                 continue;
             insertToFolder(diagElement.getModelElement(), diagram);
             insertToModelFolder(diagElement.getModelElement());
+
         }
 
+        for(UmlDiagramElement diagElement : diagram.getElements()){
+            if(diagElement.getModelElement() instanceof PackageableUmlModelElement){
+                UmlPackage pkg = ((PackageableUmlModelElement) diagElement.getModelElement()).getPackage();
+                if(pkg != null )
+                    addToPackage(pkg, (PackageableUmlModelElement) diagElement.getModelElement());
+            }
+
+        }
 
     }
 

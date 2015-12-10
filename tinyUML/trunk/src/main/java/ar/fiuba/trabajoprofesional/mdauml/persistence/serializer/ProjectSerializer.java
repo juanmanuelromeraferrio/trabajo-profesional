@@ -8,16 +8,13 @@ import java.util.regex.Pattern;
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
-import ar.fiuba.trabajoprofesional.mdauml.model.NameChangeListener;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 import org.w3c.dom.Element;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelImpl;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlHelper;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 
@@ -79,8 +76,14 @@ public abstract class ProjectSerializer implements Serializer {
                     }
                 }
                 project.getModel().addDiagram(diagram);
-                for(UmlDiagramElement umlDiagramElement :diagram.getElements())
-                    project.getModel().addElement(umlDiagramElement.getModelElement(),diagram);
+
+
+                for(UmlDiagramElement umlDiagramElement :diagram.getElements()) {
+                    UmlModelElement model = umlDiagramElement.getModelElement();
+                    if(model instanceof PackageableUmlModelElement && umlDiagramElement instanceof PackageListener)
+                        ((PackageableUmlModelElement) model).addPackageListener((PackageListener) umlDiagramElement);
+                    project.getModel().addElement(model,diagram);
+                }
 
             }
 

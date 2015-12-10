@@ -21,7 +21,7 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public interface UmlModelListener extends PackageListener {
+public interface UmlModelListener{
 
     /**
      * Called when a diagram was added.

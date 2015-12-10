@@ -62,7 +62,7 @@ import ar.fiuba.trabajoprofesional.mdauml.util.Command;
  */
 public class ApplicationState
     implements EditorStateListener, SelectionListener, ChangeListener, FocusListener,
-    TreeSelectionListener, UmlModelListener {
+    TreeSelectionListener {
 
     private JTabbedPane tabbedPane;
     private JLabel coordLabel = new JLabel("    ");
@@ -271,7 +271,6 @@ public class ApplicationState
         openNewUseCaseEditor();
         treeModel.setModel(umlModel);
         tree.expandPath(treeModel.getModelPath());
-        umlModel.addModelListener(this);
     }
 
     /**
@@ -282,7 +281,6 @@ public class ApplicationState
     protected void restoreFromProject(Project project) {
         undoManager.discardAllEdits();
         umlModel = project.getModel();
-        umlModel.addModelListener(this);
         treeModel.setModel(umlModel);
         tabbedPane.removeAll();
         for (UmlDiagram diagram : project.getOpenDiagrams()) {
@@ -605,20 +603,4 @@ public class ApplicationState
     }
 
 
-    @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
-    }
-
-
-    @Override public void elementRemoved(UmlModelElement element, UmlDiagram diagram) {
-    }
-
-    @Override
-    public void removeFromPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
-
-    }
-
-    @Override
-    public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
-
-    }
 }

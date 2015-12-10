@@ -53,7 +53,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     private String name;
     private List<Connection> connections = new ArrayList<Connection>();
     private Label nameLabel = new SimpleLabel();
-    private transient boolean gridVisible = true, snapToGrid = true;
+    private boolean gridVisible = true, snapToGrid = true;
     private transient Collection<NameChangeListener> nameChangeListeners =
         new HashSet<NameChangeListener>();
     private transient Set<NodeChangeListener> nodeChangeListeners =
