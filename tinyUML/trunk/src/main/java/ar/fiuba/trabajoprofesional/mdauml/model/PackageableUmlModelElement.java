@@ -66,4 +66,9 @@ public abstract class PackageableUmlModelElement extends AbstractUmlModelElement
         listeners.remove(listener);
     }
 
+    @Override
+    public boolean canBeInsertedOnTree(){
+        return true;
+    }
+
 }

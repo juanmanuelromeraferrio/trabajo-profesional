@@ -172,7 +172,7 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
     @Override public boolean exist(String name) {
         Set<UmlModelElement> mainElements = mapMainElementsCounts.keySet();
         for (UmlModelElement element : mainElements) {
-            if (element.getName().equals(name))
+            if ( element.getName().equals(name))
                 return true;
         }
         return false;

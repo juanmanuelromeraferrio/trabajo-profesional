@@ -11,11 +11,11 @@ public class InheritanceRelation extends UmlRelation {
         this.setNavigableToElement2(true);
     }
 
+
     @Override
     public String getName(){
-        return "";
+        return "Inheritance("+super.getName()+")";
     }
-
     public UmlModelElement getParent(){return getElement2();}
     public UmlModelElement getChild(){return getElement1();}
 

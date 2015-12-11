@@ -107,6 +107,8 @@ public class DiagramTreeModel extends DefaultTreeModel
     }
 
     @Override public void elementAdded(UmlModelElement element, UmlDiagram diagram) {
+        if(!element.canBeInsertedOnTree())
+            return;
         insertToFolder(element, diagram);
         insertToModelFolder(element);
         addNameChangeListener( element);
@@ -195,7 +197,7 @@ public class DiagramTreeModel extends DefaultTreeModel
         }
 
         for(UmlDiagramElement diagElement : diagram.getElements()){
-            if(diagElement instanceof UmlConnection)
+            if(diagElement.getModelElement()==null || !diagElement.getModelElement().canBeInsertedOnTree())
                 continue;
             insertToFolder(diagElement.getModelElement(), diagram);
             insertToModelFolder(diagElement.getModelElement());

@@ -3,7 +3,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
 
 public class ExtendRelation extends UmlRelation {
 
-    private static final String LABEL = "<<extend>>";
     private UmlStep extentionPoint;
     private String condition;
 
@@ -16,11 +15,11 @@ public class ExtendRelation extends UmlRelation {
 
     }
 
+
     @Override
     public String getName(){
-        return LABEL;
+        return "Extend("+super.getName()+")";
     }
-
 
     
     public UmlStep getExtentionPoint() {

@@ -175,9 +175,8 @@ public class UmlRelation extends AbstractUmlModelElement implements Relation {
     /**
      * {@inheritDoc}
      */
-    @Override public String toString() {
-        if (getName() != null)
-            return getName();
+    @Override public String getName() {
+
         if (element1 != null && element2 != null) {
             return element1.getName() + "->" + element2.getName();
         }

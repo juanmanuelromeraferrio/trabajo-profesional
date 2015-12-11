@@ -50,4 +50,9 @@ public final class UmlPackage extends AbstractUmlModelElement {
     public ElementType getElementType() {
         return ElementType.PACKAGE;
     }
+
+    @Override
+    public boolean canBeInsertedOnTree(){
+        return true;
+    }
 }

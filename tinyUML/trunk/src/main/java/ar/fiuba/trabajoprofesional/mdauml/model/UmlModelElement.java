@@ -35,6 +35,7 @@ import java.util.Collection;
  */
 public interface UmlModelElement extends NamedElement {
 
+
     /**
      * Makes the clone() method public.
      *
@@ -64,4 +65,6 @@ public interface UmlModelElement extends NamedElement {
      * @return the UmlModelElementListeners
      */
     Collection<UmlModelElementListener> getModelElementListeners();
+
+    boolean canBeInsertedOnTree();
 }

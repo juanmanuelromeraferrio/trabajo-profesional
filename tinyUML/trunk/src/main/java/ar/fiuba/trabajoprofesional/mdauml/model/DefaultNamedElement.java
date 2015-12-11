@@ -34,7 +34,7 @@ public class DefaultNamedElement implements NamedElement,Comparable<DefaultNamed
     private transient Collection<NameChangeListener> nameChangeListeners =
         new HashSet<NameChangeListener>();
 
-    private String name;
+    private String name= super.toString(); //Default name avoids null pointers
 
     /**
      * {@inheritDoc}

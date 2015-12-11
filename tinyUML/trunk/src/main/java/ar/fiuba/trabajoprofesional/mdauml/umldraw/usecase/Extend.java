@@ -17,6 +17,7 @@ import java.awt.geom.Point2D;
 
 public class Extend extends ArrowConnection {
 
+    private static final String LABEL = "<<extend>>";
     private static Extend prototype;
     private ConnectionNameLabel nameLabel;
 
@@ -72,7 +73,7 @@ public class Extend extends ArrowConnection {
      */
     public void setupNameLabel() {
         nameLabel = new ConnectionNameLabel();
-        nameLabel.setConnection(this);
+        nameLabel.setLabelText(LABEL);
 
     }
 

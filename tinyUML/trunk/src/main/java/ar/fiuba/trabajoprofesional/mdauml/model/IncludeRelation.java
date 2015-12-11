@@ -2,9 +2,6 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
 
 public class IncludeRelation extends UmlRelation {
 
-    private static final String LABEL = "<<include>>";
-
-
     public IncludeRelation(){
         super();
         this.setCanSetElement1Navigability(false);
@@ -14,10 +11,10 @@ public class IncludeRelation extends UmlRelation {
 
     }
 
+
     @Override
     public String getName(){
-        return LABEL;
+        return "Include("+super.getName()+")";
     }
-
 }
 

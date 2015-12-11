@@ -80,6 +80,8 @@ public abstract class ProjectSerializer implements Serializer {
 
                 for(UmlDiagramElement umlDiagramElement :diagram.getElements()) {
                     UmlModelElement model = umlDiagramElement.getModelElement();
+                    if(model==null)
+                        continue;
                     if(model instanceof PackageableUmlModelElement && umlDiagramElement instanceof PackageListener)
                         ((PackageableUmlModelElement) model).addPackageListener((PackageListener) umlDiagramElement);
                     project.getModel().addElement(model,diagram);

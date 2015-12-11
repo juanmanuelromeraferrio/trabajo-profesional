@@ -13,7 +13,7 @@ public class NestRelation extends UmlRelation{
 
     @Override
     public String getName(){
-        return "";
+        return "Nest("+super.getName()+")";
     }
 
 

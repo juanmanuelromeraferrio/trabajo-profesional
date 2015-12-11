@@ -75,4 +75,8 @@ public abstract class AbstractUmlModelElement extends DefaultNamedElement
 
         return element;
     }
+    @Override
+    public boolean canBeInsertedOnTree(){
+        return false;
+    }
 }

@@ -43,10 +43,7 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.*;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Nest;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
@@ -673,10 +670,10 @@ public abstract class DiagramEditor extends JComponent
         for (EditorStateListener l : editorListeners) {
             l.elementAdded(this);
         }
-        if (element instanceof UmlNode) {
-            UmlNode umlnode = (UmlNode) element;
-            if (umlnode.getModelElement() != null) {
-                AppFrame.get().getAppState().getUmlModel().addElement(umlnode.getModelElement(), getDiagram());
+        if (element instanceof UmlDiagramElement) {
+            UmlDiagramElement diagramElement = (UmlDiagramElement) element;
+            if (diagramElement.getModelElement() != null) {
+                AppFrame.get().getAppState().getUmlModel().addElement(diagramElement.getModelElement(), getDiagram());
             }
         }
         repaint();
@@ -691,10 +688,10 @@ public abstract class DiagramEditor extends JComponent
             l.elementRemoved(this);
         }
         selectionHandler.elementRemoved(element);
-        if (element instanceof UmlNode) {
-            UmlNode umlnode = (UmlNode) element;
-            if (umlnode.getModelElement() != null) {
-                AppFrame.get().getAppState().getUmlModel().removeElement(umlnode.getModelElement(), getDiagram());
+        if (element instanceof UmlDiagramElement) {
+            UmlDiagramElement diagramElement = (UmlDiagramElement) element;
+            if (diagramElement.getModelElement() != null) {
+                AppFrame.get().getAppState().getUmlModel().removeElement(diagramElement.getModelElement(), getDiagram());
             }
         }
         repaint();

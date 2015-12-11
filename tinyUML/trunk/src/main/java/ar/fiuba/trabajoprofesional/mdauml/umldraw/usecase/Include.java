@@ -15,6 +15,7 @@ import java.awt.geom.Line2D;
 
 public class Include extends ArrowConnection {
 
+    private static final String LABEL = "<<include>>";
     private static Include prototype;
     private ConnectionNameLabel nameLabel;
 
@@ -70,7 +71,7 @@ public class Include extends ArrowConnection {
      */
     public void setupNameLabel() {
         nameLabel = new ConnectionNameLabel();
-        nameLabel.setConnection(this);
+        nameLabel.setLabelText(LABEL);
 
     }
 

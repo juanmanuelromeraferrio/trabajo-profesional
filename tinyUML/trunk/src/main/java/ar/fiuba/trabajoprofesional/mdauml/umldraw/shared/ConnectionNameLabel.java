@@ -6,7 +6,7 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.Label;
 public class ConnectionNameLabel extends AbstractCompositeNode implements Label, LabelSource {
 
     private Label label;
-    private BaseConnection connection;
+    private String labelText ="";
 
     /**
      * Constructor.
@@ -35,14 +35,6 @@ public class ConnectionNameLabel extends AbstractCompositeNode implements Label,
         label.setParent(this);
     }
 
-    /**
-     * Sets the connection.
-     *
-     * @param conn the Connection
-     */
-    public void setConnection(BaseConnection conn) {
-        connection = conn;
-    }
 
     /**
      * {@inheritDoc}
@@ -118,17 +110,13 @@ public class ConnectionNameLabel extends AbstractCompositeNode implements Label,
      * {@inheritDoc}
      */
     public String getLabelText() {
-        if (connection.getModelElement() == null)
-            return "";
-        return connection.getModelElement().getName();
+        return labelText;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setLabelText(String aText) {
-        if (connection.getModelElement() != null) {
-            connection.getModelElement().setName(aText);
-        }
+        labelText=aText;
     }
 }
