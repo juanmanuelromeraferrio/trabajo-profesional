@@ -1,12 +1,13 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.StringTableModel;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+
+import ar.fiuba.trabajoprofesional.mdauml.util.SortedMapUtil;
 
 /**
  * This class represents an UML UseCase
@@ -29,7 +30,7 @@ public class UmlUseCase extends PackageableUmlModelElement {
   private Set<ExtendRelation> extendRelations = new HashSet<>();
   private Set<IncludeRelation> includeRelations = new HashSet<>();
 
-  private String mainEntity;  //For conversion purpose
+  private String mainEntity; // For conversion purpose
 
 
   /**
@@ -214,7 +215,8 @@ public class UmlUseCase extends PackageableUmlModelElement {
   public void removeExtend(ExtendRelation extend) {
     extendRelations.remove(extend);
   }
-  public boolean isExtending(){
+
+  public boolean isExtending() {
     return !extendRelations.isEmpty();
   }
 
@@ -225,28 +227,65 @@ public class UmlUseCase extends PackageableUmlModelElement {
   public void removeInclude(IncludeRelation include) {
     includeRelations.remove(include);
   }
-  public boolean isIncluding(){
+
+  public boolean isIncluding() {
     return !includeRelations.isEmpty();
   }
 
   public String getMainEntity() {
-    return mainEntity;
+
+    if (mainEntity == null) {
+      HashMap<String, Integer> commonEntities = new HashMap<String, Integer>();
+      List<UmlStep> steps = mainFlow.getFlow();
+      if (!steps.isEmpty()) {
+        updateMostCommonEntity(steps, commonEntities);
+        LinkedHashMap<String, Integer> sortedEntities =
+            SortedMapUtil.sortHashMapByValues(commonEntities);
+        
+        return sortedEntities.keySet().iterator().next();
+
+      } else {
+        return null;
+      }
+    } else {
+      return mainEntity;
+    }
+
+  }
+
+  private void updateMostCommonEntity(List<UmlStep> steps, HashMap<String, Integer> commonEntities) {
+    for (UmlStep step : steps) {
+      if (step instanceof UmlMainStep) {
+        Set<String> stepEntites = ((UmlMainStep) step).getEntities();
+
+        for (String entity : stepEntites) {
+          if (!commonEntities.containsKey(entity)) {
+            commonEntities.put(entity, 0);
+          }
+          Integer count = commonEntities.get(entity);
+          commonEntities.put(entity, count + 1);
+        }
+      }
+      updateMostCommonEntity(step.getChildrens(), commonEntities);
+    }
   }
 
   public void setMainEntity(String mainEntity) {
     this.mainEntity = mainEntity;
   }
 
-  public Set<String> getAllEntities(){
+  public Set<String> getAllEntities() {
     Set<String> allEntities = mainFlow.getAllEntities();
-    if(mainEntity!=null && !mainEntity.isEmpty())
+    if (mainEntity != null && !mainEntity.isEmpty())
       allEntities.add(mainEntity);
     return allEntities;
   }
-  public void replaceEntity(String original,String replacement){
-    if(mainEntity!=null && mainEntity.equals(original))
+
+
+  public void replaceEntity(String original, String replacement) {
+    if (mainEntity != null && mainEntity.equals(original))
       mainEntity = replacement;
-    mainFlow.replaceEntity(original,replacement);
+    mainFlow.replaceEntity(original, replacement);
   }
 
 }

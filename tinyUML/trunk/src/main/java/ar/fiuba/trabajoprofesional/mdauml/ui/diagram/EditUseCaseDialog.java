@@ -58,8 +58,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   private JTextField preconditionsTextField;
   private JTextField postconditionTextField;
   private JTextPane description;
+  private JList<String> mainEntities;
   private JList<UmlActor> mainActors;
   private JList<UmlActor> secondaryActors;
+  private JComboBox<String> comboMainEntity;
   private JComboBox<UmlActor> comboMainActor;
   private JComboBox<UmlActor> comboSecActors;
   private JList alternativeFlows;
@@ -131,6 +133,14 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     return mainFlow;
   }
 
+
+  public String getMainEntity() {
+    if (mainEntities.getModel().getSize() != 0)
+      return mainEntities.getModel().getElementAt(0);
+    else
+      return null;
+  }
+
   public boolean isOk() {
     return isOk;
   }
@@ -140,6 +150,9 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
     name.setText(useCase.getName());
     description.setText(useCase.getDescription());
+
+    List<String> umlEntities = new ArrayList<String>(useCase.getAllEntities());
+    Collections.sort(umlEntities);
 
     List<UmlActor> umlActors = new ArrayList<UmlActor>(useCase.getUmlActors());
     Collections.sort(umlActors, new Comparator<UmlActor>() {
@@ -157,8 +170,20 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
       index++;
     }
 
+
+    DefaultComboBoxModel entityComboBoxModel = new DefaultComboBoxModel(umlEntities.toArray());
+    comboMainEntity.setModel(entityComboBoxModel);
     comboMainActor.setModel(new DefaultComboBoxModel(umlActors.toArray()));
     comboSecActors.setModel(new DefaultComboBoxModel(umlActors.toArray()));
+
+
+    DefaultListModel<String> mainEntityModel = new DefaultListModel<String>();
+    String mainEntity = useCase.getMainEntity();
+    if (mainEntity != null) {
+      mainEntityModel.addElement(mainEntity);
+      entityComboBoxModel.removeElement(mainEntity);
+    }
+    mainEntities.setModel(mainEntityModel);
 
     DefaultListModel<UmlActor> mainActorsModel = new DefaultListModel<UmlActor>();
     for (UmlActor actor : useCase.getMainActors())
@@ -188,7 +213,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     mainFlow = (Flow) useCase.getMainFLow().clone();
 
     DefaultListModel<String> mainFlowStepModel = new DefaultListModel<String>();
-    
+
     refreshMainFlow(mainFlowStepModel);
     mainFlowStepList.setModel(mainFlowStepModel);
 
@@ -282,6 +307,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     description = new JTextPane();
     scrollPane.setViewportView(description);
+
+    JPanel mainEntityPanel = new JPanel();
+    mainEntityPanel.setBorder(new TitledBorder(null, "Main entity", TitledBorder.LEADING,
+        TitledBorder.TOP, null, null));
 
     JPanel mainActorsPanel = new JPanel();
     mainActorsPanel.setBorder(new TitledBorder(null, "Main actors", TitledBorder.LEADING,
@@ -643,29 +672,20 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           String msg = null;
           switch (((UmlMainStep) father).getType()) {
             case ELSE:
-              msg =
-                  Msg.get(
-                      "editstepmainflow.error.delete.else.step.text");
+              msg = Msg.get("editstepmainflow.error.delete.else.step.text");
               break;
             case FOR:
-              msg =
-                  Msg.get(
-                      "editstepmainflow.error.delete.for.step.text");
+              msg = Msg.get("editstepmainflow.error.delete.for.step.text");
               break;
             case IF:
-              msg =
-                  Msg.get(
-                      "editstepmainflow.error.delete.if.step.text");
+              msg = Msg.get("editstepmainflow.error.delete.if.step.text");
               break;
             case WHILE:
-              msg =
-                  Msg.get(
-                      "editstepmainflow.error.delete.while.step.text");
+              msg = Msg.get("editstepmainflow.error.delete.while.step.text");
               break;
           }
 
-          JOptionPane.showMessageDialog(parent, msg,
-              Msg.get("editstepmainflow.error.title"),
+          JOptionPane.showMessageDialog(parent, msg, Msg.get("editstepmainflow.error.title"),
               JOptionPane.INFORMATION_MESSAGE);
 
           return;
@@ -954,34 +974,35 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
             .addContainerGap()
             .addGroup(
                 gl_panel
-                    .createParallelGroup(Alignment.LEADING)
-                    .addComponent(panelAlternativeFlow, GroupLayout.DEFAULT_SIZE, 504,
-                        Short.MAX_VALUE)
-                    .addComponent(panelPostconditions, GroupLayout.DEFAULT_SIZE, 504,
-                        Short.MAX_VALUE)
-                    .addComponent(panelMainFlow, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-                    .addComponent(panelPreconditions, GroupLayout.DEFAULT_SIZE, 504,
-                        Short.MAX_VALUE)
-                    .addComponent(panelSecondaryActors, GroupLayout.DEFAULT_SIZE,
+                    .createParallelGroup(Alignment.TRAILING)
+                    .addComponent(mainEntityPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
                         GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelAlternativeFlow, Alignment.LEADING,
+                        GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+                    .addComponent(panelPostconditions, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+                        504, Short.MAX_VALUE)
+                    .addComponent(panelMainFlow, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 504,
+                        Short.MAX_VALUE)
+                    .addComponent(panelPreconditions, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+                        504, Short.MAX_VALUE)
+                    .addComponent(panelSecondaryActors, Alignment.LEADING,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mainActorsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+                        504, Short.MAX_VALUE)
                     .addGroup(
+                        Alignment.LEADING,
                         gl_panel
-                            .createParallelGroup(Alignment.LEADING, false)
+                            .createSequentialGroup()
+                            .addGroup(
+                                gl_panel.createParallelGroup(Alignment.LEADING)
+                                    .addComponent(lblDescription).addComponent(lblName))
+                            .addPreferredGap(ComponentPlacement.RELATED)
                             .addGroup(
                                 gl_panel
-                                    .createSequentialGroup()
-                                    .addGroup(
-                                        gl_panel.createParallelGroup(Alignment.LEADING)
-                                            .addComponent(lblDescription).addComponent(lblName))
-                                    .addPreferredGap(ComponentPlacement.RELATED)
-                                    .addGroup(
-                                        gl_panel
-                                            .createParallelGroup(Alignment.LEADING, false)
-                                            .addComponent(scrollPane)
-                                            .addComponent(name, GroupLayout.DEFAULT_SIZE, 443,
-                                                Short.MAX_VALUE)))
-                            .addComponent(mainActorsPanel, GroupLayout.DEFAULT_SIZE,
-                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))).addGap(31)));
+                                    .createParallelGroup(Alignment.LEADING, false)
+                                    .addComponent(scrollPane)
+                                    .addComponent(name, GroupLayout.DEFAULT_SIZE, 443,
+                                        Short.MAX_VALUE)))).addGap(31)));
     gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(
         gl_panel
             .createSequentialGroup()
@@ -999,6 +1020,9 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
                     .addComponent(lblDescription)
                     .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58,
                         GroupLayout.PREFERRED_SIZE))
+            .addGap(18)
+            .addComponent(mainEntityPanel, GroupLayout.PREFERRED_SIZE, 96,
+                GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(ComponentPlacement.RELATED)
             .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 108,
                 GroupLayout.PREFERRED_SIZE)
@@ -1018,8 +1042,71 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
             .addComponent(panelAlternativeFlow, GroupLayout.PREFERRED_SIZE, 188,
                 GroupLayout.PREFERRED_SIZE).addGap(0, 0, Short.MAX_VALUE)));
 
-    JScrollPane scrollPane_1 = new JScrollPane();
+    /* Main Entity */
 
+    JScrollPane scrollPaneEntity = new JScrollPane();
+    comboMainEntity = new JComboBox();
+
+    JButton selectMainEntity = new JButton("Select");
+    selectMainEntity.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+
+        String selectedEntity = (String) comboMainEntity.getSelectedItem();
+        DefaultListModel<String> mainEntityModelList =
+            (DefaultListModel<String>) mainEntities.getModel();
+
+
+
+        String changeEntity = mainEntityModelList.get(0);
+        comboMainEntity.addItem(changeEntity);
+        comboMainEntity.removeItem(selectedEntity);
+        mainEntityModelList.clear();
+        mainEntityModelList.addElement(selectedEntity);
+      }
+    });
+
+
+    GroupLayout gl_mainEntityPanel = new GroupLayout(mainEntityPanel);
+    gl_mainEntityPanel.setHorizontalGroup(gl_mainEntityPanel
+        .createParallelGroup(Alignment.TRAILING).addGroup(
+            gl_mainEntityPanel
+                .createSequentialGroup()
+                .addContainerGap()
+                .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(
+                    gl_mainEntityPanel
+                        .createParallelGroup(Alignment.LEADING)
+                        .addComponent(comboMainEntity, 0, 212, Short.MAX_VALUE)
+                        .addComponent(selectMainEntity, GroupLayout.DEFAULT_SIZE, 212,
+                            Short.MAX_VALUE)).addContainerGap()));
+    gl_mainEntityPanel.setVerticalGroup(gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
+        .addGroup(
+            gl_mainEntityPanel
+                .createSequentialGroup()
+                .addGap(6)
+                .addGroup(
+                    gl_mainEntityPanel
+                        .createParallelGroup(Alignment.BASELINE)
+                        .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 68,
+                            GroupLayout.PREFERRED_SIZE)
+                        .addGroup(
+                            gl_mainEntityPanel
+                                .createSequentialGroup()
+                                .addComponent(comboMainEntity, GroupLayout.PREFERRED_SIZE,
+                                    GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(selectMainEntity)))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+
+    mainEntities = new JList();
+    mainEntities.setVisibleRowCount(3);
+
+    scrollPaneEntity.setViewportView(mainEntities);
+    mainEntityPanel.setLayout(gl_mainEntityPanel);
+
+
+    JScrollPane scrollPane_1 = new JScrollPane();
     comboMainActor = new JComboBox();
 
     JButton addMainActor = new JButton("Add");
@@ -1109,6 +1196,4 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     getContentPane().setLayout(groupLayout);
 
   }
-
-
 }
