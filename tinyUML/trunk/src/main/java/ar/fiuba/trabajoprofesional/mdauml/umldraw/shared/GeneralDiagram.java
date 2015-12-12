@@ -45,8 +45,8 @@ import java.util.List;
 public abstract class GeneralDiagram extends AbstractCompositeNode
     implements NodeChangeListener, LabelSource, Diagram, DiagramElementFactory {
 
-    private static final int ADDITIONAL_SPACE_RIGHT = 30;
-    private static final int ADDITIONAL_SPACE_BOTTOM = 30;
+    private static final int ADDITIONAL_SPACE_RIGHT = 10;
+    private static final int ADDITIONAL_SPACE_BOTTOM = 10;
     private transient DiagramEditor editor;
     protected transient UmlModel umlmodel;
     private int gridSize = 7;
@@ -73,7 +73,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
     }
     public void initialize(UmlModel aModel){
         initializeNameLabel();
-        setSize(600, 400);
+        setSize(1000, 550);
         umlmodel = aModel;
         elementPrototypes = setupElementPrototypeMap();
         connectionPrototypes = setupConnectionPrototypeMap();

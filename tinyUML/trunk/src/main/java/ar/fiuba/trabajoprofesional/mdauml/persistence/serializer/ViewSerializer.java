@@ -29,7 +29,7 @@ public class ViewSerializer implements Serializer {
         List<UmlDiagram> umlDiagrams = project.getModel().getDiagrams();
         ViewPersistence viewPersistence = new ViewPersistence();
         viewPersistence.setUmlDiagrams(umlDiagrams);
-
+        viewPersistence.setOpenedDiagrams(project.getOpenDiagrams());
         serializer.writeObject(viewPersistence);
 
 

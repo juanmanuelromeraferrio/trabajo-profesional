@@ -22,6 +22,7 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.Constants;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.serializer.ProjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.persistence.xml.XmlProjectSerializer;
 import ar.fiuba.trabajoprofesional.mdauml.ui.commands.*;
@@ -209,12 +210,12 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     }
 
     /**
-     * Returns the FileFilter for the TinyUML serialized model files.
+     * Returns the FileFilter for the serialized project files.
      *
      * @return the FileFilter
      */
     private FileNameExtensionFilter createModelFileFilter() {
-        return new FileNameExtensionFilter("TinyUML serialized model file (*.tsm)", "tsm");
+        return new FileNameExtensionFilter(Msg.get("application.title")+" project file(*."+ Constants.PROJECT_EXTENTION+")", Constants.PROJECT_EXTENTION);
     }
 
     /**
@@ -225,6 +226,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle(Msg.get("dialog.openmodel.title"));
             fileChooser.addChoosableFileFilter(createModelFileFilter());
+            fileChooser.setAcceptAllFileFilterUsed(false);
             if (fileChooser.showOpenDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
                 try {
                     File currentFile = fileChooser.getSelectedFile();
@@ -232,6 +234,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
                         .read();
                     appState.restoreFromProject(openProject);
                     appState.setCurrentFile(currentFile);
+
                 } catch (ProjectSerializerException e) {
                     JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
                         Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
@@ -265,10 +268,12 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(Msg.get("dialog.saveas.title"));
         fileChooser.addChoosableFileFilter(createModelFileFilter());
+        fileChooser.setAcceptAllFileFilterUsed(false);
         if (fileChooser.showSaveDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             File currentFile = saveModelFile(selectedFile);
             appState.setCurrentFile(currentFile);
+
         }
     }
 

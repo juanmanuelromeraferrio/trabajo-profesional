@@ -61,10 +61,10 @@ public abstract class DiagramEditor extends JComponent
     AppCommandListener {
 
     // For now, we define the margins of the diagram as constants
-    private static final double MARGIN_TOP = 25;
-    private static final double MARGIN_LEFT = 25;
-    private static final double MARGIN_RIGHT = 30;
-    private static final double MARGIN_BOTTOM = 30;
+    private static final double MARGIN_TOP = 10;
+    private static final double MARGIN_LEFT = 10;
+    private static final double MARGIN_RIGHT = 10;
+    private static final double MARGIN_BOTTOM = 10;
     private static Map<String, MethodCall> selectorMap = new HashMap<String, MethodCall>();
 
     static {

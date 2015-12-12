@@ -61,7 +61,9 @@ public final class Main {
                     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
                     JFrame frame = AppFrame.get();
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     frame.setVisible(true);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

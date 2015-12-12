@@ -86,7 +86,7 @@ public class TinyApplet extends JApplet implements ApplicationShell {
     /**
      * {@inheritDoc}
      */
-    public void setTitle(File file) {
+    public void setTitle(String projectName) {
     }
 
     /**

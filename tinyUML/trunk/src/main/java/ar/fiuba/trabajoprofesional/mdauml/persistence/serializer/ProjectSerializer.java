@@ -46,6 +46,7 @@ public abstract class ProjectSerializer implements Serializer {
 
             Project project = new Project(new UmlModelImpl());
 
+
             Registerer.clean();
             ModelSerializer modelXmlSerializer = new ModelSerializer(modelObjectSerializer);
             ModelPersistence modelPersistence = (ModelPersistence) modelXmlSerializer.read();
@@ -54,7 +55,7 @@ public abstract class ProjectSerializer implements Serializer {
             ViewSerializer viewXmlSerializer = new ViewSerializer(viewObjectSerializer);
             ViewPersistence viewPersistence = (ViewPersistence) viewXmlSerializer.read();
 
-
+            project.setOpenDiagrams(viewPersistence.getOpenedDiagrams());
 
             for(UmlDiagram diagram : viewPersistence.getUmlDiagrams()) {
                 if(diagram instanceof GeneralDiagram) {
@@ -94,8 +95,9 @@ public abstract class ProjectSerializer implements Serializer {
         } catch (Exception e) {
             String msg = Msg.get("error.loadproject.message");
             throw new ProjectSerializerException(msg + " \"" + projectPath + "\".", e);
+        }
     }
-    }
+
 
     private boolean validateFormat(Element root) {
         if (XmlHelper.querySingle(root, "./" + Constants.MODEL_TAG) != null
@@ -129,21 +131,21 @@ public abstract class ProjectSerializer implements Serializer {
     }
 
     public String getViewPath(String path) {
-        return getPathWithoutExtention(path) + Constants.VIEW_EXTENTION;
+        return getPathWithoutExtention(path) +"."+ Constants.VIEW_EXTENTION;
     }
 
     public String getModelPath(String path) {
-        return getPathWithoutExtention(path) + Constants.MODEL_EXTENTION;
+        return getPathWithoutExtention(path) +"."+ Constants.MODEL_EXTENTION;
     }
 
     public String getProjectPath(String path) {
-        return getPathWithoutExtention(path) + Constants.PROJECT_EXTENTION;
+        return getPathWithoutExtention(path) +"."+ Constants.PROJECT_EXTENTION;
     }
 
     public String getPathWithoutExtention(String path) {
-        Pattern projectPattern = Pattern.compile("(.*)\\" + Constants.PROJECT_EXTENTION);
-        Pattern modelPattern = Pattern.compile("(.*)\\" + Constants.MODEL_EXTENTION);
-        Pattern viewPattern = Pattern.compile("(.*)\\" + Constants.VIEW_EXTENTION);
+        Pattern projectPattern = Pattern.compile("(.*)\\." + Constants.PROJECT_EXTENTION);
+        Pattern modelPattern = Pattern.compile("(.*)\\." + Constants.MODEL_EXTENTION);
+        Pattern viewPattern = Pattern.compile("(.*)\\." + Constants.VIEW_EXTENTION);
         String pathWithoutExtention = path;
         if (projectPattern.matcher(path).matches())
             pathWithoutExtention = projectPattern.matcher(path).replaceFirst("$1");

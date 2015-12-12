@@ -11,7 +11,7 @@ public class ViewPersistence {
 
      private List<UmlDiagram> umlDiagrams;
     private ElementNameGenerator elementNameGenerator = new ElementNameGenerator();
-
+    private List<UmlDiagram> openedDiagrams;
 
      public List<UmlDiagram> getUmlDiagrams() {
          return umlDiagrams;
@@ -21,5 +21,11 @@ public class ViewPersistence {
          this.umlDiagrams = umlDiagrams;
      }
 
+    public List<UmlDiagram> getOpenedDiagrams() {
+        return openedDiagrams;
+    }
 
+    public void setOpenedDiagrams(List<UmlDiagram> openedDiagrams) {
+        this.openedDiagrams = openedDiagrams;
+    }
 }

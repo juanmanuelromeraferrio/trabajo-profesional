@@ -60,7 +60,7 @@ public interface ApplicationShell {
      *
      * @param file the current file
      */
-    void setTitle(File file);
+    void setTitle(String projectName);
 
     /**
      * Quits the application.

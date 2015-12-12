@@ -140,13 +140,9 @@ public class AppFrame extends JFrame implements ApplicationShell {
     /**
      * {@inheritDoc}
      */
-    public void setTitle(File currentFile) {
-        if (currentFile != null) {
-            setTitle(Msg.get("application.title") + " ["
-                + currentFile.getName() + "]");
-        } else {
-            setTitle(Msg.get("application.title"));
-        }
+    public void setTitle(String projectName ) {
+        super.setTitle(projectName + " - " + Msg.get("application.title"));
+
     }
 
     public ApplicationState getAppState() {

@@ -74,5 +74,7 @@ public class Project {
         openDiagrams.add(diagram);
     }
 
-
+    public void setOpenDiagrams(List<UmlDiagram> openDiagrams) {
+        this.openDiagrams = openDiagrams;
+    }
 }

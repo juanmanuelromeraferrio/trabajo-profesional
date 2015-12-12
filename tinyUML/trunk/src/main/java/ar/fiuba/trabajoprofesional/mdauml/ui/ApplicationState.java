@@ -43,6 +43,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.undo.UndoManager;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.persistence.Constants;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorMouseEvent;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditorStateListener;
@@ -53,6 +54,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 /**
  * This class holds the common elements that the application consists of.
@@ -175,7 +177,7 @@ public class ApplicationState
         tree.getSelectionModel().addTreeSelectionListener(this);
 
         JScrollPane spane = new JScrollPane(tree);
-        spane.setPreferredSize(new Dimension(200, 300));
+        spane.setPreferredSize(new Dimension(250, 600));
         splitpane.setLeftComponent(spane);
         splitpane.setOneTouchExpandable(true);
         return splitpane;
@@ -252,13 +254,19 @@ public class ApplicationState
      */
     public void setCurrentFile(File file) {
         currentFile = file;
-        AppFrame.get().setTitle(file);
+        if(file!=null) {
+            String name = file.getName();
+            AppFrame.get().setTitle(name.substring(0, name.length() - Constants.PROJECT_EXTENTION.length() - 1));
+        }else
+            AppFrame.get().setTitle(Msg.get("project.untitled"));
     }
 
     /**
      * Creates a new project.
      */
     protected void newProject() {
+        setCurrentFile(null);
+
         undoManager.discardAllEdits();
         tabbedPane.removeAll();
         if(umlModel==null)
@@ -279,6 +287,7 @@ public class ApplicationState
      * @param project the project
      */
     protected void restoreFromProject(Project project) {
+
         undoManager.discardAllEdits();
         umlModel = project.getModel();
         treeModel.setModel(umlModel);
