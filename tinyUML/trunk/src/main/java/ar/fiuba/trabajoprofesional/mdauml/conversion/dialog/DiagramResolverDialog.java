@@ -1,5 +1,7 @@
 package ar.fiuba.trabajoprofesional.mdauml.conversion.dialog;
 
+import ar.fiuba.trabajoprofesional.mdauml.conversion.model.DiagramBuilder;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 import ar.fiuba.trabajoprofesional.mdauml.util.StringHelper;
 
@@ -24,14 +26,18 @@ public class DiagramResolverDialog extends JDialog {
     private JLabel allEntitiesLabel;
     private JButton deleteDiagram;
     private JButton renameButton;
-    private Map<String,List<String>> diagramMap;
+    private JCheckBox mapToPkg;
+    private JComboBox packagesBox;
+    private Map<String,DiagramBuilder> diagramMap;
     private List<String> mainEntities;
+    private List<UmlPackage> packages;
 
-    public DiagramResolverDialog(Map<String,List<String>> diagramMap, List<String> mainEntities) {
+    public DiagramResolverDialog(Map<String,DiagramBuilder> diagramMap, List<String> mainEntities, List<UmlPackage> packages) {
         setContentPane(contentPane);
         setModal(true);
         this.diagramMap = diagramMap;
         this.mainEntities = mainEntities;
+        this.packages = packages;
         getRootPane().setDefaultButton(buttonOK);
         setTitle(Msg.get("conversion.dialog.resolver.title"));
 
@@ -47,8 +53,9 @@ public class DiagramResolverDialog extends JDialog {
         comboBoxModel.setSelectedItem(comboBoxModel.getElementAt(0));
         comboBox.setModel(comboBoxModel);
 
+
         DefaultListModel<String> diagramEntitiesModel = new DefaultListModel<>();
-        List<String> selectedDiagramEntities = diagramMap.get(diagrams.get(0));
+        List<String> selectedDiagramEntities = diagramMap.get(diagrams.get(0)).getMainEntities();
         for(int i =0 ; i < selectedDiagramEntities.size() ;i++)
             diagramEntitiesModel.add(i,selectedDiagramEntities.get(i));
         diagramEntities.setModel(diagramEntitiesModel);
@@ -63,6 +70,20 @@ public class DiagramResolverDialog extends JDialog {
         newDiagramButton.setText(Msg.get("conversion.dialog.resolver.newDiagramButton"));
         renameButton.setText(Msg.get("conversion.dialog.resolver.renameButton"));
         deleteDiagram.setText(Msg.get("conversion.dialog.resolver.deleteDiagram"));
+        mapToPkg.setText(Msg.get("conversion.dialog.resolver.pkgcheckbox"));
+
+        boolean pkgRelated = diagramMap.get((String)comboBox.getSelectedItem()).isPackageRelated();
+
+        packagesBox.setEnabled(pkgRelated);
+        if(diagramMap.get(comboBoxModel.getSelectedItem()).getUmlPackage()!=null) {
+            DefaultComboBoxModel<UmlPackage> packageBoxModel = new DefaultComboBoxModel<>();
+            packageBoxModel.addElement(diagramMap.get(comboBoxModel.getSelectedItem()).getUmlPackage());
+            packagesBox.setModel(packageBoxModel);
+            packagesBox.setSelectedItem(diagramMap.get(comboBoxModel.getSelectedItem()).getUmlPackage());
+        }
+        mapToPkg.setSelected(pkgRelated);
+        if(packages.isEmpty())
+            mapToPkg.setEnabled(false);
         if(diagramMap.keySet().size()==1)
             deleteDiagram.setEnabled(false);
 
@@ -131,11 +152,44 @@ public class DiagramResolverDialog extends JDialog {
         });
         pack();
         setResizable(false);
+        mapToPkg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onCheckbox();
+            }
+
+
+        });
+        packagesBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onPackageSelection();
+            }
+        });
+    }
+
+    private void onPackageSelection() {
+        UmlPackage selectedPackage = (UmlPackage) packagesBox.getSelectedItem();
+        String diagram = (String) comboBox.getSelectedItem();
+        diagramMap.get(diagram).setUmlPackage(selectedPackage);
+    }
+
+    private void onCheckbox() {
+        boolean checked = mapToPkg.isSelected();
+        packagesBox.setEnabled(checked);
+        if(diagramMap.get(comboBox.getSelectedItem()).getUmlPackage()!=null)
+            packagesBox.setSelectedItem(diagramMap.get(comboBox.getSelectedItem()).getUmlPackage());
+        String diagram = (String) comboBox.getSelectedItem();
+        diagramMap.get(diagram).setPackageRelated(checked);
+        if(checked)
+            diagramMap.get(diagram).setUmlPackage((UmlPackage) packagesBox.getSelectedItem());
+        else
+            diagramMap.get(diagram).setUmlPackage(null);
     }
 
     private void onRename() {
         String diagram = (String) comboBox.getSelectedItem();
-        List<String> entities = diagramMap.get(diagram);
+        DiagramBuilder builder = diagramMap.get(diagram);
 
         String renameDiagram = newDiagramField.getText().trim();
         if(renameDiagram.isEmpty())
@@ -144,7 +198,8 @@ public class DiagramResolverDialog extends JDialog {
         if(diagrams.contains(renameDiagram))
             return;
         diagramMap.remove(diagram);
-        diagramMap.put(renameDiagram,entities);
+        builder.setName(renameDiagram);
+        diagramMap.put(renameDiagram,builder);
         List<String> newDiagrams = new ArrayList<>(diagramMap.keySet());
         Collections.sort(newDiagrams);
         comboBox.setModel(new DefaultComboBoxModel(newDiagrams.toArray()));
@@ -167,8 +222,32 @@ public class DiagramResolverDialog extends JDialog {
 
         String diagram = (String) comboBox.getSelectedItem();
         ((DefaultListModel)diagramEntities.getModel()).clear();
-        for(String entity : diagramMap.get(diagram))
+        for(String entity : diagramMap.get(diagram).getMainEntities())
             ((DefaultListModel)diagramEntities.getModel()).addElement(entity);
+
+        mapToPkg.setSelected(diagramMap.get(diagram).isPackageRelated());
+        packagesBox.setEnabled(diagramMap.get(diagram).isPackageRelated());
+        List<UmlPackage> unselectedPackages = new ArrayList<>(packages);
+        for(DiagramBuilder builder :diagramMap.values()){
+            if(builder.getUmlPackage()!=null && !builder.getName().equals(diagram))
+                unselectedPackages.remove(builder.getUmlPackage());
+        }
+        DefaultComboBoxModel<UmlPackage> packageBoxModel = new DefaultComboBoxModel<>();
+        for(UmlPackage aPackage: unselectedPackages)
+            packageBoxModel.addElement(aPackage);
+        packagesBox.setModel(packageBoxModel);
+        if(unselectedPackages.isEmpty()) {
+            mapToPkg.setEnabled(false);
+            packagesBox.setEnabled(false);
+        }else{
+            mapToPkg.setEnabled(true);
+            packagesBox.setEnabled(mapToPkg.isSelected());
+        }
+
+
+
+        if(diagramMap.get(diagram).getUmlPackage()!=null)
+            packagesBox.setSelectedItem(diagramMap.get(diagram).getUmlPackage());
 
     }
 
@@ -180,7 +259,7 @@ public class DiagramResolverDialog extends JDialog {
             ((DefaultListModel)diagramEntities.getModel()).removeElement(entity);
         }
         String diagram = (String) comboBox.getSelectedItem();
-        diagramMap.get(diagram).removeAll(selected);
+        diagramMap.get(diagram).getMainEntities().removeAll(selected);
     }
 
     private void onAdd() {
@@ -201,7 +280,7 @@ public class DiagramResolverDialog extends JDialog {
             ((DefaultListModel) diagramEntities.getModel()).addElement(entity);
 
         String diagram = (String) comboBox.getSelectedItem();
-        diagramMap.put(diagram,newDiagramEntities);
+        diagramMap.get(diagram).setMainEntities(newDiagramEntities);
 
     }
 
@@ -216,9 +295,14 @@ public class DiagramResolverDialog extends JDialog {
         newDiagrams.add(diagram);
         Collections.sort(newDiagrams);
         comboBox.setModel(new DefaultComboBoxModel(newDiagrams.toArray()));
-        diagramMap.put(newDiagramField.getText(),new ArrayList<String>());
+        diagramMap.put(newDiagramField.getText(),new DiagramBuilder());
         newDiagramField.setText("");
         comboBox.setSelectedItem(diagram);
+        mapToPkg.setSelected(diagramMap.get(newDiagramField.getText()).isPackageRelated());
+        packagesBox.setEnabled(diagramMap.get(newDiagramField.getText()).isPackageRelated());
+
+        if(diagramMap.get(comboBox.getSelectedItem()).getUmlPackage()!=null)
+            packagesBox.setSelectedItem(diagramMap.get(comboBox.getSelectedItem()).getUmlPackage());
         deleteDiagram.setEnabled(true);
 
     }
@@ -233,21 +317,4 @@ public class DiagramResolverDialog extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
-        List<String> allEntities = new ArrayList<>();
-        allEntities.add("Alberto");
-        allEntities.add("Belen");
-        allEntities.add("Cesar");
-        allEntities.add("Daniel");
-        allEntities.add("Esteban");
-        allEntities.add("Fernando");
-        allEntities.add("Gaston");
-        Map<String,List<String>> diagramMap= new HashMap<>();
-        diagramMap.put("Diagram",new ArrayList<>(allEntities));
-
-        DiagramResolverDialog dialog = new DiagramResolverDialog(diagramMap,allEntities);
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
 }

@@ -41,38 +41,19 @@ public class ConverterImpl implements Converter {
             Set<UmlPackage> packages = (Set<UmlPackage>) compactedModel.getAll(UmlPackage.class);
             List<UmlPackage> packagesList = new ArrayList<>(packages);
             Collections.sort(packagesList);
-            Map<String, List<String>> diagramMap = resolver.resolveEntitiesByDiagram(mainEntityMap,packagesList);
+            Map<String, DiagramBuilder> diagramMap = resolver.resolveEntitiesByDiagram(mainEntityMap,packagesList);
 
 
             for (String diagram : diagramMap.keySet()) {
-                List<String> mainEntities = diagramMap.get(diagram);
-                ConversionModel conversionModel = buildConversionModel(mainEntities, mainEntityMap);
-                diagramBuilder.buildClassDiagram(project, diagram, conversionModel);
+                ConversionDiagram conversionDiagram = diagramMap.get(diagram).build(mainEntityMap);
+                diagramBuilder.buildClassDiagram(project, diagram, conversionDiagram);
             }
         }catch(Exception e){
             throw new ConversionException(Msg.get("error.conversion"+ e.getMessage()),e);
         }
     }
 
-    private ConversionModel buildConversionModel(List<String> entities,Map<String, List<UmlUseCase>> mainEntityMap) {
-        ConversionModel conversionModel = new ConversionModel();
-        for(String mainEntity: entities){
-            Control control = conversionModel.getControl(StringHelper.toUpperCamelCase(mainEntity) + Msg.get("conversion.names.control"));
-            for(UmlUseCase useCase : mainEntityMap.get(mainEntity)){
-                control.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
-                for(String entityName : useCase.getAllEntities()){
-                    Entity entity = conversionModel.getEntity(StringHelper.toUpperCamelCase(entityName) + Msg.get("conversion.names.entity"));
-                    conversionModel.addRelation(new SimpleRelation(control,entity));
-                }
-                for(UmlActor mainActor : useCase.getMainActors()){
-                    Boundary boundary = conversionModel.getBoundary(StringHelper.toUpperCamelCase(mainActor.getName()) + Msg.get("conversion.names.boundary"));
-                    boundary.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
-                    conversionModel.addRelation(new SimpleRelation(boundary,control));
-                }
-            }
-        }
-        return conversionModel;
-    }
+
 
     private Map<String,List<UmlUseCase>> buildMainEntityMap(Set<UmlUseCase> useCases) {
         Map<String,List<UmlUseCase>> mainEntityMap = new HashMap<>();

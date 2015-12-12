@@ -3,13 +3,22 @@ package ar.fiuba.trabajoprofesional.mdauml.conversion.model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ConversionModel implements IConversionModel{
+public class ConversionDiagram implements IConversionDiagram {
 
     private Set<Boundary> boundaries = new HashSet<>();
     private Set<Control> controls = new HashSet<>();
     private Set<Entity> entities= new HashSet<>();
     private Set<SimpleRelation> relations = new HashSet<>();
+    private String name;
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public Set<Boundary> getBoundaries() {

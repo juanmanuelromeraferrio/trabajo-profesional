@@ -38,12 +38,16 @@ public class MainToolbarManager extends AbstractToolbarManager {
         addFileButtons();
         getToolbar().addSeparator();
         addEditButtons();
+        getToolbar().addSeparator();
+        createButtonWithName("convert");
+
         setEnabled("UNDO", false);
         setEnabled("REDO", false);
         setEnabled("CUT", false);
         setEnabled("COPY", false);
         setEnabled("PASTE", false);
         setEnabled("DELETE", false);
+        setEnabled("CONVERT",true);
     }
 
     /**
@@ -65,6 +69,7 @@ public class MainToolbarManager extends AbstractToolbarManager {
         createButtonWithName("delete");
         createButtonWithName("undo");
         createButtonWithName("redo");
+
     }
 
     /**

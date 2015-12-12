@@ -3,7 +3,7 @@ package ar.fiuba.trabajoprofesional.mdauml.conversion.model;
 
 import java.util.Set;
 
-public interface  IConversionModel {
+public interface IConversionDiagram {
 
     Set<Boundary> getBoundaries();
 
@@ -13,4 +13,5 @@ public interface  IConversionModel {
 
     Set<SimpleRelation> getRelations();
 
+    String getName();
 }

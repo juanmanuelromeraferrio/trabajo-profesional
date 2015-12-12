@@ -17,7 +17,9 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui;
 
+import ar.fiuba.trabajoprofesional.mdauml.conversion.impl.ConverterImpl;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlDiagram;
@@ -88,6 +90,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
             selectorMap.put("REDO", new MethodCall(getClass().getMethod("redo")));
             selectorMap.put("UNDO", new MethodCall(getClass().getMethod("undo")));
             selectorMap.put("DELETE", new MethodCall(getClass().getMethod("delete")));
+            selectorMap.put("CONVERT", new MethodCall(getClass().getMethod("convert")));
             selectorMap.put("EDIT_SETTINGS", new MethodCall(getClass().getMethod("editSettings")));
             selectorMap.put("QUIT", new MethodCall(getClass().getMethod("quitApplication")));
             selectorMap.put("ABOUT", new MethodCall(getClass().getMethod("about")));
@@ -377,6 +380,16 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
                     Msg.get("error.nohelp.title"), JOptionPane.ERROR_MESSAGE);
         } catch (URISyntaxException ignore) {
             ignore.printStackTrace();
+        }
+    }
+
+    public void convert(){
+        try {
+              new ConverterImpl().convert(appState.createProjectForWrite());
+        } catch (ConversionException e) {
+            JOptionPane
+                    .showMessageDialog(getShellComponent(), e.getMessage(),
+                            Msg.get("error.conversion.title"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

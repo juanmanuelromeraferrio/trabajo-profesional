@@ -105,8 +105,8 @@ public class EntityCompactorDialog extends JDialog {
                     mergingElements.add(i,model.get(i));
                 String merged = mergedEntity.getText();
 
-                if(mergingElements.size()<2){
-                    JOptionPane.showMessageDialog(AppFrame.get(), Msg.get("conversion.dialog.entityCompactor.moreThan2"));
+                if(mergingElements.isEmpty()){
+                    JOptionPane.showMessageDialog(AppFrame.get(), Msg.get("conversion.dialog.entityCompactor.emptyMerge"));
                     return;
                 }
                 if(merged.isEmpty()) {
