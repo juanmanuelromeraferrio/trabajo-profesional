@@ -31,7 +31,9 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 public class EditStepMainFlowDialog extends javax.swing.JDialog {
@@ -49,6 +51,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private JTextPane stepDescription;
   private UmlMainStep step;
   private UmlMainStep father;
+  private UmlUseCase umlUseCase;
 
   private JComboBox<String> comboActorsStep;
   private JTextField textFieldCondition;
@@ -68,17 +71,20 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
    * @param parent the parent frame
    * @wbp.parser.constructor
    */
-  public EditStepMainFlowDialog(java.awt.Window parent, UmlMainStep father) {
+  public EditStepMainFlowDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlMainStep father) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
+    this.umlUseCase = umlUseCase;
     initComponents();
 
   }
 
-  public EditStepMainFlowDialog(java.awt.Window parent, UmlMainStep father, UmlMainStep step) {
+  public EditStepMainFlowDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlMainStep father,
+      UmlMainStep step) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
     this.step = step;
+    this.umlUseCase = umlUseCase;
     this.isEditMode = Boolean.TRUE;
     initComponents();
     myPostInit();
@@ -310,11 +316,21 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-    String[] actorItems =
-        {Msg.get("editstepmainflow.user.actor"), Msg.get("editstepmainflow.system.actor")};
+    // String[] actorItems =
+    // {Msg.get("editstepmainflow.user.actor"), Msg.get("editstepmainflow.system.actor")};
+
+    List<String> actorItems = new ArrayList<String>();
+    Set<UmlActor> umlActors = this.umlUseCase.getUmlActors();
+    for (UmlActor umlActor : umlActors) {
+      actorItems.add(umlActor.getName());
+    }
+    actorItems.add(Msg.get("editstepmainflow.system.actor"));
+
 
     JLabel actorLabel = new JLabel(Msg.get("editstepmainflow.actor.label"));
-    ComboBoxModel<String> actorComboBoxModel = new DefaultComboBoxModel<String>(actorItems);
+    String[] arrayActorItems = new String[actorItems.size()];
+    actorItems.toArray(arrayActorItems);
+    ComboBoxModel<String> actorComboBoxModel = new DefaultComboBoxModel<String>(arrayActorItems);
     comboActorsStep = new JComboBox<String>();
     comboActorsStep.setModel(actorComboBoxModel);
 

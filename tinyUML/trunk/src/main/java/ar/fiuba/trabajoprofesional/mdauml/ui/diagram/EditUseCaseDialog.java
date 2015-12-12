@@ -511,8 +511,9 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
       public void actionPerformed(ActionEvent e) {
 
         UmlMainStep father = getFather();
+        UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
 
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, father);
+        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
@@ -592,7 +593,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         UmlMainStep step = (UmlMainStep) mainFlow.getStep(selectedStep);
         UmlMainStep father = (UmlMainStep) step.getFather();
 
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, father, step);
+        UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
+        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father, step);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
