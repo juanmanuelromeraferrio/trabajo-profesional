@@ -234,24 +234,35 @@ public class UmlUseCase extends PackageableUmlModelElement {
 
   public String getMainEntity() {
 
+    return getMainEntityByFlow(mainFlow);
+  }
+
+  public String getMainEntityByFlow(Flow flow) {
+
     if (mainEntity == null) {
       HashMap<String, Integer> commonEntities = new HashMap<String, Integer>();
-      List<UmlStep> steps = mainFlow.getFlow();
+      List<UmlStep> steps = flow.getFlow();
       if (!steps.isEmpty()) {
         updateMostCommonEntity(steps, commonEntities);
         LinkedHashMap<String, Integer> sortedEntities =
             SortedMapUtil.sortHashMapByValues(commonEntities);
-        
+
         return sortedEntities.keySet().iterator().next();
 
       } else {
         return null;
       }
     } else {
-      return mainEntity;
+      Set<String> allEntities = flow.getAllEntities();
+      if (allEntities.contains(mainEntity)) {
+        return mainEntity;
+      }
+      return null;
+
     }
 
   }
+
 
   private void updateMostCommonEntity(List<UmlStep> steps, HashMap<String, Integer> commonEntities) {
     for (UmlStep step : steps) {

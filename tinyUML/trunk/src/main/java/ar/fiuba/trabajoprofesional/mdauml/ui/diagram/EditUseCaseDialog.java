@@ -150,10 +150,6 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
     name.setText(useCase.getName());
     description.setText(useCase.getDescription());
-
-    List<String> umlEntities = new ArrayList<String>(useCase.getAllEntities());
-    Collections.sort(umlEntities);
-
     List<UmlActor> umlActors = new ArrayList<UmlActor>(useCase.getUmlActors());
     Collections.sort(umlActors, new Comparator<UmlActor>() {
       @Override
@@ -171,19 +167,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     }
 
 
-    DefaultComboBoxModel entityComboBoxModel = new DefaultComboBoxModel(umlEntities.toArray());
-    comboMainEntity.setModel(entityComboBoxModel);
+    updateEntityPanel(true);
+
     comboMainActor.setModel(new DefaultComboBoxModel(umlActors.toArray()));
     comboSecActors.setModel(new DefaultComboBoxModel(umlActors.toArray()));
-
-
-    DefaultListModel<String> mainEntityModel = new DefaultListModel<String>();
-    String mainEntity = useCase.getMainEntity();
-    if (mainEntity != null) {
-      mainEntityModel.addElement(mainEntity);
-      entityComboBoxModel.removeElement(mainEntity);
-    }
-    mainEntities.setModel(mainEntityModel);
 
     DefaultListModel<UmlActor> mainActorsModel = new DefaultListModel<UmlActor>();
     for (UmlActor actor : useCase.getMainActors())
@@ -216,6 +203,34 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     refreshMainFlow(mainFlowStepModel);
     mainFlowStepList.setModel(mainFlowStepModel);
+
+  }
+
+  private void updateEntityPanel(Boolean init) {
+
+    UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
+    List<String> umlEntities;
+    String mainEntity;
+    if (init) {
+      umlEntities = new ArrayList<String>(useCase.getAllEntities());
+      mainEntity = useCase.getMainEntity();
+    } else {
+      umlEntities = new ArrayList<String>(mainFlow.getAllEntities());
+      mainEntity = useCase.getMainEntityByFlow(mainFlow);
+    }
+
+    Collections.sort(umlEntities);
+    DefaultComboBoxModel entityComboBoxModel = new DefaultComboBoxModel(umlEntities.toArray());
+    comboMainEntity.setModel(entityComboBoxModel);
+
+    DefaultListModel<String> mainEntityModel = new DefaultListModel<String>();
+
+    if (mainEntity != null) {
+      mainEntityModel.addElement(mainEntity);
+      entityComboBoxModel.removeElement(mainEntity);
+    }
+
+    mainEntities.setModel(mainEntityModel);
 
   }
 
@@ -554,6 +569,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
               break;
           }
         }
+
+        updateEntityPanel(false);
       }
 
       private void addNewStep(UmlStep step) {
@@ -645,6 +662,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           }
 
           refreshMainFlow(listModel);
+          updateEntityPanel(false);
 
         }
       }
@@ -700,8 +718,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
         UmlMainStep umlMainStep = (UmlMainStep) step;
         removeFathers(umlMainStep);
-
         refreshMainFlow(listModel);
+        updateEntityPanel(false);
       }
     });
 
@@ -1057,7 +1075,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         DefaultListModel<String> mainEntityModelList =
             (DefaultListModel<String>) mainEntities.getModel();
 
-
+        if (comboMainEntity.getModel().getSize() == 0)
+          return;
 
         String changeEntity = mainEntityModelList.get(0);
         comboMainEntity.addItem(changeEntity);

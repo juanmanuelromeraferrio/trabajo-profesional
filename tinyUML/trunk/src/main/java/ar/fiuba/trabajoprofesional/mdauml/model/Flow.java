@@ -1,8 +1,5 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import ar.fiuba.trabajoprofesional.mdauml.conversion.model.Entity;
-import ar.fiuba.trabajoprofesional.mdauml.util.StringHelper;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -177,33 +174,36 @@ public class Flow {
   public Set<String> getAllEntities() {
     return getAllEntities(flow);
   }
+
   public Set<String> getAllEntities(List<UmlStep> steps) {
     Set<String> allEntities = new HashSet<>();
-    for (UmlStep step : steps){
-      if(step instanceof UmlMainStep){
-        Set<String> stepEntites = ((UmlMainStep)step).getEntities();
+    for (UmlStep step : steps) {
+      if (step instanceof UmlMainStep) {
+        Set<String> stepEntites = ((UmlMainStep) step).getEntities();
         allEntities.addAll(stepEntites);
       }
       allEntities.addAll(getAllEntities(step.getChildrens()));
     }
     return allEntities;
   }
-  public void replaceEntity(String original, String replacement){
-    replaceEntity(original,replacement,flow);
+
+  public void replaceEntity(String original, String replacement) {
+    replaceEntity(original, replacement, flow);
   }
-  public void replaceEntity(String original, String replacement, List<UmlStep> steps){
-    for(UmlStep step : steps){
-      if(step instanceof UmlMainStep) {
+
+  public void replaceEntity(String original, String replacement, List<UmlStep> steps) {
+    for (UmlStep step : steps) {
+      if (step instanceof UmlMainStep) {
         Set<String> replacedEntities = new HashSet<>();
-        for (String entity : ((UmlMainStep) step).getEntities()){
-          if(entity.equals(original))
+        for (String entity : ((UmlMainStep) step).getEntities()) {
+          if (entity.equals(original))
             replacedEntities.add(replacement);
           else
             replacedEntities.add(entity);
         }
         ((UmlMainStep) step).setEntities(replacedEntities);
       }
-      replaceEntity(original,replacement,step.getChildrens());
+      replaceEntity(original, replacement, step.getChildrens());
     }
   }
 }

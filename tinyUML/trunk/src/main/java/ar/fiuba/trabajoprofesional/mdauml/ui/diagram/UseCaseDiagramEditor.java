@@ -127,10 +127,8 @@ public class UseCaseDiagramEditor extends DiagramEditor {
         umlUseCase.setPreconditions(dialog.getPreconditions());
         umlUseCase.setPostconditions(dialog.getPostconditions());
         umlUseCase.setMainFLow(dialog.getMainFlow());
-        String mainEntity = dialog.getMainEntity();
-        if (mainEntity != null) {
-          umlUseCase.setMainEntity(mainEntity);
-        }
+        umlUseCase.setMainEntity(dialog.getMainEntity());
+
         redraw();
 
       }

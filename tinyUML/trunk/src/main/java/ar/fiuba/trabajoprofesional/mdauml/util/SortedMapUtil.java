@@ -2,6 +2,7 @@ package ar.fiuba.trabajoprofesional.mdauml.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -13,7 +14,13 @@ public class SortedMapUtil {
       HashMap<String, Integer> passedMap) {
     List<String> mapKeys = new ArrayList<String>(passedMap.keySet());
     List<Integer> mapValues = new ArrayList<Integer>(passedMap.values());
-    Collections.sort(mapValues);
+    Collections.sort(mapValues, new Comparator<Integer>() {
+
+      @Override
+      public int compare(Integer o1, Integer o2) {
+        return o1.compareTo(o2) * -1;
+      }
+    });
     Collections.sort(mapKeys);
 
     LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
