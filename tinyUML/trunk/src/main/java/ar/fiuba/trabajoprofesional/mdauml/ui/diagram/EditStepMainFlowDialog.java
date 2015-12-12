@@ -53,6 +53,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private JComboBox<String> comboActorsStep;
   private JTextField textFieldCondition;
 
+  private String[] charactersForbidden = {".", ";", ",", "(", ")", "\"", "<", ">"};
+
   private JLabel lblCondition;
   private JPanel entitiesPanel;
   private JButton editStep;
@@ -108,8 +110,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     mainScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
     mainScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-    JButton btnCancel =
-        new JButton(Msg.get("stdcaption.cancel"));
+    JButton btnCancel = new JButton(Msg.get("stdcaption.cancel"));
     btnCancel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = false;
@@ -146,14 +147,14 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     mainScrollPanel.setViewportView(generalPanel);
 
     final JPanel stepPanel = new JPanel();
-    stepPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        Msg.get("editstepmainflow.step.label"),
-        TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    stepPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Msg
+        .get("editstepmainflow.step.label"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     JScrollPane scrollPaneStep = new JScrollPane();
 
     saveStep = new JButton(Msg.get("stdcaption.save"));
     saveStep.addActionListener(new ActionListener() {
+
       @SuppressWarnings({"unchecked", "rawtypes"})
       public void actionPerformed(ActionEvent arg0) {
 
@@ -177,6 +178,10 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
             List<String> entitiesSelected = new ArrayList<String>();
 
             for (String entity : entitiesList) {
+
+              for (String character : charactersForbidden) {
+                entity = entity.replace(character, "");
+              }
 
               if (entity.startsWith("@")) {
                 String entityFormatedSelected =
@@ -236,8 +241,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-    JLabel typeLabel =
-        new JLabel(Msg.get("editstepmainflow.type.label"));
+    JLabel typeLabel = new JLabel(Msg.get("editstepmainflow.type.label"));
 
     ComboBoxModel<StepType> typeComboBoxModel;
 
@@ -307,17 +311,14 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     });
 
     String[] actorItems =
-        {Msg.get("editstepmainflow.user.actor"),
-            Msg.get("editstepmainflow.system.actor")};
+        {Msg.get("editstepmainflow.user.actor"), Msg.get("editstepmainflow.system.actor")};
 
-    JLabel actorLabel =
-        new JLabel(Msg.get("editstepmainflow.actor.label"));
+    JLabel actorLabel = new JLabel(Msg.get("editstepmainflow.actor.label"));
     ComboBoxModel<String> actorComboBoxModel = new DefaultComboBoxModel<String>(actorItems);
     comboActorsStep = new JComboBox<String>();
     comboActorsStep.setModel(actorComboBoxModel);
 
-    lblCondition =
-        new JLabel(Msg.get("editstepmainflow.condition.label"));
+    lblCondition = new JLabel(Msg.get("editstepmainflow.condition.label"));
     lblCondition.setVisible(false);
     textFieldCondition = new JTextField();
     textFieldCondition.setColumns(10);
@@ -408,8 +409,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     stepPanel.setLayout(gropuLayoutStepPanel);
 
     entitiesPanel = new JPanel();
-    entitiesPanel.setBorder(new TitledBorder(null, Msg.get(
-        "editstepmainflow.entities.label"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    entitiesPanel.setBorder(new TitledBorder(null, Msg.get("editstepmainflow.entities.label"),
+        TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     GroupLayout firstLayout = new GroupLayout(generalPanel);
     firstLayout.setHorizontalGroup(firstLayout.createParallelGroup(Alignment.TRAILING).addGroup(
@@ -444,8 +445,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       }
     });
 
-    JButton deleteEntity =
-        new JButton(Msg.get("stdcaption.delete"));
+    JButton deleteEntity = new JButton(Msg.get("stdcaption.delete"));
     deleteEntity.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
 
