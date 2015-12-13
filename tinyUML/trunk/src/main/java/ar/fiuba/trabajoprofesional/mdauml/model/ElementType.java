@@ -30,7 +30,10 @@ public enum ElementType {
     ACTOR("Actor"),
     USE_CASE("Use Case"),
     RELATION("Relation"),
-    STEREOTYPE("Stereotype");
+    STEREOTYPE("Stereotype"),
+    BOUNDARY("Boundary"),
+    CONTROL("Control"),
+    ENTITY("Entity");
 
     private String name;
 

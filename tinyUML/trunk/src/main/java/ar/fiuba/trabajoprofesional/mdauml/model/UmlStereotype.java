@@ -32,7 +32,7 @@ public final class UmlStereotype extends AbstractUmlModelElement {
     /**
      * Private constructor.
      */
-    private UmlStereotype() {
+    protected UmlStereotype() {
     }
 
     /**

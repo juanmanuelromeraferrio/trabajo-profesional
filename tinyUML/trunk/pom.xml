@@ -8,6 +8,11 @@
 
 	<!-- dependencies section -->
 	<dependencies>
+		<dependency>
+			<groupId>com.github.adedayo.intellij.sdk</groupId>
+			<artifactId>forms_rt</artifactId>
+			<version>142.1</version>
+		</dependency>
 		<!-- Testing-Frameworks -->
 		<dependency>
 			<groupId>junit</groupId>

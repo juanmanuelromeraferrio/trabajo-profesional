@@ -20,13 +20,7 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz;
 import java.util.HashMap;
 import java.util.Map;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.ElementType;
-import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
-import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModel;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association.AssociationType;
 
@@ -72,6 +66,27 @@ public class ClassDiagram extends GeneralDiagram {
         classElem.setModelElement(clss);
         classElem.addNodeChangeListener(this);
         elementPrototypes.put(ElementType.CLASS, classElem);
+
+        // Add boundary prototype
+        UmlBoundary boundary = (UmlBoundary) UmlBoundary.getPrototype().clone();
+        ClassElement boundaryElem = (ClassElement) ClassElement.getPrototype().clone();
+        boundaryElem.setModelElement(boundary);
+        boundaryElem.addNodeChangeListener(this);
+        elementPrototypes.put(ElementType.BOUNDARY, boundaryElem);
+
+        // Add control prototype
+        UmlControl control = (UmlControl) UmlControl.getPrototype().clone();
+        ClassElement controlElem = (ClassElement) ClassElement.getPrototype().clone();
+        controlElem.setModelElement(control);
+        controlElem.addNodeChangeListener(this);
+        elementPrototypes.put(ElementType.CONTROL, controlElem);
+
+        // Add entity prototype
+        UmlEntity entity = (UmlEntity) UmlEntity.getPrototype().clone();
+        ClassElement entityElem = (ClassElement) ClassElement.getPrototype().clone();
+        entityElem.setModelElement(entity);
+        entityElem.addNodeChangeListener(this);
+        elementPrototypes.put(ElementType.ENTITY, entityElem);
 
         return elementPrototypes;
     }

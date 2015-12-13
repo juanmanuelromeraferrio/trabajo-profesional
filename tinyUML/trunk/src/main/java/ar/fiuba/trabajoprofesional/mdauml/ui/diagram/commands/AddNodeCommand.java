@@ -84,5 +84,6 @@ public class AddNodeCommand extends AbstractUndoableEdit implements Command {
         node.setAbsolutePos(absx, absy);
         notification.notifyElementAdded(node);
 
+
     }
 }

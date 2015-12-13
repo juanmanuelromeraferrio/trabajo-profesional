@@ -428,7 +428,7 @@ public class ApplicationState
     /**
      * Opens a new class editor.
      */
-    protected void openNewClassEditor() {
+    public void openNewClassEditor() {
         EditorPanel editorPanel = editorFactory.openNewClassEditor(umlModel);
         currentEditor = editorPanel.getDiagramEditor();
         addDiagramEditorEvents(editorPanel);

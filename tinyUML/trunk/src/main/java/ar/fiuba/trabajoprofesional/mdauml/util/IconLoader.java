@@ -46,6 +46,9 @@ public final class IconLoader {
         urlMap
             .put(IconType.MOUSE_POINTER, "ar/fiuba/trabajoprofesional/mdauml/ui/mousepointer.png");
         urlMap.put(IconType.CLASS, "ar/fiuba/trabajoprofesional/mdauml/ui/class.png");
+        urlMap.put(IconType.BOUNDARY, "ar/fiuba/trabajoprofesional/mdauml/ui/boundary.png");
+        urlMap.put(IconType.CONTROL, "ar/fiuba/trabajoprofesional/mdauml/ui/control.png");
+        urlMap.put(IconType.ENTITY, "ar/fiuba/trabajoprofesional/mdauml/ui/entity.png");
         urlMap.put(IconType.CLOSE_TAB, "ar/fiuba/trabajoprofesional/mdauml/ui/close-tab.png");
         urlMap.put(IconType.PACKAGE, "ar/fiuba/trabajoprofesional/mdauml/ui/package.png");
         urlMap.put(IconType.DEPENDENCY, "ar/fiuba/trabajoprofesional/mdauml/ui/dependency.png");
@@ -123,6 +126,6 @@ public final class IconLoader {
         MOUSE_POINTER,
         CLASS, PACKAGE, DEPENDENCY, ASSOCIATION, AGGREGATION,
         COMPOSITION, INHERITANCE, INTERFACE_REALIZATION, NOTE, NOTE_CONNECTOR,
-        LIFELINE, MESSAGE, ACTOR, EXTEND, INCLUDE, USE_CASE, CONVERT, NEST
+        LIFELINE, MESSAGE, ACTOR, EXTEND, INCLUDE, USE_CASE, CONVERT, BOUNDARY, CONTROL, ENTITY, NEST
     }
 }

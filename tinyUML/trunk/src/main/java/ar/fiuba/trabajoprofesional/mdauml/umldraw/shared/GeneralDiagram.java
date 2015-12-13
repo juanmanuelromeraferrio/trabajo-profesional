@@ -545,6 +545,7 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
             UmlModelElement model = umlnode.getModelElement();
             String name = ElementNameGenerator.getName(elementType);
             umlnode.getModelElement().setName(name);
+            umlnode.setModelElement(model);
             if(model instanceof PackageableUmlModelElement && umlnode instanceof PackageListener)
                 ((PackageableUmlModelElement) model).addPackageListener((PackageListener) umlnode);
         }

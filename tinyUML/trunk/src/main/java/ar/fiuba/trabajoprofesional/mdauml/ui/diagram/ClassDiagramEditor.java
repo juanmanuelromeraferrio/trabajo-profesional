@@ -66,6 +66,15 @@ public class ClassDiagramEditor extends DiagramEditor {
             selectorMap.put("CREATE_CLASS", new MethodCall(
                 ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
                 ElementType.CLASS));
+            selectorMap.put("CREATE_BOUNDARY", new MethodCall(
+                    ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                    ElementType.BOUNDARY));
+            selectorMap.put("CREATE_CONTROL", new MethodCall(
+                    ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                    ElementType.CONTROL));
+            selectorMap.put("CREATE_ENTITY", new MethodCall(
+                    ClassDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                    ElementType.ENTITY));
             selectorMap.put("CREATE_DEPENDENCY", new MethodCall(ClassDiagramEditor.class
                 .getMethod("setCreateConnectionMode", RelationType.class),
                 RelationType.DEPENDENCY));

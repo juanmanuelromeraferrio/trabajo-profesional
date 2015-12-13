@@ -29,7 +29,7 @@ public class DiagramBuilder {
                     continue;
                 control.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
                 for(String entityName : useCase.getAllEntities()){
-                    Entity entity = conversionDiagram.getEntity(StringHelper.toUpperCamelCase(entityName) + Msg.get("conversion.names.entity"));
+                    Entity entity = conversionDiagram.getEntity(StringHelper.toUpperCamelCase(entityName));
                     conversionDiagram.addRelation(new SimpleRelation(control,entity));
                 }
                 for(UmlActor mainActor : useCase.getMainActors()){

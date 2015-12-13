@@ -174,6 +174,7 @@ public final class ClassElement extends AbstractCompositeNode
             if (classData != null) {
                 classData.addModelElementListener(this);
             }
+            elementChanged(model);
 
         }else throw new IllegalArgumentException("UmlClass expected");
     }

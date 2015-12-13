@@ -388,7 +388,7 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
               new ConverterImpl().convert(appState.createProjectForWrite());
         } catch (ConversionException e) {
             JOptionPane
-                    .showMessageDialog(getShellComponent(), e.getMessage(),
+                    .showMessageDialog(getShellComponent(), e,
                             Msg.get("error.conversion.title"), JOptionPane.ERROR_MESSAGE);
         }
     }

@@ -19,16 +19,13 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
+
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -103,58 +100,17 @@ public class CreationHandler implements EditorMode {
      * {@inheritDoc}
      */
     public void mousePressed(EditorMouseEvent event) {
-        CompositeNode parent = editor.getDiagram();
-        DiagramElement possibleParent =
-            editor.getDiagram().getChildAt(tmpPos.getX(), tmpPos.getY());
-        if (isNestingCondition(possibleParent)) {
-            parent = (CompositeNode) possibleParent;
-        }
-        AddNodeCommand createCommand =
-            new AddNodeCommand(editor, parent, element, tmpPos.getX(), tmpPos.getY());
-        editor.execute(createCommand);
-        PackageElement pkgElement = findNestingPackage();
-        if(pkgElement != null){
-            editor.addNestConnectionToParent(element,pkgElement);
-
-        }
-
-
+        ElementInserter.insert(element,editor,tmpPos);
     }
 
 
-
-    private PackageElement findNestingPackage() {
-        if(element instanceof UmlNode) {
-            UmlModelElement model = ((UmlNode) element).getModelElement();
-            if(model instanceof PackageableUmlModelElement){
-                UmlPackage pkg = ((PackageableUmlModelElement) model).getPackage();
-                if(pkg!=null  ){
-                    DiagramElement pkgElement = editor.getDiagram().findElementFromModel(pkg);
-                    return (PackageElement) pkgElement;
-                }
-            }
-
-        }
-        return null;
-
-    }
 
     /**
      * {@inheritDoc}
      */
     public void mouseReleased(EditorMouseEvent event) {
         if(AppFrame.get().getAppState().TREE_DRAGING){
-            CompositeNode parent = editor.getDiagram();
-            DiagramElement possibleParent =
-                    editor.getDiagram().getChildAt(tmpPos.getX(), tmpPos.getY());
-            if (isNestingCondition(possibleParent)) {
-                parent = (CompositeNode) possibleParent;
-            }
-            AddNodeCommand createCommand =
-                    new AddNodeCommand(editor, parent, element, tmpPos.getX(), tmpPos.getY());
-
-            editor.execute(createCommand);
-
+            ElementInserter.insert(element,editor,tmpPos);
         }
     }
 
@@ -186,20 +142,6 @@ public class CreationHandler implements EditorMode {
         drawSilhouette(drawingContext);
     }
 
-    /**
-     * Determines if the node can be nested in the specified nester object.
-     * This is the case if canNestElements() is true and the node is within
-     * the nester's bounds. This version uses the cached bounds object in
-     * order to be used without a drawing context.
-     *
-     * @param nester the nester object
-     * @return true if the nesting condition is true, false otherwise
-     */
-    private boolean isNestingCondition(DiagramElement nester) {
-        if (cachedBounds == null)
-            return false;
-        return nester.canNestElements() && nester.getAbsoluteBounds().contains(cachedBounds);
-    }
 
     /**
      * Determines if the node can be nested in the specified nester object.

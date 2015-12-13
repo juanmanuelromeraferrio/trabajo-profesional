@@ -41,6 +41,9 @@ public class ClassEditorToolbarManager extends AbstractToolbarManager {
         toolbar.add(createToggleButtonWithName(buttongroup, "select"));
         toolbar.add(createToggleButtonWithName(buttongroup, "package"));
         toolbar.add(createToggleButtonWithName(buttongroup, "class"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "boundary"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "control"));
+        toolbar.add(createToggleButtonWithName(buttongroup, "entity"));
         toolbar.addSeparator(new Dimension(10, 10));
         toolbar.add(createToggleButtonWithName(buttongroup, "dependency"));
         toolbar.add(createToggleButtonWithName(buttongroup, "association"));

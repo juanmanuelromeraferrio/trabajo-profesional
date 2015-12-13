@@ -28,7 +28,7 @@ import java.util.List;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class UmlClass extends PackageableUmlModelElement {
+public class UmlClass extends PackageableUmlModelElement {
 
     private static UmlClass prototype;
     private boolean isAbstract;
@@ -39,7 +39,7 @@ public final class UmlClass extends PackageableUmlModelElement {
     /**
      * Constructor.
      */
-    private UmlClass() {
+    protected UmlClass() {
     }
 
     /**
