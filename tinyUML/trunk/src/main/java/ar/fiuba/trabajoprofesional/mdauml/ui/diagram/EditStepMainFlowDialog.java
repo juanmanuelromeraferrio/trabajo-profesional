@@ -127,6 +127,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     JButton btnOk = new JButton(Msg.get("stdcaption.ok"));
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        saveStep.doClick();
         isOk = true;
         dispose();
       }
