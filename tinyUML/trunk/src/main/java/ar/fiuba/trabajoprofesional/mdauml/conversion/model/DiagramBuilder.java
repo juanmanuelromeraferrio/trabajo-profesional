@@ -34,7 +34,7 @@ public class DiagramBuilder {
                 }
                 for(UmlActor mainActor : useCase.getMainActors()){
                     Boundary boundary = conversionDiagram.getBoundary(StringHelper.toUpperCamelCase(mainActor.getName()) + Msg.get("conversion.names.boundary"));
-                    boundary.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
+                    boundary.addMethod("+"+StringHelper.toLowerCamelCase(useCase.getName())+"()");
                     conversionDiagram.addRelation(new SimpleRelation(boundary,control));
                 }
             }
