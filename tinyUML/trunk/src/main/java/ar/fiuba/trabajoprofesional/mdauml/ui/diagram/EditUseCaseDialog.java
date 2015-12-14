@@ -267,7 +267,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
   private void initComponents() {
     setResizable(false);
-    setSize(new Dimension(570, 700));
+    setSize(new Dimension(741, 700));
     setTitle("Use case specification");
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -291,22 +291,26 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
       }
     });
     GroupLayout groupLayout = new GroupLayout(getContentPane());
-    groupLayout.setHorizontalGroup(groupLayout
-        .createParallelGroup(Alignment.TRAILING)
-        .addGroup(
-            groupLayout.createSequentialGroup().addContainerGap(335, Short.MAX_VALUE)
-                .addComponent(btnOk).addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(btnCancel).addContainerGap())
-        .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE));
-    groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-        groupLayout
-            .createSequentialGroup()
-            .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 633,
-                GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(ComponentPlacement.UNRELATED)
-            .addGroup(
-                groupLayout.createParallelGroup(Alignment.LEADING).addComponent(btnCancel)
-                    .addComponent(btnOk)).addContainerGap()));
+    groupLayout.setHorizontalGroup(
+      groupLayout.createParallelGroup(Alignment.TRAILING)
+        .addGroup(groupLayout.createSequentialGroup()
+          .addContainerGap(607, Short.MAX_VALUE)
+          .addComponent(btnOk)
+          .addPreferredGap(ComponentPlacement.RELATED)
+          .addComponent(btnCancel)
+          .addContainerGap())
+        .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+    );
+    groupLayout.setVerticalGroup(
+      groupLayout.createParallelGroup(Alignment.LEADING)
+        .addGroup(groupLayout.createSequentialGroup()
+          .addComponent(mainScrollPanel, GroupLayout.PREFERRED_SIZE, 633, GroupLayout.PREFERRED_SIZE)
+          .addPreferredGap(ComponentPlacement.RELATED)
+          .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+            .addComponent(btnCancel)
+            .addComponent(btnOk))
+          .addContainerGap())
+    );
 
     JPanel panel = new JPanel();
     mainScrollPanel.setViewportView(panel);
@@ -988,79 +992,56 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     scrollPaneAlternativeFlow.setViewportView(alternativeFlows);
     panelAlternativeFlow.setLayout(gl_panelAlternativeFlow);
     GroupLayout gl_panel = new GroupLayout(panel);
-    gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.TRAILING).addGroup(
-        gl_panel
-            .createSequentialGroup()
-            .addContainerGap()
-            .addGroup(
-                gl_panel
-                    .createParallelGroup(Alignment.TRAILING)
-                    .addComponent(mainEntityPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelAlternativeFlow, Alignment.LEADING,
-                        GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-                    .addComponent(panelPostconditions, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-                        504, Short.MAX_VALUE)
-                    .addComponent(panelMainFlow, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 504,
-                        Short.MAX_VALUE)
-                    .addComponent(panelPreconditions, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-                        504, Short.MAX_VALUE)
-                    .addComponent(panelSecondaryActors, Alignment.LEADING,
-                        GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(mainActorsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-                        504, Short.MAX_VALUE)
-                    .addGroup(
-                        Alignment.LEADING,
-                        gl_panel
-                            .createSequentialGroup()
-                            .addGroup(
-                                gl_panel.createParallelGroup(Alignment.LEADING)
-                                    .addComponent(lblDescription).addComponent(lblName))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addGroup(
-                                gl_panel
-                                    .createParallelGroup(Alignment.LEADING, false)
-                                    .addComponent(scrollPane)
-                                    .addComponent(name, GroupLayout.DEFAULT_SIZE, 443,
-                                        Short.MAX_VALUE)))).addGap(31)));
-    gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(
-        gl_panel
-            .createSequentialGroup()
-            .addContainerGap()
-            .addGroup(
-                gl_panel
-                    .createParallelGroup(Alignment.BASELINE)
-                    .addComponent(lblName)
-                    .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                        GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(ComponentPlacement.RELATED)
-            .addGroup(
-                gl_panel
-                    .createParallelGroup(Alignment.LEADING)
-                    .addComponent(lblDescription)
-                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58,
-                        GroupLayout.PREFERRED_SIZE))
-            .addGap(18)
-            .addComponent(mainEntityPanel, GroupLayout.PREFERRED_SIZE, 96,
-                GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(ComponentPlacement.RELATED)
-            .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 108,
-                GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(ComponentPlacement.RELATED)
-            .addComponent(panelSecondaryActors, GroupLayout.PREFERRED_SIZE, 108,
-                GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(ComponentPlacement.UNRELATED)
-            .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 136,
-                GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(ComponentPlacement.UNRELATED)
-            .addComponent(panelMainFlow, GroupLayout.PREFERRED_SIZE, 188,
-                GroupLayout.PREFERRED_SIZE)
-            .addGap(18)
-            .addComponent(panelPostconditions, GroupLayout.PREFERRED_SIZE, 136,
-                GroupLayout.PREFERRED_SIZE)
-            .addGap(18)
-            .addComponent(panelAlternativeFlow, GroupLayout.PREFERRED_SIZE, 188,
-                GroupLayout.PREFERRED_SIZE).addGap(0, 0, Short.MAX_VALUE)));
+    gl_panel.setHorizontalGroup(
+      gl_panel.createParallelGroup(Alignment.TRAILING)
+        .addGroup(gl_panel.createSequentialGroup()
+          .addContainerGap()
+          .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+            .addComponent(mainEntityPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelAlternativeFlow, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+            .addComponent(panelPostconditions, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+            .addComponent(panelMainFlow, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+            .addComponent(panelPreconditions, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+            .addComponent(panelSecondaryActors, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(mainActorsPanel, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+            .addGroup(gl_panel.createSequentialGroup()
+              .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+                .addComponent(lblDescription)
+                .addComponent(lblName))
+              .addPreferredGap(ComponentPlacement.RELATED)
+              .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+                .addComponent(scrollPane)
+                .addComponent(name, GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE))
+              .addGap(8)))
+          .addGap(31))
+    );
+    gl_panel.setVerticalGroup(
+      gl_panel.createParallelGroup(Alignment.LEADING)
+        .addGroup(gl_panel.createSequentialGroup()
+          .addContainerGap()
+          .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+            .addComponent(lblName)
+            .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+          .addPreferredGap(ComponentPlacement.RELATED)
+          .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+            .addComponent(lblDescription)
+            .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))
+          .addGap(18)
+          .addComponent(mainEntityPanel, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
+          .addPreferredGap(ComponentPlacement.RELATED)
+          .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+          .addPreferredGap(ComponentPlacement.RELATED)
+          .addComponent(panelSecondaryActors, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+          .addPreferredGap(ComponentPlacement.UNRELATED)
+          .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
+          .addPreferredGap(ComponentPlacement.UNRELATED)
+          .addComponent(panelMainFlow, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE)
+          .addGap(18)
+          .addComponent(panelPostconditions, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
+          .addGap(18)
+          .addComponent(panelAlternativeFlow, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE)
+          .addGap(0, 0, Short.MAX_VALUE))
+    );
 
     /* Main Entity */
 
@@ -1088,37 +1069,29 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
 
     GroupLayout gl_mainEntityPanel = new GroupLayout(mainEntityPanel);
-    gl_mainEntityPanel.setHorizontalGroup(gl_mainEntityPanel
-        .createParallelGroup(Alignment.TRAILING).addGroup(
-            gl_mainEntityPanel
-                .createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addGroup(
-                    gl_mainEntityPanel
-                        .createParallelGroup(Alignment.LEADING)
-                        .addComponent(comboMainEntity, 0, 212, Short.MAX_VALUE)
-                        .addComponent(selectMainEntity, GroupLayout.DEFAULT_SIZE, 212,
-                            Short.MAX_VALUE)).addContainerGap()));
-    gl_mainEntityPanel.setVerticalGroup(gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
-        .addGroup(
-            gl_mainEntityPanel
-                .createSequentialGroup()
-                .addGap(6)
-                .addGroup(
-                    gl_mainEntityPanel
-                        .createParallelGroup(Alignment.BASELINE)
-                        .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 68,
-                            GroupLayout.PREFERRED_SIZE)
-                        .addGroup(
-                            gl_mainEntityPanel
-                                .createSequentialGroup()
-                                .addComponent(comboMainEntity, GroupLayout.PREFERRED_SIZE,
-                                    GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(selectMainEntity)))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+    gl_mainEntityPanel.setHorizontalGroup(
+      gl_mainEntityPanel.createParallelGroup(Alignment.TRAILING)
+        .addGroup(gl_mainEntityPanel.createSequentialGroup()
+          .addContainerGap()
+          .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+          .addPreferredGap(ComponentPlacement.RELATED)
+          .addGroup(gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
+            .addComponent(selectMainEntity, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+            .addComponent(comboMainEntity, 0, 212, Short.MAX_VALUE))
+          .addContainerGap())
+    );
+    gl_mainEntityPanel.setVerticalGroup(
+      gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
+        .addGroup(gl_mainEntityPanel.createSequentialGroup()
+          .addGroup(gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
+            .addGroup(gl_mainEntityPanel.createSequentialGroup()
+              .addGap(32)
+              .addComponent(selectMainEntity))
+            .addGroup(gl_mainEntityPanel.createParallelGroup(Alignment.BASELINE)
+              .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+              .addComponent(comboMainEntity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+          .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
 
     mainEntities = new JList();
     mainEntities.setVisibleRowCount(3);
