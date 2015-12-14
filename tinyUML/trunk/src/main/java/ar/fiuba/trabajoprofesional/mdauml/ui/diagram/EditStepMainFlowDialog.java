@@ -422,6 +422,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
                                 Short.MAX_VALUE).addComponent(editStep))).addContainerGap()));
 
     stepDescription = new JTextPane();
+    stepDescription.setToolTipText(Msg.get("editstepmainflow.description.tooltip"));
     scrollPaneStep.setViewportView(stepDescription);
     stepPanel.setLayout(gropuLayoutStepPanel);
 
