@@ -247,7 +247,7 @@ public abstract class DiagramEditor extends JComponent
      *
      * @return the DrawingContext
      */
-    protected DrawingContext getDrawingContext() {
+    public DrawingContext getDrawingContext() {
         return renderHelper.getDrawingContext();
     }
 

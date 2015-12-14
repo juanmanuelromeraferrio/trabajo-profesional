@@ -572,7 +572,8 @@ public final class ClassElement extends AbstractCompositeNode
         Relation relation = (Relation) umlConn.getModelElement();
         if(conn instanceof NoteConnection)
             return;
-
+        if(conn instanceof Association)
+            return;
         UmlModelElement element1 = relation.getElement1();
         UmlModelElement element2 = relation.getElement2();
 
@@ -604,5 +605,9 @@ public final class ClassElement extends AbstractCompositeNode
     @Override
     public void addToPackage(UmlPackage umlPackage, PackageableUmlModelElement packageableUmlModelElement) {
 
+    }
+
+    @Override
+    public void validateConnectionAsTarget(RelationType relationType, UmlNode node) throws AddConnectionException {
     }
 }

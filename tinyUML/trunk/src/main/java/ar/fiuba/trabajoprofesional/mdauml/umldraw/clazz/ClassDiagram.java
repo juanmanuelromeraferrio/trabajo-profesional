@@ -112,7 +112,7 @@ public class ClassDiagram extends GeneralDiagram {
         depPrototype.setRelation((Relation) notnavigable.clone());
         connectionPrototypes.put(RelationType.DEPENDENCY, depPrototype);
 
-        Association assocPrototype = (Association) RectilinearAssociation.getPrototype().clone();
+        Association assocPrototype = (Association) SimpleAssociation.getPrototype().clone();
         assocPrototype.setRelation((Relation) fullnavigable.clone());
         connectionPrototypes.put(RelationType.ASSOCIATION, assocPrototype);
 

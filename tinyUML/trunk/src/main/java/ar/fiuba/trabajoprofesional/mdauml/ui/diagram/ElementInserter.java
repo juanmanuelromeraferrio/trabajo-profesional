@@ -1,15 +1,16 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.CompositeNode;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
-import ar.fiuba.trabajoprofesional.mdauml.draw.Node;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddConnectionCommand;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.AddNodeCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 
 import java.awt.*;
@@ -67,4 +68,19 @@ public class ElementInserter {
 
     }
 
+    public static void insertConnection(UmlNode source, DiagramElement elem, DiagramEditor editor, RelationType relationType, Point2D anchor, Point2D tmpPos) throws AddConnectionException {
+        LineConnectMethod connectMethod = editor.getDiagram().getElementFactory().getConnectMethod(relationType);
+        if ( source != null && elem instanceof ConnectionVisitor) {
+            ((ConnectionVisitor) elem).validateConnectionAsTarget(relationType, source);
+
+            UmlConnection conn = editor.getDiagram().getElementFactory()
+                    .createConnection(relationType, source, (UmlNode) elem);
+            connectMethod
+                    .generateAndSetPointsToConnection(conn, source, (UmlNode) elem, anchor, tmpPos);
+            AddConnectionCommand command =
+                    new AddConnectionCommand(editor, editor.getDiagram(), conn);
+            editor.execute(command);
+
+        }
+    }
 }

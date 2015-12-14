@@ -45,4 +45,10 @@ public final class UmlProperty extends DefaultNamedElement {
             prototype = new UmlProperty();
         return prototype;
     }
+
+    public boolean equals(Object o){
+        if(getName()==null ||((UmlProperty)o).getName()==null)
+            return false;
+        return this.getName().equals(((UmlProperty)o).getName());
+    }
 }

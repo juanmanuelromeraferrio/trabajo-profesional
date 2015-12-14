@@ -125,18 +125,8 @@ public class LineHandler implements EditorMode {
         try {
             double mx = event.getX(), my = event.getY();
             DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
-            if ( source != null && elem instanceof ConnectionVisitor ) {
-                ((ConnectionVisitor) elem).validateConnectionAsTarget(relationType, source);
+            ElementInserter.insertConnection(source,elem,editor,relationType,anchor,tmpPos);
 
-                UmlConnection conn = editor.getDiagram().getElementFactory()
-                        .createConnection(relationType, source, (UmlNode) elem);
-                connectMethod
-                        .generateAndSetPointsToConnection(conn, source, (UmlNode) elem, anchor, tmpPos);
-                AddConnectionCommand command =
-                        new AddConnectionCommand(editor, editor.getDiagram(), conn);
-                editor.execute(command);
-
-            }
         }catch (AddConnectionException e){
             JOptionPane.showMessageDialog(AppFrame.get(), e.getMessage(),
                     Msg.get("error.connection.title")

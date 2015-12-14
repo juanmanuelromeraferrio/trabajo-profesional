@@ -2,10 +2,10 @@ package ar.fiuba.trabajoprofesional.mdauml.conversion.impl;
 
 import ar.fiuba.trabajoprofesional.mdauml.conversion.ClassDiagramBuilder;
 
-import ar.fiuba.trabajoprofesional.mdauml.conversion.model.Boundary;
-import ar.fiuba.trabajoprofesional.mdauml.conversion.model.IConversionDiagram;
-import ar.fiuba.trabajoprofesional.mdauml.conversion.model.SimpleClass;
+import ar.fiuba.trabajoprofesional.mdauml.conversion.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DoubleDimension;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
+import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.ApplicationState;
@@ -14,20 +14,23 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.ElementInserter;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
+import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
 
     private static final String CREATE_BOUNDARY = Msg.get("classtoolbar.boundary.command");
     private static final String CREATE_CONTROL = Msg.get("classtoolbar.control.command");
     private static final String CREATE_ENTITY = Msg.get("classtoolbar.entity.command");
-    private static final double V_MARGIN = 20;
-    private static final double H_MARGIN = 50;
-    private static final double DIAGRAM_H_MARGIN = 20;
+    private static final double V_MARGIN = 10;
+    private static final double H_MARGIN = 250;
+    private static final double DIAGRAM_H_MARGIN = 30;
     private static final double DIAGRAM_V_MARGIN = 20;
 
     @Override
@@ -37,24 +40,126 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
         ClassDiagramEditor diagramEditor = (ClassDiagramEditor) appState.getCurrentEditor();
         ClassDiagram diagram = (ClassDiagram) diagramEditor.getDiagram();
         diagram.setName(diagramName);
-        Boundary boundary = conversionModel.getBoundaries().iterator().next();
-        UmlBoundary umlBoundary = (UmlBoundary) UmlBoundary.getPrototype().clone();
-        umlBoundary.setName(boundary.getName());
-        List<UmlProperty> methods = new ArrayList<>();
-        for(String method : boundary.getMethods()){
-            UmlProperty umlMethod = (UmlProperty) UmlProperty.getPrototype().clone();
-            umlMethod.setName(method);
-            methods.add(umlMethod);
-        }
-        umlBoundary.setMethods(methods);
-        ClassElement element = (ClassElement) diagram.getElementFactory().createNodeFromModel(umlBoundary);
-        element.setParent(diagram);
 
-        Point2D pos = new Point2D.Double(300,300);
-        ElementInserter.insert(element,diagramEditor,pos);
+        List<ClassElement> controls = toElements(conversionModel.getControls(),diagramEditor);
+        List<ClassElement> entities = toElements(conversionModel.getEntities(),diagramEditor);
+        List<ClassElement> boundaries = toElements(conversionModel.getBoundaries(),diagramEditor);
+        Map<ClassElement,List<ClassElement>> controlEntities = new HashMap<>();
+        Map<ClassElement,List<ClassElement>> controlBoundaries = new HashMap<>();
+        initControlMaps(controlBoundaries,controlEntities,controls,entities,boundaries,conversionModel.getRelations());
+        Map<ClassElement,Point2D> positions = calculatePositions(controlBoundaries,controls,controlEntities);
+        for(ClassElement element : positions.keySet()){
+            Point2D pos = positions.get(element);
+            ElementInserter.insert(element,diagramEditor,pos);
+        }
+        for(SimpleRelation relation:conversionModel.getRelations()){
+            SimpleClass noControl;
+            SimpleClass aControl;
+            if (relation.getClass1() instanceof Control) {
+                noControl = relation.getClass2();
+                aControl = relation.getClass1();
+            }
+            else {
+                noControl = relation.getClass1();
+                aControl  = relation.getClass2();
+            }
+            UmlNode source = findElement(controls,aControl.getName());
+            ClassElement elem;
+            if(noControl instanceof Boundary)
+                elem = findElement(boundaries,noControl.getName());
+            else
+                elem = findElement(entities,noControl.getName());
+            try {
+                ElementInserter.insertConnection(source,elem,diagramEditor,RelationType.ASSOCIATION,new Point2D.Double(source.getAbsCenterX(),source.getAbsCenterY()),new Point2D.Double(elem.getAbsCenterX(),elem.getAbsCenterY()));
+            } catch (AddConnectionException e) {
+                    e.printStackTrace();
+            }
+        }
+
     }
 
-    private Map<ClassElement,Point2D> calculatePositions(Map<String,List<ClassElement>> boundaryMap, List<ClassElement> controls, Map<String,List<ClassElement>> entityMap){
+    private void initControlMaps(Map<ClassElement, List<ClassElement>> controlBoundaries,
+                                 Map<ClassElement, List<ClassElement>> controlEntities,
+                                 List<ClassElement> controls,
+                                 List<ClassElement> entities,
+                                 List<ClassElement> boundaries,
+                                 Set<SimpleRelation> relations) {
+        for(ClassElement control:controls){
+            controlBoundaries.put(control,new ArrayList<ClassElement>());
+            List<ClassElement> boundaryList = controlBoundaries.get(control);
+            controlEntities.put(control,new ArrayList<ClassElement>());
+            List<ClassElement> entityList = controlEntities.get(control);
+            for(SimpleRelation relation : relations) {
+                SimpleClass noControl;
+                SimpleClass aControl;
+                if (relation.getClass1() instanceof Control) {
+                    noControl = relation.getClass2();
+                    aControl = relation.getClass1();
+                }
+                else {
+                    noControl = relation.getClass1();
+                    aControl  = relation.getClass2();
+                }
+                if(! control.getLabelText().equals(aControl.getName()))
+                    continue;
+                if (noControl instanceof Boundary)
+                    boundaryList.add(findElement(boundaries, noControl.getName()));
+                else
+                    entityList.add(findElement(entities, noControl.getName()));
+            }
+        }
+
+    }
+
+    private List<ClassElement> toElements(Set<? extends SimpleClass> simpleClasses, ClassDiagramEditor diagramEditor) {
+        ClassDiagram diagram = (ClassDiagram) diagramEditor.getDiagram();
+        List<ClassElement> elements = new ArrayList<>();
+        for(SimpleClass simpleClass : simpleClasses){
+            UmlClass umlClass;
+            if(simpleClass instanceof  Boundary) {
+                umlClass = (UmlClass) AppFrame.get().getAppState().getUmlModel().getElement(simpleClass.getName(),UmlBoundary.class);
+                if(umlClass == null) {
+                    umlClass = (UmlClass) UmlBoundary.getPrototype().clone();
+                    umlClass.setName(simpleClass.getName());
+                }
+            }else if (simpleClass instanceof Control) {
+                umlClass = (UmlClass) AppFrame.get().getAppState().getUmlModel().getElement(simpleClass.getName(), UmlControl.class);
+                if (umlClass == null){
+                    umlClass = (UmlClass) UmlControl.getPrototype().clone();
+                    umlClass.setName(simpleClass.getName());
+                }
+            }else {
+                umlClass = (UmlClass) AppFrame.get().getAppState().getUmlModel().getElement(simpleClass.getName(),UmlEntity.class);
+                if(umlClass == null) {
+                    umlClass = (UmlClass) UmlEntity.getPrototype().clone();
+                    umlClass.setName(simpleClass.getName());
+                }
+            }
+
+
+            List<UmlProperty> allMethod = umlClass.getMethods();
+            for(String method : simpleClass.getMethods()){
+                UmlProperty umlMethod = (UmlProperty) UmlProperty.getPrototype().clone();
+                umlMethod.setName(method);
+                if(!allMethod.contains(umlMethod))
+                    allMethod.add(umlMethod);
+            }
+
+            ClassElement element = (ClassElement) diagram.getElementFactory().createNodeFromModel(umlClass);
+            element.setParent(diagram);
+            DrawingContext drawingContext = diagramEditor.getDrawingContext();
+            Rectangle clipBounds = new Rectangle();
+            Graphics g = AppFrame.get().getGraphics();
+            g.getClipBounds(clipBounds);
+            drawingContext.setGraphics2D((Graphics2D) g,clipBounds );
+            element.recalculateSize(drawingContext);
+
+            elements.add(element);
+        }
+        return elements;
+    }
+
+    private Map<ClassElement,Point2D> calculatePositions(Map<ClassElement,List<ClassElement>> boundaryMap, List<ClassElement> controls, Map<ClassElement,List<ClassElement>> entityMap){
 
         Map<ClassElement,Point2D> positions = new HashMap<>();
 
@@ -65,9 +170,9 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
         Set<ClassElement> allEntities = new HashSet<>();
         Set<ClassElement> allBoundaries = new HashSet<>();
         for(ClassElement control : controls) {
-            List<ClassElement> boundaries = boundaryMap.get(control.getLabelText());
+            List<ClassElement> boundaries = boundaryMap.get(control);
             allBoundaries.addAll(boundaries);
-            List<ClassElement> entities = entityMap.get(control.getLabelText());
+            List<ClassElement> entities = entityMap.get(control);
             allEntities.addAll(entities);
         }
         Dimension2D allBoundaryDimension = calculateDimension(allBoundaries);
@@ -76,8 +181,8 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
         entityOffset.setLocation(controlOffset.getX()+allControlDimension.getWidth()+H_MARGIN,entityOffset.getY());
         Dimension2D allEntitiesDimension = calculateDimension(allEntities);
         for(ClassElement control : controls){
-            List<ClassElement> boundaries = boundaryMap.get(control.getLabelText());
-            List<ClassElement> entities = entityMap.get(control.getLabelText());
+            List<ClassElement> boundaries = boundaryMap.get(control);
+            List<ClassElement> entities = entityMap.get(control);
             for(ClassElement element : positions.keySet()){
                 boundaries.remove(element);
                 entities.remove(element);
@@ -92,22 +197,23 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
             if(entitiesDimension.getHeight() > maxHeight)
                 maxHeight = entitiesDimension.getHeight();
             groupDimension.setSize( boundariesDimension.getWidth() +
-                            controlDimension.getHeight() + entitiesDimension.getHeight()+ 2*H_MARGIN,
+                            controlDimension.getWidth() + entitiesDimension.getWidth()+ 2*H_MARGIN,
                     maxHeight);
-            double boundaryVPadding = (boundariesDimension.getHeight() - maxHeight)/2.0;
+            double boundaryVPadding = (maxHeight - boundariesDimension.getHeight() )/2.0;
             boundaryOffset.setLocation(boundaryOffset.getX(),boundaryOffset.getY()+boundaryVPadding);
-            double controlVPadding = (controlDimension.getHeight() - maxHeight)/2.0;
+            double controlVPadding = (maxHeight - controlDimension.getHeight() )/2.0;
             controlOffset.setLocation(controlOffset.getX(),controlOffset.getY()+controlVPadding);
-            double entityVPadding = (entitiesDimension.getHeight() - maxHeight)/2.0;
+            double entityVPadding = (maxHeight - entitiesDimension.getHeight() )/2.0;
             entityOffset.setLocation(entityOffset.getX(),entityOffset.getY()+entityVPadding);
 
-
+            ////// Setting control position
             Point2D controlPos = (Point2D) controlOffset.clone();
             double controlHPadding =  (controlDimension.getWidth() - allControlDimension.getWidth())/2.0;
             controlPos.setLocation(controlPos.getX()+controlHPadding,controlPos.getY());
             positions.put(control, controlPos);
-            controlOffset.setLocation(controlOffset.getX(),controlOffset.getY()+controlDimension.getHeight()+V_MARGIN);
+            controlOffset.setLocation(controlOffset.getX(),controlOffset.getY()+controlDimension.getHeight()+controlVPadding+V_MARGIN);
 
+            ////// Setting boundaries position
             for(ClassElement boundary: boundaries){
                 Point2D boundaryPos = (Point2D) boundaryOffset.clone();
                 double boundaryHPadding =  (boundary.getSize().getWidth() - allBoundaryDimension.getWidth())/2.0;
@@ -119,10 +225,32 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
             if(!boundaries.isEmpty())
                 boundaryOffset.setLocation(boundaryOffset.getX(),boundaryOffset.getY() - V_MARGIN);
 
-            boundaryOffset.setLocation(boundaryOffset.getX(),boundaryOffset.getY()+boundaryVPadding);
+            boundaryOffset.setLocation(boundaryOffset.getX(),boundaryOffset.getY()+boundaryVPadding+V_MARGIN);
+
+            ////// Setting entities position
+            for(ClassElement entity: entities){
+                Point2D entityPos = (Point2D) entityOffset.clone();
+                double entityHPadding =  (entity.getSize().getWidth() - allEntitiesDimension.getWidth())/2.0;
+                entityPos.setLocation(entityPos.getX()+entityHPadding,entityPos.getY());
+                positions.put(entity, entityPos);
+                entityOffset.setLocation(entityOffset.getX(),
+                        entityOffset.getY()+entity.getSize().getHeight()+V_MARGIN);
+            }
+            if(!entities.isEmpty())
+                entityOffset.setLocation(entityOffset.getX(),entityOffset.getY() - V_MARGIN);
+
+            entityOffset.setLocation(entityOffset.getX(),entityOffset.getY()+entityVPadding+V_MARGIN);
 
         }
-        return  null;
+        return  positions;
+    }
+
+    private ClassElement findElement(List<ClassElement> elements, String name) {
+        for(ClassElement element : elements){
+            if(element.getLabelText().equals(name))
+                return element;
+        }
+        return null;
     }
 
     private Dimension2D calculateDimension(Collection<ClassElement> elements) {
@@ -136,7 +264,7 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
             if(elementWidth > dimensionWidth)
                 dimension.setSize(elementWidth,dimensionHeight);
 
-            dimension.setSize(dimensionWidth,dimensionHeight + elementHeight + V_MARGIN);
+            dimension.setSize(dimension.getWidth(),dimensionHeight + elementHeight + V_MARGIN);
 
         }
         if(!elements.isEmpty())

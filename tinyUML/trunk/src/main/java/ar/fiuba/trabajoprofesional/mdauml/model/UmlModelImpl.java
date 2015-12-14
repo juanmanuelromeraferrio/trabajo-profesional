@@ -198,6 +198,15 @@ public class UmlModelImpl implements UmlModel, NameChangeListener {
 
     }
 
+    @Override
+    public UmlModelElement getElement(String name, Class<? extends UmlModelElement> umlBoundaryClass) {
+        for(UmlModelElement element : getAll(umlBoundaryClass)){
+            if(element.getName()!=null && element.getName().equals(name))
+                return element;
+        }
+        return null;
+    }
+
     @Override public void nameChanged(NamedElement element) throws ElementNameAlreadyExist {
         Set<UmlModelElement> mainElements = mapMainElementsCounts.keySet();
         for (UmlModelElement modelElement : mainElements) {

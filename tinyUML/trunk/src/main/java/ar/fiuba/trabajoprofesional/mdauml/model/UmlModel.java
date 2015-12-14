@@ -117,4 +117,6 @@ public interface UmlModel {
     Set<? extends UmlModelElement> getAll(Class<? extends UmlModelElement> clazz);
 
     void reset();
+
+    UmlModelElement getElement(String name, Class<? extends UmlModelElement> umlBoundaryClass);
 }

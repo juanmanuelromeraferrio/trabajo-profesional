@@ -27,7 +27,7 @@ public class DiagramBuilder {
             for(UmlUseCase useCase : mainEntityMap.get(mainEntity)){
                 if(isPackageRelated() && (useCase.getPackage()==null || !useCase.getPackage().equals(umlPackage)))
                     continue;
-                control.addMethod(StringHelper.toLowerCamelCase(useCase.getName()));
+                control.addMethod("+"+StringHelper.toLowerCamelCase(useCase.getName())+"()");
                 for(String entityName : useCase.getAllEntities()){
                     Entity entity = conversionDiagram.getEntity(StringHelper.toUpperCamelCase(entityName));
                     conversionDiagram.addRelation(new SimpleRelation(control,entity));
