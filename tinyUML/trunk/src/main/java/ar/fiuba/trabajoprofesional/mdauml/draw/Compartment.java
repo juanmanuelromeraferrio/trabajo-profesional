@@ -36,9 +36,6 @@ import java.util.List;
 public class Compartment extends AbstractCompositeNode implements CompositeNode {
 
     private static final double MIN_WIDTH = 80;
-
-
-    ;
     private static final double MIN_HEIGHT = 10;
     private List<Label> labels = new ArrayList<Label>();
     private double marginTop = Defaults.getInstance().getMarginTop();
