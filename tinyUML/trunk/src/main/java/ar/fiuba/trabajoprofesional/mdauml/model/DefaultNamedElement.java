@@ -43,6 +43,7 @@ public class DefaultNamedElement implements NamedElement,Comparable<DefaultNamed
         DefaultNamedElement cloned = null;
         try {
             cloned = (DefaultNamedElement) super.clone();
+            cloned.nameChangeListeners = new HashSet<>();
         } catch (CloneNotSupportedException ignore) {
             ignore.printStackTrace();
         }

@@ -1,21 +1,19 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import java.util.ArrayList;
-import java.util.List;
+public class UmlBoundary extends UmlStereotypedClass{
 
-public class UmlBoundary extends UmlClass {
-
+    private static final String BOUNDARY_NAME = "<<boundary>>";
     private static UmlBoundary prototype;
     /**
      * Constructor.
      */
     private UmlBoundary() {
         super();
-        UmlStereotype stereotype = new UmlStereotype();
-        stereotype.setName("<<boundary>>");
-        ArrayList<UmlStereotype> list = new ArrayList<>();
-        list.add(stereotype);
-        super.setStereotypes(list);
+    }
+
+    @Override
+    public String getStereotype() {
+        return BOUNDARY_NAME;
     }
 
     /**
@@ -29,10 +27,7 @@ public class UmlBoundary extends UmlClass {
         return prototype;
     }
 
-    @Override
-    public void setStereotypes(List<UmlStereotype> stereotypes){
 
-    }
 
 
 

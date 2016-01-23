@@ -50,4 +50,20 @@ public final class UmlStereotype extends AbstractUmlModelElement {
     public ElementType getElementType() {
         return ElementType.STEREOTYPE;
     }
+
+    @Override
+    public void setName(String name){
+        if(name.length() < 4 || !name.substring(0,2).equals("<<")||!name.substring(name.length()-2,name.length()).equals(">>"))
+            super.setName( "<<" + name + ">>" );
+        else
+            super.setName(name);
+    }
+
+
+    @Override
+    public boolean equals(Object o){
+        if(o==null || !(o instanceof UmlStereotype))
+            return false;
+        return  ((UmlStereotype)o).getName().equals(getName());
+    }
 }

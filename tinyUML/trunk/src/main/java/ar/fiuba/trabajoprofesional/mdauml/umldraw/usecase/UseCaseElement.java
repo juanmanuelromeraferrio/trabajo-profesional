@@ -123,6 +123,8 @@ public final class UseCaseElement extends AbstractCompositeNode
      */
     @Override public void recalculateSize(DrawingContext drawingContext) {
         mainCompartment.recalculateSize(drawingContext);
+        setSize(new DoubleDimension(Math.max(super.getSize().getWidth(),mainCompartment.getSize().getWidth()),getSize().getHeight()));
+        mainCompartment.setSize(new DoubleDimension(getSize().getWidth(),getSize().getHeight()));
         notifyNodeResized();
     }
 
@@ -146,13 +148,6 @@ public final class UseCaseElement extends AbstractCompositeNode
         return minMainSize;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override public Dimension2D getSize() {
-        Dimension2D mainSize = mainCompartment.getSize();
-        return mainSize;
-    }
 
     /**
      * {@inheritDoc}
@@ -181,6 +176,7 @@ public final class UseCaseElement extends AbstractCompositeNode
      */
     @Override public void setSize(double width, double height) {
         mainCompartment.setSize(width, height);
+        super.setSize(width,height);
         invalidate();
     }
 

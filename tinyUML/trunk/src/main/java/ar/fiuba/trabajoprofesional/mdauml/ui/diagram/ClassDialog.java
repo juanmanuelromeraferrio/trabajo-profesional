@@ -1,9 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlBoundary;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlStereotype;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
@@ -14,18 +11,17 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 public class ClassDialog extends JDialog {
     private static final int CLASS_INDEX = 0;
-    private static final int ATTRIBUTES_INDEX = 1;
-    private static final int METHODS_INDEX = 2;
+    private static final int MEMBERS_INDEX = 1;
+    private DefaultTableModel stereotypeTableModel;
     private UmlClass classModel;
     private ClassElement classElement;
-    private DefaultListModel<String> stereotypeListModel;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -33,15 +29,13 @@ public class ClassDialog extends JDialog {
     private JPanel mainPanel;
     private JTabbedPane tabbedPanel;
     private JPanel classPanel;
-    private JPanel attributesPanel;
+    private JPanel membersPanel;
     private JPanel methodsPanel;
     private JPanel namePanel;
     private JLabel classNameLabel;
     private JTextField classNameField;
     private JCheckBox classAbstractCheckbox;
     private JPanel stereotypePanel;
-    private JCheckBox stereotypesVisible;
-    private JList stereotypeList;
     private JButton addStereotypeButton;
     private JButton removeStereotypeButton;
     private JPanel stereotypesLeft;
@@ -55,7 +49,20 @@ public class ClassDialog extends JDialog {
     private JButton deleteAttributeButton;
     private JButton moveUpAttributeButton;
     private JButton moveDownAttributeButton;
-    private JLabel stereotypesLabel;
+    private JPanel attributesPanel;
+    private JTable methodsTable;
+    private JButton addMethodButton;
+    private JButton deleteMethodButton;
+    private JButton moveUpMethodButton;
+    private JButton moveDownMethodButton;
+    private JPanel attributesButtonPanel;
+    private JPanel attributesTablePanel;
+    private JPanel methodsTablePanel;
+    private JPanel methodsButtonPanel;
+    private JTable stereotypeTable;
+    private JScrollPane stereotypeScroll;
+    private boolean ok = false;
+
 
     public ClassDialog(Window parent, ClassElement aClassElement) {
         super(parent, ModalityType.APPLICATION_MODAL);
@@ -67,17 +74,13 @@ public class ClassDialog extends JDialog {
 
         tabbedPanel.setTitleAt(CLASS_INDEX, Msg.get("classeditor.tab.class"));
 
-        tabbedPanel.setTitleAt(ATTRIBUTES_INDEX, Msg.get("classeditor.tab.attributes"));
-
-        tabbedPanel.setTitleAt(METHODS_INDEX, Msg.get("classeditor.tab.methods"));
+        tabbedPanel.setTitleAt(MEMBERS_INDEX, Msg.get("classeditor.tab.members"));
 
         classNameLabel.setText(Msg.get("classeditor.className"));
 
         classAbstractCheckbox.setText(Msg.get("classeditor.isAbstract"));
 
         ((TitledBorder) stereotypePanel.getBorder()).setTitle(Msg.get("classeditor.stereotypes"));
-
-        stereotypesVisible.setText(Msg.get("classeditor.visible"));
 
         addStereotypeButton.setText(Msg.get("classeditor.add"));
 
@@ -89,28 +92,23 @@ public class ClassDialog extends JDialog {
 
         ((TitledBorder) docPanel.getBorder()).setTitle(Msg.get("classeditor.documentation"));
 
-        stereotypeListModel = new DefaultListModel<String>();
+        stereotypeTableModel = new DefaultTableModel();
+        stereotypeTableModel.addColumn("");
         for (int i = 0; i < classModel.getStereotypes().size(); i++) {
             UmlStereotype umlStereotype = classModel.getStereotypes().get(i);
-            stereotypeListModel.addElement(umlStereotype.getName().substring(2, umlStereotype.getName().length() - 2));
+            stereotypeTableModel.addRow(new Object[]{umlStereotype.getName().substring(2, umlStereotype.getName().length() - 2)});
         }
+        stereotypeTable.setModel(stereotypeTableModel);
 
-        stereotypeList.setModel(stereotypeListModel);
+        stereotypeTable.setTableHeader(null);
 
         classNameField.setText(classModel.getName());
         classAbstractCheckbox.setSelected(classModel.isAbstract());
-        stereotypesVisible.setSelected(classElement.showStereotypes());
+        documentationArea.setText(classModel.getDocumentation());
 
-        ////////////////////////////////////////////////////
+        /////////////////////  ATTRIBUTES  //////////////////////////
 
-//        TableColumn returnTypeColumn = new TableColumn(0, 10);
-//        returnTypeColumn.setHeaderValue(Msg.get("classeditor.returnType"));
-//        TableColumn nameColumn = new TableColumn(1, 50);
-//        nameColumn.setHeaderValue(Msg.get("classeditor.nameColumn"));
-
-//        TableColumn argumentsColumn = new TableColumn(2, 200);
-//        argumentsColumn.setHeaderValue(Msg.get("classeditor.argumentsColumn"));
-
+        ((TitledBorder) attributesPanel.getBorder()).setTitle(Msg.get("classeditor.attributes"));
 
         String typeAttColumnName = Msg.get("classeditor.type");
         String nameAttColumnName = Msg.get("classeditor.nameColumn");
@@ -135,12 +133,66 @@ public class ClassDialog extends JDialog {
         attributesTable.getColumn(nameAttColumnName).setPreferredWidth(400);
         attributesTable.getColumn(visibleAttColumnName).setPreferredWidth(60);
 
-
+        List<UmlProperty> attributes = classModel.getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            Object[] row = new Object[3];
+            row[0] = attributes.get(i).getName().split(":")[1];
+            row[1] = attributes.get(i).getName().split(":")[0];
+            row[2] = classElement.getAttributesVisibility().get(i);
+            attributesTableModel.addRow(row);
+        }
 
         addAttributeButton.setText(Msg.get("classeditor.add"));
         deleteAttributeButton.setText(Msg.get("classeditor.remove"));
         moveUpAttributeButton.setText(Msg.get("classeditor.moveUp"));
         moveDownAttributeButton.setText(Msg.get("classeditor.moveDown"));
+
+        /////////////////////  METHODS  //////////////////////////
+
+        ((TitledBorder) methodsPanel.getBorder()).setTitle(Msg.get("classeditor.methods"));
+
+        String returnTypeColumnName = Msg.get("classeditor.returnType");
+        String nameMethodColumnName = Msg.get("classeditor.nameColumn");
+        String argsMethodColumnName = Msg.get("classeditor.arguments");
+        String visibleMethodColumnName = Msg.get("classeditor.visible");
+
+        final DefaultTableModel methodsTableModel = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int index) {
+                if (index == 3)
+                    return Boolean.class;
+
+                return String.class;
+            }
+        };
+
+        methodsTableModel.addColumn(returnTypeColumnName);
+        methodsTableModel.addColumn(nameMethodColumnName);
+        methodsTableModel.addColumn(argsMethodColumnName);
+        methodsTableModel.addColumn(visibleMethodColumnName);
+
+        methodsTable.setModel(methodsTableModel);
+        methodsTable.getColumn(returnTypeColumnName).setPreferredWidth(80);
+        methodsTable.getColumn(nameMethodColumnName).setPreferredWidth(120);
+        methodsTable.getColumn(argsMethodColumnName).setPreferredWidth(300);
+        methodsTable.getColumn(visibleMethodColumnName).setPreferredWidth(60);
+
+        List<UmlProperty> methods = classModel.getMethods();
+        for (int i = 0; i < methods.size(); i++) {
+            Object[] row = new Object[4];
+            String[] splitted = methods.get(i).getName().split(":");
+            row[0] = splitted[splitted.length - 1];
+            row[1] = methods.get(i).getName().split("\\(")[0];
+            row[2] = methods.get(i).getName().split("[\\(\\)]")[1];
+            row[3] = classElement.getMethodVisibility().get(i);
+            methodsTableModel.addRow(row);
+        }
+
+
+        addMethodButton.setText(Msg.get("classeditor.add"));
+        deleteMethodButton.setText(Msg.get("classeditor.remove"));
+        moveUpMethodButton.setText(Msg.get("classeditor.moveUp"));
+        moveDownMethodButton.setText(Msg.get("classeditor.moveDown"));
 
 
         buttonOK.addActionListener(new ActionListener() {
@@ -172,43 +224,26 @@ public class ClassDialog extends JDialog {
         addStereotypeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                stereotypeListModel.addElement("new stereotype");
-                stereotypeList.setSelectedIndex(stereotypeListModel.getSize() - 1);
-                stereotypeList.ensureIndexIsVisible(stereotypeList.getSelectedIndex());
+                stereotypeTableModel.addRow(new Object[]{"new stereotype"});
+                stereotypeTable.setRowSelectionInterval(stereotypeTableModel.getRowCount() - 1, stereotypeTableModel.getRowCount() - 1);
             }
         });
         removeStereotypeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                stereotypeListModel.remove(stereotypeList.getSelectedIndex());
+                deleteFromTable(stereotypeTable);
             }
         });
         upStereotypeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selected = (String) stereotypeList.getSelectedValue();
-                int index = stereotypeList.getSelectedIndex();
-                if (index == 0)
-                    return;
-                stereotypeListModel.setElementAt(stereotypeListModel.get(index - 1), index);
-
-                stereotypeListModel.setElementAt(selected, index - 1);
-                stereotypeList.setSelectedIndex(index - 1);
+                moveUpFromTable(stereotypeTable);
             }
         });
         downStereotypeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                String selected = (String) stereotypeList.getSelectedValue();
-                int index = stereotypeList.getSelectedIndex();
-                if (index == stereotypeListModel.getSize() - 1)
-                    return;
-                stereotypeListModel.setElementAt(stereotypeListModel.get(index + 1), index);
-
-                stereotypeListModel.setElementAt(selected, index + 1);
-                stereotypeList.setSelectedIndex(index + 1);
-
+                moveDownFromTable(stereotypeTable);
             }
         });
         addAttributeButton.addActionListener(new ActionListener() {
@@ -220,45 +255,136 @@ public class ClassDialog extends JDialog {
         deleteAttributeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selected = attributesTable.getSelectedRow();
-                if (selected == -1)
-                    return;
-                attributesTableModel.removeRow(selected);
+                deleteFromTable(attributesTable);
             }
         });
         moveUpAttributeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selected = attributesTable.getSelectedRow();
-                if (selected == -1 || selected == 0)
-                    return;
-                Vector rows = attributesTableModel.getDataVector();
-                Object rowSelected = rows.get(selected);
-                Object rowAbove = rows.get(selected - 1);
-                rows.setElementAt(rowSelected, selected - 1);
-                rows.setElementAt(rowAbove, selected);
-                attributesTable.setRowSelectionInterval(selected - 1, selected - 1);
+                moveUpFromTable(attributesTable);
 
             }
         });
         moveDownAttributeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selected = attributesTable.getSelectedRow();
-                if (selected == -1 || selected == attributesTableModel.getRowCount() - 1)
-                    return;
-                Vector rows = attributesTableModel.getDataVector();
-                Object rowSelected = rows.get(selected);
-                Object rowBelow = rows.get(selected + 1);
-                rows.setElementAt(rowSelected, selected + 1);
-                rows.setElementAt(rowBelow, selected);
-                attributesTable.setRowSelectionInterval(selected + 1, selected + 1);
+                moveDownFromTable(attributesTable);
             }
         });
+        addMethodButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                methodsTableModel.addRow(new Object[]{"int", "newMethod", "value1:int,value2:int", true});
+            }
+        });
+        deleteMethodButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteFromTable(methodsTable);
+            }
+        });
+        moveUpMethodButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveUpFromTable(methodsTable);
+            }
+        });
+        moveDownMethodButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveDownFromTable(methodsTable);
+            }
+        });
+        pack();
+    }
+
+    private void deleteFromTable(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        int selected = table.getSelectedRow();
+        if (selected == -1)
+            return;
+        model.removeRow(selected);
+
+    }
+
+    private void moveUpFromTable(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        int selected = table.getSelectedRow();
+        if (selected == -1 || selected == 0)
+            return;
+        Vector rows = model.getDataVector();
+        Object rowSelected = rows.get(selected);
+        Object rowAbove = rows.get(selected - 1);
+        rows.setElementAt(rowSelected, selected - 1);
+        rows.setElementAt(rowAbove, selected);
+        table.setRowSelectionInterval(selected - 1, selected - 1);
+    }
+
+    private void moveDownFromTable(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        int selected = table.getSelectedRow();
+        if (selected == -1 || selected == model.getRowCount() - 1)
+            return;
+        Vector rows = model.getDataVector();
+        Object rowSelected = rows.get(selected);
+        Object rowBelow = rows.get(selected + 1);
+        rows.setElementAt(rowSelected, selected + 1);
+        rows.setElementAt(rowBelow, selected);
+        table.setRowSelectionInterval(selected + 1, selected + 1);
+
     }
 
     private void onOK() {
-// add your code here
+        ArrayList<UmlProperty> attributes = new ArrayList<>();
+        ArrayList<Boolean> attributesVisibility = new ArrayList<>();
+        ArrayList<UmlProperty> methods = new ArrayList<>();
+        ArrayList<Boolean> methodsVisbility = new ArrayList<>();
+        Vector attributesMatrix = ((DefaultTableModel) attributesTable.getModel()).getDataVector();
+        for (Vector row : (Vector<Vector>) attributesMatrix) {
+            UmlProperty attribute = (UmlProperty) UmlProperty.getPrototype().clone();
+            String attName;
+            if (row.get(1) == null || ((String) row.get(1)).isEmpty() || row.get(0) == null || ((String) row.get(0)).isEmpty())
+                continue;
+            attName = row.get(1) + ":" + row.get(0);
+            attribute.setName(attName);
+            attributes.add(attribute);
+            attributesVisibility.add((Boolean) row.get(2));
+        }
+        Vector methodsMatrix = ((DefaultTableModel) methodsTable.getModel()).getDataVector();
+        for (Vector row : (Vector<Vector>) methodsMatrix) {
+            UmlProperty method = (UmlProperty) UmlProperty.getPrototype().clone();
+            String methodName;
+            if (row.get(1) == null || ((String) row.get(1)).isEmpty())
+                continue;
+
+            methodName = row.get(1) + "(";
+            if (row.get(2) != null)
+                methodName += row.get(2);
+            if (row.get(0) == null || ((String) row.get(0)).isEmpty())
+                methodName += "):void";
+            else
+                methodName += "):" + row.get(0);
+            method.setName(methodName);
+            methods.add(method);
+            methodsVisbility.add((Boolean) row.get(3));
+        }
+
+        classModel.setAttributes(attributes);
+        classModel.setMethods(methods);
+        classElement.setAttributeVisibility(attributesVisibility);
+        classElement.setMethodVisibility(methodsVisbility);
+        classModel.setName(classNameField.getText());
+        classModel.setAbstract(classAbstractCheckbox.isSelected());
+
+        ArrayList<UmlStereotype> stereotypes = new ArrayList<>();
+        for (int i = 0; i < stereotypeTableModel.getRowCount(); i++) {
+            UmlStereotype stereotype = (UmlStereotype) UmlStereotype.getPrototype().clone();
+            stereotype.setName("<<" + ((Vector<Vector>) stereotypeTableModel.getDataVector()).elementAt(i).elementAt(0) + ">>");
+            stereotypes.add(stereotype);
+        }
+        classModel.setStereotypes(stereotypes);
+        classModel.setDocumentation(documentationArea.getText());
+        ok = true;
         dispose();
     }
 
@@ -276,6 +402,10 @@ public class ClassDialog extends JDialog {
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    public boolean isOk() {
+        return ok;
     }
 
     {
@@ -330,23 +460,22 @@ public class ClassDialog extends JDialog {
         classAbstractCheckbox.setText("CheckBox");
         namePanel.add(classAbstractCheckbox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         stereotypePanel = new JPanel();
-        stereotypePanel.setLayout(new GridLayoutManager(2, 2, new Insets(10, 20, 10, 20), -1, -1));
+        stereotypePanel.setLayout(new GridLayoutManager(1, 2, new Insets(10, 20, 10, 20), -1, -1));
         stereotypePanel.setEnabled(true);
         classPanel.add(stereotypePanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 100), null, 0, false));
         stereotypePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, new Color(-16777216)));
-        stereotypesVisible = new JCheckBox();
-        stereotypesVisible.setText("CheckBox");
-        stereotypePanel.add(stereotypesVisible, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         stereotypesLeft = new JPanel();
         stereotypesLeft.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        stereotypePanel.add(stereotypesLeft, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 70), new Dimension(-1, 70), 0, false));
-        final JScrollPane scrollPane1 = new JScrollPane();
-        stereotypesLeft.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 60), new Dimension(-1, 60), 0, false));
-        stereotypeList = new JList();
-        scrollPane1.setViewportView(stereotypeList);
+        stereotypePanel.add(stereotypesLeft, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 70), new Dimension(-1, 70), 0, false));
+        stereotypeScroll = new JScrollPane();
+        stereotypeScroll.setAutoscrolls(true);
+        stereotypesLeft.add(stereotypeScroll, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 60), new Dimension(-1, 60), 0, false));
+        stereotypeTable = new JTable();
+        stereotypeTable.setShowVerticalLines(false);
+        stereotypeScroll.setViewportView(stereotypeTable);
         stereotypesRight = new JPanel();
         stereotypesRight.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        stereotypePanel.add(stereotypesRight, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, 60), new Dimension(-1, 60), 0, false));
+        stereotypePanel.add(stereotypesRight, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, 60), new Dimension(-1, 60), 0, false));
         addStereotypeButton = new JButton();
         addStereotypeButton.setText("Button");
         stereotypesRight.add(addStereotypeButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -363,46 +492,72 @@ public class ClassDialog extends JDialog {
         docPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 20, 10, 20), -1, -1));
         classPanel.add(docPanel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         docPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
-        final JScrollPane scrollPane2 = new JScrollPane();
-        docPanel.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        docPanel.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         documentationArea = new JTextArea();
-        scrollPane2.setViewportView(documentationArea);
+        scrollPane1.setViewportView(documentationArea);
+        membersPanel = new JPanel();
+        membersPanel.setLayout(new GridLayoutManager(3, 1, new Insets(10, 10, 10, 10), -1, -1));
+        tabbedPanel.addTab("Untitled", membersPanel);
         attributesPanel = new JPanel();
-        attributesPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPanel.addTab("Untitled", attributesPanel);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        attributesPanel.add(panel2, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        attributesPanel.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JScrollPane scrollPane3 = new JScrollPane();
-        panel3.add(scrollPane3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        attributesPanel.setLayout(new GridLayoutManager(2, 2, new Insets(5, 5, 5, 5), -1, -1));
+        membersPanel.add(attributesPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        attributesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "title"));
+        attributesTablePanel = new JPanel();
+        attributesTablePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        attributesPanel.add(attributesTablePanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane2 = new JScrollPane();
+        attributesTablePanel.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         attributesTable = new JTable();
         attributesTable.setCellSelectionEnabled(true);
         attributesTable.setEditingRow(-1);
         attributesTable.setFocusCycleRoot(false);
-        scrollPane3.setViewportView(attributesTable);
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
-        attributesPanel.add(panel4, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        scrollPane2.setViewportView(attributesTable);
+        attributesButtonPanel = new JPanel();
+        attributesButtonPanel.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
+        attributesPanel.add(attributesButtonPanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(100, -1), null, 0, false));
         addAttributeButton = new JButton();
         addAttributeButton.setText("Button");
-        panel4.add(addAttributeButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        attributesButtonPanel.add(addAttributeButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        panel4.add(spacer2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        attributesButtonPanel.add(spacer2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         deleteAttributeButton = new JButton();
         deleteAttributeButton.setText("Button");
-        panel4.add(deleteAttributeButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        attributesButtonPanel.add(deleteAttributeButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         moveUpAttributeButton = new JButton();
         moveUpAttributeButton.setText("Button");
-        panel4.add(moveUpAttributeButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        attributesButtonPanel.add(moveUpAttributeButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         moveDownAttributeButton = new JButton();
         moveDownAttributeButton.setText("Button");
-        panel4.add(moveDownAttributeButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        attributesButtonPanel.add(moveDownAttributeButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         methodsPanel = new JPanel();
-        methodsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPanel.addTab("Untitled", methodsPanel);
+        methodsPanel.setLayout(new GridLayoutManager(1, 2, new Insets(5, 5, 5, 5), -1, -1));
+        membersPanel.add(methodsPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        methodsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "title"));
+        methodsTablePanel = new JPanel();
+        methodsTablePanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        methodsPanel.add(methodsTablePanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane3 = new JScrollPane();
+        methodsTablePanel.add(scrollPane3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        methodsTable = new JTable();
+        scrollPane3.setViewportView(methodsTable);
+        methodsButtonPanel = new JPanel();
+        methodsButtonPanel.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
+        methodsPanel.add(methodsButtonPanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(100, -1), null, 0, false));
+        addMethodButton = new JButton();
+        addMethodButton.setText("Button");
+        methodsButtonPanel.add(addMethodButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deleteMethodButton = new JButton();
+        deleteMethodButton.setText("Button");
+        methodsButtonPanel.add(deleteMethodButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        moveUpMethodButton = new JButton();
+        moveUpMethodButton.setText("Button");
+        methodsButtonPanel.add(moveUpMethodButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        moveDownMethodButton = new JButton();
+        moveDownMethodButton.setText("Button");
+        methodsButtonPanel.add(moveDownMethodButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        methodsButtonPanel.add(spacer3, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**

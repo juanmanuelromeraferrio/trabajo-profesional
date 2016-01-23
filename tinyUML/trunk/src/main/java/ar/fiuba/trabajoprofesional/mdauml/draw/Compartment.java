@@ -145,7 +145,8 @@ public class Compartment extends AbstractCompositeNode implements CompositeNode 
     public void recalculateSize(DrawingContext drawingContext) {
         if (getParent().getSize().getWidth() >= getMinimumSize().getWidth()) {
             setWidth(getParent().getSize().getWidth() * aspectToParentWidth);
-        }
+        }else
+            setWidth(getMinimumSize().getWidth());
         double y = marginTop;
         for (Label label : labels) {
             label.recalculateSize(drawingContext);
@@ -174,10 +175,10 @@ public class Compartment extends AbstractCompositeNode implements CompositeNode 
      * @param verticalLabelSpace   the vertical space that is used by labels
      */
     private void adjustMinimumSize(double horizontalLabelSpace, double verticalLabelSpace) {
-        double minwidth = Math.max(horizontalLabelSpace, getMinimumSize().getWidth());
-        double minheight = Math.max(verticalLabelSpace, getMinimumSize().getHeight());
+        double minwidth = Math.max(horizontalLabelSpace,MIN_WIDTH);
+        double minheight = Math.max(verticalLabelSpace, MIN_HEIGHT);
         double width = Math.max(minwidth, getSize().getWidth());
-        double height = Math.max(minheight, getSize().getHeight());
+        double height = minheight;
         setMinimumSize(minwidth, minheight);
         setSizePlain(width, height);
     }

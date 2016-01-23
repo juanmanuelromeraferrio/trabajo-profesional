@@ -1,21 +1,20 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class UmlControl extends UmlClass {
+public class UmlControl extends UmlStereotypedClass {
 
+    private static final String CONTROL_NAME = "<<control>>";
     private static UmlControl prototype;
     /**
      * Constructor.
      */
     private UmlControl() {
         super();
-        UmlStereotype stereotype = new UmlStereotype();
-        stereotype.setName("<<control>>");
-        ArrayList<UmlStereotype> list = new ArrayList<>();
-        list.add(stereotype);
-        super.setStereotypes(list);
+    }
+
+    @Override
+    public String getStereotype() {
+        return CONTROL_NAME;
     }
 
     /**
@@ -27,11 +26,6 @@ public class UmlControl extends UmlClass {
         if (prototype == null)
             prototype = new UmlControl();
         return prototype;
-    }
-
-    @Override
-    public void setStereotypes(List<UmlStereotype> stereotypes){
-
     }
 
 

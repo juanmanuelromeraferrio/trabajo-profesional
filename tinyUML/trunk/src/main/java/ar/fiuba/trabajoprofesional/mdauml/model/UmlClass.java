@@ -35,7 +35,7 @@ public class UmlClass extends PackageableUmlModelElement {
     private List<UmlProperty> attributes = new ArrayList<UmlProperty>();
     private List<UmlProperty> methods = new ArrayList<UmlProperty>();
     private List<UmlStereotype> stereotypes = new ArrayList<UmlStereotype>();
-
+    private String documentation ="";
     /**
      * Constructor.
      */
@@ -152,5 +152,13 @@ public class UmlClass extends PackageableUmlModelElement {
     public void setStereotypes(List<UmlStereotype> stereotypeList) {
         stereotypes = stereotypeList;
         notifyElementChanged();
+    }
+
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
     }
 }

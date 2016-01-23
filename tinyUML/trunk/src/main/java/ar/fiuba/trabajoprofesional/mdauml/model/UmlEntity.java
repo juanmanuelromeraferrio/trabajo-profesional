@@ -1,21 +1,20 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class UmlEntity extends UmlClass {
+public class UmlEntity extends UmlStereotypedClass {
 
+    private static final String ENTITY_NAME = "<<entity>>";
     private static UmlEntity prototype;
     /**
      * Constructor.
      */
     private UmlEntity() {
         super();
-        UmlStereotype stereotype = new UmlStereotype();
-        stereotype.setName("<<entity>>");
-        ArrayList<UmlStereotype> list = new ArrayList<>();
-        list.add(stereotype);
-        super.setStereotypes(list);
+    }
+
+    @Override
+    public String getStereotype() {
+        return ENTITY_NAME;
     }
 
     /**
@@ -28,12 +27,6 @@ public class UmlEntity extends UmlClass {
             prototype = new UmlEntity();
         return prototype;
     }
-
-    @Override
-    public void setStereotypes(List<UmlStereotype> stereotypes){
-
-    }
-
 
 
 }

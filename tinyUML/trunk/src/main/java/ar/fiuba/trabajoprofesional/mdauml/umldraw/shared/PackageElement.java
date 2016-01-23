@@ -171,6 +171,8 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     @Override public void recalculateSize(DrawingContext drawingContext) {
         tabCompartment.recalculateSize(drawingContext);
         mainCompartment.recalculateSize(drawingContext);
+        tabCompartment.setSize(new DoubleDimension(tabCompartment.getSize().getWidth(),TAB_MIN_HEIGHT));
+        mainCompartment.setSize(new DoubleDimension(mainCompartment.getSize().getWidth(),getSize().getHeight() - tabCompartment.getSize().getHeight()));
         notifyNodeResized();
     }
 
@@ -211,8 +213,10 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     @Override public Dimension2D getSize() {
         Dimension2D tabSize = tabCompartment.getSize();
         Dimension2D mainSize = mainCompartment.getSize();
-        return new DoubleDimension(Math.max(tabSize.getWidth(), mainSize.getWidth()),
-            tabSize.getHeight() + mainSize.getHeight());
+        double width = Math.max(super.getSize().getWidth(), Math.max(tabSize.getWidth(), mainSize.getWidth()));
+        double height = Math.max(super.getSize().getHeight(),tabSize.getHeight() + mainSize.getHeight());
+        super.setSize(new DoubleDimension(width,height));
+        return super.getSize();
     }
 
     /**
@@ -228,6 +232,7 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     @Override public void setSize(double width, double height) {
         double mainHeight = height - TAB_MIN_HEIGHT;
         mainCompartment.setSize(width, mainHeight);
+        super.setSize(width,height);
         invalidate();
     }
 

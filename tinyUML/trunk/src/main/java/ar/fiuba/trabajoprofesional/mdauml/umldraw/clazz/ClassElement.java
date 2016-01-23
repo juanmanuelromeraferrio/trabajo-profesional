@@ -28,6 +28,8 @@ import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext.FontType;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import java.awt.geom.Dimension2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a Class element in the editor. It is responsible for
@@ -46,6 +48,8 @@ public final class ClassElement extends AbstractCompositeNode
     private Compartment operationsCompartment;
     private Label mainLabel;
     private boolean showOperations = true, showAttributes = false, showStereotypes = true;
+    private ArrayList<Boolean> methodVisibility;
+    private ArrayList<Boolean> attributesVisibility;
 
     /**
      * Private constructor.
@@ -62,6 +66,8 @@ public final class ClassElement extends AbstractCompositeNode
         attributesCompartment.setAlignment(Alignment.LEFT);
         operationsCompartment.setParent(this);
         operationsCompartment.setAlignment(Alignment.LEFT);
+        methodVisibility=new ArrayList<>();
+        attributesVisibility=new ArrayList<>();
     }
 
     /**
@@ -336,15 +342,21 @@ public final class ClassElement extends AbstractCompositeNode
      */
     public void elementChanged(UmlModelElement element) {
         attributesCompartment.removeAllLabels();
-        for (UmlProperty property : ((UmlClass) element).getAttributes()) {
+        List<UmlProperty> attributes = ((UmlClass) element).getAttributes();
+        for (int i = 0; i < attributes.size() ; i++ ) {
+            if(i < attributesVisibility.size() && ! attributesVisibility.get(i))
+                continue;
             Label label = new SimpleLabel();
-            label.setSource(new UmlModelElementLabelSource(property));
+            label.setSource(new UmlModelElementLabelSource(attributes.get(i)));
             attributesCompartment.addLabel(label);
         }
         operationsCompartment.removeAllLabels();
-        for (UmlProperty property : ((UmlClass) element).getMethods()) {
+        List<UmlProperty> methods = ((UmlClass) element).getMethods();
+        for (int i = 0; i < methods.size() ; i++ ) {
+            if(i < methodVisibility.size() && ! methodVisibility.get(i))
+                continue;
             Label label = new SimpleLabel();
-            label.setSource(new UmlModelElementLabelSource(property));
+            label.setSource(new UmlModelElementLabelSource(methods.get(i)));
             operationsCompartment.addLabel(label);
         }
         reinitMainCompartment();
@@ -517,7 +529,9 @@ public final class ClassElement extends AbstractCompositeNode
     private void resizeLastCompartmentToFit() {
         Compartment lastCompartment = getLastVisibleCompartment();
         double diffHeight = getSize().getHeight() - getCompartmentHeightSum();
-        lastCompartment.setHeight(lastCompartment.getSize().getHeight() + diffHeight);
+        //Increase the height without invalidate the last component
+        lastCompartment.setSize(new DoubleDimension(getSize().getWidth(),lastCompartment.getSize().getHeight() + diffHeight) );
+
     }
 
     /**
@@ -609,5 +623,31 @@ public final class ClassElement extends AbstractCompositeNode
 
     @Override
     public void validateConnectionAsTarget(RelationType relationType, UmlNode node) throws AddConnectionException {
+    }
+
+    public void setAttributeVisibility(ArrayList<Boolean> attributesVisibility) {
+        boolean show=false;
+        for(Boolean anyVisible : attributesVisibility)
+            if(anyVisible)
+                show=true;
+        setShowAttributes(show);
+        this.attributesVisibility= new ArrayList<>(attributesVisibility);
+
+        //reload compartments
+        elementChanged(getModelElement());
+    }
+
+    public void setMethodVisibility(ArrayList<Boolean> methodVisibility) {
+        this.methodVisibility = methodVisibility;
+        //reload compartments
+        elementChanged(getModelElement());
+    }
+
+    public ArrayList<Boolean> getMethodVisibility() {
+        return methodVisibility;
+    }
+
+    public ArrayList<Boolean> getAttributesVisibility() {
+        return attributesVisibility;
     }
 }

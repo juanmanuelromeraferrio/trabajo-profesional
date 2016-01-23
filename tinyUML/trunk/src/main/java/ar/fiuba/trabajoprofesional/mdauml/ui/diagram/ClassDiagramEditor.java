@@ -111,18 +111,10 @@ public class ClassDiagramEditor extends DiagramEditor {
         if (element instanceof ClassElement) {
             ClassElement classElement = (ClassElement) element;
             UmlClass umlclass = (UmlClass) classElement.getModelElement();
-            EditClassDialog dialog = new EditClassDialog(window, classElement, true);
+            ClassDialog dialog = new ClassDialog(window, classElement);
             dialog.setLocationRelativeTo(AppFrame.get());
             dialog.setVisible(true);
             if (dialog.isOk()) {
-                umlclass.setAbstract(dialog.classIsAbstract());
-                classElement.setShowOperations(dialog.showOperations());
-                classElement.setShowAttributes(dialog.showAttributes());
-                classElement.setShowStereotypes(dialog.showStereotypes());
-                umlclass.setName(dialog.getName());
-                umlclass.setMethods(dialog.getMethods());
-                umlclass.setAttributes(dialog.getAttributes());
-                umlclass.setStereotypes(dialog.getStereotypes());
                 redraw();
             }
         } else if (element instanceof Association) {

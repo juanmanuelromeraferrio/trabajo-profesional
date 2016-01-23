@@ -25,6 +25,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
+import javafx.scene.shape.Circle;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -44,12 +45,12 @@ import java.util.List;
 public class NodeSelection implements Selection, NodeChangeListener {
 
     private static final Color ACCEPT_COLOR = new Color(0, 220, 50);
-    private static final int HANDLE_SIZE = 5;
+    private static final int HANDLE_RADIUS = 3;
     private static final int HANDLE_NW = 0;
     private static final int HANDLE_NE = 1;
     private static final int HANDLE_SW = 2;
     private static final int HANDLE_SE = 3;
-    private Rectangle2D[] handles = new Rectangle2D[4];
+    private Circle[] handles = new Circle[4];
 
     private Node node;
     private DiagramOperations editor;
@@ -70,7 +71,7 @@ public class NodeSelection implements Selection, NodeChangeListener {
     public NodeSelection(DiagramOperations anEditor, Node aNode) {
         editor = anEditor;
         for (int i = 0; i < 4; i++) {
-            handles[i] = new Rectangle2D.Double();
+            handles[i] = new Circle(HANDLE_RADIUS);
         }
         node = aNode;
         node.addNodeChangeListener(this);
@@ -121,22 +122,27 @@ public class NodeSelection implements Selection, NodeChangeListener {
     private void setHandlePositions() {
         double absx = node.getAbsoluteX1(), absy = node.getAbsoluteY1(),
             swidth = node.getSize().getWidth();
-        double x = absx - HANDLE_SIZE, y = absy - HANDLE_SIZE,
-            width = HANDLE_SIZE, height = HANDLE_SIZE;
-        handles[0].setRect(x, y, width, height);
+        double x = absx, y = absy;
+
+        handles[0].setCenterX(absx-HANDLE_RADIUS);
+        handles[0].setCenterY(absy-HANDLE_RADIUS);
+
 
         // second handle
         x = absx + swidth;
-        handles[1].setRect(x, y, width, height);
+        handles[1].setCenterX(x + HANDLE_RADIUS);
+        handles[1].setCenterY(y - HANDLE_RADIUS);
 
         // third handle
-        x = absx - HANDLE_SIZE;
+        x = absx;
         y = absy + node.getSize().getHeight();
-        handles[2].setRect(x, y, width, height);
+        handles[2].setCenterX(x - HANDLE_RADIUS);
+        handles[2].setCenterY(y + HANDLE_RADIUS);
 
         // fourth handle
         x = absx + swidth;
-        handles[3].setRect(x, y, width, height);
+        handles[3].setCenterX(x + HANDLE_RADIUS);
+        handles[3].setCenterY(y + HANDLE_RADIUS);
     }
 
     /**
@@ -534,9 +540,11 @@ public class NodeSelection implements Selection, NodeChangeListener {
      */
     private void drawHandles(DrawingContext drawingContext) {
         for (int i = 0; i < handles.length; i++) {
+            Point2D origin = new Point2D.Double(handles[i].getCenterX()-HANDLE_RADIUS,handles[i].getCenterY()-HANDLE_RADIUS);
+            Dimension2D dimension = new DoubleDimension(2*HANDLE_RADIUS,2*HANDLE_RADIUS);
+
             drawingContext
-                .fillRectangle(handles[i].getX(), handles[i].getY(), handles[i].getWidth(),
-                    handles[i].getHeight(), Color.BLACK);
+                .drawEllipse(origin,dimension,Color.BLACK,Color.WHITE);
         }
     }
 
