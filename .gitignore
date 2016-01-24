@@ -5,3 +5,4 @@ out
 out/**
 tinyUML/trunk/src/test/**/*.xml
 tinyUml/trunk/target/*
+**/target/**
