@@ -3,7 +3,7 @@ package ar.fiuba.trabajoprofesional.mdauml.conversion.model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ConversionDiagram implements IConversionDiagram {
+public class ConversionModel {
 
     private Set<Boundary> boundaries = new HashSet<>();
     private Set<Control> controls = new HashSet<>();
@@ -11,7 +11,7 @@ public class ConversionDiagram implements IConversionDiagram {
     private Set<SimpleRelation> relations = new HashSet<>();
     private String name;
 
-    @Override
+    
     public String getName() {
         return name;
     }
@@ -20,37 +20,42 @@ public class ConversionDiagram implements IConversionDiagram {
         this.name = name;
     }
 
-    @Override
+    
     public Set<Boundary> getBoundaries() {
         return boundaries;
     }
 
-    @Override
+    
     public Set<Control> getControls() {
         return controls;
     }
 
-    @Override
+    
     public Set<Entity> getEntities() {
         return entities;
     }
 
-    @Override
+    
     public Set<SimpleRelation> getRelations() {
         return relations;
     }
-
+    
+    
     public void addBoundary(Boundary boundary){
         boundaries.add(boundary);
     }
-
+    
+    
     public void addControl(Control control){
         controls.add(control);
     }
-
+    
+    
     public void addEntity(Entity entity){
         entities.add(entity);
     }
+    
+    
     public void addRelation(SimpleRelation relation){
         relations.add(relation);
         relation.getClass1().addRelation(relation);

@@ -19,21 +19,17 @@
  */
 package test.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlAttribute;
 import junit.framework.*;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlProperty;
 
-/**
- * Test for UmlProperty.
- * @author Wei-ju Wu
- * @version 1.0
- */
-public class UmlPropertyTest extends TestCase {
+
+public class UmlAttributeTest extends TestCase {
   
   /**
    * Tests the setter methods.
    */
   public void testSetters() {
-    UmlProperty property = (UmlProperty) UmlProperty.getPrototype().clone();
+    UmlAttribute property = (UmlAttribute) UmlAttribute.getPrototype().clone();
     property.setName("name");
     assertEquals("name", property.getName());
   }

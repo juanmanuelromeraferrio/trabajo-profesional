@@ -342,7 +342,7 @@ public final class ClassElement extends AbstractCompositeNode
      */
     public void elementChanged(UmlModelElement element) {
         attributesCompartment.removeAllLabels();
-        List<UmlProperty> attributes = ((UmlClass) element).getAttributes();
+        List<UmlAttribute> attributes = ((UmlClass) element).getAttributes();
         for (int i = 0; i < attributes.size() ; i++ ) {
             if(i < attributesVisibility.size() && ! attributesVisibility.get(i))
                 continue;
@@ -351,7 +351,7 @@ public final class ClassElement extends AbstractCompositeNode
             attributesCompartment.addLabel(label);
         }
         operationsCompartment.removeAllLabels();
-        List<UmlProperty> methods = ((UmlClass) element).getMethods();
+        List<UmlMethod> methods = ((UmlClass) element).getMethods();
         for (int i = 0; i < methods.size() ; i++ ) {
             if(i < methodVisibility.size() && ! methodVisibility.get(i))
                 continue;

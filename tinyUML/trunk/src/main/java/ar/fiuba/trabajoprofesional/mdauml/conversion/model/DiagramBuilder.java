@@ -1,6 +1,5 @@
 package ar.fiuba.trabajoprofesional.mdauml.conversion.model;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.Diagram;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
@@ -18,8 +17,8 @@ public class DiagramBuilder {
     private UmlPackage umlPackage;
     private List<String> mainEntities=new ArrayList<>();
 
-    public ConversionDiagram build(Map<String,List<UmlUseCase>> mainEntityMap){
-        ConversionDiagram conversionDiagram = new ConversionDiagram();
+    public ConversionModel build(Map<String,List<UmlUseCase>> mainEntityMap){
+        ConversionModel conversionDiagram = new ConversionModel();
         conversionDiagram.setName(name);
 
         for(String mainEntity: mainEntities){

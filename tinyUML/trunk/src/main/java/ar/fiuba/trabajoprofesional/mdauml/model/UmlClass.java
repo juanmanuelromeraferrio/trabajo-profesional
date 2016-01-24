@@ -32,8 +32,8 @@ public class UmlClass extends PackageableUmlModelElement {
 
     private static UmlClass prototype;
     private boolean isAbstract;
-    private List<UmlProperty> attributes = new ArrayList<UmlProperty>();
-    private List<UmlProperty> methods = new ArrayList<UmlProperty>();
+    private List<UmlAttribute> attributes = new ArrayList<UmlAttribute>();
+    private List<UmlMethod> methods = new ArrayList<UmlMethod>();
     private List<UmlStereotype> stereotypes = new ArrayList<UmlStereotype>();
     private String documentation ="";
     /**
@@ -63,12 +63,12 @@ public class UmlClass extends PackageableUmlModelElement {
      */
     @Override public Object clone() {
         UmlClass cloned = (UmlClass) super.clone();
-        cloned.attributes = new ArrayList<UmlProperty>();
-        for (UmlProperty attribute : attributes) {
+        cloned.attributes = new ArrayList<UmlAttribute>();
+        for (UmlAttribute attribute : attributes) {
             cloned.attributes.add(attribute);
         }
-        cloned.methods = new ArrayList<UmlProperty>();
-        for (UmlProperty method : methods) {
+        cloned.methods = new ArrayList<UmlMethod>();
+        for (UmlMethod method : methods) {
             cloned.methods.add(method);
         }
         cloned.stereotypes = new ArrayList<UmlStereotype>();
@@ -102,7 +102,7 @@ public class UmlClass extends PackageableUmlModelElement {
      *
      * @return the methods
      */
-    public List<UmlProperty> getMethods() {
+    public List<UmlMethod> getMethods() {
         return methods;
     }
 
@@ -111,7 +111,7 @@ public class UmlClass extends PackageableUmlModelElement {
      *
      * @param methodList the method list
      */
-    public void setMethods(List<UmlProperty> methodList) {
+    public void setMethods(List<UmlMethod> methodList) {
         methods = methodList;
         notifyElementChanged();
     }
@@ -121,7 +121,7 @@ public class UmlClass extends PackageableUmlModelElement {
      *
      * @return the attributes
      */
-    public List<UmlProperty> getAttributes() {
+    public List<UmlAttribute> getAttributes() {
         return attributes;
     }
 
@@ -130,7 +130,7 @@ public class UmlClass extends PackageableUmlModelElement {
      *
      * @param attributeList the attribute list
      */
-    public void setAttributes(List<UmlProperty> attributeList) {
+    public void setAttributes(List<UmlAttribute> attributeList) {
         attributes = attributeList;
         notifyElementChanged();
     }

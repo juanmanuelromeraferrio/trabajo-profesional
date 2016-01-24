@@ -24,7 +24,7 @@ import ar.fiuba.trabajoprofesional.mdauml.model.NamedElement;
 
 
 /**
- * This class decorates an UmlProperty with the Label source interface.
+ * This class decorates an UmlAttribute or UmlMethod with the Label source interface.
  *
  * @author Wei-ju Wu
  * @version 1.0

@@ -133,11 +133,11 @@ public class ClassDialog extends JDialog {
         attributesTable.getColumn(nameAttColumnName).setPreferredWidth(400);
         attributesTable.getColumn(visibleAttColumnName).setPreferredWidth(60);
 
-        List<UmlProperty> attributes = classModel.getAttributes();
+        List<UmlAttribute> attributes = classModel.getAttributes();
         for (int i = 0; i < attributes.size(); i++) {
             Object[] row = new Object[3];
             row[0] = attributes.get(i).getName().split(":")[1];
-            row[1] = attributes.get(i).getName().split(":")[0];
+            row[1] = attributes.get(i).getName().split(":")[0].substring(1);
             row[2] = classElement.getAttributesVisibility().get(i);
             attributesTableModel.addRow(row);
         }
@@ -177,13 +177,14 @@ public class ClassDialog extends JDialog {
         methodsTable.getColumn(argsMethodColumnName).setPreferredWidth(300);
         methodsTable.getColumn(visibleMethodColumnName).setPreferredWidth(60);
 
-        List<UmlProperty> methods = classModel.getMethods();
+        List<UmlMethod> methods = classModel.getMethods();
         for (int i = 0; i < methods.size(); i++) {
             Object[] row = new Object[4];
             String[] splitted = methods.get(i).getName().split(":");
             row[0] = splitted[splitted.length - 1];
-            row[1] = methods.get(i).getName().split("\\(")[0];
-            row[2] = methods.get(i).getName().split("[\\(\\)]")[1];
+            row[1] = methods.get(i).getName().split("\\(")[0].substring(1);
+            String args = methods.get(i).getName().split("[\\(\\)]")[1];
+            row[2] = args == null ? "" : args;
             row[3] = classElement.getMethodVisibility().get(i);
             methodsTableModel.addRow(row);
         }
@@ -335,29 +336,29 @@ public class ClassDialog extends JDialog {
     }
 
     private void onOK() {
-        ArrayList<UmlProperty> attributes = new ArrayList<>();
+        ArrayList<UmlAttribute> attributes = new ArrayList<>();
         ArrayList<Boolean> attributesVisibility = new ArrayList<>();
-        ArrayList<UmlProperty> methods = new ArrayList<>();
+        ArrayList<UmlMethod> methods = new ArrayList<>();
         ArrayList<Boolean> methodsVisbility = new ArrayList<>();
         Vector attributesMatrix = ((DefaultTableModel) attributesTable.getModel()).getDataVector();
         for (Vector row : (Vector<Vector>) attributesMatrix) {
-            UmlProperty attribute = (UmlProperty) UmlProperty.getPrototype().clone();
+            UmlAttribute attribute = (UmlAttribute) UmlAttribute.getPrototype().clone();
             String attName;
             if (row.get(1) == null || ((String) row.get(1)).isEmpty() || row.get(0) == null || ((String) row.get(0)).isEmpty())
                 continue;
-            attName = row.get(1) + ":" + row.get(0);
+            attName = "-" + row.get(1) + ":" + row.get(0);
             attribute.setName(attName);
             attributes.add(attribute);
             attributesVisibility.add((Boolean) row.get(2));
         }
         Vector methodsMatrix = ((DefaultTableModel) methodsTable.getModel()).getDataVector();
         for (Vector row : (Vector<Vector>) methodsMatrix) {
-            UmlProperty method = (UmlProperty) UmlProperty.getPrototype().clone();
+            UmlMethod method = (UmlMethod) UmlMethod.getPrototype().clone();
             String methodName;
             if (row.get(1) == null || ((String) row.get(1)).isEmpty())
                 continue;
 
-            methodName = row.get(1) + "(";
+            methodName = "+" + row.get(1) + "(";
             if (row.get(2) != null)
                 methodName += row.get(2);
             if (row.get(0) == null || ((String) row.get(0)).isEmpty())

@@ -11,7 +11,6 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.ApplicationState;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.ClassDiagramEditor;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.ElementInserter;
-import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
@@ -34,16 +33,16 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
     private static final double DIAGRAM_V_MARGIN = 20;
 
     @Override
-    public void buildClassDiagram(Project project,String diagramName, IConversionDiagram conversionModel) {
+    public void buildClassDiagram(Map<Class<? extends UmlClass>,List<UmlClass>> classModel,String diagramName, ConversionModel conversionModel) {
         ApplicationState appState = AppFrame.get().getAppState();
         appState.openNewClassEditor();
         ClassDiagramEditor diagramEditor = (ClassDiagramEditor) appState.getCurrentEditor();
         ClassDiagram diagram = (ClassDiagram) diagramEditor.getDiagram();
         diagram.setName(diagramName);
 
-        List<ClassElement> controls = toElements(conversionModel.getControls(),diagramEditor);
-        List<ClassElement> entities = toElements(conversionModel.getEntities(),diagramEditor);
-        List<ClassElement> boundaries = toElements(conversionModel.getBoundaries(),diagramEditor);
+        List<ClassElement> controls = toElements(classModel,conversionModel.getControls(),diagramEditor);
+        List<ClassElement> entities = toElements(classModel,conversionModel.getEntities(),diagramEditor);
+        List<ClassElement> boundaries = toElements(classModel,conversionModel.getBoundaries(),diagramEditor);
         Map<ClassElement,List<ClassElement>> controlEntities = new HashMap<>();
         Map<ClassElement,List<ClassElement>> controlBoundaries = new HashMap<>();
         initControlMaps(controlBoundaries,controlEntities,controls,entities,boundaries,conversionModel.getRelations());
@@ -111,41 +110,35 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
 
     }
 
-    private List<ClassElement> toElements(Set<? extends SimpleClass> simpleClasses, ClassDiagramEditor diagramEditor) {
+    private List<ClassElement> toElements(Map<Class<? extends UmlClass>,List<UmlClass>> classModel,Set<? extends SimpleClass> simpleClasses, ClassDiagramEditor diagramEditor) {
         ClassDiagram diagram = (ClassDiagram) diagramEditor.getDiagram();
         List<ClassElement> elements = new ArrayList<>();
         for(SimpleClass simpleClass : simpleClasses){
-            UmlClass umlClass;
+            UmlClass umlClass = null;
             if(simpleClass instanceof  Boundary) {
-                umlClass = (UmlClass) AppFrame.get().getAppState().getUmlModel().getElement(simpleClass.getName(),UmlBoundary.class);
-                if(umlClass == null) {
-                    umlClass = (UmlClass) UmlBoundary.getPrototype().clone();
-                    umlClass.setName(simpleClass.getName());
-                }
+                for(UmlClass umlBoundary : classModel.get(UmlBoundary.class))
+                    if(umlBoundary.getName().equals(simpleClass.getName()))
+                        umlClass=umlBoundary;
             }else if (simpleClass instanceof Control) {
-                umlClass = (UmlClass) AppFrame.get().getAppState().getUmlModel().getElement(simpleClass.getName(), UmlControl.class);
-                if (umlClass == null){
-                    umlClass = (UmlClass) UmlControl.getPrototype().clone();
-                    umlClass.setName(simpleClass.getName());
-                }
+                for(UmlClass umlControl : classModel.get(UmlControl.class))
+                    if(umlControl.getName().equals(simpleClass.getName()))
+                        umlClass=umlControl;
             }else {
-                umlClass = (UmlClass) AppFrame.get().getAppState().getUmlModel().getElement(simpleClass.getName(),UmlEntity.class);
-                if(umlClass == null) {
-                    umlClass = (UmlClass) UmlEntity.getPrototype().clone();
-                    umlClass.setName(simpleClass.getName());
-                }
+                for(UmlClass umlEntity : classModel.get(UmlEntity.class))
+                    if(umlEntity.getName().equals(simpleClass.getName()))
+                        umlClass=umlEntity;
             }
 
-
-            List<UmlProperty> allMethod = umlClass.getMethods();
-            for(String method : simpleClass.getMethods()){
-                UmlProperty umlMethod = (UmlProperty) UmlProperty.getPrototype().clone();
-                umlMethod.setName(method);
-                if(!allMethod.contains(umlMethod))
-                    allMethod.add(umlMethod);
-            }
 
             ClassElement element = (ClassElement) diagram.getElementFactory().createNodeFromModel(umlClass);
+            ArrayList<Boolean> methodVisibility = new ArrayList<>();
+            for(UmlMethod method : umlClass.getMethods()){
+                if(simpleClass.getMethods().contains(method.getName()))
+                    methodVisibility.add(true);
+                else
+                    methodVisibility.add(false);
+            }
+            element.setMethodVisibility(methodVisibility);
             element.setParent(diagram);
             DrawingContext drawingContext = diagramEditor.getDrawingContext();
             Rectangle clipBounds = new Rectangle();

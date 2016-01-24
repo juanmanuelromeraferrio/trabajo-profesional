@@ -20,12 +20,10 @@
 package test.mdauml.model;
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlClass;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElementListener;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlProperty;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlStereotype;
 
 /**
  * A test class for UmlClass.
@@ -66,10 +64,10 @@ public class UmlClassTest extends MockObjectTestCase {
     UmlClass clonedClass = (UmlClass) UmlClass.getPrototype().clone();
     clonedClass.addModelElementListener((UmlModelElementListener)
       mockListener.proxy());
-    List<UmlProperty> methodList = new ArrayList<UmlProperty>();
-    UmlProperty method1 = (UmlProperty) UmlProperty.getPrototype().clone();
-    UmlProperty method2 = (UmlProperty) UmlProperty.getPrototype().clone();
-    UmlProperty method3 = (UmlProperty) UmlProperty.getPrototype().clone();
+    List<UmlMethod> methodList = new ArrayList<UmlMethod>();
+    UmlMethod method1 = (UmlMethod) UmlMethod.getPrototype().clone();
+    UmlMethod method2 = (UmlMethod) UmlMethod.getPrototype().clone();
+    UmlMethod method3 = (UmlMethod) UmlMethod.getPrototype().clone();
     methodList.add(method1);
     methodList.add(method2);
     methodList.add(method3);
@@ -87,10 +85,10 @@ public class UmlClassTest extends MockObjectTestCase {
     UmlClass clonedClass = (UmlClass) UmlClass.getPrototype().clone();
     clonedClass.addModelElementListener((UmlModelElementListener)
       mockListener.proxy());
-    List<UmlProperty> attributeList = new ArrayList<UmlProperty>();
-    UmlProperty attrib1 = (UmlProperty) UmlProperty.getPrototype().clone();
-    UmlProperty attrib2 = (UmlProperty) UmlProperty.getPrototype().clone();
-    UmlProperty attrib3 = (UmlProperty) UmlProperty.getPrototype().clone();
+    List<UmlAttribute> attributeList = new ArrayList<UmlAttribute>();
+    UmlAttribute attrib1 = (UmlAttribute) UmlAttribute.getPrototype().clone();
+    UmlAttribute attrib2 = (UmlAttribute) UmlAttribute.getPrototype().clone();
+    UmlAttribute attrib3 = (UmlAttribute) UmlAttribute.getPrototype().clone();
     attributeList.add(attrib1);
     attributeList.add(attrib2);
     attributeList.add(attrib3);
@@ -125,14 +123,14 @@ public class UmlClassTest extends MockObjectTestCase {
    * Tests  the clone() method.
    */
   public void testClone() {
-    List<UmlProperty> methods = new ArrayList<UmlProperty>();
-    List<UmlProperty> attributes = new ArrayList<UmlProperty>();
+    List<UmlMethod> methods = new ArrayList<UmlMethod>();
+    List<UmlAttribute> attributes = new ArrayList<UmlAttribute>();
     List<UmlStereotype> stereotypes = new ArrayList<UmlStereotype>();
     for (int i = 0; i < 3; i++) {
-      UmlProperty method = (UmlProperty) UmlProperty.getPrototype().clone();
+      UmlMethod method = (UmlMethod) UmlMethod.getPrototype().clone();
       method.setName("method" + i);
       methods.add(method);
-      UmlProperty attribute = (UmlProperty) UmlProperty.getPrototype().clone();
+      UmlAttribute attribute = (UmlAttribute) UmlAttribute.getPrototype().clone();
       attribute.setName("attribute" + i);
       attributes.add(attribute);
       UmlStereotype stereo = (UmlStereotype) UmlStereotype.getPrototype().clone();

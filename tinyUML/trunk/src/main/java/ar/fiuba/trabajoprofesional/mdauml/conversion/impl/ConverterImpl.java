@@ -8,7 +8,6 @@ import ar.fiuba.trabajoprofesional.mdauml.exception.ValidateException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.model.Project;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
-import ar.fiuba.trabajoprofesional.mdauml.util.StringHelper;
 
 import java.util.*;
 
@@ -18,6 +17,7 @@ public class ConverterImpl implements Converter {
     private EntityCompactor compactor = new EntityCompactorImpl();
     private DiagramResolver resolver = new DiagramResolverImpl();
     private ClassDiagramBuilder diagramBuilder = new ClassDiagramBuilderImpl();
+    private ClassModelBuilder classModelBuilder = new ClassModelBuilderImpl();
 
     @Override
     public void convert(Project project) throws ConversionException {
@@ -38,6 +38,10 @@ public class ConverterImpl implements Converter {
 
             Set<UmlUseCase> useCases = (Set<UmlUseCase>) compactedModel.getAll(UmlUseCase.class);
             Map<String, List<UmlUseCase>> mainEntityMap = buildMainEntityMap(useCases);
+
+            ConversionModel conversionModel = classModelBuilder.buildConversionModel(mainEntityMap);
+            Map<Class<? extends UmlClass>, List<UmlClass>> umlModel = classModelBuilder.buildUmlModel(conversionModel);
+
             Set<UmlPackage> packages = (Set<UmlPackage>) compactedModel.getAll(UmlPackage.class);
             List<UmlPackage> packagesList = new ArrayList<>(packages);
             Collections.sort(packagesList);
@@ -45,8 +49,8 @@ public class ConverterImpl implements Converter {
 
 
             for (String diagram : diagramMap.keySet()) {
-                ConversionDiagram conversionDiagram = diagramMap.get(diagram).build(mainEntityMap);
-                diagramBuilder.buildClassDiagram(project, diagram, conversionDiagram);
+                ConversionModel conversionDiagram = diagramMap.get(diagram).build(mainEntityMap);
+                diagramBuilder.buildClassDiagram(umlModel, diagram, conversionDiagram);
             }
         }catch(Exception e){
             throw new ConversionException(Msg.get("error.conversion"+ e.getMessage()),e);
