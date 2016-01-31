@@ -434,5 +434,8 @@ public abstract class AbstractConnection implements Connection {
         node.removeConcreteConnection(this);
     }
 
-
+    @Override
+    public boolean isConnectionSource() {
+        return false;
+    }
 }

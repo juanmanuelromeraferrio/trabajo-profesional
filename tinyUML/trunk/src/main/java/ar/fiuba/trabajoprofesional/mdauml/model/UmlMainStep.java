@@ -69,13 +69,13 @@ public class UmlMainStep extends UmlStep {
       case ELSE:
         return getIndexAndSpaces() + ". " + type.toString() + " " + super.getDescription();
       case REGULAR:
-        return getIndexAndSpaces() + ". " + actor + ": " + super.getDescription().replace("@", "");
+        return getIndexAndSpaces() + ". " + actor + ": " + getDescription().replace("@", "");
       default:
         return "";
     }
   }
 
-  private String getIndexAndSpaces() {
+  protected String getIndexAndSpaces() {
     String completeIndex = super.getCompleteIndex();
     int countMatches = StringUtils.countMatches(completeIndex, ".");
     return StringUtils.leftPad(completeIndex, completeIndex.length() + countMatches * 3, " ");
@@ -93,15 +93,15 @@ public class UmlMainStep extends UmlStep {
     UmlStep cloned = new UmlMainStep(this.description, this.actor, this.type, cloneEntities);
     cloned.index = this.index;
 
-    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.childrens.size());
-    for (UmlStep step : this.childrens) {
+    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.children.size());
+    for (UmlStep step : this.children) {
       if (step instanceof UmlMainStep) {
         UmlMainStep umlMainStep = (UmlMainStep) step;
         cloneChildren.add(umlMainStep.clone(cloned));
       }
     }
 
-    cloned.childrens = cloneChildren;
+    cloned.children = cloneChildren;
     return cloned;
   }
 
@@ -116,8 +116,8 @@ public class UmlMainStep extends UmlStep {
     cloned.father = father;
     cloned.index = this.index;
 
-    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.childrens.size());
-    for (UmlStep step : this.childrens) {
+    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.children.size());
+    for (UmlStep step : this.children) {
       if (step instanceof UmlMainStep) {
         UmlMainStep umlMainStep = (UmlMainStep) step;
         cloneChildren.add(umlMainStep.clone(cloned));
@@ -125,7 +125,7 @@ public class UmlMainStep extends UmlStep {
     }
 
 
-    cloned.childrens = cloneChildren;
+    cloned.children = cloneChildren;
     return cloned;
   }
 

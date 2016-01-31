@@ -2,11 +2,19 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
 
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum StepType {
-  REGULAR("editstepmainflow.regular.type"), IF("editstepmainflow.if.type"), ELSE(
-      "editstepmainflow.else.type"), WHILE("editstepmainflow.while.type"), FOR(
-      "editstepmainflow.for.type"), ENDIF("editstepmainflow.endif.type"), ENDWHILE(
-      "editstepmainflow.endwhile.type"), ENDFOR("editstepmainflow.endfor.type");
+  REGULAR("editstepmainflow.regular.type"),
+  IF("editstepmainflow.if.type"),
+  ELSE("editstepmainflow.else.type"),
+  WHILE("editstepmainflow.while.type"),
+  FOR("editstepmainflow.for.type"),
+  ENDIF("editstepmainflow.endif.type"),
+  ENDWHILE("editstepmainflow.endwhile.type"),
+  ENDFOR("editstepmainflow.endfor.type"),
+  INCLUDE("editstepmainflow.include.type");
 
   private String value;
 
@@ -19,67 +27,38 @@ public enum StepType {
     return Msg.get(value);
   }
 
-  public static StepType[] getValidTypesFor(StepType type, int childrens) {
+  public static StepType[] getValidTypesFor(UmlMainStep father, boolean hasChildren, boolean hasInlcude) {
 
-    switch (type) {
+    List<StepType> validStepTypes = new ArrayList<>();
+    validStepTypes.add(StepType.REGULAR);
+    validStepTypes.add(StepType.IF);
+    validStepTypes.add(StepType.WHILE);
+    validStepTypes.add(StepType.FOR);
 
+    if (hasInlcude)
+      validStepTypes.add(StepType.INCLUDE);
+
+    if (!hasChildren)
+      return validStepTypes.toArray(new StepType[(validStepTypes.size())]);
+
+    switch (father.getType()) {
       case ELSE:
-        StepType[] valuesElse;
-        if (childrens > 0) {
-          valuesElse =
-              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR,
-                  StepType.ENDIF};
-        } else {
-          valuesElse = new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
-        }
-        return valuesElse;
+        validStepTypes.add(StepType.ENDIF);
+        break;
       case FOR:
-        StepType[] valuesFor;
-
-        if (childrens > 0) {
-          valuesFor =
-              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR,
-                  StepType.ENDFOR};
-        } else {
-          valuesFor = new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
-        }
-
-
-        return valuesFor;
+        validStepTypes.add(StepType.ENDFOR);
+        break;
       case IF:
-        StepType[] valuesIF;
-
-        if (childrens > 0) {
-          valuesIF =
-              new StepType[] {StepType.REGULAR, StepType.IF, StepType.ELSE, StepType.WHILE,
-                  StepType.FOR, StepType.ENDIF};
-        } else {
-          valuesIF = new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
-        }
-
-        return valuesIF;
+        validStepTypes.add(StepType.ELSE);
+        validStepTypes.add(StepType.ENDIF);
+        break;
       case WHILE:
-        StepType[] valuesWhile;
-
-        if (childrens > 0) {
-          valuesWhile =
-              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR,
-                  StepType.ENDWHILE};
-        } else {
-          valuesWhile =
-              new StepType[] {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
-        }
-
-        return valuesWhile;
+        validStepTypes.add(ENDWHILE);
+        break;
       default:
         return null;
-
     }
-
+    return validStepTypes.toArray(new StepType[(validStepTypes.size())]);
   }
 
-  public static StepType[] getValidTypesWithoutFather() {
-    StepType[] values = {StepType.REGULAR, StepType.IF, StepType.WHILE, StepType.FOR};
-    return values;
-  }
 }

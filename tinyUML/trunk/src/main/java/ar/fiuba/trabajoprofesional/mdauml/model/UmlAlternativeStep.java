@@ -23,8 +23,8 @@ public class UmlAlternativeStep extends UmlStep {
     cloned.father = father;
     cloned.index = this.index;
 
-    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.childrens.size());
-    for (UmlStep step : this.childrens) {
+    List<UmlStep> cloneChildren = new ArrayList<UmlStep>(this.children.size());
+    for (UmlStep step : this.children) {
       if (step instanceof UmlAlternativeStep) {
         UmlAlternativeStep umlAltStep = (UmlAlternativeStep) step;
         cloneChildren.add(umlAltStep.clone(cloned));
@@ -32,7 +32,7 @@ public class UmlAlternativeStep extends UmlStep {
     }
 
 
-    cloned.childrens = cloneChildren;
+    cloned.children = cloneChildren;
     return cloned;
   }
 

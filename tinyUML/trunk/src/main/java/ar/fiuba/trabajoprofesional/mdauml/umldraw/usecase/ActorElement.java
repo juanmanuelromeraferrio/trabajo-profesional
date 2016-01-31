@@ -312,4 +312,10 @@ public final class ActorElement extends AbstractCompositeNode
         if(this.getModelElement()==packageableUmlModelElement)
             removeExistingConnection(Nest.class);
     }
+
+
+    @Override
+    public boolean isConnectionSource() {
+        return true;
+    }
 }

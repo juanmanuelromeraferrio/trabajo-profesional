@@ -48,6 +48,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private JList<String> entities;
   private JComboBox<String> comboEntities;
   private JComboBox<StepType> comboTypesStep;
+  private JComboBox<UmlUseCase> includeCombo;
   private JTextPane stepDescription;
   private UmlMainStep step;
   private UmlMainStep father;
@@ -64,6 +65,9 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private JButton saveStep;
 
   private Boolean isEditMode = Boolean.FALSE;
+  private JPanel stepPanel;
+  private JScrollPane scrollPaneStep;
+  private JLabel includedLabel;
 
   /**
    * Creates new form EditUseCaseDialog
@@ -127,7 +131,6 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     JButton btnOk = new JButton(Msg.get("stdcaption.ok"));
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        saveStep.doClick();
         isOk = true;
         dispose();
       }
@@ -153,11 +156,11 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     JPanel generalPanel = new JPanel();
     mainScrollPanel.setViewportView(generalPanel);
 
-    final JPanel stepPanel = new JPanel();
+    stepPanel = new JPanel();
     stepPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Msg
         .get("editstepmainflow.step.label"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-    JScrollPane scrollPaneStep = new JScrollPane();
+    scrollPaneStep = new JScrollPane();
 
     saveStep = new JButton(Msg.get("stdcaption.save"));
     saveStep.addActionListener(new ActionListener() {
@@ -167,18 +170,16 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
         StepType stepType = getStepType();
         switch (stepType) {
-          case IF:
-          case WHILE:
-          case FOR:
-          case ELSE: {
-            textFieldCondition.setEnabled(false);
-            break;
-          }
+          case INCLUDE:
           case REGULAR: {
             entities.setModel(new DefaultListModel<String>());
 
             List<String> entityModel = new ArrayList<String>();
             String description = stepDescription.getText();
+            if(description.trim().isEmpty()) {
+              comboEntities.removeAllItems();
+              break;
+            }
             String[] split = description.split(" ");
 
             List<String> entitiesList = Arrays.asList(split);
@@ -229,13 +230,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         StepType stepType = getStepType();
 
         switch (stepType) {
-          case IF:
-          case WHILE:
-          case FOR:
-          case ELSE: {
-            textFieldCondition.setEnabled(true);
-            break;
-          }
+          case INCLUDE:
           case REGULAR: {
             stepDescription.setEnabled(true);
             break;
@@ -254,21 +249,16 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
     if (isEditMode) {
       StepType[] values = new StepType[] {step.getType()};
-      typeComboBoxModel = new DefaultComboBoxModel<StepType>(values);
+      typeComboBoxModel = new DefaultComboBoxModel<>(values);
     } else {
-      if (father != null) {
-        StepType[] values =
-            StepType.getValidTypesFor(father.getType(), father.getChildrens().size());
-        typeComboBoxModel = new DefaultComboBoxModel<StepType>(values);
-      } else {
-        typeComboBoxModel =
-            new DefaultComboBoxModel<StepType>(StepType.getValidTypesWithoutFather());
-      }
+      boolean hasChildren = father != null && !father.getChildren().isEmpty();
+      StepType[] validTypes= StepType.getValidTypesFor(father,hasChildren,umlUseCase.isIncluding());
+
+      typeComboBoxModel = new DefaultComboBoxModel<>(validTypes);
     }
 
 
-
-    comboTypesStep = new JComboBox<StepType>();
+    comboTypesStep = new JComboBox<>();
     comboTypesStep.setModel(typeComboBoxModel);
     comboTypesStep.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -281,33 +271,54 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
           case FOR:
           case ELSE: {
             comboActorsStep.setEnabled(false);
+            includeCombo.setVisible(false);
+            includedLabel.setVisible(false);
             stepDescription.setVisible(false);
             lblCondition.setVisible(true);
             textFieldCondition.setVisible(true);
             textFieldCondition.setEnabled(true);
+            scrollPaneStep.setVisible(false);
+            saveStep.setVisible(false);
+            editStep.setVisible(false);
             entitiesPanel.setVisible(false);
-            saveStep.setVisible(true);
-            editStep.setVisible(true);
             break;
           }
           case ENDIF:
           case ENDWHILE:
           case ENDFOR: {
             comboActorsStep.setEnabled(false);
+            includeCombo.setVisible(false);
+            includedLabel.setVisible(false);
             stepDescription.setVisible(false);
             lblCondition.setVisible(false);
             textFieldCondition.setVisible(false);
             entitiesPanel.setVisible(false);
+            scrollPaneStep.setVisible(false);
             saveStep.setVisible(false);
             editStep.setVisible(false);
             break;
           }
-          default: {
+          case INCLUDE:
             comboActorsStep.setEnabled(true);
+            includeCombo.setVisible(true);
+            includedLabel.setVisible(true);
             stepDescription.setVisible(true);
             lblCondition.setVisible(false);
             textFieldCondition.setVisible(false);
             entitiesPanel.setVisible(true);
+            scrollPaneStep.setVisible(true);
+            saveStep.setVisible(true);
+            editStep.setVisible(true);
+            break;
+          default: {
+            comboActorsStep.setEnabled(true);
+            includeCombo.setVisible(false);
+            includedLabel.setVisible(false);
+            stepDescription.setVisible(true);
+            lblCondition.setVisible(false);
+            textFieldCondition.setVisible(false);
+            entitiesPanel.setVisible(true);
+            scrollPaneStep.setVisible(true);
             saveStep.setVisible(true);
             editStep.setVisible(true);
           }
@@ -316,6 +327,17 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
       }
     });
+
+
+    includedLabel = new JLabel(Msg.get("editstepmainflow.included.label"));
+    UmlUseCase [] includedUseCases =   new UmlUseCase[umlUseCase.getIncluded().size()];
+    for(int i=0 ; i < includedUseCases.length ; i++){
+      includedUseCases[i] = umlUseCase.getIncluded().get(i);
+    }
+    ComboBoxModel<UmlUseCase> includeComboBoxModel= new DefaultComboBoxModel<>(includedUseCases);
+    includeCombo = new JComboBox<>(includeComboBoxModel);
+    includedLabel.setVisible(false);
+    includeCombo.setVisible(false);
 
     // String[] actorItems =
     // {Msg.get("editstepmainflow.user.actor"), Msg.get("editstepmainflow.system.actor")};
@@ -375,11 +397,14 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
                                             .addComponent(typeLabel, GroupLayout.DEFAULT_SIZE,
                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(actorLabel, GroupLayout.DEFAULT_SIZE, 54,
-                                                Short.MAX_VALUE)).addComponent(lblCondition))
-                            .addGap(18)
+                                                Short.MAX_VALUE))
+                                            .addComponent(includedLabel, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(lblCondition))
+                                .addGap(18)
                             .addGroup(
                                 gropuLayoutStepPanel
                                     .createParallelGroup(Alignment.LEADING)
+                                    .addComponent(includeCombo, 0, 386, Short.MAX_VALUE)
                                     .addComponent(comboActorsStep, 0, 386, Short.MAX_VALUE)
                                     .addComponent(comboTypesStep, 0, 386, Short.MAX_VALUE)
                                     .addComponent(textFieldCondition, GroupLayout.DEFAULT_SIZE,
@@ -401,14 +426,21 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
                     .addComponent(actorLabel)
                     .addComponent(comboActorsStep, GroupLayout.PREFERRED_SIZE,
                         GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(ComponentPlacement.UNRELATED)
+            .addPreferredGap(ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+            .addGroup(
+                gropuLayoutStepPanel
+                    .createParallelGroup(Alignment.BASELINE)
+                    .addComponent(includedLabel)
+                    .addComponent(includeCombo, GroupLayout.PREFERRED_SIZE,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
             .addGroup(
                 gropuLayoutStepPanel
                     .createParallelGroup(Alignment.BASELINE)
                     .addComponent(textFieldCondition, GroupLayout.PREFERRED_SIZE,
                         GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondition))
-            .addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+            .addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
             .addGroup(
                 gropuLayoutStepPanel
                     .createParallelGroup(Alignment.TRAILING, false)
@@ -418,7 +450,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
                         gropuLayoutStepPanel
                             .createSequentialGroup()
                             .addComponent(saveStep)
-                            .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE,
+                            .addPreferredGap(ComponentPlacement.RELATED, 10,
                                 Short.MAX_VALUE).addComponent(editStep))).addContainerGap()));
 
     stepDescription = new JTextPane();
@@ -546,6 +578,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
         textFieldCondition.setText(step.getDescription());
         break;
       }
+      case INCLUDE:
       case REGULAR: {
         stepDescription.setText(step.getDescription());
         break;
@@ -567,8 +600,13 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       case ELSE: {
         return;
       }
+      case INCLUDE:
       case REGULAR: {
         // Guardo lista de Entidades Posibles
+        if(description.trim().isEmpty()){
+          comboEntities.removeAllItems();
+          break;
+        }
         String[] split = description.split(" ");
         List<String> entitiesList = Arrays.asList(split);
         List<String> entityListFinal = new ArrayList<String>();
@@ -609,6 +647,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       case ELSE: {
         return this.textFieldCondition.getText();
       }
+      case INCLUDE:
       case REGULAR: {
         return this.stepDescription.getText();
       }
@@ -635,5 +674,9 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
   public boolean isOk() {
     return isOk;
+  }
+
+  public UmlUseCase getIncluded() {
+    return (UmlUseCase) includeCombo.getSelectedItem();
   }
 }

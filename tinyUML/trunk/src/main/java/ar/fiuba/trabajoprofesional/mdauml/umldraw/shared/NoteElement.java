@@ -186,4 +186,9 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
             default:    throw new AddConnectionException(Msg.get("error.connection.invalidConnection"));
         }
     }
+
+    @Override
+    public boolean isConnectionSource() {
+        return true;
+    }
 }

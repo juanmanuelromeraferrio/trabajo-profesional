@@ -19,10 +19,7 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import ar.fiuba.trabajoprofesional.mdauml.draw.ConnectionVisitor;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.draw.DrawingContext;
-import ar.fiuba.trabajoprofesional.mdauml.draw.LineConnectMethod;
+import ar.fiuba.trabajoprofesional.mdauml.draw.*;
 import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.RelationType;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
@@ -111,10 +108,11 @@ public class LineHandler implements EditorMode {
     public void mousePressed(EditorMouseEvent event) {
         double mx = event.getX(), my = event.getY();
         DiagramElement elem = editor.getDiagram().getChildAt(mx, my);
-
+        if(elem.isConnectionSource()) {
             anchor.setLocation(mx, my);
             isDragging = true;
             source = (UmlNode) elem;
+        }
 
     }
 

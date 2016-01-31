@@ -84,7 +84,7 @@ public class Flow {
 
     // Remove Step To Father
     if (father != null) {
-      father.removeChildrenStep(step);
+      father.removeChild(step);
     }
 
     // Remove Childrens to Flow
@@ -92,7 +92,7 @@ public class Flow {
   }
 
   private void removeChildrenToFlow(UmlStep umlStep) {
-    for (UmlStep childrenStep : umlStep.getChildrens()) {
+    for (UmlStep childrenStep : umlStep.getChildren()) {
       removeChildrenToFlow(childrenStep);
       flow.remove(childrenStep);
     }
@@ -113,14 +113,14 @@ public class Flow {
 
   private void addChildrenToFlow(UmlStep umlStep, int selectedStep) {
     // flow.add(selectedStep, umlStep);
-    // for (UmlStep childrenStep : umlStep.getChildrens()) {
+    // for (UmlStep childrenStep : umlStep.getChildren()) {
     // int index = getFlowIndexForChildrenStep(childrenStep);// childrenStep.getRealIndex() - 1;
     // addChildrenToFlow(childrenStep, index);
     // }
   }
 
   public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep) {
-    fatherStep.addChildrenStep(childrenStep);
+    fatherStep.addChild(childrenStep);
     int index = getFlowIndexForChildrenStep(childrenStep);// childrenStep.getRealIndex() - 1;
     addChildrenToFlow(childrenStep, index);
   }
@@ -150,7 +150,7 @@ public class Flow {
 
   private int indexOfStep(UmlStep searchStep, UmlStep father, int start) {
     int result = start;
-    for (UmlStep children : father.getChildrens()) {
+    for (UmlStep children : father.getChildren()) {
       if (children.equals(searchStep)) {
         return result + 1;
       }
@@ -161,13 +161,13 @@ public class Flow {
   }
 
   public void addChildrenStep(UmlStep fatherStep, UmlStep childrenStep, int selectedStep) {
-    fatherStep.addChildrenStep(childrenStep, selectedStep);
+    fatherStep.addChild(childrenStep, selectedStep);
     int flowIndex = flow.indexOf(fatherStep) + selectedStep + 1;
     addChildrenToFlow(childrenStep, flowIndex);
   }
 
   public void removeChildrenStep(UmlStep selectedStep, int selectedAlternativeStep) {
-    selectedStep.removeChildrenStepByPosition(selectedAlternativeStep);
+    selectedStep.removeChildAt(selectedAlternativeStep);
     flow.remove(selectedStep);
   }
 
@@ -182,7 +182,7 @@ public class Flow {
         Set<String> stepEntites = ((UmlMainStep) step).getEntities();
         allEntities.addAll(stepEntites);
       }
-      allEntities.addAll(getAllEntities(step.getChildrens()));
+      allEntities.addAll(getAllEntities(step.getChildren()));
     }
     return allEntities;
   }
@@ -203,7 +203,30 @@ public class Flow {
         }
         ((UmlMainStep) step).setEntities(replacedEntities);
       }
-      replaceEntity(original, replacement, step.getChildrens());
+      replaceEntity(original, replacement, step.getChildren());
     }
+  }
+
+  public void replaceInclude(UmlModelElement included){
+    List<UmlStep> replacedFlow = new ArrayList<>();
+    replaceInclude(included,flow,replacedFlow);
+    this.flow=replacedFlow;
+  }
+  public void replaceInclude(UmlModelElement included, List<UmlStep> steps, List<UmlStep> newSteps) {
+
+    for (UmlStep step : steps) {
+      UmlStep newStep = step.clone();
+      if (step instanceof IncludeStep) {
+        if(((IncludeStep) step).getIncluded().equals(included)) {
+          newStep =((IncludeStep) step).convertToRegular();
+        }
+      }
+      newSteps.add(newStep);
+      List<UmlStep> newChildren = new ArrayList<>();
+      newStep.setChildren(newChildren);
+      replaceInclude(included,step.getChildren(),newStep.getChildren());
+
+    }
+
   }
 }

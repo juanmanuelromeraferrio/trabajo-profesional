@@ -181,5 +181,7 @@ public interface DiagramElement extends Cloneable {
     GeneralDiagram getDiagram();
     void setDiagram(GeneralDiagram d);
 
+    boolean isConnectionSource();
+
 
 }

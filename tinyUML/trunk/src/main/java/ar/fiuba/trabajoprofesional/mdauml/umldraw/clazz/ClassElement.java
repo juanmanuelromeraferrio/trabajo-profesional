@@ -650,4 +650,11 @@ public final class ClassElement extends AbstractCompositeNode
     public ArrayList<Boolean> getAttributesVisibility() {
         return attributesVisibility;
     }
+
+
+    @Override
+    public boolean isConnectionSource() {
+        return true;
+    }
+
 }

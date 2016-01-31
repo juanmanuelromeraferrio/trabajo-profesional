@@ -322,4 +322,8 @@ public final class PackageElement extends AbstractCompositeNode implements Label
     }
 
 
+    @Override
+    public boolean isConnectionSource() {
+        return true;
+    }
 }

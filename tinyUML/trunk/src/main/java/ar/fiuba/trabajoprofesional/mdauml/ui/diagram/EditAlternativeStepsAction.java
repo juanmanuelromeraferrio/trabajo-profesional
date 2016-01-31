@@ -15,7 +15,6 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
 
 public class EditAlternativeStepsAction extends AbstractAction {
@@ -74,7 +73,7 @@ public class EditAlternativeStepsAction extends AbstractAction {
     }
 
     Rectangle r = list.getCellBounds(row, row);
-    this.alternativeSelectedStep = selectedStep.getChildren(row);
+    this.alternativeSelectedStep = selectedStep.getChild(row);
     String selectValue = alternativeSelectedStep.getDescription();
 
     model.getElementAt(row);

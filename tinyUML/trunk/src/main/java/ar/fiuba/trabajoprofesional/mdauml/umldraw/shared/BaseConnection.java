@@ -384,4 +384,10 @@ public abstract class BaseConnection implements UmlConnection {
     public void nodeResized(Node node) {
         connection.nodeResized(node);
     }
+
+
+    @Override
+    public boolean isConnectionSource() {
+        return false;
+    }
 }

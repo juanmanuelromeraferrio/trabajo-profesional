@@ -32,12 +32,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
-import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
@@ -259,7 +254,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
       fathers.remove(umlsMainStep);
     }
 
-    for (UmlStep umlStep : umlsMainStep.getChildrens()) {
+    for (UmlStep umlStep : umlsMainStep.getChildren()) {
       removeFathers((UmlMainStep) umlStep);
     }
 
@@ -543,6 +538,14 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           UmlStep step = null;
 
           switch (stepType) {
+            case INCLUDE:{
+              String actor = dialog.getActor();
+              Set<String> entities = dialog.getEntities();
+              step = new IncludeStep(stepDescription, actor,  entities);
+              ((IncludeStep)step).setIncluded(dialog.getIncluded());
+              addNewStep(step);
+              break;
+            }
             case REGULAR: {
               String actor = dialog.getActor();
               Set<String> entities = dialog.getEntities();
@@ -641,7 +644,12 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
             String actor = dialog.getActor();
             Set<String> entities = dialog.getEntities();
             newStep = new UmlMainStep(stepDescription, actor, stepType, entities);
-          } else {
+          } else if(stepType.equals(StepType.INCLUDE)){
+            String actor = dialog.getActor();
+            Set<String> entities = dialog.getEntities();
+            newStep = new IncludeStep(stepDescription, actor, entities);
+            ((IncludeStep)newStep).setIncluded(dialog.getIncluded());
+          }else {
             newStep = new UmlMainStep(stepDescription, stepType);
           }
 
@@ -652,7 +660,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           }
 
           // Add Children
-          for (UmlStep children : step.getChildrens()) {
+          for (UmlStep children : step.getChildren()) {
             mainFlow.addChildrenStep(newStep, children);
           }
 
@@ -691,7 +699,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         UmlStep step = mainFlow.getStep(selectedStep);
 
         UmlStep father = step.getFather();
-        if (father != null && father.getChildrens().size() == 1) {
+        if (father != null && father.getChildren().size() == 1) {
 
           String msg = null;
           switch (((UmlMainStep) father).getType()) {

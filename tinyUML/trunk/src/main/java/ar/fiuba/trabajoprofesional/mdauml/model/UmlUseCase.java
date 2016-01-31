@@ -38,7 +38,6 @@ public class UmlUseCase extends PackageableUmlModelElement {
    */
   public UmlUseCase() {}
 
-  ;
 
   /**
    * Returns the prototype instance.
@@ -226,6 +225,9 @@ public class UmlUseCase extends PackageableUmlModelElement {
 
   public void removeInclude(IncludeRelation include) {
     includeRelations.remove(include);
+    mainFlow.replaceInclude(include.getElement2());
+    for(Flow alternativeFlow:alternativeFlows)
+      alternativeFlow.replaceInclude(include.getElement2());
   }
 
   public boolean isIncluding() {
@@ -247,7 +249,8 @@ public class UmlUseCase extends PackageableUmlModelElement {
         LinkedHashMap<String, Integer> sortedEntities =
             SortedMapUtil.sortHashMapByValues(commonEntities);
 
-        return sortedEntities.keySet().iterator().next();
+        if( sortedEntities.keySet().iterator().hasNext())
+          return sortedEntities.keySet().iterator().next();
 
       } else {
         return null;
@@ -260,7 +263,7 @@ public class UmlUseCase extends PackageableUmlModelElement {
       return null;
 
     }
-
+    return null;
   }
 
 
@@ -277,7 +280,7 @@ public class UmlUseCase extends PackageableUmlModelElement {
           commonEntities.put(entity, count + 1);
         }
       }
-      updateMostCommonEntity(step.getChildrens(), commonEntities);
+      updateMostCommonEntity(step.getChildren(), commonEntities);
     }
   }
 
@@ -299,4 +302,11 @@ public class UmlUseCase extends PackageableUmlModelElement {
     mainFlow.replaceEntity(original, replacement);
   }
 
+  public List<UmlUseCase> getIncluded() {
+    List<UmlUseCase> includedUseCases =  new ArrayList<>();
+    for(IncludeRelation relation :includeRelations){
+      includedUseCases.add((UmlUseCase) relation.getElement2());
+    }
+    return includedUseCases;
+  }
 }

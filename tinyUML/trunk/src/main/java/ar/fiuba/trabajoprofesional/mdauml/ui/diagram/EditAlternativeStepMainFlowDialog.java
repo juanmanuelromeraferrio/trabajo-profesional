@@ -224,7 +224,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
     for (UmlStep step : steps) {
       completeSteps.add(step.showDescription());
       actualSteps.add(step);
-      for (UmlStep chlidrenSteps : step.getCompleteStepsChildrens()) {
+      for (UmlStep chlidrenSteps : step.getDescendants()) {
         completeSteps.add(chlidrenSteps.showDescription());
         actualSteps.add(chlidrenSteps);
       }
@@ -254,7 +254,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
         
         alternativeStepEditListAction.setSelectedStep(selectedStep);
 
-        for (UmlStep obj : selectedStep.getChildrens()) {
+        for (UmlStep obj : selectedStep.getChildren()) {
           ((DefaultListModel<String>) jListAlternativeSteps.getModel()).addElement(obj
               .showDescription());
         }
@@ -461,7 +461,7 @@ public class EditAlternativeStepMainFlowDialog extends javax.swing.JDialog {
 
   private void refreshModel(DefaultListModel<String> listModel) {
     listModel.clear();
-    for (UmlStep obj : selectedStep.getChildrens()) {
+    for (UmlStep obj : selectedStep.getChildren()) {
       listModel.addElement(obj.showDescription());
     }
   }

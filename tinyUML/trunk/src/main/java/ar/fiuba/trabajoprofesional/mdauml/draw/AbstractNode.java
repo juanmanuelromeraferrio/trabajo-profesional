@@ -530,4 +530,8 @@ public abstract class AbstractNode implements Node, ConnectionVisitor{
         this.changeListeners = changeListeners;
     }
 
+    @Override
+    public boolean isConnectionSource() {
+        return false;
+    }
 }

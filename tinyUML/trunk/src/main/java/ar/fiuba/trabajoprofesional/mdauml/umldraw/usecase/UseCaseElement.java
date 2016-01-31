@@ -339,4 +339,9 @@ public final class UseCaseElement extends AbstractCompositeNode
         if(this.getModelElement()==packageableUmlModelElement)
             removeExistingConnection(Nest.class);
     }
+
+    @Override
+    public boolean isConnectionSource() {
+        return true;
+    }
 }

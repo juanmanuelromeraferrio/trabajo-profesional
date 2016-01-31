@@ -7,14 +7,14 @@ import java.util.List;
 public abstract class UmlStep {
 
   protected UmlStep father;
-  protected List<UmlStep> childrens;
+  protected List<UmlStep> children;
   protected Integer index;
 
   protected String description;
 
   protected UmlStep(String description) {
     this.description = description;
-    this.childrens = new ArrayList<UmlStep>();
+    this.children = new ArrayList<UmlStep>();
   }
 
   public void setFather(UmlStep father) {
@@ -61,56 +61,63 @@ public abstract class UmlStep {
     }
   }
 
+
   public void setIndex(int i) {
     this.index = i;
 
   }
 
-  public void addChildrenStep(UmlStep step) {
+  public void addChild(UmlStep step) {
     step.setFather(this);
-    int size = childrens.size();
+    int size = children.size();
     step.setIndex(size + 1);
-    childrens.add(step);
+    children.add(step);
   }
 
-  public void addChildrenStep(UmlStep step, int selectedStep) {
+  public void setChildren(List<UmlStep> children) {
+    this.children.clear();
+    for(UmlStep child : children)
+      addChild(child);
+  }
+
+  public void addChild(UmlStep step, int selectedStep) {
     step.setFather(this);
     step.setIndex(selectedStep + 1);
-    childrens.add(selectedStep, step);
+    children.add(selectedStep, step);
 
-    for (int i = selectedStep + 1; i < childrens.size(); i++) {
-      childrens.get(i).incrementIndex();
+    for (int i = selectedStep + 1; i < children.size(); i++) {
+      children.get(i).incrementIndex();
     }
   }
 
-  public void removeChildrenStep(UmlStep step) {
-    int index = childrens.indexOf(step);
-    for (int i = index + 1; i < childrens.size(); i++) {
-      childrens.get(i).decrementIndex();
+  public void removeChild(UmlStep step) {
+    int index = children.indexOf(step);
+    for (int i = index + 1; i < children.size(); i++) {
+      children.get(i).decrementIndex();
     }
 
-    childrens.remove(step);
+    children.remove(step);
   }
 
-  public void removeChildrenStepByPosition(int selectedAlternativeStep) {
-    UmlStep umlStep = childrens.get(selectedAlternativeStep);
-    this.removeChildrenStep(umlStep);
+  public void removeChildAt(int selectedAlternativeStep) {
+    UmlStep umlStep = children.get(selectedAlternativeStep);
+    this.removeChild(umlStep);
   }
 
-  public UmlStep getChildren(int index) {
-    return childrens.get(index);
+  public UmlStep getChild(int index) {
+    return children.get(index);
   }
 
-  public List<UmlStep> getChildrens() {
-    return childrens;
+  public List<UmlStep> getChildren() {
+    return children;
   }
 
-  public List<UmlStep> getCompleteStepsChildrens() {
+  public List<UmlStep> getDescendants() {
     List<UmlStep> result = new ArrayList<UmlStep>();
 
-    for (UmlStep step : childrens) {
+    for (UmlStep step : children) {
       result.add(step);
-      result.addAll(step.getCompleteStepsChildrens());
+      result.addAll(step.getDescendants());
     }
 
     return result;
@@ -124,7 +131,7 @@ public abstract class UmlStep {
   public List<String> getCompleteDescription() {
     List<String> result = new ArrayList<String>();
     result.add(showDescription());
-    for (UmlStep umlStep : childrens) {
+    for (UmlStep umlStep : children) {
       result.addAll(umlStep.getCompleteDescription());
     }
 
@@ -140,7 +147,7 @@ public abstract class UmlStep {
 
     count++;
 
-    for (UmlStep step : childrens) {
+    for (UmlStep step : children) {
       int totalSize = count + step.getTotalSize();
       if (totalSize <= index) {
         count = totalSize;
@@ -154,7 +161,7 @@ public abstract class UmlStep {
 
   public int getTotalSize() {
     int size = 1;
-    for (UmlStep step : childrens) {
+    for (UmlStep step : children) {
       size += step.getTotalSize();
     }
 
