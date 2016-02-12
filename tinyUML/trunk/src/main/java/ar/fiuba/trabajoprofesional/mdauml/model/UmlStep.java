@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class UmlStep {
+public class UmlStep {
 
   protected UmlStep father;
   protected List<UmlStep> children;
@@ -12,7 +12,7 @@ public abstract class UmlStep {
 
   protected String description;
 
-  protected UmlStep(String description) {
+  public UmlStep(String description) {
     this.description = description;
     this.children = new ArrayList<UmlStep>();
   }
@@ -123,10 +123,9 @@ public abstract class UmlStep {
     return result;
   }
 
-  public abstract String showDescription();
-
-  @Override
-  public abstract UmlStep clone();
+  public  String showDescription(){
+    return description;
+  }
 
   public List<String> getCompleteDescription() {
     List<String> result = new ArrayList<String>();
@@ -139,6 +138,13 @@ public abstract class UmlStep {
 
   }
 
+  public UmlStep clone(){
+    try {
+      return (UmlStep) super.clone();
+    } catch (CloneNotSupportedException e) {
+      return null;
+    }
+  }
 
   public UmlStep findByIndex(int index, int count) {
     if (index == count) {
@@ -166,6 +172,11 @@ public abstract class UmlStep {
     }
 
     return size;
+  }
+
+  @Override
+  public String toString(){
+    return showDescription();
   }
 
 

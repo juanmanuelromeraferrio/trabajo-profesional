@@ -11,7 +11,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -22,7 +21,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -33,6 +31,7 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.StepCRUD;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
@@ -69,8 +68,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   private EditListAction postconditionEditListAction;
 
   private Window parent;
-  private Stack<UmlMainStep> fathers;
-
+  private StepCRUD stepCRUD;
 
 
   /**
@@ -84,7 +82,6 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.parent = parent;
     this.useCaseElement = anUseCase;
-    this.fathers = new Stack<UmlMainStep>();
     initComponents();
     myPostInit();
   }
@@ -195,9 +192,11 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     mainFlow = (Flow) useCase.getMainFLow().clone();
 
     DefaultListModel<String> mainFlowStepModel = new DefaultListModel<String>();
-
-    refreshMainFlow(mainFlowStepModel);
     mainFlowStepList.setModel(mainFlowStepModel);
+
+    stepCRUD = new StepCRUD(
+            useCase, mainFlow, parent,mainFlowStepList);
+    stepCRUD.read();
 
   }
 
@@ -229,48 +228,177 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
   }
 
-  private void refreshMainFlow(DefaultListModel<String> listModel) {
-    List<UmlStep> flow = mainFlow.getFlow();
-    listModel.clear();
-    for (UmlStep step_ : flow) {
+  ///////////////////////  ACTION LISTENERS BEGIN ///////////////////////////////////////////
 
-      List<String> completeDescription = step_.getCompleteDescription();
-      for (String element : completeDescription) {
-        listModel.addElement(element);
-      }
+  private void onAddMainActor() {
+
+    UmlActor selectedActor = (UmlActor) comboMainActor.getSelectedItem();
+    DefaultListModel<UmlActor> mainActorModelList =
+            (DefaultListModel<UmlActor>) mainActors.getModel();
+
+    if (!mainActorModelList.contains(selectedActor)) {
+      ((DefaultListModel<UmlActor>) mainActors.getModel()).addElement(selectedActor);
+      ((DefaultListModel<UmlActor>) secondaryActors.getModel()).removeElement(selectedActor);
     }
   }
 
-  private UmlMainStep getFather() {
-    UmlMainStep father = null;
-    if (!fathers.isEmpty()) {
-      father = fathers.peek();
+  private void onDeleteMainActor() {
+
+    DefaultListModel<UmlActor> listModelActors =
+            ((DefaultListModel<UmlActor>) mainActors.getModel());
+
+    if (listModelActors.isEmpty())
+      return;
+
+    int selectedActor = mainActors.getSelectedIndex();
+
+    if (selectedActor == -1) {
+      selectedActor = listModelActors.getSize() - 1;
     }
-    return father;
+
+    listModelActors.remove(selectedActor);
+
   }
 
-  private void removeFathers(UmlMainStep umlsMainStep) {
-    if (umlsMainStep.isFatherType()) {
-      fathers.remove(umlsMainStep);
+  private void onAddSecondaryActor() {
+    UmlActor selectedActor = (UmlActor) comboSecActors.getSelectedItem();
+
+    DefaultListModel<UmlActor> secondaryActorModelList =
+            (DefaultListModel<UmlActor>) secondaryActors.getModel();
+
+    if (!secondaryActorModelList.contains(selectedActor)) {
+      ((DefaultListModel<UmlActor>) secondaryActors.getModel()).addElement(selectedActor);
+      ((DefaultListModel<UmlActor>) mainActors.getModel()).removeElement(selectedActor);
+    }
+  }
+
+
+  private void onDeleteSecondaryActor() {
+
+    DefaultListModel<UmlActor> listModelActors =
+            ((DefaultListModel<UmlActor>) secondaryActors.getModel());
+
+    if (listModelActors.isEmpty())
+      return;
+
+    int selectedActor = secondaryActors.getSelectedIndex();
+
+    if (selectedActor == -1) {
+      selectedActor = listModelActors.getSize() - 1;
     }
 
-    for (UmlStep umlStep : umlsMainStep.getChildren()) {
-      removeFathers((UmlMainStep) umlStep);
-    }
+    listModelActors.remove(selectedActor);
 
   }
+
+
+  private void onAddPrecondition() {
+
+    String precondition = preconditionsTextField.getText();
+    if (!precondition.isEmpty()) {
+      ((DefaultListModel<String>) preconditions.getModel()).addElement(precondition);
+      preconditionsTextField.setText("");
+    }
+  }
+
+
+  private void onDeletePrecondition() {
+
+    DefaultListModel<String> listModel = ((DefaultListModel<String>) preconditions.getModel());
+    if (listModel.isEmpty())
+      return;
+
+    int selectedPrecondition = preconditions.getSelectedIndex();
+
+    if (selectedPrecondition == -1) {
+      selectedPrecondition = listModel.getSize() - 1;
+    }
+    listModel.remove(selectedPrecondition);
+  }
+
+  private void onAddStep() {
+    stepCRUD.add();
+    updateEntityPanel(false);
+  }
+
+  private void onDeleteStep() {
+    stepCRUD.remove();
+    updateEntityPanel(false);
+
+  }
+
+  private void onEditStep() {
+    stepCRUD.edit();
+    updateEntityPanel(false);
+
+  }
+
+  private void onAddAlternativeFlow() {
+
+    AddAlternativeFlowDialog dialog =
+            new AddAlternativeFlowDialog(parent, new AlternativeFlow(), (UmlUseCase) useCaseElement.getModelElement());
+    dialog.setLocationRelativeTo(parent);
+    dialog.setVisible(true);
+
+    if (dialog.isOk()) {
+
+      mainFlow = dialog.getUpdatedFlow();
+
+    }
+  }
+
+  private void onAddPostcondition() {
+    String postCondition = postconditionTextField.getText();
+    if (!postCondition.isEmpty()) {
+      ((DefaultListModel<String>) postconditions.getModel()).addElement(postCondition);
+      postconditionTextField.setText("");
+    }
+  }
+
+  private void onDeletePostcondition() {
+
+    DefaultListModel<String> listModel = ((DefaultListModel<String>) postconditions.getModel());
+    if (listModel.isEmpty())
+      return;
+
+    int selected = postconditions.getSelectedIndex();
+
+    if (selected == -1) {
+      selected = listModel.getSize() - 1;
+    }
+    listModel.remove(selected);
+  }
+
+  private void onSelectMainEntity() {
+
+    String selectedEntity = (String) comboMainEntity.getSelectedItem();
+    DefaultListModel<String> mainEntityModelList =
+            (DefaultListModel<String>) mainEntities.getModel();
+
+    if (comboMainEntity.getModel().getSize() == 0)
+      return;
+
+    String changeEntity = mainEntityModelList.get(0);
+    comboMainEntity.addItem(changeEntity);
+    comboMainEntity.removeItem(selectedEntity);
+    mainEntityModelList.clear();
+    mainEntityModelList.addElement(selectedEntity);
+  }
+
+  ///////////////////////  ACTION LISTENERS END   ///////////////////////////////////////////
+
 
   private void initComponents() {
     setResizable(false);
     setSize(new Dimension(741, 700));
-    setTitle("Use case specification");
+    setTitle(Msg.get("editUseCaseDialog.title"));
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
     JScrollPane mainScrollPanel = new JScrollPane();
     mainScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
     mainScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-    JButton btnCancel = new JButton("Cancel");
+    JButton btnCancel = new JButton(Msg.get("stdcaption.cancel"));
     btnCancel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = false;
@@ -278,7 +406,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
       }
     });
 
-    JButton btnOk = new JButton("OK");
+    JButton btnOk = new JButton(Msg.get("stdcaption.ok"));
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = true;
@@ -307,15 +435,15 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           .addContainerGap())
     );
 
-    JPanel panel = new JPanel();
+    final JPanel panel = new JPanel();
     mainScrollPanel.setViewportView(panel);
 
-    JLabel lblName = new JLabel("Name:");
+    JLabel lblName = new JLabel(Msg.get("editUseCaseDialog.label.name"));
 
     name = new JTextField();
     name.setColumns(10);
 
-    JLabel lblDescription = new JLabel("Description:");
+    JLabel lblDescription = new JLabel(Msg.get("editUseCaseDialog.label.description"));
 
     JScrollPane scrollPane = new JScrollPane();
 
@@ -323,53 +451,33 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     scrollPane.setViewportView(description);
 
     JPanel mainEntityPanel = new JPanel();
-    mainEntityPanel.setBorder(new TitledBorder(null, "Main entity", TitledBorder.LEADING,
+    mainEntityPanel.setBorder(new TitledBorder(null, Msg.get("editUseCaseDialog.border.mainentity"), TitledBorder.LEADING,
         TitledBorder.TOP, null, null));
 
     JPanel mainActorsPanel = new JPanel();
-    mainActorsPanel.setBorder(new TitledBorder(null, "Main actors", TitledBorder.LEADING,
+    mainActorsPanel.setBorder(new TitledBorder(null, Msg.get("editUseCaseDialog.border.mainActors"), TitledBorder.LEADING,
         TitledBorder.TOP, null, null));
 
     JPanel panelSecondaryActors = new JPanel();
     panelSecondaryActors.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        "Secondary actors", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+       Msg.get("editUseCaseDialog.border.secActors"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     JScrollPane scrollPane_2 = new JScrollPane();
 
     comboSecActors = new JComboBox();
 
-    JButton addSecondaryActors = new JButton("Add");
+    JButton addSecondaryActors = new JButton(Msg.get("editUseCaseDialog.add"));
     addSecondaryActors.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        UmlActor selectedActor = (UmlActor) comboSecActors.getSelectedItem();
+        onAddSecondaryActor();
 
-        DefaultListModel<UmlActor> secondaryActorModelList =
-            (DefaultListModel<UmlActor>) secondaryActors.getModel();
-
-        if (!secondaryActorModelList.contains(selectedActor)) {
-          ((DefaultListModel<UmlActor>) secondaryActors.getModel()).addElement(selectedActor);
-          ((DefaultListModel<UmlActor>) mainActors.getModel()).removeElement(selectedActor);
-        }
       }
     });
 
-    JButton removeSecondaryActors = new JButton("Delete");
+    JButton removeSecondaryActors = new JButton(Msg.get("editUseCaseDialog.delete"));
     removeSecondaryActors.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
-        DefaultListModel<UmlActor> listModelActors =
-            ((DefaultListModel<UmlActor>) secondaryActors.getModel());
-
-        if (listModelActors.isEmpty())
-          return;
-
-        int selectedActor = secondaryActors.getSelectedIndex();
-
-        if (selectedActor == -1) {
-          selectedActor = listModelActors.getSize() - 1;
-        }
-
-        listModelActors.remove(selectedActor);
+        onDeleteSecondaryActor();
       }
     });
     GroupLayout gl_panelSecondaryActors = new GroupLayout(panelSecondaryActors);
@@ -422,44 +530,29 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     JPanel panelPreconditions = new JPanel();
     panelPreconditions.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        "Preconditions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        Msg.get("editUseCaseDialog.border.precondition"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     JScrollPane scrollPanePreconditions = new JScrollPane();
 
-    JButton addPreconditions = new JButton("Add");
+    JButton addPreconditions = new JButton(Msg.get("editUseCaseDialog.add"));
     addPreconditions.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
-        String precondition = preconditionsTextField.getText();
-        if (!precondition.isEmpty()) {
-          ((DefaultListModel<String>) preconditions.getModel()).addElement(precondition);
-          preconditionsTextField.setText("");
-        }
+        onAddPrecondition();
       }
     });
 
-    JButton deletePreconditions = new JButton("Delete");
+    JButton deletePreconditions = new JButton(Msg.get("editUseCaseDialog.delete"));
     deletePreconditions.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-
-        DefaultListModel<String> listModel = ((DefaultListModel<String>) preconditions.getModel());
-        if (listModel.isEmpty())
-          return;
-
-        int selectedPrecondition = preconditions.getSelectedIndex();
-
-        if (selectedPrecondition == -1) {
-          selectedPrecondition = listModel.getSize() - 1;
-        }
-        listModel.remove(selectedPrecondition);
+        onDeletePrecondition();
       }
     });
 
     preconditionsTextField = new JTextField();
     preconditionsTextField.setColumns(10);
 
-    JButton editPreconditions = new JButton("Edit");
-    preconditionEditListAction = new EditListAction("Edit");
+    JButton editPreconditions = new JButton(Msg.get("editUseCaseDialog.edit"));
+    preconditionEditListAction = new EditListAction(Msg.get("editUseCaseDialog.edit"));
     editPreconditions.setAction(preconditionEditListAction);
 
     GroupLayout gl_panelPreconditions = new GroupLayout(panelPreconditions);
@@ -516,222 +609,36 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     JPanel panelMainFlow = new JPanel();
     panelMainFlow.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        "Main flow", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        Msg.get("editUseCaseDialog.border.mainflow"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     JScrollPane mainFlowStepPane = new JScrollPane();
-    JButton addMainFlowButton = new JButton("Add");
+    JButton addMainFlowButton = new JButton(Msg.get("editUseCaseDialog.add"));
+
+
+
+
+
 
     addMainFlowButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
-        UmlMainStep father = getFather();
-        UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
-
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father);
-        dialog.setLocationRelativeTo(parent);
-        dialog.setVisible(true);
-
-        if (dialog.isOk()) {
-
-          StepType stepType = dialog.getStepType();
-          String stepDescription = dialog.getDescription();
-          UmlStep step = null;
-
-          switch (stepType) {
-            case INCLUDE:{
-              String actor = dialog.getActor();
-              Set<String> entities = dialog.getEntities();
-              step = new IncludeStep(stepDescription, actor,  entities);
-              ((IncludeStep)step).setIncluded(dialog.getIncluded());
-              addNewStep(step);
-              break;
-            }
-            case REGULAR: {
-              String actor = dialog.getActor();
-              Set<String> entities = dialog.getEntities();
-              step = new UmlMainStep(stepDescription, actor, stepType, entities);
-              addNewStep(step);
-              break;
-            }
-            case IF:
-            case WHILE:
-            case FOR: {
-              step = new UmlMainStep(stepDescription, stepType);
-              addNewStep(step);
-              break;
-            }
-            case ELSE: {
-              step = new UmlMainStep(stepDescription, stepType);
-              fathers.pop();
-              addNewStep(step);
-              break;
-            }
-            case ENDIF:
-            case ENDWHILE:
-            case ENDFOR: {
-              fathers.pop();
-              break;
-            }
-            default:
-              break;
-          }
-        }
-
-        updateEntityPanel(false);
+        onAddStep();
       }
 
-      private void addNewStep(UmlStep step) {
-        UmlMainStep father = getFather();
-        if (father != null) {
-          mainFlow.addChildrenStep(father, step);
-        } else {
-          mainFlow.addStep(step);
-        }
-
-        UmlMainStep umlMainStep = (UmlMainStep) step;
-        if (umlMainStep.isFatherType()) {
-          fathers.push(umlMainStep);
-        }
-
-        String informationStep = step.showDescription();
-        ((DefaultListModel<String>) mainFlowStepList.getModel()).addElement(informationStep);
-      }
     });
 
-    JButton editStepMainFlowButton = new JButton("Edit");
+    JButton editStepMainFlowButton = new JButton(Msg.get("editUseCaseDialog.edit"));
     editStepMainFlowButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
-        DefaultListModel<String> listModel =
-            ((DefaultListModel<String>) mainFlowStepList.getModel());
-
-        if (listModel.isEmpty())
-          return;
-
-        int selectedStep = mainFlowStepList.getSelectedIndex();
-
-        if (selectedStep == -1) {
-          selectedStep = listModel.getSize() - 1;
-        }
-
-        UmlMainStep step = (UmlMainStep) mainFlow.getStep(selectedStep);
-        UmlMainStep father = (UmlMainStep) step.getFather();
-
-        UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father, step);
-        dialog.setLocationRelativeTo(parent);
-        dialog.setVisible(true);
+        onEditStep();
 
 
-        if (dialog.isOk()) {
-          String stepDescription = dialog.getDescription();
-          StepType stepType = dialog.getStepType();
-
-
-          int indexReal = step.getIndex();
-          int indexFlow = mainFlow.getFlowIndex(step);
-
-          if (father != null) {
-            selectedStep = selectedStep - mainFlow.getFlow().indexOf(father) - 1;
-          }
-
-          // Borro el Step Original
-          mainFlow.removeStep(step);
-
-          // Creo uno nuevo
-          UmlStep newStep;
-          if (stepType.equals(StepType.REGULAR)) {
-            String actor = dialog.getActor();
-            Set<String> entities = dialog.getEntities();
-            newStep = new UmlMainStep(stepDescription, actor, stepType, entities);
-          } else if(stepType.equals(StepType.INCLUDE)){
-            String actor = dialog.getActor();
-            Set<String> entities = dialog.getEntities();
-            newStep = new IncludeStep(stepDescription, actor, entities);
-            ((IncludeStep)newStep).setIncluded(dialog.getIncluded());
-          }else {
-            newStep = new UmlMainStep(stepDescription, stepType);
-          }
-
-          if (father != null) {
-            mainFlow.addChildrenStep(father, newStep, selectedStep);
-          } else {
-            mainFlow.addStep(newStep, indexReal, indexFlow);
-          }
-
-          // Add Children
-          for (UmlStep children : step.getChildren()) {
-            mainFlow.addChildrenStep(newStep, children);
-          }
-
-          UmlMainStep umlMainStep = (UmlMainStep) newStep;
-          if (umlMainStep.isFatherType()) {
-            int index = fathers.indexOf(step);
-            if (index != -1) {
-              fathers.remove(index);
-              fathers.insertElementAt(umlMainStep, index);
-            }
-          }
-
-          refreshMainFlow(listModel);
-          updateEntityPanel(false);
-
-        }
       }
     });
 
-    JButton deletStepMainFlowButton = new JButton("Delete");
+    JButton deletStepMainFlowButton = new JButton(Msg.get("editUseCaseDialog.delete"));
     deletStepMainFlowButton.addActionListener(new ActionListener() {
-      @SuppressWarnings("incomplete-switch")
       public void actionPerformed(ActionEvent e) {
-
-        DefaultListModel<String> listModel =
-            ((DefaultListModel<String>) mainFlowStepList.getModel());
-        if (listModel.isEmpty())
-          return;
-
-        int selectedStep = mainFlowStepList.getSelectedIndex();
-
-        if (selectedStep == -1) {
-          selectedStep = listModel.getSize() - 1;
-        }
-
-        UmlStep step = mainFlow.getStep(selectedStep);
-
-        UmlStep father = step.getFather();
-        if (father != null && father.getChildren().size() == 1) {
-
-          String msg = null;
-          switch (((UmlMainStep) father).getType()) {
-            case ELSE:
-              msg = Msg.get("editstepmainflow.error.delete.else.step.text");
-              break;
-            case FOR:
-              msg = Msg.get("editstepmainflow.error.delete.for.step.text");
-              break;
-            case IF:
-              msg = Msg.get("editstepmainflow.error.delete.if.step.text");
-              break;
-            case WHILE:
-              msg = Msg.get("editstepmainflow.error.delete.while.step.text");
-              break;
-          }
-
-          JOptionPane.showMessageDialog(parent, msg, Msg.get("editstepmainflow.error.title"),
-              JOptionPane.INFORMATION_MESSAGE);
-
-          return;
-        }
-
-
-
-        mainFlow.removeStep(step);
-
-
-        UmlMainStep umlMainStep = (UmlMainStep) step;
-        removeFathers(umlMainStep);
-        refreshMainFlow(listModel);
-        updateEntityPanel(false);
+        onDeleteStep();
       }
     });
 
@@ -785,43 +692,28 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     JPanel panelPostconditions = new JPanel();
     panelPostconditions.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        "Postconditions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        Msg.get("editUseCaseDialog.border.postcondition"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
     postconditionTextField = new JTextField();
     postconditionTextField.setColumns(10);
 
     JScrollPane scrollPanePostconditions = new JScrollPane();
 
-    JButton editPostConditions = new JButton("Edit");
-    postconditionEditListAction = new EditListAction("Edit");
+    JButton editPostConditions = new JButton(Msg.get("editUseCaseDialog.edit"));
+    postconditionEditListAction = new EditListAction(Msg.get("editUseCaseDialog.edit"));
     editPostConditions.setAction(postconditionEditListAction);
 
-    JButton addPostconditions = new JButton("Add");
+    JButton addPostconditions = new JButton(Msg.get("editUseCaseDialog.add"));
     addPostconditions.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
-        String postCondition = postconditionTextField.getText();
-        if (!postCondition.isEmpty()) {
-          ((DefaultListModel<String>) postconditions.getModel()).addElement(postCondition);
-          postconditionTextField.setText("");
-        }
+        onAddPostcondition();
       }
     });
 
-    JButton deletePostoconditions = new JButton("Delete");
+    JButton deletePostoconditions = new JButton(Msg.get("editUseCaseDialog.delete"));
     deletePostoconditions.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-
-        DefaultListModel<String> listModel = ((DefaultListModel<String>) postconditions.getModel());
-        if (listModel.isEmpty())
-          return;
-
-        int selected = postconditions.getSelectedIndex();
-
-        if (selected == -1) {
-          selected = listModel.getSize() - 1;
-        }
-        listModel.remove(selected);
+        onDeletePostcondition();
       }
     });
 
@@ -883,74 +775,21 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     JPanel panelAlternativeFlow = new JPanel();
     panelAlternativeFlow.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        "Alternative flows", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        Msg.get("editUseCaseDialog.border.alternativeFlow"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-    JButton editAlternativeFlowButton = new JButton("Edit");
+    JButton editAlternativeFlowButton = new JButton(Msg.get("editUseCaseDialog.edit"));
 
     JScrollPane scrollPaneAlternativeFlow = new JScrollPane();
 
-    JButton deleteAlternativeFlowButton = new JButton("Delete");
+    JButton deleteAlternativeFlowButton = new JButton(Msg.get("editUseCaseDialog.delete"));
 
-    JButton addAlternativeFlowButton = new JButton("Add");
+    JButton addAlternativeFlowButton = new JButton(Msg.get("editUseCaseDialog.add"));
     addAlternativeFlowButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        EditAlternativeStepMainFlowDialog dialog =
-            new EditAlternativeStepMainFlowDialog(parent, mainFlow);
-        dialog.setLocationRelativeTo(parent);
-        dialog.setVisible(true);
-
-        if (dialog.isOk()) {
-
-          mainFlow = dialog.getUpdatedFlow();
-          // String stepDescription = dialog.getDescription();
-          // Set<String> entities = dialog.getEntities();
-          // String stepType = dialog.getStepType();
-          // UmlStep step = new UmlMainStep(stepType, stepDescription, entities);
-          // mainFlow.addStep(step);
-          // String informationStep = step.showDescription();
-          // ((DefaultListModel<String>) mainFlowStepList.getModel()).addElement(informationStep);
-
-        }
+        onAddAlternativeFlow();
       }
     });
 
-
-
-    // GroupLayout gl_panelAlternativeFlow = new GroupLayout(panelAlternativeFlow);
-    // gl_panelAlternativeFlow.setHorizontalGroup(
-    // gl_panelAlternativeFlow.createParallelGroup(Alignment.TRAILING)
-    // .addGroup(gl_panelAlternativeFlow.createSequentialGroup()
-    // .addContainerGap()
-    // .addComponent(scrollPaneAlternativeFlow, GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
-    // .addGap(10)
-    // .addGroup(gl_panelAlternativeFlow.createParallelGroup(Alignment.TRAILING)
-    // .addComponent(deleteAlternativeFlowButton, GroupLayout.DEFAULT_SIZE,
-    // GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-    // .addGroup(gl_panelAlternativeFlow.createSequentialGroup()
-    // .addGap(18)
-    // .addComponent(addAlternativeFlowButton, GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
-    // .addGroup(gl_panelAlternativeFlow.createSequentialGroup()
-    // .addGap(18)
-    // .addComponent(editAlternativeFlowButton, GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)))
-    // .addGap(1))
-    // );
-    // gl_panelAlternativeFlow.setVerticalGroup(
-    // gl_panelAlternativeFlow.createParallelGroup(Alignment.LEADING)
-    // .addGroup(gl_panelAlternativeFlow.createSequentialGroup()
-    // .addContainerGap()
-    // .addGroup(gl_panelAlternativeFlow.createParallelGroup(Alignment.LEADING, false)
-    // .addGroup(gl_panelAlternativeFlow.createSequentialGroup()
-    // .addComponent(scrollPaneAlternativeFlow, GroupLayout.PREFERRED_SIZE, 150,
-    // GroupLayout.PREFERRED_SIZE)
-    // .addContainerGap())
-    // .addGroup(Alignment.TRAILING, gl_panelAlternativeFlow.createSequentialGroup()
-    // .addComponent(addAlternativeFlowButton)
-    // .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-    // .addComponent(editAlternativeFlowButton)
-    // .addPreferredGap(ComponentPlacement.RELATED)
-    // .addComponent(deleteAlternativeFlowButton)
-    // .addGap(58))))
-    // );
 
 
     GroupLayout gl_panelAlternativeFlow = new GroupLayout(panelAlternativeFlow);
@@ -1056,22 +895,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     JScrollPane scrollPaneEntity = new JScrollPane();
     comboMainEntity = new JComboBox();
 
-    JButton selectMainEntity = new JButton("Select");
+    JButton selectMainEntity = new JButton(Msg.get("editUseCaseDialog.select"));
     selectMainEntity.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-
-        String selectedEntity = (String) comboMainEntity.getSelectedItem();
-        DefaultListModel<String> mainEntityModelList =
-            (DefaultListModel<String>) mainEntities.getModel();
-
-        if (comboMainEntity.getModel().getSize() == 0)
-          return;
-
-        String changeEntity = mainEntityModelList.get(0);
-        comboMainEntity.addItem(changeEntity);
-        comboMainEntity.removeItem(selectedEntity);
-        mainEntityModelList.clear();
-        mainEntityModelList.addElement(selectedEntity);
+        onSelectMainEntity();
       }
     });
 
@@ -1111,38 +938,17 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     JScrollPane scrollPane_1 = new JScrollPane();
     comboMainActor = new JComboBox();
 
-    JButton addMainActor = new JButton("Add");
+    JButton addMainActor = new JButton(Msg.get("editUseCaseDialog.add"));
     addMainActor.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        UmlActor selectedActor = (UmlActor) comboMainActor.getSelectedItem();
-        DefaultListModel<UmlActor> mainActorModelList =
-            (DefaultListModel<UmlActor>) mainActors.getModel();
-
-        if (!mainActorModelList.contains(selectedActor)) {
-          ((DefaultListModel<UmlActor>) mainActors.getModel()).addElement(selectedActor);
-          ((DefaultListModel<UmlActor>) secondaryActors.getModel()).removeElement(selectedActor);
-        }
+        onAddMainActor();
       }
     });
 
-    JButton deleteMainActor = new JButton("Delete");
+    JButton deleteMainActor = new JButton(Msg.get("editUseCaseDialog.delete"));
     deleteMainActor.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-
-        DefaultListModel<UmlActor> listModelActors =
-            ((DefaultListModel<UmlActor>) mainActors.getModel());
-
-        if (listModelActors.isEmpty())
-          return;
-
-        int selectedActor = mainActors.getSelectedIndex();
-
-        if (selectedActor == -1) {
-          selectedActor = listModelActors.getSize() - 1;
-        }
-
-        listModelActors.remove(selectedActor);
-
+        onDeleteMainActor();
       }
     });
     GroupLayout gl_mainActorsPanel = new GroupLayout(mainActorsPanel);
@@ -1198,4 +1004,6 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     getContentPane().setLayout(groupLayout);
 
   }
+
+
 }

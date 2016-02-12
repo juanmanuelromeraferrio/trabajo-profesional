@@ -36,6 +36,15 @@ public class DiagramBuilder {
                     boundary.addMethod("+"+StringHelper.toLowerCamelCase(useCase.getName())+"()");
                     conversionDiagram.addRelation(new SimpleRelation(boundary,control));
                 }
+                for(UmlUseCase included : useCase.getIncluded()){
+                    if(isPackageRelated() && (included.getPackage()==null || !included.getPackage().equals(umlPackage)))
+                        continue;
+                    String includedEntity=included.getMainEntity();
+                    if(includedEntity.equals(mainEntity))
+                        continue;
+                    Control includedControl = conversionDiagram.getControl(StringHelper.toUpperCamelCase(includedEntity) + Msg.get("conversion.names.control"));
+                    conversionDiagram.addRelation(new SimpleRelation(control,includedControl));
+                }
             }
         }
         return conversionDiagram;

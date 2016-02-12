@@ -52,6 +52,14 @@ public class Flow {
 
   }
 
+  public int getSize(){
+    int size = 0;
+    for (UmlStep step : flow)
+      size += step.getTotalSize();
+
+    return size;
+  }
+
   public UmlStep getStep(int index) {
     UmlStep stepResult = null;
     int size = 0;

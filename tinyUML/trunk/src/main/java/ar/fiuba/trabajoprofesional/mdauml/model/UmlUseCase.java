@@ -23,7 +23,7 @@ public class UmlUseCase extends PackageableUmlModelElement {
   private Set<UmlActor> secondaryActors = new HashSet<UmlActor>();
   private Set<UmlActor> umlActors = new HashSet<UmlActor>();
   private Flow mainFlow = new Flow();
-  private List<Flow> alternativeFlows = new ArrayList<Flow>();
+  private List<AlternativeFlow> alternativeFlows = new ArrayList<AlternativeFlow>();
   private List<String> preconditions = new ArrayList<String>();
   private List<String> postconditions = new ArrayList<String>();
 
@@ -66,19 +66,19 @@ public class UmlUseCase extends PackageableUmlModelElement {
     this.mainFlow.removeStep(step);
   }
 
-  public List<Flow> getAlternativeFlows() {
+  public List<AlternativeFlow> getAlternativeFlows() {
     return alternativeFlows;
   }
 
-  public void setAlternativeFlows(List<Flow> alternativeFlows) {
-    this.alternativeFlows = new ArrayList<Flow>(alternativeFlows);
+  public void setAlternativeFlows(List<AlternativeFlow> alternativeFlows) {
+    this.alternativeFlows = new ArrayList<AlternativeFlow>(alternativeFlows);
   }
 
-  public void addAlternativeFlow(Flow alternativeFlow) {
+  public void addAlternativeFlow(AlternativeFlow alternativeFlow) {
     this.alternativeFlows.add(alternativeFlow);
   }
 
-  public void removeAlternativeFlow(Flow alternativeFlow) {
+  public void removeAlternativeFlow(AlternativeFlow alternativeFlow) {
     this.alternativeFlows.remove(alternativeFlow);
   }
 
