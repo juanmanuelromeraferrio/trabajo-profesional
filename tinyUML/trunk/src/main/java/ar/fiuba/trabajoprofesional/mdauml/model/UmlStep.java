@@ -1,11 +1,14 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class UmlStep {
 
+  public static final UmlStep ANY = new UmlStep(Msg.get("umlStep.anyStep"));
   protected UmlStep father;
   protected List<UmlStep> children;
   protected Integer index;
@@ -142,7 +145,7 @@ public class UmlStep {
     try {
       return (UmlStep) super.clone();
     } catch (CloneNotSupportedException e) {
-      return null;
+      return ANY;
     }
   }
 

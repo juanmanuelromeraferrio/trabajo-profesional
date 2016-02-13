@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class AddAlternativeFlowDialog extends JDialog {
+public class AlternativeFlowDialog extends JDialog {
 
     private final UmlStep anyStep;
     private StepCRUD stepCrud;
@@ -48,9 +48,9 @@ public class AddAlternativeFlowDialog extends JDialog {
     private JPanel conditionPanel;
     private JLabel conditionLabel;
     private JLabel entryLabel;
-    private boolean ok=false;
+    private boolean ok = false;
 
-    public AddAlternativeFlowDialog(Window window, AlternativeFlow alternativeFlow, UmlUseCase usecase) {
+    public AlternativeFlowDialog(Window window, AlternativeFlow alternativeFlow, UmlUseCase usecase, Flow mainFlow) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -69,11 +69,10 @@ public class AddAlternativeFlowDialog extends JDialog {
         entryComboModel = new DefaultComboBoxModel<>();
         returnComboModel = new DefaultComboBoxModel<>();
 
-        anyStep = new UmlStep(Msg.get("editstepalternativeflow.anyStep"));
+        anyStep = UmlStep.ANY;
         entryComboModel.addElement(anyStep);
         returnComboModel.addElement(anyStep);
 
-        Flow mainFlow = usecase.getMainFLow();
 
         for (int i = 0; i < mainFlow.getSize(); i++) {
             entryComboModel.addElement(mainFlow.getStep(i));
@@ -83,6 +82,15 @@ public class AddAlternativeFlowDialog extends JDialog {
 
         entryCombo.setModel(entryComboModel);
         returnCombo.setModel(returnComboModel);
+
+        if (alternativeFlow.getEntryStep() != null)
+            for (int i = 0; i < entryComboModel.getSize(); i++)
+                if (entryComboModel.getElementAt(i).toString().equals(alternativeFlow.getEntryStep().toString()))
+                    entryCombo.setSelectedIndex(i);
+        if (alternativeFlow.getReturnStep() != null)
+            for (int i = 0; i < returnComboModel.getSize(); i++)
+                if (returnComboModel.getElementAt(i).toString().equals(alternativeFlow.getReturnStep().toString()))
+                    returnCombo.setSelectedIndex(i);
 
         stepsListModel = new DefaultListModel<>();
 
@@ -109,6 +117,8 @@ public class AddAlternativeFlowDialog extends JDialog {
                 onCancel();
             }
         });
+
+        pack();
 
 // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -158,18 +168,14 @@ public class AddAlternativeFlowDialog extends JDialog {
     }
 
     private void onOK() {
-        ok=true;
+        ok = true;
         alternativeFlow.setName(nameField.getText());
 
-        if(!entryCombo.getSelectedItem().equals(anyStep))
-            alternativeFlow.setEntryStep((UmlStep) entryCombo.getSelectedItem());
-        else
-            alternativeFlow.setEntryStep(null);
 
-        if(!returnCombo.getSelectedItem().equals(anyStep))
-            alternativeFlow.setReturnStep((UmlStep) returnCombo.getSelectedItem());
-        else
-            alternativeFlow.setReturnStep(null);
+        alternativeFlow.setEntryStep((UmlStep) entryCombo.getSelectedItem());
+
+
+        alternativeFlow.setReturnStep((UmlStep) returnCombo.getSelectedItem());
 
         alternativeFlow.setEnrtyCondition(conditionField.getText());
 
@@ -178,29 +184,13 @@ public class AddAlternativeFlowDialog extends JDialog {
     }
 
     private void onCancel() {
-        ok=false;
+        ok = false;
         dispose();
     }
 
-    public static void main(String[] args) {
 
-        Flow mainFlow = new Flow();
-        mainFlow.addStep(new UmlStep("1 . System: do something"));
-
-        mainFlow.addStep(new UmlStep("2 . Actor: respnse"));
-
-        mainFlow.addStep(new UmlStep("3 . System: do something else"));
-
-        UmlUseCase umlUseCase = (UmlUseCase) UmlUseCase.getPrototype().clone();
-        umlUseCase.addMainFlowStep(new UmlStep("1 . System: do something"));
-        umlUseCase.addMainFlowStep(new UmlStep("2 . Actor: respnse"));
-        umlUseCase.addMainFlowStep(new UmlStep("3 . System: do something else"));
-
-
-        AddAlternativeFlowDialog dialog = new AddAlternativeFlowDialog(AppFrame.get(), new AlternativeFlow(), umlUseCase);
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    public boolean isOk() {
+        return ok;
     }
 
     {
@@ -300,9 +290,5 @@ public class AddAlternativeFlowDialog extends JDialog {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
-    }
-
-    public boolean isOk() {
-        return ok;
     }
 }

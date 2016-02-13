@@ -1,12 +1,16 @@
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
 
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
+
+import java.util.ArrayList;
+
 public class AlternativeFlow extends Flow {
 
-    private UmlStep entryStep;
-    private String enrtyCondition;
-    private UmlStep returnStep;
-    private String name;
+    private UmlStep entryStep=UmlStep.ANY;
+    private String enrtyCondition="";
+    private UmlStep returnStep=UmlStep.ANY;
+    private String name= Msg.get("alternativeFlow.defaultName");
 
 
 
@@ -46,5 +50,22 @@ public class AlternativeFlow extends Flow {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Object clone() {
+        AlternativeFlow cloned = new AlternativeFlow();
+        cloned.flow = new ArrayList<>(this.flow.size());
+        for (UmlStep item : this.flow) {
+            cloned.flow.add(item.clone());
+        }
+        if(entryStep!=null)
+            cloned.entryStep= entryStep.clone();
+        cloned.name = name;
+        cloned.enrtyCondition = enrtyCondition;
+        if(returnStep!=null)
+            cloned.returnStep = returnStep.clone();
+        return cloned;
+
     }
 }

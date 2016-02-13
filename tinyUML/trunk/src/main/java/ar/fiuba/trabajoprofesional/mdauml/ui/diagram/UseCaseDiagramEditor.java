@@ -115,19 +115,11 @@ public class UseCaseDiagramEditor extends DiagramEditor {
 
     } else if (element instanceof UseCaseElement) {
       UseCaseElement useCaseElement = (UseCaseElement) element;
-      UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
       EditUseCaseDialog dialog = new EditUseCaseDialog(window, useCaseElement, true);
       dialog.setLocationRelativeTo(AppFrame.get());
       dialog.setVisible(true);
       if (dialog.isOk()) {
-        umlUseCase.setName(dialog.getName());
-        umlUseCase.setDescription(dialog.getDescription());
-        umlUseCase.setMainActors(dialog.getMainActors());
-        umlUseCase.setSecondaryActors(dialog.getSecondaryActors());
-        umlUseCase.setPreconditions(dialog.getPreconditions());
-        umlUseCase.setPostconditions(dialog.getPostconditions());
-        umlUseCase.setMainFLow(dialog.getMainFlow());
-        umlUseCase.setMainEntity(dialog.getMainEntity());
+
 
         redraw();
 

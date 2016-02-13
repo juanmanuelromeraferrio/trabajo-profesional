@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Flow {
-  private List<UmlStep> flow = new ArrayList<UmlStep>();
+  protected List<UmlStep> flow = new ArrayList<UmlStep>();
 
   public List<UmlStep> getFlow() {
     return flow;

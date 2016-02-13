@@ -58,7 +58,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   private JComboBox<String> comboMainEntity;
   private JComboBox<UmlActor> comboMainActor;
   private JComboBox<UmlActor> comboSecActors;
-  private JList alternativeFlows;
+  private JList<AlternativeFlow> alternativeFlows;
   private JList<String> postconditions;
   private JList<String> preconditions;
   private JList<String> mainFlowStepList;
@@ -84,6 +84,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     this.useCaseElement = anUseCase;
     initComponents();
     myPostInit();
+
   }
 
   public String getDescription() {
@@ -139,10 +140,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
 
   private void myPostInit() {
-    UmlUseCase useCase = (UmlUseCase) useCaseElement.getModelElement();
-    name.setText(useCase.getName());
-    description.setText(useCase.getDescription());
-    List<UmlActor> umlActors = new ArrayList<UmlActor>(useCase.getUmlActors());
+    UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
+    name.setText(umlUseCase.getName());
+    description.setText(umlUseCase.getDescription());
+    List<UmlActor> umlActors = new ArrayList<UmlActor>(umlUseCase.getUmlActors());
     Collections.sort(umlActors, new Comparator<UmlActor>() {
       @Override
       public int compare(UmlActor o1, UmlActor o2) {
@@ -165,37 +166,48 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     comboSecActors.setModel(new DefaultComboBoxModel(umlActors.toArray()));
 
     DefaultListModel<UmlActor> mainActorsModel = new DefaultListModel<UmlActor>();
-    for (UmlActor actor : useCase.getMainActors())
+    for (UmlActor actor : umlUseCase.getMainActors())
       mainActorsModel.addElement(actor);
     mainActors.setModel(mainActorsModel);
 
     DefaultListModel<UmlActor> secActorsModel = new DefaultListModel<UmlActor>();
-    for (UmlActor actor : useCase.getSecondaryActors())
+    for (UmlActor actor : umlUseCase.getSecondaryActors())
       secActorsModel.addElement(actor);
     secondaryActors.setModel(secActorsModel);
 
     DefaultListModel<String> preconditionsModel = new DefaultListModel<String>();
-    for (String precondition : useCase.getPreconditions()) {
+    for (String precondition : umlUseCase.getPreconditions()) {
       preconditionsModel.addElement(precondition);
     }
     preconditions.setModel(preconditionsModel);
     preconditionEditListAction.setList(preconditions);
 
     DefaultListModel<String> postconditionsModel = new DefaultListModel<String>();
-    for (String postconditions : useCase.getPostconditions()) {
+    for (String postconditions : umlUseCase.getPostconditions()) {
       postconditionsModel.addElement(postconditions);
     }
     postconditions.setModel(postconditionsModel);
     postconditionEditListAction.setList(postconditions);
 
 
-    mainFlow = (Flow) useCase.getMainFLow().clone();
+    DefaultListModel<AlternativeFlow> alternativeFlowListModel = new DefaultListModel<>();
+
+    for(AlternativeFlow currentAlternativeFlow :umlUseCase.getAlternativeFlows()){
+      AlternativeFlow cloned = (AlternativeFlow) currentAlternativeFlow.clone();
+      alternativeFlowListModel.addElement(cloned);
+    }
+    alternativeFlows.setModel(alternativeFlowListModel);
+
+    mainFlow = (Flow) umlUseCase.getMainFLow().clone();
 
     DefaultListModel<String> mainFlowStepModel = new DefaultListModel<String>();
     mainFlowStepList.setModel(mainFlowStepModel);
 
     stepCRUD = new StepCRUD(
-            useCase, mainFlow, parent,mainFlowStepList);
+            umlUseCase, mainFlow, parent,mainFlowStepList);
+
+
+    validateUseCase(umlUseCase);
     stepCRUD.read();
 
   }
@@ -206,10 +218,12 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     List<String> umlEntities;
     String mainEntity;
     if (init) {
-      umlEntities = new ArrayList<String>(useCase.getAllEntities());
+      umlEntities = new ArrayList<>(useCase.getAllEntities());
       mainEntity = useCase.getMainEntity();
     } else {
-      umlEntities = new ArrayList<String>(mainFlow.getAllEntities());
+      umlEntities = new ArrayList<>(mainFlow.getAllEntities());
+      for(int i = 0 ; i < alternativeFlows.getModel().getSize();i++ )
+        umlEntities.addAll(alternativeFlows.getModel().getElementAt(i).getAllEntities());
       mainEntity = useCase.getMainEntityByFlow(mainFlow);
     }
 
@@ -335,16 +349,45 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
   private void onAddAlternativeFlow() {
 
-    AddAlternativeFlowDialog dialog =
-            new AddAlternativeFlowDialog(parent, new AlternativeFlow(), (UmlUseCase) useCaseElement.getModelElement());
+    AlternativeFlow newAlternativeFlow = new AlternativeFlow();
+    AlternativeFlowDialog dialog =
+            new AlternativeFlowDialog(parent,newAlternativeFlow , (UmlUseCase) useCaseElement.getModelElement(),mainFlow);
     dialog.setLocationRelativeTo(parent);
     dialog.setVisible(true);
 
     if (dialog.isOk()) {
+      ((DefaultListModel)alternativeFlows.getModel()).addElement(newAlternativeFlow);
 
-      mainFlow = dialog.getUpdatedFlow();
-
+      updateEntityPanel(false);
     }
+  }
+  private void onEditAlternativeFlow() {
+
+
+    if (alternativeFlows.getModel().getSize()==0)
+      return;
+
+    int selectedIndex = alternativeFlows.getSelectedIndex();
+
+    if (selectedIndex == -1) {
+      selectedIndex = alternativeFlows.getModel().getSize() - 1;
+    }
+
+    AlternativeFlow selectedFlow = alternativeFlows.getModel().getElementAt(selectedIndex);
+
+    AlternativeFlowDialog dialog =
+            new AlternativeFlowDialog(parent,selectedFlow , (UmlUseCase) useCaseElement.getModelElement(),mainFlow);
+    dialog.setLocationRelativeTo(parent);
+    dialog.setVisible(true);
+    if (dialog.isOk()) {
+      updateEntityPanel(false);
+    }
+
+  }
+
+  private void onDeleteAlternativeFlow(){
+    alternativeFlows.remove(alternativeFlows.getSelectedIndex());
+    updateEntityPanel(false);
   }
 
   private void onAddPostcondition() {
@@ -385,6 +428,69 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     mainEntityModelList.addElement(selectedEntity);
   }
 
+  private void onOk() {
+
+    UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
+    validateUseCase(umlUseCase);
+    umlUseCase.setName(this.getName());
+    umlUseCase.setDescription(this.getDescription());
+    umlUseCase.setMainActors(this.getMainActors());
+    umlUseCase.setSecondaryActors(this.getSecondaryActors());
+    umlUseCase.setPreconditions(this.getPreconditions());
+    umlUseCase.setPostconditions(this.getPostconditions());
+    umlUseCase.setMainFLow(this.getMainFlow());
+    umlUseCase.setAlternativeFlows(this.getAlternativeFlows());
+    umlUseCase.setMainEntity(this.getMainEntity());
+  }
+
+  private List<AlternativeFlow> getAlternativeFlows() {
+    List<AlternativeFlow> alternativeFlowList = new ArrayList<>();
+    for(int i = 0 ; i < alternativeFlows.getModel().getSize();i++)
+      alternativeFlowList.add(alternativeFlows.getModel().getElementAt(i));
+    return alternativeFlowList;
+  }
+
+  private void validateUseCase(UmlUseCase umlUseCase) {
+    for(UmlStep step: mainFlow.getFlow()){
+      validateStep(step,umlUseCase);
+    }
+    for(int i=0 ; i < alternativeFlows.getModel().getSize();i++) {
+      AlternativeFlow alternativeFlow = alternativeFlows.getModel().getElementAt(i);
+      validateAlternativeFlow(alternativeFlow, umlUseCase);
+    }
+  }
+
+  private void validateAlternativeFlow(AlternativeFlow alternativeFlow, UmlUseCase umlUseCase) {
+    alternativeFlow.setEntryStep(validateStepExistance(alternativeFlow.getEntryStep(),mainFlow.getFlow()));
+    alternativeFlow.setReturnStep(validateStepExistance(alternativeFlow.getReturnStep(),mainFlow.getFlow()));
+    for (UmlStep step : alternativeFlow.getFlow()) {
+      validateStep(step, umlUseCase);
+    }
+  }
+
+  private UmlStep validateStepExistance(UmlStep step, List<UmlStep> flow) {
+    for(UmlStep mainStep :flow){
+      if(mainStep.toString().equals(step.toString()))
+        return step;
+    }
+    return UmlStep.ANY;
+  }
+
+  private void validateStep(UmlStep step, UmlUseCase umlUseCase) {
+    if(!(step instanceof UmlMainStep))
+      return;
+    UmlMainStep mainStep = (UmlMainStep) step;
+
+    if(mainStep.getActor().equals(Msg.get("editstepmainflow.system.actor")))
+      return;
+
+    for(UmlActor actor : umlUseCase.getUmlActors()){
+      if(actor.getName().equals(mainStep.getActor()))
+        return;
+    }
+    mainStep.setActor(Msg.get("editstepmainflow.default.actor"));
+  }
+
   ///////////////////////  ACTION LISTENERS END   ///////////////////////////////////////////
 
 
@@ -410,6 +516,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = true;
+        onOk();
         dispose();
       }
     });
@@ -789,6 +896,16 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         onAddAlternativeFlow();
       }
     });
+    editAlternativeFlowButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        onEditAlternativeFlow();
+      }
+    });
+    deleteAlternativeFlowButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        onDeleteAlternativeFlow();
+      }
+    });
 
 
 
@@ -1004,6 +1121,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     getContentPane().setLayout(groupLayout);
 
   }
+
+
 
 
 }

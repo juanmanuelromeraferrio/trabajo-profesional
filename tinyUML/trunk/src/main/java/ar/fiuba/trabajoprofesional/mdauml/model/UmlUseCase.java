@@ -235,13 +235,13 @@ public class UmlUseCase extends PackageableUmlModelElement {
   }
 
   public String getMainEntity() {
-
-    return getMainEntityByFlow(mainFlow);
+    if(mainEntity==null)
+      mainEntity = getMainEntityByFlow(mainFlow);
+    return mainEntity;
   }
 
   public String getMainEntityByFlow(Flow flow) {
 
-    if (mainEntity == null) {
       HashMap<String, Integer> commonEntities = new HashMap<String, Integer>();
       List<UmlStep> steps = flow.getFlow();
       if (!steps.isEmpty()) {
@@ -255,14 +255,7 @@ public class UmlUseCase extends PackageableUmlModelElement {
       } else {
         return null;
       }
-    } else {
-      Set<String> allEntities = flow.getAllEntities();
-      if (allEntities.contains(mainEntity)) {
-        return mainEntity;
-      }
-      return null;
 
-    }
     return null;
   }
 
@@ -290,6 +283,9 @@ public class UmlUseCase extends PackageableUmlModelElement {
 
   public Set<String> getAllEntities() {
     Set<String> allEntities = mainFlow.getAllEntities();
+    for(AlternativeFlow alternativeFlow: alternativeFlows){
+      allEntities.addAll(alternativeFlow.getAllEntities());
+    }
     if (mainEntity != null && !mainEntity.isEmpty())
       allEntities.add(mainEntity);
     return allEntities;
