@@ -135,6 +135,11 @@ public class SimpleLabel extends AbstractNode implements Label {
         setOrigin(getOrigin().getX(), centery - (lheight / 2));
     }
 
+    @Override
+    public void validate() {
+        valid=true;
+    }
+
     /**
      * {@inheritDoc}
      */

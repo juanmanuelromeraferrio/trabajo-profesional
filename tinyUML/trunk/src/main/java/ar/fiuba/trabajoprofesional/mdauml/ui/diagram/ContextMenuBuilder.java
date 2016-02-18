@@ -27,6 +27,7 @@ import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.IconLoader;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
@@ -116,6 +117,12 @@ public class ContextMenuBuilder implements ActionListener {
      */
     private JPopupMenu createSingleConnectionContextMenu(Connection conn) {
         JPopupMenu menu = new JPopupMenu();
+        if(conn instanceof Extend) {
+            if(((Extend) conn).getShow())
+                createMenuItem(menu, "hideExtentionPoint");
+            else
+                createMenuItem(menu, "showExtentionPoint");
+        }
         createMenuItem(menu, "resetpoints");
         if (conn.isRectilinear()) {
             createMenuItem(menu, "recttodirect");
@@ -162,7 +169,7 @@ public class ContextMenuBuilder implements ActionListener {
      * @param conn the connection
      */
     private void addEditConnectionPropertiesMenu(JPopupMenu menu, UmlConnection conn) {
-        if (conn instanceof Association) {
+        if (conn instanceof Association || conn instanceof Extend) {
             menu.addSeparator();
             createMenuItem(menu, "editproperties");
         }

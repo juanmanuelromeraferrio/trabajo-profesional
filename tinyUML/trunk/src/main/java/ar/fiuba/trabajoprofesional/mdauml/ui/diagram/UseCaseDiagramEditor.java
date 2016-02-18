@@ -13,6 +13,7 @@ import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.GeneralDiagram;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ActorElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
 
@@ -119,10 +120,16 @@ public class UseCaseDiagramEditor extends DiagramEditor {
       dialog.setLocationRelativeTo(AppFrame.get());
       dialog.setVisible(true);
       if (dialog.isOk()) {
-
-
         redraw();
+      }
 
+    }else if (element instanceof Extend){
+      ExtendDialog dialog = new ExtendDialog((Extend) element);
+      dialog.setLocationRelativeTo(AppFrame.get());
+      dialog.setVisible(true);
+      if (dialog.isOk()) {
+        ((Extend)element).refresh();
+        redraw();
       }
 
     }

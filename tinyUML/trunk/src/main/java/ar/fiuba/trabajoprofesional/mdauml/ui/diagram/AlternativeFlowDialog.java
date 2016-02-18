@@ -74,9 +74,9 @@ public class AlternativeFlowDialog extends JDialog {
         returnComboModel.addElement(anyStep);
 
 
-        for (int i = 0; i < mainFlow.getSize(); i++) {
-            entryComboModel.addElement(mainFlow.getStep(i));
-            returnComboModel.addElement(mainFlow.getStep(i));
+        for (int i = 0; i < mainFlow.getAllSteps().size(); i++) {
+            entryComboModel.addElement(mainFlow.getAllSteps().get(i));
+            returnComboModel.addElement(mainFlow.getAllSteps().get(i));
         }
 
 

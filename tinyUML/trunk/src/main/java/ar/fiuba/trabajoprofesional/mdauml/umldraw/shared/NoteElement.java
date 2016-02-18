@@ -36,10 +36,10 @@ import java.awt.geom.GeneralPath;
  * @author Wei-ju Wu
  * @version 1.0
  */
-public final class NoteElement extends AbstractCompositeNode implements UmlNode, LabelSource {
+public class NoteElement extends AbstractCompositeNode implements UmlNode, LabelSource {
 
     private static final int CORNER_SIZE = 10;
-    private static final double MARGIN_TOP = CORNER_SIZE + 2;
+    protected static final double MARGIN_TOP = CORNER_SIZE + 2;
     private static final Color FILL_COLOR = new Color(249, 249, 145);
     private static NoteElement prototype;
     private String content;
@@ -48,7 +48,7 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
     /**
      * Constructor.
      */
-    private NoteElement() {
+    protected NoteElement() {
         setSize(180, 60);
         label.setSource(this);
         label.setParent(this);
@@ -138,6 +138,13 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
                 setSize(width, height);
             }
         }
+        drawNote(drawingContext);
+        label.draw(drawingContext);
+    }
+    protected void drawNote(DrawingContext drawingContext){
+        double width = getSize().getWidth();
+        double height = getSize().getHeight();
+
         double x = getAbsoluteX1(), y = getAbsoluteY1();
         GeneralPath mainShape = new GeneralPath();
         mainShape.moveTo(x, y);
@@ -153,7 +160,7 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
         corner.closePath();
         drawingContext.draw(mainShape, FILL_COLOR);
         drawingContext.draw(corner, FILL_COLOR);
-        label.draw(drawingContext);
+
     }
 
     /**
@@ -190,5 +197,17 @@ public final class NoteElement extends AbstractCompositeNode implements UmlNode,
     @Override
     public boolean isConnectionSource() {
         return true;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void validate() {
+        label.validate();
+    }
+
+    protected void setLabel(Label label) {
+        this.label = label;
     }
 }

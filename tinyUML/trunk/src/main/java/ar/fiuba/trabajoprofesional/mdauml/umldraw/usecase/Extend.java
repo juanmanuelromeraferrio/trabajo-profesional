@@ -2,24 +2,23 @@ package ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase;
 
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.*;
-import ar.fiuba.trabajoprofesional.mdauml.exception.AddConnectionException;
 import ar.fiuba.trabajoprofesional.mdauml.model.ExtendRelation;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlRelation;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.DiagramEditor;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.DeleteElementCommand;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.ArrowConnection;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.BaseConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.ConnectionNameLabel;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Extend extends ArrowConnection {
 
     private static final String LABEL = "<<extend>>";
     private static Extend prototype;
     private ConnectionNameLabel nameLabel;
+    private boolean show = false;
+    private ExtentionPointNote extentionPointNote ;
+
 
     /**
      * Private constructor.
@@ -30,12 +29,17 @@ public class Extend extends ArrowConnection {
         setOpenHead(true);
         relation=new ExtendRelation();
         setupNameLabel();
+        extentionPointNote = new ExtentionPointNote(this);
     }
     @Override
     public Extend clone(){
         Extend cloned= (Extend) super.clone();
         cloned.setupNameLabel();
         cloned.nameLabel.setParent(nameLabel.getParent());
+        cloned.show = show;
+        cloned.extentionPointNote= new ExtentionPointNote(cloned);
+        if(show)
+            cloned.extentionPointNote.initialize();
         return cloned;
     }
 
@@ -65,6 +69,11 @@ public class Extend extends ArrowConnection {
         super.draw(drawingContext);
         positionNameLabel();
         nameLabel.draw(drawingContext);
+
+    }
+
+    private ExtentionPointNote buildExtentionPointNote() {
+        return null;
     }
 
 
@@ -94,5 +103,29 @@ public class Extend extends ArrowConnection {
     }
     @Override public void cancelNode(ConnectionVisitor node){
         node.removeConcreteConnection(this);
+    }
+
+    public boolean getShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        if(!this.show && show)
+            extentionPointNote.initialize();
+        if(this.show && !show)
+            deleteExtentionPoint(getDiagram().getEditor());
+        this.show = show;
+    }
+
+    public void deleteExtentionPoint(DiagramEditor editor){
+        ArrayList<DiagramElement> elements = new ArrayList<>();
+        elements.add(extentionPointNote);
+        DeleteElementCommand command = new DeleteElementCommand(editor, elements);
+        editor.execute(command);
+    }
+
+
+    public void refresh() {
+        extentionPointNote.refresh();
     }
 }

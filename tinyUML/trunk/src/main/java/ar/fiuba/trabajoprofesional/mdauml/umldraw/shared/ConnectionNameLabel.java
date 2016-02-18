@@ -94,6 +94,11 @@ public class ConnectionNameLabel extends AbstractCompositeNode implements Label,
         label.centerVertically();
     }
 
+    @Override
+    public void validate() {
+        label.validate();
+    }
+
     /**
      * {@inheritDoc}
      */

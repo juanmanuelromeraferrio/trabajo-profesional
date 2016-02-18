@@ -40,6 +40,14 @@ public class MultiLineLabel extends SimpleLabel {
 
     private transient MultilineLayout layout;
 
+    public MultilineLayout getLayout() {
+        return layout;
+    }
+
+    public void setLayout(MultilineLayout layout) {
+        this.layout = layout;
+    }
+
     /**
      * {@inheritDoc}
      */

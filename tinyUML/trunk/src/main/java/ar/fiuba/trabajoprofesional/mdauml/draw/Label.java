@@ -73,4 +73,6 @@ public interface Label extends Node {
      * Centers this Label vertically in its parent.
      */
     void centerVertically();
+
+    void validate();
 }

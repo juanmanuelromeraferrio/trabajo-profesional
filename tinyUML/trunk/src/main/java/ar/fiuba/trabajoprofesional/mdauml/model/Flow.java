@@ -119,6 +119,15 @@ public class Flow {
 
   }
 
+  public List<UmlStep> getAllSteps(){
+    List<UmlStep> steps = new ArrayList<>();
+    for(UmlStep step : flow){
+      steps.add(step);
+      steps.addAll(step.getDescendants());
+    }
+    return steps;
+  }
+
   private void addChildrenToFlow(UmlStep umlStep, int selectedStep) {
     // flow.add(selectedStep, umlStep);
     // for (UmlStep childrenStep : umlStep.getChildren()) {

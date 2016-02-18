@@ -3,8 +3,8 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
 
 public class ExtendRelation extends UmlRelation {
 
-    private UmlStep extentionPoint;
-    private String condition;
+    private UmlStep extentionPoint=UmlStep.UNDEFINED;
+    private String condition="";
 
     public ExtendRelation(){
         super();

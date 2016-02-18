@@ -17,15 +17,12 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +41,8 @@ import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.ExtentionPointNote;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 import ar.fiuba.trabajoprofesional.mdauml.util.MethodCall;
@@ -162,6 +161,10 @@ public abstract class DiagramEditor extends JComponent
                     new MethodCall(DiagramEditor.class.getMethod("rectilinearToDirect")));
             selectorMap.put("DIRECT_TO_RECT",
                     new MethodCall(DiagramEditor.class.getMethod("directToRectilinear")));
+            selectorMap.put("SHOW_EXTENTION_POINT",
+                    new MethodCall(DiagramEditor.class.getMethod("showExtentionPoint")));
+            selectorMap.put("HIDE_EXTENTION_POINT",
+                    new MethodCall(DiagramEditor.class.getMethod("hideExtentionPoint")));
             selectorMap.put("NAVIGABLE_TO_SOURCE", new MethodCall(
                     DiagramEditor.class.getMethod("setNavigability", RelationEndType.class),
                     RelationEndType.SOURCE));
@@ -564,6 +567,23 @@ public abstract class DiagramEditor extends JComponent
         }
     }
 
+    public void showExtentionPoint() {
+        if (getSelectedElements().size() > 0 && getSelectedElements()
+                .get(0) instanceof Extend) {
+            Extend extend = (Extend) getSelectedElements().get(0);
+            extend.setShow(true);
+            repaint();
+        }
+    }
+    public void hideExtentionPoint() {
+        if (getSelectedElements().size() > 0 && getSelectedElements()
+                .get(0) instanceof Extend) {
+            Extend extend = (Extend) getSelectedElements().get(0);
+            extend.setShow(false);
+            repaint();
+        }
+
+    }
     /**
      * Switches a direct connection into a rectilinear one.
      */
@@ -694,6 +714,10 @@ public abstract class DiagramEditor extends JComponent
                 AppFrame.get().getAppState().getUmlModel().removeElement(diagramElement.getModelElement(), getDiagram());
             }
         }
+
+        if (element instanceof Extend)
+            ((Extend) element).deleteExtentionPoint(this);
+
         repaint();
     }
 

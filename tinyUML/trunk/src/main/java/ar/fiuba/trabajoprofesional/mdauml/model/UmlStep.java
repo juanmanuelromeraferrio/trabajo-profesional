@@ -9,6 +9,7 @@ import java.util.List;
 public class UmlStep {
 
   public static final UmlStep ANY = new UmlStep(Msg.get("umlStep.anyStep"));
+  public static final UmlStep UNDEFINED = new UmlStep(Msg.get("umlStep.undefined"));
   protected UmlStep father;
   protected List<UmlStep> children;
   protected Integer index;
@@ -143,6 +144,10 @@ public class UmlStep {
 
   public UmlStep clone(){
     try {
+      if(this.equals(UmlStep.ANY))
+        return ANY;
+      if(this.equals(UmlStep.UNDEFINED))
+        return UNDEFINED;
       return (UmlStep) super.clone();
     } catch (CloneNotSupportedException e) {
       return ANY;
