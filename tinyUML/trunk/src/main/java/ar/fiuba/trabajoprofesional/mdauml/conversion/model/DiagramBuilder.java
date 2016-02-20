@@ -36,18 +36,23 @@ public class DiagramBuilder {
                     boundary.addMethod("+"+StringHelper.toLowerCamelCase(useCase.getName())+"()");
                     conversionDiagram.addRelation(new SimpleRelation(boundary,control));
                 }
-                for(UmlUseCase included : useCase.getIncluded()){
-                    if(isPackageRelated() && (included.getPackage()==null || !included.getPackage().equals(umlPackage)))
-                        continue;
-                    String includedEntity=included.getMainEntity();
-                    if(includedEntity.equals(mainEntity))
-                        continue;
-                    Control includedControl = conversionDiagram.getControl(StringHelper.toUpperCamelCase(includedEntity) + Msg.get("conversion.names.control"));
-                    conversionDiagram.addRelation(new SimpleRelation(control,includedControl));
-                }
+                addControlControlRelatioin(conversionDiagram,control,mainEntity,useCase.getIncluded());
+                addControlControlRelatioin(conversionDiagram,control,mainEntity,useCase.getExtended());
             }
         }
         return conversionDiagram;
+    }
+
+    private void addControlControlRelatioin(ConversionModel conversionDiagram, Control control, String mainEntity, List<UmlUseCase> useCases) {
+        for(UmlUseCase relatedUseCase : useCases){
+            if(isPackageRelated() && (relatedUseCase.getPackage()==null || !relatedUseCase.getPackage().equals(umlPackage)))
+                continue;
+            String relatedMainEntity=relatedUseCase.getMainEntity();
+            if(relatedMainEntity.equals(mainEntity))
+                continue;
+            Control relatedControl = conversionDiagram.getControl(StringHelper.toUpperCamelCase(relatedMainEntity) + Msg.get("conversion.names.control"));
+            conversionDiagram.addRelation(new SimpleRelation(control,relatedControl));
+        }
     }
 
     public UmlPackage getUmlPackage() {

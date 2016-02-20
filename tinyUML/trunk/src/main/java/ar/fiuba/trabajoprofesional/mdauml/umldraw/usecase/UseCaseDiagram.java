@@ -56,6 +56,10 @@ public class UseCaseDiagram extends GeneralDiagram {
         pkgPrototype.setModelElement(pkg);
         elementPrototypes.put(ElementType.PACKAGE, pkgPrototype);
 
+
+        SystemElement sytemElement = (SystemElement) SystemElement.getPrototype().clone();
+        elementPrototypes.put(ElementType.SYSTEM, sytemElement);
+
         return elementPrototypes;
     }
 

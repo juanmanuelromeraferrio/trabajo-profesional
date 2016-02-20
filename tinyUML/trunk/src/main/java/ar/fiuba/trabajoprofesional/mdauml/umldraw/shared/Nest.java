@@ -49,6 +49,11 @@ public class Nest extends BaseConnection {
 
     }
 
+    @Override
+    public boolean isInBack() {
+        return false;
+    }
+
     private void drawAnchor(DrawingContext drawingContext) {
         Point2D endingPoint = getEndPoint1();
         Point2D next = getPoints().get(1);

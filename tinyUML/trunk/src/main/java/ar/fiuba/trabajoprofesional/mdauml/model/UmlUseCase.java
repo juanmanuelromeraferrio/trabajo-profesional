@@ -305,4 +305,12 @@ public class UmlUseCase extends PackageableUmlModelElement {
     }
     return includedUseCases;
   }
+
+  public List<UmlUseCase> getExtended() {
+    List<UmlUseCase> extendedUseCases =  new ArrayList<>();
+    for(ExtendRelation relation :extendRelations){
+      extendedUseCases.add((UmlUseCase) relation.getElement2());
+    }
+    return extendedUseCases;
+  }
 }

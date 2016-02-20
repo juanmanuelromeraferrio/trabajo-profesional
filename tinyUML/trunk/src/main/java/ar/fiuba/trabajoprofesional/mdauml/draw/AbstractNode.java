@@ -534,4 +534,9 @@ public abstract class AbstractNode implements Node, ConnectionVisitor{
     public boolean isConnectionSource() {
         return false;
     }
+
+    @Override
+    public boolean isInBack() {
+        return false;
+    }
 }

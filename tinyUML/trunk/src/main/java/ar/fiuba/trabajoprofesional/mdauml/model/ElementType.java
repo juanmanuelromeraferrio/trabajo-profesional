@@ -33,7 +33,8 @@ public enum ElementType {
     STEREOTYPE("Stereotype"),
     BOUNDARY("Boundary"),
     CONTROL("Control"),
-    ENTITY("Entity");
+    ENTITY("Entity"),
+    SYSTEM("System");
 
     private String name;
 

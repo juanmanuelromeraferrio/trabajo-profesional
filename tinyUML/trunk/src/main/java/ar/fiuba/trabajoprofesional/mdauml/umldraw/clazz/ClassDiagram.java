@@ -23,6 +23,7 @@ import java.util.Map;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.*;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association.AssociationType;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.SystemElement;
 
 /**
  * This class specializes the GeneralDiagram, at the same time it implements the

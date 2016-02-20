@@ -60,6 +60,11 @@ public class UseCaseDiagramEditor extends DiagramEditor {
               UseCaseDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
               ElementType.PACKAGE));
 
+      selectorMap.put("CREATE_SYSTEM",
+              new MethodCall(
+                      UseCaseDiagramEditor.class.getMethod("setCreationMode", ElementType.class),
+                      ElementType.SYSTEM));
+
       selectorMap.put(
           "CREATE_ASSOCIATION",
           new MethodCall(UseCaseDiagramEditor.class.getMethod("setCreateConnectionMode",
@@ -146,4 +151,5 @@ public class UseCaseDiagramEditor extends DiagramEditor {
     else
       super.handleCommand(command);
   }
+
 }

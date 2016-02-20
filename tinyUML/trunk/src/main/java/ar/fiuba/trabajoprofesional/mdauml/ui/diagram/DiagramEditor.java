@@ -696,8 +696,11 @@ public abstract class DiagramEditor extends JComponent
                 AppFrame.get().getAppState().getUmlModel().addElement(diagramElement.getModelElement(), getDiagram());
             }
         }
+        if(element.isInBack())
+            diagram.putChildToBack(element);
         repaint();
     }
+
 
     /**
      * {@inheritDoc}
@@ -715,6 +718,8 @@ public abstract class DiagramEditor extends JComponent
             }
         }
 
+        if (element instanceof ExtentionPointNote)
+            ((ExtentionPointNote) element).delete();
         if (element instanceof Extend)
             ((Extend) element).deleteExtentionPoint(this);
 

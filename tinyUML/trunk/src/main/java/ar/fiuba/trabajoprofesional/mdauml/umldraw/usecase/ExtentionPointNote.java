@@ -78,7 +78,7 @@ public class ExtentionPointNote extends NoteElement{
         double middleX= point1X + (point2X-point1X)/2.0;
         double middleY= point1Y + (point2Y-point1Y)/2.0;
         Line2D lineToCenter = new Line2D.Double(middleX, middleY, getAbsCenterX(), getAbsCenterY());
-        Point2D intersection = new Point2D.Double();
+        Point2D intersection = new Point2D.Double(middleX,middleY);
         calculateIntersection(lineToCenter,intersection);
         drawingContext.drawDashedLine(middleX, middleY,intersection.getX(),intersection.getY());
 
@@ -127,7 +127,9 @@ public class ExtentionPointNote extends NoteElement{
         refresh=true;
     }
 
-
+    public void delete(){
+        extend.hideExtentionPoint();
+    }
 
 
 }

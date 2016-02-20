@@ -68,6 +68,8 @@ public final class IconLoader {
         urlMap.put(IconType.ACTOR, "ar/fiuba/trabajoprofesional/mdauml/ui/actor.png");
         urlMap.put(IconType.USE_CASE, "ar/fiuba/trabajoprofesional/mdauml/ui/usecase.png");
 
+        urlMap.put(IconType.SYSTEM, "ar/fiuba/trabajoprofesional/mdauml/ui/system.png");
+
         urlMap.put(IconType.NEW, "org/fife/plaf/Office2003/new.gif");
         urlMap.put(IconType.OPEN, "org/fife/plaf/Office2003/open.gif");
         urlMap.put(IconType.SAVE, "org/fife/plaf/Office2003/save.gif");
@@ -126,6 +128,6 @@ public final class IconLoader {
         MOUSE_POINTER,
         CLASS, PACKAGE, DEPENDENCY, ASSOCIATION, AGGREGATION,
         COMPOSITION, INHERITANCE, INTERFACE_REALIZATION, NOTE, NOTE_CONNECTOR,
-        LIFELINE, MESSAGE, ACTOR, EXTEND, INCLUDE, USE_CASE, CONVERT, BOUNDARY, CONTROL, ENTITY, NEST
+        LIFELINE, MESSAGE, ACTOR, EXTEND, INCLUDE, USE_CASE, CONVERT, BOUNDARY, CONTROL, ENTITY, SYSTEM, NEST
     }
 }

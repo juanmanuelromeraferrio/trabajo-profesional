@@ -438,4 +438,9 @@ public abstract class AbstractConnection implements Connection {
     public boolean isConnectionSource() {
         return false;
     }
+
+    @Override
+    public boolean isInBack() {
+        return false;
+    }
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Extend extends ArrowConnection {
 
     private static final String LABEL = "<<extend>>";
+    private static final int VERTICAL_DISTANCE = 10;
     private static Extend prototype;
     private ConnectionNameLabel nameLabel;
     private boolean show = false;
@@ -60,6 +61,7 @@ public class Extend extends ArrowConnection {
     @Override public void setParent(CompositeNode parent) {
         super.setParent(parent);
         nameLabel.setParent(parent);
+        extentionPointNote.setParent(parent);
     }
 
     /**
@@ -67,6 +69,7 @@ public class Extend extends ArrowConnection {
      */
     @Override public void draw(DrawingContext drawingContext) {
         super.draw(drawingContext);
+        nameLabel.recalculateSize(drawingContext);
         positionNameLabel();
         nameLabel.draw(drawingContext);
 
@@ -95,7 +98,13 @@ public class Extend extends ArrowConnection {
         Line2D middlesegment = segments.get(segments.size() / 2);
         int x = (int) (middlesegment.getX2() + middlesegment.getX1()) / 2;
         int y = (int) (middlesegment.getY2() + middlesegment.getY1()) / 2;
-        nameLabel.setAbsolutePos(x, y);
+        double middleSegmentAngle = Math.atan2(middlesegment.getY2()-middlesegment.getY1(),middlesegment.getX2()-middlesegment.getX1());
+        double sign=-1.1;
+        if((middleSegmentAngle > 0 && middleSegmentAngle < Math.PI /2.0)||
+                (middleSegmentAngle > -Math.PI && middleSegmentAngle < -Math.PI /2.0))
+            sign=1.1;
+        nameLabel.setAbsolutePos(x - nameLabel.getSize().getWidth()*(1+sign*Math.abs(Math.sin(middleSegmentAngle))),
+                y +VERTICAL_DISTANCE* Math.abs(Math.cos(middleSegmentAngle)) );
     }
 
     @Override public void acceptNode(ConnectionVisitor node) {
@@ -117,7 +126,13 @@ public class Extend extends ArrowConnection {
         this.show = show;
     }
 
+
+    public void hideExtentionPoint(){
+        this.show=false;
+    }
+
     public void deleteExtentionPoint(DiagramEditor editor){
+
         ArrayList<DiagramElement> elements = new ArrayList<>();
         elements.add(extentionPointNote);
         DeleteElementCommand command = new DeleteElementCommand(editor, elements);

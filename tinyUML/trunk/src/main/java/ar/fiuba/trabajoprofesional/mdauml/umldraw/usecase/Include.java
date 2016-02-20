@@ -19,6 +19,8 @@ public class Include extends ArrowConnection {
     private static Include prototype;
     private ConnectionNameLabel nameLabel;
 
+    private static final int VERTICAL_DISTANCE = 10;
+
     /**
      * Private constructor.
      */
@@ -84,7 +86,14 @@ public class Include extends ArrowConnection {
         Line2D middlesegment = segments.get(segments.size() / 2);
         int x = (int) (middlesegment.getX2() + middlesegment.getX1()) / 2;
         int y = (int) (middlesegment.getY2() + middlesegment.getY1()) / 2;
-        nameLabel.setAbsolutePos(x, y);
+        double middleSegmentAngle = Math.atan2(middlesegment.getY2()-middlesegment.getY1(),middlesegment.getX2()-middlesegment.getX1());
+        double sign=-1.1;
+        if((middleSegmentAngle > 0 && middleSegmentAngle < Math.PI /2.0)||
+                (middleSegmentAngle > -Math.PI && middleSegmentAngle < -Math.PI /2.0))
+            sign=1.1;
+        nameLabel.setAbsolutePos(x - nameLabel.getSize().getWidth()*(1+sign*Math.abs(Math.sin(middleSegmentAngle))),
+                y +VERTICAL_DISTANCE* Math.abs(Math.cos(middleSegmentAngle)) );
+
     }
 
     @Override public void acceptNode(ConnectionVisitor node){
