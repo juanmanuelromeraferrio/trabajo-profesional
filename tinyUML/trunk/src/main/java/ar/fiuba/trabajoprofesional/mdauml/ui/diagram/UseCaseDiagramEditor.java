@@ -125,6 +125,7 @@ public class UseCaseDiagramEditor extends DiagramEditor {
       dialog.setLocationRelativeTo(AppFrame.get());
       dialog.setVisible(true);
       if (dialog.isOk()) {
+        element.invalidate();
         redraw();
       }
 
