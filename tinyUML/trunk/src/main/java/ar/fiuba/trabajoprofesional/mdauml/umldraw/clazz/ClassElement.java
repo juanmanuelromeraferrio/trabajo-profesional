@@ -207,6 +207,11 @@ public final class ClassElement extends AbstractCompositeNode
         return showAttributes;
     }
 
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+
     /**
      * Sets the showOperations flag.
      *

@@ -377,4 +377,9 @@ public abstract class Association extends BaseConnection {
     @Override public void cancelNode(ConnectionVisitor node){
         node.removeConcreteConnection(this);
     }
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
 }

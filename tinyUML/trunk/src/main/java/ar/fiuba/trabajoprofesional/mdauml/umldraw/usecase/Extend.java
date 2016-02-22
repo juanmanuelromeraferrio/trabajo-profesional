@@ -138,7 +138,10 @@ public class Extend extends ArrowConnection {
         DeleteElementCommand command = new DeleteElementCommand(editor, elements);
         editor.execute(command);
     }
-
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
 
     public void refresh() {
         extentionPointNote.refresh();

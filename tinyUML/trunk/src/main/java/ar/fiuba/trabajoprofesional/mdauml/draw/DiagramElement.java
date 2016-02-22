@@ -184,5 +184,7 @@ public interface DiagramElement extends Cloneable {
     boolean isConnectionSource();
 
 
+    boolean isEditable();
+
     boolean isInBack();
 }

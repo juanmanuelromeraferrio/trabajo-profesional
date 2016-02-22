@@ -226,6 +226,10 @@ public final class ActorElement extends AbstractCompositeNode
 
     }
 
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
 
     @Override public void addConcreteConnection(Nest connection){
         actor.setPackageRelation((NestRelation) connection.getModelElement());

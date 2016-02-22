@@ -81,6 +81,13 @@ public final class UseCaseElement extends AbstractCompositeNode
 
     }
 
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+
+
     /**
      * Returns the main label for testing purposes.
      *

@@ -395,4 +395,9 @@ public abstract class BaseConnection implements UmlConnection {
     public boolean isInBack() {
         return false;
     }
+
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
 }

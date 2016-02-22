@@ -443,4 +443,9 @@ public abstract class AbstractConnection implements Connection {
     public boolean isInBack() {
         return false;
     }
+
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
 }

@@ -69,6 +69,9 @@ public abstract class AbstractNode implements Node, ConnectionVisitor{
         return diagram;
     }
 
+    public boolean isEditable() {
+        return false;
+    }
 
     public void setDiagram(GeneralDiagram diagram) {
         this.diagram = diagram;

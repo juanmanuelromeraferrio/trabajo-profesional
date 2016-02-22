@@ -20,13 +20,12 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
 import ar.fiuba.trabajoprofesional.mdauml.draw.Connection;
+import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
 import ar.fiuba.trabajoprofesional.mdauml.draw.Selection;
 import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
 import ar.fiuba.trabajoprofesional.mdauml.model.Relation;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlConnection;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlDiagramElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.Association;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.Extend;
 import ar.fiuba.trabajoprofesional.mdauml.util.AppCommandListener;
 import ar.fiuba.trabajoprofesional.mdauml.util.IconLoader;
@@ -67,11 +66,14 @@ public class ContextMenuBuilder implements ActionListener {
         if (selection.getElements().size() > 1) {
             return createMultipleSelectionContextMenu();
         } else {
-            UmlDiagramElement elem = (UmlDiagramElement) selection.getElement();
+            DiagramElement elem = selection.getElement();
             if (elem instanceof Connection) {
                 return createSingleConnectionContextMenu((Connection) elem);
             }
-            return createSingleNodeContextMenu(elem);
+            if (elem instanceof UmlDiagramElement) {
+                return createSingleNodeContextMenu((UmlDiagramElement) elem);
+            }
+            return null;
         }
     }
 
@@ -94,9 +96,6 @@ public class ContextMenuBuilder implements ActionListener {
      */
     private JPopupMenu createSingleNodeContextMenu(UmlDiagramElement element) {
         JPopupMenu menu = new JPopupMenu();
-        if (element instanceof ClassElement) {
-            createMenuItem(menu, "editproperties");
-        }
         JMenu drawOrderMenu =
             new JMenu(Msg.get("submenu.draworder.name"));
         menu.add(drawOrderMenu);
@@ -106,6 +105,8 @@ public class ContextMenuBuilder implements ActionListener {
             createMenuItem(menu,"unpack");
         menu.addSeparator();
         createMenuItem(menu, "delete");
+
+        addEditPropertiesMenu( menu,  element);
         return menu;
     }
 
@@ -132,7 +133,7 @@ public class ContextMenuBuilder implements ActionListener {
         addNavigabilityMenu(menu, (UmlConnection) conn);
         menu.addSeparator();
         createMenuItem(menu, "delete");
-        addEditConnectionPropertiesMenu(menu, (UmlConnection) conn);
+        addEditPropertiesMenu(menu, (UmlDiagramElement) conn);
         return menu;
     }
 
@@ -166,10 +167,10 @@ public class ContextMenuBuilder implements ActionListener {
      * Creates a property menu if possible.
      *
      * @param menu the popup menu
-     * @param conn the connection
+     * @param elem the element
      */
-    private void addEditConnectionPropertiesMenu(JPopupMenu menu, UmlConnection conn) {
-        if (conn instanceof Association || conn instanceof Extend) {
+    private void addEditPropertiesMenu(JPopupMenu menu, DiagramElement elem) {
+        if (elem.isEditable()) {
             menu.addSeparator();
             createMenuItem(menu, "editproperties");
         }
