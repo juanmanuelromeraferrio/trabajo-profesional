@@ -348,6 +348,8 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
       actorItems.add(umlActor.getName());
     }
     actorItems.add(Msg.get("editstepmainflow.system.actor"));
+    if(umlActors.isEmpty()||this.step!=null && this.step.getActor().equals(Msg.get("editstepmainflow.default.actor")))
+      actorItems.add(Msg.get("editstepmainflow.default.actor"));
 
 
     JLabel actorLabel = new JLabel(Msg.get("editstepmainflow.actor.label"));
