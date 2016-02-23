@@ -1,7 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import java.awt.Dimension;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -28,12 +27,15 @@ import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.StepCRUD;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
+import ar.fiuba.trabajoprofesional.mdauml.util.PDControlScrollPane;
+import javafx.scene.layout.Border;
 
 
 /**
@@ -500,8 +502,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     setTitle(Msg.get("editUseCaseDialog.title"));
     setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-    JScrollPane mainScrollPanel = new JScrollPane();
-    mainScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
+    JScrollPane mainScrollPanel = new PDControlScrollPane();
+    mainScrollPanel.getVerticalScrollBar().setUnitIncrement(32);
     mainScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
     JButton btnCancel = new JButton(Msg.get("stdcaption.cancel"));
@@ -528,7 +530,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           .addComponent(btnOk)
           .addPreferredGap(ComponentPlacement.RELATED)
           .addComponent(btnCancel)
-          .addContainerGap())
+          .addGap(6))
         .addComponent(mainScrollPanel, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
     );
     groupLayout.setVerticalGroup(
@@ -539,7 +541,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
           .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
             .addComponent(btnCancel)
             .addComponent(btnOk))
-          .addContainerGap())
+          .addGap(6))
     );
 
     final JPanel panel = new JPanel();
@@ -552,24 +554,24 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
 
     JLabel lblDescription = new JLabel(Msg.get("editUseCaseDialog.label.description"));
 
-    JScrollPane scrollPane = new JScrollPane();
+    JScrollPane scrollPane = new PDControlScrollPane();
 
     description = new JTextPane();
     scrollPane.setViewportView(description);
 
     JPanel mainEntityPanel = new JPanel();
-    mainEntityPanel.setBorder(new TitledBorder(null, Msg.get("editUseCaseDialog.border.mainentity"), TitledBorder.LEADING,
+    mainEntityPanel.setBorder(new TitledBorder(new EmptyBorder(1,1,1,1), Msg.get("editUseCaseDialog.border.mainentity"), TitledBorder.LEFT,
         TitledBorder.TOP, null, null));
 
     JPanel mainActorsPanel = new JPanel();
-    mainActorsPanel.setBorder(new TitledBorder(null, Msg.get("editUseCaseDialog.border.mainActors"), TitledBorder.LEADING,
-        TitledBorder.TOP, null, null));
+    mainActorsPanel.setBorder(new TitledBorder( new EmptyBorder(1,1,1,1), Msg.get("editUseCaseDialog.border.mainActors"), TitledBorder.LEFT,
+            TitledBorder.TOP, null, null));
 
     JPanel panelSecondaryActors = new JPanel();
-    panelSecondaryActors.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-       Msg.get("editUseCaseDialog.border.secActors"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    panelSecondaryActors.setBorder(new TitledBorder( new EmptyBorder(1,1,1,1),
+       Msg.get("editUseCaseDialog.border.secActors"), TitledBorder.LEFT, TitledBorder.TOP, null, null));
 
-    JScrollPane scrollPane_2 = new JScrollPane();
+    JScrollPane scrollPane_2 = new PDControlScrollPane();
 
     comboSecActors = new JComboBox();
 
@@ -592,8 +594,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         Alignment.TRAILING).addGroup(
         gl_panelSecondaryActors
             .createSequentialGroup()
-            .addContainerGap()
-            .addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+            .addGap(4)
+            .addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
             .addPreferredGap(ComponentPlacement.UNRELATED)
             .addGroup(
                 gl_panelSecondaryActors
@@ -604,10 +606,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
                             .addComponent(comboSecActors, GroupLayout.PREFERRED_SIZE, 130,
                                 GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(addSecondaryActors, GroupLayout.DEFAULT_SIZE, 72,
+                            .addComponent(addSecondaryActors, GroupLayout.DEFAULT_SIZE, 10,
                                 Short.MAX_VALUE))
-                    .addComponent(removeSecondaryActors, GroupLayout.DEFAULT_SIZE, 208,
-                        Short.MAX_VALUE)).addContainerGap()));
+                    .addComponent(removeSecondaryActors, GroupLayout.DEFAULT_SIZE, 140,
+                        Short.MAX_VALUE)).addGap(6)));
     gl_panelSecondaryActors.setVerticalGroup(gl_panelSecondaryActors.createParallelGroup(
         Alignment.LEADING).addGroup(
         gl_panelSecondaryActors
@@ -622,13 +624,14 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
                             .addGroup(
                                 gl_panelSecondaryActors
                                     .createParallelGroup(Alignment.BASELINE)
-                                    .addComponent(comboSecActors, GroupLayout.PREFERRED_SIZE,
-                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(addSecondaryActors))
-                            .addPreferredGap(ComponentPlacement.RELATED)
+                                    .addComponent(comboSecActors, GroupLayout.DEFAULT_SIZE,
+                                        28, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(addSecondaryActors, GroupLayout.DEFAULT_SIZE,
+                                            28, GroupLayout.PREFERRED_SIZE))
+                            .addGap(6)
                             .addComponent(removeSecondaryActors))
-                    .addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 65,
-                        GroupLayout.PREFERRED_SIZE)).addContainerGap(19, Short.MAX_VALUE)));
+                    .addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 62,
+                        62)).addContainerGap(19, Short.MAX_VALUE)));
 
     secondaryActors = new JList();
     secondaryActors.setVisibleRowCount(3);
@@ -636,10 +639,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     panelSecondaryActors.setLayout(gl_panelSecondaryActors);
 
     JPanel panelPreconditions = new JPanel();
-    panelPreconditions.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        Msg.get("editUseCaseDialog.border.precondition"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    panelPreconditions.setBorder(new TitledBorder(new EmptyBorder(1,1,1,1),
+        Msg.get("editUseCaseDialog.border.precondition"), TitledBorder.LEFT, TitledBorder.TOP, null, null));
 
-    JScrollPane scrollPanePreconditions = new JScrollPane();
+    JScrollPane scrollPanePreconditions = new PDControlScrollPane();
 
     JButton addPreconditions = new JButton(Msg.get("editUseCaseDialog.add"));
     addPreconditions.addActionListener(new ActionListener() {
@@ -668,24 +671,24 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         .addGroup(
             gl_panelPreconditions
                 .createSequentialGroup()
-                .addContainerGap()
+                .addGap(6)
                 .addGroup(
                     gl_panelPreconditions
                         .createParallelGroup(Alignment.LEADING)
-                        .addComponent(scrollPanePreconditions, GroupLayout.DEFAULT_SIZE, 321,
+                        .addComponent(scrollPanePreconditions, GroupLayout.DEFAULT_SIZE, 450,
                             Short.MAX_VALUE)
-                        .addComponent(preconditionsTextField, GroupLayout.DEFAULT_SIZE, 321,
+                        .addComponent(preconditionsTextField, GroupLayout.DEFAULT_SIZE, 450,
                             Short.MAX_VALUE))
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(
                     gl_panelPreconditions
                         .createParallelGroup(Alignment.TRAILING)
                         .addComponent(deletePreconditions, GroupLayout.PREFERRED_SIZE,
-                            GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editPreconditions, GroupLayout.DEFAULT_SIZE, 102,
+                            50, Short.MAX_VALUE)
+                        .addComponent(editPreconditions, GroupLayout.DEFAULT_SIZE, 50,
                             Short.MAX_VALUE)
-                        .addComponent(addPreconditions, GroupLayout.DEFAULT_SIZE, 122,
-                            Short.MAX_VALUE)).addContainerGap()));
+                        .addComponent(addPreconditions, GroupLayout.DEFAULT_SIZE, 50,
+                            Short.MAX_VALUE)).addGap(6)));
     gl_panelPreconditions.setVerticalGroup(gl_panelPreconditions.createParallelGroup(
         Alignment.LEADING).addGroup(
         gl_panelPreconditions
@@ -694,20 +697,23 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
             .addGroup(
                 gl_panelPreconditions
                     .createParallelGroup(Alignment.BASELINE)
-                    .addComponent(addPreconditions)
+                    .addComponent(addPreconditions, GroupLayout.PREFERRED_SIZE, 28,
+                            GroupLayout.PREFERRED_SIZE)
                     .addComponent(preconditionsTextField, GroupLayout.PREFERRED_SIZE,
-                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-            .addGap(8)
+                        28, GroupLayout.PREFERRED_SIZE))
+            .addGap(6)
             .addGroup(
                 gl_panelPreconditions
                     .createParallelGroup(Alignment.BASELINE)
-                    .addComponent(scrollPanePreconditions, GroupLayout.PREFERRED_SIZE, 65,
+                    .addComponent(scrollPanePreconditions, GroupLayout.PREFERRED_SIZE, 62,
                         GroupLayout.PREFERRED_SIZE)
                     .addGroup(
                         gl_panelPreconditions.createSequentialGroup()
-                            .addComponent(editPreconditions)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(deletePreconditions)))
+                            .addComponent(editPreconditions, GroupLayout.PREFERRED_SIZE, 28,
+                                    GroupLayout.PREFERRED_SIZE)
+                            .addGap(6)
+                            .addComponent(deletePreconditions, GroupLayout.PREFERRED_SIZE, 28,
+                                    GroupLayout.PREFERRED_SIZE)))
             .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
     preconditions = new JList();
@@ -715,10 +721,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     panelPreconditions.setLayout(gl_panelPreconditions);
 
     JPanel panelMainFlow = new JPanel();
-    panelMainFlow.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        Msg.get("editUseCaseDialog.border.mainflow"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    panelMainFlow.setBorder(new TitledBorder(new EmptyBorder(1,1,1,1),
+        Msg.get("editUseCaseDialog.border.mainflow"), TitledBorder.LEFT, TitledBorder.TOP, null, null));
 
-    JScrollPane mainFlowStepPane = new JScrollPane();
+    JScrollPane mainFlowStepPane = new PDControlScrollPane();
     JButton addMainFlowButton = new JButton(Msg.get("editUseCaseDialog.add"));
 
 
@@ -756,23 +762,19 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         .addGroup(
             gl_panelMainFlow
                 .createSequentialGroup()
-                .addContainerGap()
-                .addComponent(mainFlowStepPane, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                .addGap(6)
+                .addComponent(mainFlowStepPane, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                 .addGap(10)
                 .addGroup(
                     gl_panelMainFlow
                         .createParallelGroup(Alignment.LEADING)
                         .addComponent(editStepMainFlowButton, Alignment.TRAILING,
-                            GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-                        .addComponent(deletStepMainFlowButton, GroupLayout.DEFAULT_SIZE, 67,
+                            GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                        .addComponent(deletStepMainFlowButton, GroupLayout.DEFAULT_SIZE, 50,
                             Short.MAX_VALUE)
-                        .addGroup(
-                            Alignment.TRAILING,
-                            gl_panelMainFlow
-                                .createSequentialGroup()
-                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                .addComponent(addMainFlowButton, GroupLayout.DEFAULT_SIZE, 132,
-                                    Short.MAX_VALUE))).addContainerGap()));
+                        .addComponent(addMainFlowButton, GroupLayout.DEFAULT_SIZE, 50,
+                            Short.MAX_VALUE))
+        ).addGap(6));
     gl_panelMainFlow.setVerticalGroup(gl_panelMainFlow.createParallelGroup(Alignment.LEADING)
         .addGroup(
             gl_panelMainFlow
@@ -798,13 +800,13 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     panelMainFlow.setLayout(gl_panelMainFlow);
 
     JPanel panelPostconditions = new JPanel();
-    panelPostconditions.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        Msg.get("editUseCaseDialog.border.postcondition"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    panelPostconditions.setBorder(new TitledBorder(new EmptyBorder(1,1,1,1),
+        Msg.get("editUseCaseDialog.border.postcondition"), TitledBorder.LEFT, TitledBorder.TOP, null, null));
 
     postconditionTextField = new JTextField();
     postconditionTextField.setColumns(10);
 
-    JScrollPane scrollPanePostconditions = new JScrollPane();
+    JScrollPane scrollPanePostconditions = new PDControlScrollPane();
 
     JButton editPostConditions = new JButton(Msg.get("editUseCaseDialog.edit"));
     postconditionEditListAction = new EditListAction(Msg.get("editUseCaseDialog.edit"));
@@ -830,28 +832,28 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         Alignment.TRAILING).addGroup(
         gl_panelPostconditions
             .createSequentialGroup()
-            .addContainerGap()
+            .addGap(6)
             .addGroup(
                 gl_panelPostconditions
                     .createParallelGroup(Alignment.LEADING)
-                    .addComponent(scrollPanePostconditions, GroupLayout.DEFAULT_SIZE, 332,
+                    .addComponent(scrollPanePostconditions, GroupLayout.DEFAULT_SIZE, 450,
                         Short.MAX_VALUE)
-                    .addComponent(postconditionTextField, GroupLayout.DEFAULT_SIZE, 332,
+                    .addComponent(postconditionTextField, GroupLayout.DEFAULT_SIZE, 450,
                         Short.MAX_VALUE))
             .addGap(10)
             .addGroup(
                 gl_panelPostconditions
                     .createParallelGroup(Alignment.TRAILING)
-                    .addComponent(deletePostoconditions, GroupLayout.PREFERRED_SIZE, 102,
+                    .addComponent(deletePostoconditions, GroupLayout.PREFERRED_SIZE, 50,
                         Short.MAX_VALUE)
                     .addGroup(
                         gl_panelPostconditions
                             .createSequentialGroup()
                             .addPreferredGap(ComponentPlacement.UNRELATED)
-                            .addComponent(addPostconditions, GroupLayout.DEFAULT_SIZE, 130,
+                            .addComponent(addPostconditions, GroupLayout.DEFAULT_SIZE, 50,
                                 Short.MAX_VALUE))
-                    .addComponent(editPostConditions, GroupLayout.DEFAULT_SIZE, 130,
-                        Short.MAX_VALUE)).addContainerGap()));
+                    .addComponent(editPostConditions, GroupLayout.DEFAULT_SIZE, 50,
+                        Short.MAX_VALUE)).addGap(6)));
     gl_panelPostconditions.setVerticalGroup(gl_panelPostconditions.createParallelGroup(
         Alignment.LEADING).addGroup(
         gl_panelPostconditions
@@ -860,19 +862,22 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
             .addGroup(
                 gl_panelPostconditions
                     .createParallelGroup(Alignment.BASELINE)
-                    .addComponent(addPostconditions)
+                    .addComponent(addPostconditions, GroupLayout.PREFERRED_SIZE, 28,
+                            GroupLayout.PREFERRED_SIZE)
                     .addComponent(postconditionTextField, GroupLayout.PREFERRED_SIZE,
-                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-            .addGap(8)
+                        28 , GroupLayout.PREFERRED_SIZE))
+            .addGap(6)
             .addGroup(
                 gl_panelPostconditions
                     .createParallelGroup(Alignment.LEADING)
                     .addGroup(
                         gl_panelPostconditions.createSequentialGroup()
-                            .addComponent(editPostConditions)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(deletePostoconditions))
-                    .addComponent(scrollPanePostconditions, GroupLayout.PREFERRED_SIZE, 65,
+                            .addComponent(editPostConditions, GroupLayout.PREFERRED_SIZE, 28,
+                                    GroupLayout.PREFERRED_SIZE)
+                            .addGap(6)
+                            .addComponent(deletePostoconditions, GroupLayout.PREFERRED_SIZE, 28,
+                                    GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scrollPanePostconditions, GroupLayout.PREFERRED_SIZE, 62,
                         GroupLayout.PREFERRED_SIZE))
             .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
@@ -881,12 +886,12 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     panelPostconditions.setLayout(gl_panelPostconditions);
 
     JPanel panelAlternativeFlow = new JPanel();
-    panelAlternativeFlow.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
-        Msg.get("editUseCaseDialog.border.alternativeFlow"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    panelAlternativeFlow.setBorder(new TitledBorder(new EmptyBorder(1,1,1,1),
+        Msg.get("editUseCaseDialog.border.alternativeFlow"), TitledBorder.LEFT, TitledBorder.TOP, null, null));
 
     JButton editAlternativeFlowButton = new JButton(Msg.get("editUseCaseDialog.edit"));
 
-    JScrollPane scrollPaneAlternativeFlow = new JScrollPane();
+    JScrollPane scrollPaneAlternativeFlow = new PDControlScrollPane();
 
     JButton deleteAlternativeFlowButton = new JButton(Msg.get("editUseCaseDialog.delete"));
 
@@ -915,24 +920,20 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         .addGroup(
             gl_panelAlternativeFlow
                 .createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPaneAlternativeFlow, GroupLayout.DEFAULT_SIZE, 302,
+                .addGap(6)
+                .addComponent(scrollPaneAlternativeFlow, GroupLayout.DEFAULT_SIZE, 450,
                     Short.MAX_VALUE)
                 .addGap(10)
                 .addGroup(
                     gl_panelAlternativeFlow
                         .createParallelGroup(Alignment.TRAILING)
                         .addComponent(editAlternativeFlowButton, Alignment.TRAILING,
-                            GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-                        .addComponent(deleteAlternativeFlowButton, GroupLayout.DEFAULT_SIZE, 67,
+                            GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                        .addComponent(deleteAlternativeFlowButton, GroupLayout.DEFAULT_SIZE, 50,
                             Short.MAX_VALUE)
-                        .addGroup(
-                            Alignment.TRAILING,
-                            gl_panelAlternativeFlow
-                                .createSequentialGroup()
-                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                .addComponent(addAlternativeFlowButton, GroupLayout.DEFAULT_SIZE,
-                                    132, Short.MAX_VALUE))).addContainerGap()));
+                        .addComponent(addAlternativeFlowButton, GroupLayout.DEFAULT_SIZE,
+                            50, Short.MAX_VALUE)
+                    ).addGap(6)));
     gl_panelAlternativeFlow.setVerticalGroup(gl_panelAlternativeFlow.createParallelGroup(
         Alignment.LEADING).addGroup(
         gl_panelAlternativeFlow
@@ -959,16 +960,20 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     gl_panel.setHorizontalGroup(
       gl_panel.createParallelGroup(Alignment.TRAILING)
         .addGroup(gl_panel.createSequentialGroup()
-          .addContainerGap()
+          .addGap(6)
           .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-            .addComponent(mainEntityPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(mainEntityPanel, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
             .addComponent(panelAlternativeFlow, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
             .addComponent(panelPostconditions, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
             .addComponent(panelMainFlow, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
             .addComponent(panelPreconditions, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-            .addComponent(panelSecondaryActors, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(mainActorsPanel, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
             .addGroup(gl_panel.createSequentialGroup()
+                  .addComponent(mainActorsPanel, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                  .addComponent(panelSecondaryActors, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                  .addPreferredGap(ComponentPlacement.UNRELATED)
+            )
+            .addGroup(gl_panel.createSequentialGroup()
+              .addGap(6)
               .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
                 .addComponent(lblDescription)
                 .addComponent(lblName))
@@ -982,34 +987,37 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     gl_panel.setVerticalGroup(
       gl_panel.createParallelGroup(Alignment.LEADING)
         .addGroup(gl_panel.createSequentialGroup()
-          .addContainerGap()
+          .addGap(12)
           .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
             .addComponent(lblName)
+
             .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-          .addPreferredGap(ComponentPlacement.RELATED)
+                .addGap(12)
           .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
             .addComponent(lblDescription)
+
             .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))
-          .addGap(18)
-          .addComponent(mainEntityPanel, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.RELATED)
-          .addComponent(panelSecondaryActors, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.UNRELATED)
+          .addGap(22)
+                .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+               .addComponent(mainActorsPanel, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+
+          .addComponent(panelSecondaryActors, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE))
+                .addGap(10)
           .addComponent(panelPreconditions, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-          .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addGap(10)
           .addComponent(panelMainFlow, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE)
-          .addGap(18)
+          .addGap(10)
           .addComponent(panelPostconditions, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-          .addGap(18)
+          .addGap(10)
           .addComponent(panelAlternativeFlow, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE)
-          .addGap(0, 0, Short.MAX_VALUE))
+          .addGap(10)
+          .addComponent(mainEntityPanel, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
+          .addGap(10))
     );
 
     /* Main Entity */
 
-    JScrollPane scrollPaneEntity = new JScrollPane();
+    JScrollPane scrollPaneEntity = new PDControlScrollPane();
     comboMainEntity = new JComboBox();
 
     JButton selectMainEntity = new JButton(Msg.get("editUseCaseDialog.select"));
@@ -1024,25 +1032,24 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     gl_mainEntityPanel.setHorizontalGroup(
       gl_mainEntityPanel.createParallelGroup(Alignment.TRAILING)
         .addGroup(gl_mainEntityPanel.createSequentialGroup()
-          .addContainerGap()
-          .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+          .addGap(6)
+          .addComponent(scrollPaneEntity, GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
           .addPreferredGap(ComponentPlacement.RELATED)
           .addGroup(gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
-            .addComponent(selectMainEntity, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-            .addComponent(comboMainEntity, 0, 212, Short.MAX_VALUE))
-          .addContainerGap())
+            .addComponent(selectMainEntity, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+            .addComponent(comboMainEntity, 0, 180, Short.MAX_VALUE))
+          .addGap(6))
     );
     gl_mainEntityPanel.setVerticalGroup(
       gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
-        .addGroup(gl_mainEntityPanel.createSequentialGroup()
           .addGroup(gl_mainEntityPanel.createParallelGroup(Alignment.LEADING)
             .addGroup(gl_mainEntityPanel.createSequentialGroup()
-              .addGap(32)
-              .addComponent(selectMainEntity))
-            .addGroup(gl_mainEntityPanel.createParallelGroup(Alignment.BASELINE)
-              .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-              .addComponent(comboMainEntity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-          .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+              .addComponent(comboMainEntity, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+              .addGap(6)
+              .addComponent(selectMainEntity, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+            )
+            .addComponent(scrollPaneEntity, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+          )
     );
 
     mainEntities = new JList();
@@ -1052,7 +1059,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     mainEntityPanel.setLayout(gl_mainEntityPanel);
 
 
-    JScrollPane scrollPane_1 = new JScrollPane();
+    JScrollPane scrollPane_1 = new PDControlScrollPane();
     comboMainActor = new JComboBox();
 
     JButton addMainActor = new JButton(Msg.get("editUseCaseDialog.add"));
@@ -1073,8 +1080,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
         .createParallelGroup(Alignment.TRAILING).addGroup(
             gl_mainActorsPanel
                 .createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                .addGap(4)
+                .addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(
                     gl_mainActorsPanel
@@ -1082,13 +1089,13 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
                         .addGroup(
                             gl_mainActorsPanel
                                 .createSequentialGroup()
-                                .addComponent(comboMainActor, GroupLayout.PREFERRED_SIZE, 132,
+                                .addComponent(comboMainActor, GroupLayout.PREFERRED_SIZE, 130,
                                     GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(addMainActor, GroupLayout.DEFAULT_SIZE, 70,
+                                .addComponent(addMainActor, GroupLayout.DEFAULT_SIZE, 10,
                                     Short.MAX_VALUE))
-                        .addComponent(deleteMainActor, GroupLayout.DEFAULT_SIZE, 200,
-                            Short.MAX_VALUE)).addContainerGap()));
+                        .addComponent(deleteMainActor, GroupLayout.DEFAULT_SIZE, 140,
+                            Short.MAX_VALUE)).addGap(6)));
     gl_mainActorsPanel.setVerticalGroup(gl_mainActorsPanel.createParallelGroup(Alignment.LEADING)
         .addGroup(
             gl_mainActorsPanel
@@ -1097,7 +1104,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
                 .addGroup(
                     gl_mainActorsPanel
                         .createParallelGroup(Alignment.BASELINE)
-                        .addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 68,
+                        .addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 62,
                             GroupLayout.PREFERRED_SIZE)
                         .addGroup(
                             gl_mainActorsPanel
@@ -1106,9 +1113,10 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
                                     gl_mainActorsPanel
                                         .createParallelGroup(Alignment.BASELINE)
                                         .addComponent(comboMainActor, GroupLayout.PREFERRED_SIZE,
-                                            GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(addMainActor))
-                                .addPreferredGap(ComponentPlacement.RELATED)
+                                            28, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(addMainActor, GroupLayout.PREFERRED_SIZE,
+                                                28, GroupLayout.PREFERRED_SIZE))
+                                .addGap(6)
                                 .addComponent(deleteMainActor)))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
