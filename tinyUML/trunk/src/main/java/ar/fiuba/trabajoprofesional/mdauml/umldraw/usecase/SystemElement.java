@@ -38,7 +38,7 @@ public class SystemElement extends AbstractNode implements UmlNode{
     @Override
     public void draw(DrawingContext drawingContext) {
         Stroke originalStroke = drawingContext.getGraphics2D().getStroke();
-        drawingContext.getGraphics2D().setStroke(new BasicStroke(3));
+        drawingContext.getGraphics2D().setStroke(new BasicStroke(2));
         drawingContext.getGraphics2D().setBackground(new Color(0,0,0,0));
         drawingContext.getGraphics2D().setColor(Color.black);
         drawingContext.getGraphics2D().draw(new Rectangle2D.Double(getAbsoluteX1(), getAbsoluteY1(), getSize().getWidth(), getSize().getHeight()));

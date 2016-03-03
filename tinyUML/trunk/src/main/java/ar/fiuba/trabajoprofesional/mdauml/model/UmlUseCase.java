@@ -196,6 +196,9 @@ public class UmlUseCase extends PackageableUmlModelElement {
     cloned.mainFlow = (Flow) this.mainFlow.clone();
     cloned.preconditions = new ArrayList<>(this.preconditions);
     cloned.postconditions = new ArrayList<>(this.postconditions);
+    cloned.includeRelations = new HashSet<>(this.includeRelations);
+    cloned.extendRelations= new HashSet<>(this.extendRelations);
+    cloned.mainEntity = this.mainEntity;
     return cloned;
 
   }
