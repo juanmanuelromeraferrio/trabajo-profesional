@@ -19,21 +19,22 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.draw;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
-import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
-import ar.fiuba.trabajoprofesional.mdauml.util.Command;
-import javafx.scene.shape.Circle;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javafx.scene.shape.Circle;
+import ar.fiuba.trabajoprofesional.mdauml.model.PackageableUmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlModelElement;
+import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.PackageElement;
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.shared.UmlNode;
+import ar.fiuba.trabajoprofesional.mdauml.util.Command;
 
 /**
  * A selection that holds a single rectangular shape. It is designed for reuse,

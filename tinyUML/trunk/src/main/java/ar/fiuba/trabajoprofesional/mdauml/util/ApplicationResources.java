@@ -35,7 +35,7 @@ public final class ApplicationResources {
     private static ApplicationResources instance = new ApplicationResources();
     // The resource bundle this is based on.
     private ResourceBundle resources =
-        ResourceBundle.getBundle("ar.fiuba.trabajoprofesional.mdauml.ui.tinyuml-captions");
+        ResourceBundle.getBundle("ar.fiuba.trabajoprofesional.mdauml.ui.tinyuml-captions-es");
 
     /**
      * Private constructor to enforce Singleton.
