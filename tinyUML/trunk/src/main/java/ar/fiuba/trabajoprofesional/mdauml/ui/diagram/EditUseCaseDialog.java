@@ -453,7 +453,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void validateUseCase(UmlUseCase umlUseCase) {
-    for(UmlStep step: mainFlow.getFlow()){
+    for(UmlStep step: mainFlow.getAllSteps()){
       validateStep(step,umlUseCase);
     }
     for(int i=0 ; i < alternativeFlows.getModel().getSize();i++) {
@@ -463,15 +463,15 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void validateAlternativeFlow(AlternativeFlow alternativeFlow, UmlUseCase umlUseCase) {
-    alternativeFlow.setEntryStep(validateStepExistance(alternativeFlow.getEntryStep(),mainFlow.getFlow()));
-    alternativeFlow.setReturnStep(validateStepExistance(alternativeFlow.getReturnStep(),mainFlow.getFlow()));
+    alternativeFlow.setEntryStep(validateStepExistance(alternativeFlow.getEntryStep(),mainFlow.getAllSteps()));
+    alternativeFlow.setReturnStep(validateStepExistance(alternativeFlow.getReturnStep(),mainFlow.getAllSteps()));
     for (UmlStep step : alternativeFlow.getFlow()) {
       validateStep(step, umlUseCase);
     }
   }
 
-  private UmlStep validateStepExistance(UmlStep step, List<UmlStep> flow) {
-    for(UmlStep mainStep :flow){
+  private UmlStep validateStepExistance(UmlStep step, List<UmlStep> allSteps) {
+    for(UmlStep mainStep :allSteps){
       if(mainStep.toString().equals(step.toString()))
         return step;
     }
@@ -482,7 +482,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     if(!(step instanceof UmlMainStep))
       return;
     UmlMainStep mainStep = (UmlMainStep) step;
-
+    if(mainStep.getActor()==null)
+      return;
     if(mainStep.getActor().equals(Msg.get("editstepmainflow.system.actor")))
       return;
 
