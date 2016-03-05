@@ -11,26 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
+import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.StepCRUD;
 import ar.fiuba.trabajoprofesional.mdauml.umldraw.usecase.UseCaseElement;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
@@ -431,7 +419,6 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void onOk() {
-
     UmlUseCase umlUseCase = (UmlUseCase) useCaseElement.getModelElement();
     validateUseCase(umlUseCase);
     umlUseCase.setName(this.getName());
@@ -453,7 +440,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void validateUseCase(UmlUseCase umlUseCase) {
-    for(UmlStep step: mainFlow.getFlow()){
+    for(UmlStep step: mainFlow.getAllSteps()){
       validateStep(step,umlUseCase);
     }
     for(int i=0 ; i < alternativeFlows.getModel().getSize();i++) {
@@ -463,15 +450,15 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void validateAlternativeFlow(AlternativeFlow alternativeFlow, UmlUseCase umlUseCase) {
-    alternativeFlow.setEntryStep(validateStepExistance(alternativeFlow.getEntryStep(),mainFlow.getFlow()));
-    alternativeFlow.setReturnStep(validateStepExistance(alternativeFlow.getReturnStep(),mainFlow.getFlow()));
+    alternativeFlow.setEntryStep(validateStepExistance(alternativeFlow.getEntryStep(),mainFlow.getAllSteps()));
+    alternativeFlow.setReturnStep(validateStepExistance(alternativeFlow.getReturnStep(),mainFlow.getAllSteps()));
     for (UmlStep step : alternativeFlow.getFlow()) {
       validateStep(step, umlUseCase);
     }
   }
 
-  private UmlStep validateStepExistance(UmlStep step, List<UmlStep> flow) {
-    for(UmlStep mainStep :flow){
+  private UmlStep validateStepExistance(UmlStep step, List<UmlStep> allSteps) {
+    for(UmlStep mainStep :allSteps){
       if(mainStep.toString().equals(step.toString()))
         return step;
     }
@@ -482,7 +469,8 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     if(!(step instanceof UmlMainStep))
       return;
     UmlMainStep mainStep = (UmlMainStep) step;
-
+    if(mainStep.getActor()==null)
+      return;
     if(mainStep.getActor().equals(Msg.get("editstepmainflow.system.actor")))
       return;
 
@@ -517,6 +505,21 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     JButton btnOk = new JButton(Msg.get("stdcaption.ok"));
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        UmlStep lastStep;
+        List<UmlStep> allSteps = mainFlow.getAllSteps();
+        if(!allSteps.isEmpty()) {
+          lastStep = allSteps.get(allSteps.size() - 1);
+          if(lastStep instanceof UmlMainStep)
+            switch(((UmlMainStep) lastStep).getType()){
+              case IF:
+              case ELSE:
+              case WHILE:
+              case FOR:
+                JOptionPane.showMessageDialog(AppFrame.get().getShellComponent(), Msg.get("error.editusecase.orphanstep.message"),
+                        Msg.get("error.editusecase.orphanstep.title"), JOptionPane.ERROR_MESSAGE);
+              return;
+            }
+        }
         isOk = true;
         onOk();
         dispose();
