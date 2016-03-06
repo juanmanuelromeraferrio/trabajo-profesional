@@ -19,6 +19,11 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.util;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -33,15 +38,31 @@ import java.util.ResourceBundle;
 public final class ApplicationResources {
 
     private static ApplicationResources instance = new ApplicationResources();
-    // The resource bundle this is based on.
-    private ResourceBundle resources =
-        ResourceBundle.getBundle("ar.fiuba.trabajoprofesional.mdauml.ui.tinyuml-captions-es");
+     private Properties configuration;
 
+    // The resource bundle this is based on.
+    private ResourceBundle resources ;
     /**
      * Private constructor to enforce Singleton.
      */
     private ApplicationResources() {
         int i = 1;
+        configuration = new Properties();
+
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
+
+        if (inputStream != null) {
+            try {
+                configuration.load(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new RuntimeException("property file config.properties not found in the classpath");
+        }
+
+
+        resources=ResourceBundle.getBundle("ar.fiuba.trabajoprofesional.mdauml.ui.tinyuml-captions", new Locale(configuration.getProperty("language")));
 
     }
 
