@@ -17,6 +17,8 @@
  */
 package ar.fiuba.trabajoprofesional.mdauml.model;
 
+import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
+
 /**
  * The possible element types.
  *
@@ -24,17 +26,17 @@ package ar.fiuba.trabajoprofesional.mdauml.model;
  * @version 1.0
  */
 public enum ElementType {
-    CLASS("Class"),
-    PACKAGE("Package"),
-    NOTE("Note"),
-    ACTOR("Actor"),
-    USE_CASE("Use Case"),
-    RELATION("Relation"),
-    STEREOTYPE("Stereotype"),
-    BOUNDARY("Boundary"),
-    CONTROL("Control"),
-    ENTITY("Entity"),
-    SYSTEM("System");
+    CLASS(Msg.get("elementType.class")),
+    PACKAGE(Msg.get("elementType.package")),
+    NOTE(Msg.get("elementType.note")),
+    ACTOR(Msg.get("elementType.actor")),
+    USE_CASE(Msg.get("elementType.usecase")),
+    RELATION(Msg.get("elementType.relation")),
+    STEREOTYPE(Msg.get("elementType.stereotype")),
+    BOUNDARY(Msg.get("elementType.boundary")),
+    CONTROL(Msg.get("elementType.control")),
+    ENTITY(Msg.get("elementType.entity")),
+    SYSTEM(Msg.get("elementType.system"));
 
     private String name;
 
