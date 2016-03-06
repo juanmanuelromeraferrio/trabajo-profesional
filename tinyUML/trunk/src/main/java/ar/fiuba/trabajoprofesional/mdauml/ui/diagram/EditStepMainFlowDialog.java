@@ -132,6 +132,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     btnOk.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isOk = true;
+        onSave();
         dispose();
       }
     });
@@ -167,60 +168,9 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
       @SuppressWarnings({"unchecked", "rawtypes"})
       public void actionPerformed(ActionEvent arg0) {
+        onSave();
 
-        StepType stepType = getStepType();
-        switch (stepType) {
-          case INCLUDE:
-          case REGULAR: {
-            entities.setModel(new DefaultListModel<String>());
 
-            List<String> entityModel = new ArrayList<String>();
-            String description = stepDescription.getText();
-            if(description.trim().isEmpty()) {
-              comboEntities.removeAllItems();
-              break;
-            }
-            String[] split = description.split(" ");
-
-            List<String> entitiesList = Arrays.asList(split);
-            List<String> entitiesSelected = new ArrayList<String>();
-
-            for (String entity : entitiesList) {
-
-              for (String character : charactersForbidden) {
-                entity = entity.replace(character, "");
-              }
-
-              if (entity.startsWith("@")) {
-                String entityFormatedSelected =
-                    entity.substring(1, 2).toUpperCase() + entity.substring(2);
-                if (!entitiesSelected.contains(entityFormatedSelected)) {
-                  entitiesSelected.add(entityFormatedSelected);
-                }
-              } else {
-                String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
-
-                if (!entityModel.contains(entityFormated)) {
-                  entityModel.add(entityFormated);
-                }
-              }
-            }
-
-            Collections.sort(entityModel);
-            Collections.sort(entitiesSelected);
-            comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
-
-            for (String entitySelect : entitiesSelected) {
-              ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
-            }
-            stepDescription.setEnabled(false);
-            break;
-          }
-          default: {
-            break;
-          }
-
-        }
       }
     });
 
@@ -567,6 +517,62 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
     generalPanel.setLayout(firstLayout);
     getContentPane().setLayout(groupLayout);
 
+  }
+
+  private void onSave() {
+
+    StepType stepType = getStepType();
+    switch (stepType) {
+      case INCLUDE:
+      case REGULAR: {
+        entities.setModel(new DefaultListModel<String>());
+
+        List<String> entityModel = new ArrayList<String>();
+        String description = stepDescription.getText();
+        if (description.trim().isEmpty()) {
+          comboEntities.removeAllItems();
+          break;
+        }
+        String[] split = description.split(" ");
+
+        List<String> entitiesList = Arrays.asList(split);
+        List<String> entitiesSelected = new ArrayList<String>();
+
+        for (String entity : entitiesList) {
+
+          for (String character : charactersForbidden) {
+            entity = entity.replace(character, "");
+          }
+
+          if (entity.startsWith("@")) {
+            String entityFormatedSelected =
+                    entity.substring(1, 2).toUpperCase() + entity.substring(2);
+            if (!entitiesSelected.contains(entityFormatedSelected)) {
+              entitiesSelected.add(entityFormatedSelected);
+            }
+          } else {
+            String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
+
+            if (!entityModel.contains(entityFormated)) {
+              entityModel.add(entityFormated);
+            }
+          }
+        }
+
+        Collections.sort(entityModel);
+        Collections.sort(entitiesSelected);
+        comboEntities.setModel(new DefaultComboBoxModel(entityModel.toArray()));
+
+        for (String entitySelect : entitiesSelected) {
+          ((DefaultListModel<String>) entities.getModel()).addElement(entitySelect);
+        }
+        stepDescription.setEnabled(false);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
   private void setDescription(UmlMainStep step) {

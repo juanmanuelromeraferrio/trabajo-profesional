@@ -224,7 +224,6 @@ public class StepCRUD {
 
     }
 
-
     private void removeFathers(UmlMainStep umlsMainStep) {
         if (umlsMainStep.isFatherType()) {
             fathers.remove(umlsMainStep);
@@ -235,8 +234,6 @@ public class StepCRUD {
         }
 
     }
-
-
 
     public void read() {
         java.util.List<UmlStep> steps = flow.getFlow();
