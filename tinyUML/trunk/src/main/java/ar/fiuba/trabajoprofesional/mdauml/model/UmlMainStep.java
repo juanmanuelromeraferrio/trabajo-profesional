@@ -11,7 +11,7 @@ public class UmlMainStep extends UmlStep {
 
   private Set<String> entities;
   private String actor;
-  private StepType type;
+  private StepType type=StepType.REGULAR;
 
   protected UmlMainStep(String description) {
     super(description);
@@ -61,6 +61,8 @@ public class UmlMainStep extends UmlStep {
 
   @Override
   public String showDescription() {
+    if(isRoot())
+      return super.getDescription();
 
     switch (type) {
       case IF:

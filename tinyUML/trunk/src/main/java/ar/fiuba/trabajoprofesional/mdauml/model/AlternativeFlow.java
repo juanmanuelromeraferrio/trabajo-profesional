@@ -55,10 +55,7 @@ public class AlternativeFlow extends Flow {
     @Override
     public Object clone() {
         AlternativeFlow cloned = new AlternativeFlow();
-        cloned.flow = new ArrayList<>(this.flow.size());
-        for (UmlStep item : this.flow) {
-            cloned.flow.add(item.clone());
-        }
+        cloned.root = root.clone();
         if(entryStep!=null)
             cloned.entryStep= entryStep.clone();
         cloned.name = name;

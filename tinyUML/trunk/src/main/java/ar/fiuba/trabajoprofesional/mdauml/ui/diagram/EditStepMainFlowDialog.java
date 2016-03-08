@@ -30,10 +30,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.StepType;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlActor;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlMainStep;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 public class EditStepMainFlowDialog extends javax.swing.JDialog {
@@ -51,7 +48,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
   private JComboBox<UmlUseCase> includeCombo;
   private JTextPane stepDescription;
   private UmlMainStep step;
-  private UmlMainStep father;
+  private UmlStep father;
   private UmlUseCase umlUseCase;
 
   private JComboBox<String> comboActorsStep;
@@ -75,7 +72,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
    * @param parent the parent frame
    * @wbp.parser.constructor
    */
-  public EditStepMainFlowDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlMainStep father) {
+  public EditStepMainFlowDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlStep father) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
     this.umlUseCase = umlUseCase;
@@ -83,7 +80,7 @@ public class EditStepMainFlowDialog extends javax.swing.JDialog {
 
   }
 
-  public EditStepMainFlowDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlMainStep father,
+  public EditStepMainFlowDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlStep father,
       UmlMainStep step) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;

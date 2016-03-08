@@ -58,7 +58,7 @@ public class UmlStep {
   }
 
   public String getCompleteIndex() {
-    if (this.father != null) {
+    if (!father.isRoot()) {
       return father.getCompleteIndex() + "." + index.toString();
     } else {
       return index.toString();
@@ -148,13 +148,14 @@ public class UmlStep {
         return ANY;
       if(this.equals(UmlStep.UNDEFINED))
         return UNDEFINED;
+
       return (UmlStep) super.clone();
     } catch (CloneNotSupportedException e) {
       return ANY;
     }
   }
 
-  public UmlStep findByIndex(int index, int count) {
+  public UmlStep find(int index, int count) {
     if (index == count) {
       return this;
     }
@@ -162,21 +163,21 @@ public class UmlStep {
     count++;
 
     for (UmlStep step : children) {
-      int totalSize = count + step.getTotalSize();
+      int totalSize = count + step.getSize();
       if (totalSize <= index) {
         count = totalSize;
         continue;
       }
-      return step.findByIndex(index, count);
+      return step.find(index, count);
     }
 
     return null;
   }
 
-  public int getTotalSize() {
+  public int getSize() {
     int size = 1;
     for (UmlStep step : children) {
-      size += step.getTotalSize();
+      size += step.getSize();
     }
 
     return size;
@@ -188,4 +189,7 @@ public class UmlStep {
   }
 
 
+  public boolean isRoot() {
+    return father==null;
+  }
 }

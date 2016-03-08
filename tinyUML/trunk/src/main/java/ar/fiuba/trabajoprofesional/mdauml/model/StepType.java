@@ -27,7 +27,7 @@ public enum StepType {
     return Msg.get(value);
   }
 
-  public static StepType[] getValidTypesFor(UmlMainStep father, boolean hasChildren, boolean hasInlcude) {
+  public static StepType[] getValidTypesFor(UmlStep father, boolean hasChildren, boolean hasInlcude) {
 
     List<StepType> validStepTypes = new ArrayList<>();
     validStepTypes.add(StepType.REGULAR);
@@ -38,10 +38,10 @@ public enum StepType {
     if (hasInlcude)
       validStepTypes.add(StepType.INCLUDE);
 
-    if (!hasChildren)
+    if (!hasChildren||father.isRoot())
       return validStepTypes.toArray(new StepType[(validStepTypes.size())]);
 
-    switch (father.getType()) {
+    switch (((UmlMainStep)father).getType()) {
       case ELSE:
         validStepTypes.add(StepType.ENDIF);
         break;

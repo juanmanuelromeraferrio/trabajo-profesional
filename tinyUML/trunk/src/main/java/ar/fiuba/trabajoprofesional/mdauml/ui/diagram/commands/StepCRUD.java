@@ -14,7 +14,7 @@ public class StepCRUD {
 
     private UmlUseCase useCase;
     private Flow flow;
-    private Stack<UmlMainStep> fathers;
+    private Stack<UmlStep> lastOpenedStep;
     private Window parent;
     private JList<String> stepList;
     private DefaultListModel<String> stepsModel;
@@ -23,7 +23,8 @@ public class StepCRUD {
     public StepCRUD(UmlUseCase usecase, Flow flow, Window window, JList<String> stepList) {
         this.useCase = usecase;
         this.flow = flow;
-        this.fathers = new Stack<>();
+        this.lastOpenedStep = new Stack<>();
+        lastOpenedStep.push(flow.getRoot());
         this.parent = window;
         this.stepList = stepList;
         this.stepsModel = (DefaultListModel<String>) stepList.getModel();
@@ -31,7 +32,7 @@ public class StepCRUD {
 
     public void add( ){
 
-        UmlMainStep father = fathers.isEmpty()?null:fathers.peek();
+        UmlStep father = lastOpenedStep.peek();
         
         EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father);
         dialog.setLocationRelativeTo(parent);
@@ -41,6 +42,7 @@ public class StepCRUD {
 
             StepType stepType = dialog.getStepType();
             String stepDescription = dialog.getDescription();
+
             UmlStep step = null;
 
             switch (stepType) {
@@ -68,14 +70,14 @@ public class StepCRUD {
                 }
                 case ELSE: {
                     step = new UmlMainStep(stepDescription, stepType);
-                    fathers.pop();
+                    lastOpenedStep.pop();
                     addNewStep(step);
                     break;
                 }
                 case ENDIF:
                 case ENDWHILE:
                 case ENDFOR: {
-                    fathers.pop();
+                    lastOpenedStep.pop();
                     break;
                 }
                 default:
@@ -110,71 +112,27 @@ public class StepCRUD {
         if (!dialog.isOk())
             return;
 
-        String stepDescription = dialog.getDescription();
-        StepType stepType = dialog.getStepType();
+        step.setDescription( dialog.getDescription());
+        step.setActor( dialog.getActor());
+        step.setEntities( dialog.getEntities());
 
-        int indexReal = step.getIndex();
-        int indexFlow = flow.getFlowIndex(step);
+        if(step instanceof IncludeStep)
+            ((IncludeStep) step).setIncluded(dialog.getIncluded());
 
-        if (father != null) {
-            selectedStep = selectedStep - flow.getFlow().indexOf(father) - 1;
-        }
-
-        // Borro el Step Original
-        flow.removeStep(step);
-
-        // Creo uno nuevo
-        UmlStep newStep;
-        if (stepType.equals(StepType.REGULAR)) {
-            String actor = dialog.getActor();
-            Set<String> entities = dialog.getEntities();
-            newStep = new UmlMainStep(stepDescription, actor, stepType, entities);
-        } else if (stepType.equals(StepType.INCLUDE)) {
-            String actor = dialog.getActor();
-            Set<String> entities = dialog.getEntities();
-            newStep = new IncludeStep(stepDescription, actor, entities);
-            ((IncludeStep) newStep).setIncluded(dialog.getIncluded());
-        } else {
-            newStep = new UmlMainStep(stepDescription, stepType);
-        }
-
-        if (father != null) {
-            flow.addChildrenStep(father, newStep, selectedStep);
-        } else {
-            flow.addStep(newStep, indexReal, indexFlow);
-        }
-
-        // Add Children
-        for (UmlStep children : step.getChildren()) {
-            flow.addChildrenStep(newStep, children);
-        }
-
-        UmlMainStep umlMainStep = (UmlMainStep) newStep;
-        if (umlMainStep.isFatherType()) {
-            int index = fathers.indexOf(step);
-            if (index != -1) {
-                fathers.remove(index);
-                fathers.insertElementAt(umlMainStep, index);
-            }
-        }
         read();
 
     }
     private void addNewStep(UmlStep step) {
-        UmlMainStep father = fathers.isEmpty()?null:fathers.peek();
-        if (father != null) {
-            flow.addChildrenStep(father, step);
-        } else {
-            flow.addStep(step);
-        }
+        UmlStep father = lastOpenedStep.peek();
+
+        father.addChild(step);
 
         UmlMainStep umlMainStep = (UmlMainStep) step;
         if (umlMainStep.isFatherType()) {
-            fathers.push(umlMainStep);
+            lastOpenedStep.push(umlMainStep);
         }
 
-        String informationStep = step.showDescription();
-        stepsModel.addElement(informationStep);
+        stepsModel.addElement(step.showDescription());
     }
 
 
@@ -192,7 +150,7 @@ public class StepCRUD {
         UmlStep step = flow.getStep(selectedStep);
 
         UmlStep father = step.getFather();
-        if (father != null && father.getChildren().size() == 1) {
+        if (father.getChildren().size() == 1 && father!=lastOpenedStep.peek()) {
 
             String msg = null;
             switch (((UmlMainStep) father).getType()) {
@@ -216,35 +174,28 @@ public class StepCRUD {
             return;
         }
 
-
-
         flow.removeStep(step);
-        removeFathers((UmlMainStep)step);
+        removeFromOpenedSteps((UmlMainStep)step);
         read();
 
     }
 
-    private void removeFathers(UmlMainStep umlsMainStep) {
-        if (umlsMainStep.isFatherType()) {
-            fathers.remove(umlsMainStep);
+    private void removeFromOpenedSteps(UmlMainStep step) {
+        if (step.isFatherType()) {
+            lastOpenedStep.remove(step);
         }
 
-        for (UmlStep umlStep : umlsMainStep.getChildren()) {
-            removeFathers((UmlMainStep) umlStep);
+        for (UmlStep child : step.getChildren()) {
+            removeFromOpenedSteps((UmlMainStep) child);
         }
 
     }
 
     public void read() {
-        java.util.List<UmlStep> steps = flow.getFlow();
         stepsModel.clear();
-        for (UmlStep step : steps) {
+        for (String element : flow.getDescription())
+            stepsModel.addElement(element);
 
-            java.util.List<String> completeDescription = step.getCompleteDescription();
-            for (String element : completeDescription) {
-                stepsModel.addElement(element);
-            }
-        }
     }
 }
 
