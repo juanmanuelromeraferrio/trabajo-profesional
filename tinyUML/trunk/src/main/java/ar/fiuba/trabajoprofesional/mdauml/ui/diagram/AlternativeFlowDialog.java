@@ -1,9 +1,6 @@
 package ar.fiuba.trabajoprofesional.mdauml.ui.diagram;
 
-import ar.fiuba.trabajoprofesional.mdauml.model.AlternativeFlow;
-import ar.fiuba.trabajoprofesional.mdauml.model.Flow;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlStep;
-import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
+import ar.fiuba.trabajoprofesional.mdauml.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
 import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands.StepCRUD;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
@@ -14,6 +11,8 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 public class AlternativeFlowDialog extends JDialog {
 
@@ -50,7 +49,7 @@ public class AlternativeFlowDialog extends JDialog {
     private JLabel entryLabel;
     private boolean ok = false;
 
-    public AlternativeFlowDialog(Window window, AlternativeFlow alternativeFlow, UmlUseCase usecase, Flow mainFlow) {
+    public AlternativeFlowDialog(Window window, final AlternativeFlow alternativeFlow, UmlUseCase usecase, Flow mainFlow) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -107,7 +106,23 @@ public class AlternativeFlowDialog extends JDialog {
         buttonCancel.setText(Msg.get("stdcaption.cancel"));
 
         buttonOK.addActionListener(new ActionListener() {
+            @SuppressWarnings("Duplicates")
             public void actionPerformed(ActionEvent e) {
+                UmlStep lastStep;
+                List<UmlStep> allSteps = alternativeFlow.getAllSteps();
+                if (!allSteps.isEmpty()) {
+                    lastStep = allSteps.get(allSteps.size() - 1);
+                    if (lastStep instanceof UmlMainStep)
+                        switch (((UmlMainStep) lastStep).getType()) {
+                            case IF:
+                            case ELSE:
+                            case WHILE:
+                            case FOR:
+                                JOptionPane.showMessageDialog(AppFrame.get().getShellComponent(), Msg.get("error.editusecase.orphanstep.message"),
+                                        Msg.get("error.editusecase.orphanstep.title"), JOptionPane.ERROR_MESSAGE);
+                                return;
+                        }
+                }
                 onOK();
             }
         });

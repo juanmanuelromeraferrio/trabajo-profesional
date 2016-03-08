@@ -2,7 +2,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui.diagram.commands;
 
 
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
-import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditStepMainFlowDialog;
+import ar.fiuba.trabajoprofesional.mdauml.ui.diagram.EditStepDialog;
 import ar.fiuba.trabajoprofesional.mdauml.util.Msg;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public class StepCRUD {
 
         UmlStep father = lastOpenedStep.peek();
         
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father);
+        EditStepDialog dialog = new EditStepDialog(parent, useCase, father);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
@@ -104,7 +104,7 @@ public class StepCRUD {
         UmlMainStep step = (UmlMainStep) flow.getStep(selectedStep);
         UmlMainStep father = (UmlMainStep) step.getFather();
 
-        EditStepMainFlowDialog dialog = new EditStepMainFlowDialog(parent, useCase, father, step);
+        EditStepDialog dialog = new EditStepDialog(parent, useCase, father, step);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
