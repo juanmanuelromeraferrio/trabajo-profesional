@@ -321,7 +321,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void onAddStep() {
-    stepCRUD.add();
+    stepCRUD.add(this.hasAMainActor());
     updateEntityPanel(false);
   }
 
@@ -332,16 +332,19 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
   }
 
   private void onEditStep() {
-    stepCRUD.edit();
+    stepCRUD.edit(this.hasAMainActor());
     updateEntityPanel(false);
 
+  }
+  private boolean hasAMainActor(){
+    return this.mainActors.getModel().getSize()!=0;
   }
 
   private void onAddAlternativeFlow() {
 
     AlternativeFlow newAlternativeFlow = new AlternativeFlow();
     AlternativeFlowDialog dialog =
-            new AlternativeFlowDialog(parent,newAlternativeFlow , (UmlUseCase) useCaseElement.getModelElement(),mainFlow);
+            new AlternativeFlowDialog(parent,newAlternativeFlow , (UmlUseCase) useCaseElement.getModelElement(),mainFlow,this.hasAMainActor());
     dialog.setLocationRelativeTo(parent);
     dialog.setVisible(true);
 
@@ -366,7 +369,7 @@ public class EditUseCaseDialog extends javax.swing.JDialog {
     AlternativeFlow selectedFlow = alternativeFlows.getModel().getElementAt(selectedIndex);
 
     AlternativeFlowDialog dialog =
-            new AlternativeFlowDialog(parent,selectedFlow , (UmlUseCase) useCaseElement.getModelElement(),mainFlow);
+            new AlternativeFlowDialog(parent,selectedFlow , (UmlUseCase) useCaseElement.getModelElement(),mainFlow,this.hasAMainActor());
     dialog.setLocationRelativeTo(parent);
     dialog.setVisible(true);
     if (dialog.isOk()) {

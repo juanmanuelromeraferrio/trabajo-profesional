@@ -17,6 +17,7 @@ import java.util.List;
 public class AlternativeFlowDialog extends JDialog {
 
     private final UmlStep anyStep;
+    private final boolean hasAMainActor;
     private StepCRUD stepCrud;
     private UmlUseCase usecase;
     private DefaultListModel<UmlStep> stepsListModel;
@@ -49,10 +50,12 @@ public class AlternativeFlowDialog extends JDialog {
     private JLabel entryLabel;
     private boolean ok = false;
 
-    public AlternativeFlowDialog(Window window, final AlternativeFlow alternativeFlow, UmlUseCase usecase, Flow mainFlow) {
+    public AlternativeFlowDialog(Window window, final AlternativeFlow alternativeFlow, UmlUseCase usecase, Flow mainFlow, boolean hasAMainActor) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+
+        this.hasAMainActor = hasAMainActor;
 
 
         this.alternativeFlow = alternativeFlow;
@@ -175,11 +178,11 @@ public class AlternativeFlowDialog extends JDialog {
     }
 
     private void onEditStep() {
-        stepCrud.edit();
+        stepCrud.edit(hasAMainActor);
     }
 
     private void onAddStep() {
-        stepCrud.add();
+        stepCrud.add(hasAMainActor);
     }
 
     private void onOK() {

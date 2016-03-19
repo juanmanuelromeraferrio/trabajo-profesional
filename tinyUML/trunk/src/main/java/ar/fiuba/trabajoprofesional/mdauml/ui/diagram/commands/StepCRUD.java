@@ -30,11 +30,11 @@ public class StepCRUD {
         this.stepsModel = (DefaultListModel<String>) stepList.getModel();
     }
 
-    public void add( ){
+    public void add( boolean hasAMainActor){
 
         UmlStep father = lastOpenedStep.peek();
         
-        EditStepDialog dialog = new EditStepDialog(parent, useCase, father);
+        EditStepDialog dialog = new EditStepDialog(parent, useCase, father,hasAMainActor);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
@@ -90,7 +90,7 @@ public class StepCRUD {
 
 
     @SuppressWarnings("Duplicates")
-    public void edit() {
+    public void edit(boolean hasAMainActor) {
 
         if (stepsModel.isEmpty())
             return;
@@ -104,7 +104,7 @@ public class StepCRUD {
         UmlMainStep step = (UmlMainStep) flow.getStep(selectedStep);
         UmlMainStep father = (UmlMainStep) step.getFather();
 
-        EditStepDialog dialog = new EditStepDialog(parent, useCase, father, step);
+        EditStepDialog dialog = new EditStepDialog(parent, useCase, father, step,hasAMainActor);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 

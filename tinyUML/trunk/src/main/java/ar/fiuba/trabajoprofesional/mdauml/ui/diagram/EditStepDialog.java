@@ -40,6 +40,7 @@ public class EditStepDialog extends javax.swing.JDialog {
    * 
    */
   private static final long serialVersionUID = -7124053842249491277L;
+  private final boolean hasAMainActor;
 
   private Boolean isOk = Boolean.FALSE;
   private JList<String> entities;
@@ -72,20 +73,22 @@ public class EditStepDialog extends javax.swing.JDialog {
    * @param parent the parent frame
    * @wbp.parser.constructor
    */
-  public EditStepDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlStep father) {
+  public EditStepDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlStep father, boolean hasAMainActor) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
     this.umlUseCase = umlUseCase;
+    this.hasAMainActor = hasAMainActor;
     initComponents();
 
   }
 
   public EditStepDialog(java.awt.Window parent, UmlUseCase umlUseCase, UmlStep father,
-                        UmlMainStep step) {
+                        UmlMainStep step, boolean hasAMainActor) {
     super(parent, ModalityType.APPLICATION_MODAL);
     this.father = father;
     this.step = step;
     this.umlUseCase = umlUseCase;
+    this.hasAMainActor = hasAMainActor;
     this.isEditMode = Boolean.TRUE;
     initComponents();
     myPostInit();
@@ -295,7 +298,9 @@ public class EditStepDialog extends javax.swing.JDialog {
       actorItems.add(umlActor.getName());
     }
     actorItems.add(Msg.get("editstepmainflow.system.actor"));
-    if(umlActors.isEmpty()||this.step!=null && this.step.getActor().equals(Msg.get("editstepmainflow.default.actor")))
+    if(!hasAMainActor||
+            (this.step!=null && this.step.getActor().equals(Msg.get("editstepmainflow.default.actor")))
+            )
       actorItems.add(Msg.get("editstepmainflow.default.actor"));
 
 
@@ -536,18 +541,26 @@ public class EditStepDialog extends javax.swing.JDialog {
         List<String> entitiesSelected = new ArrayList<String>();
 
         for (String entity : entitiesList) {
+          entity = entity.trim();
 
           for (String character : charactersForbidden) {
             entity = entity.replace(character, "");
           }
 
+
           if (entity.startsWith("@")) {
+
+            if(entity.length() < 3)
+              continue;
             String entityFormatedSelected =
                     entity.substring(1, 2).toUpperCase() + entity.substring(2);
             if (!entitiesSelected.contains(entityFormatedSelected)) {
               entitiesSelected.add(entityFormatedSelected);
             }
           } else {
+
+            if(entity.length() < 2)
+              continue;
             String entityFormated = entity.substring(0, 1).toUpperCase() + entity.substring(1);
 
             if (!entityModel.contains(entityFormated)) {
@@ -616,7 +629,8 @@ public class EditStepDialog extends javax.swing.JDialog {
         List<String> entityListFinal = new ArrayList<String>();
         for (String entity : entitiesList) {
 
-          if (entity.startsWith("@")) {
+          entity = entity.trim();
+          if (entity.startsWith("@")|| entity.length() < 2) {
             continue;
           }
 
