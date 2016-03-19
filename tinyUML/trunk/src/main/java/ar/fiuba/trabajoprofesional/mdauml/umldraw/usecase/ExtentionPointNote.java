@@ -114,8 +114,8 @@ public class ExtentionPointNote extends NoteElement{
         String condition = ((ExtendRelation)extend.getModelElement()).getCondition();
 
         if(condition.isEmpty())
-            return Msg.get("ExtentionPointNote.label.ep") +" "+ extentionPoint;
-        return Msg.get("ExtentionPointNote.label.ep") +" "+ extentionPoint +"\n"+
+            return Msg.get("ExtentionPointNote.label.ep") +" "+ extentionPoint.toString().trim();
+        return Msg.get("ExtentionPointNote.label.ep") +" "+ extentionPoint.toString().trim() +"\n"+
                Msg.get("ExtentionPointNote.label.condition")+" "+condition;
 
 
