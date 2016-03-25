@@ -25,8 +25,16 @@ public class ValidatorImpl implements Validator{
     private void validate(Set<UmlUseCase> useCases) throws ValidateException, ConversionCanceledException {
 
         for(UmlUseCase useCase : useCases){
-            if(useCase.getMainActors().isEmpty())
-                throw new ValidateException(Msg.get("error.validator.useCaseNoActor").replaceAll("@USECASE",useCase.getName()));
+            if(useCase.getMainActors().isEmpty() && !useCase.isExtending()){
+                boolean isIncluded =false;
+                for(UmlUseCase including : useCases)
+                    if (including.getIncluded().contains(useCase)) {
+                        isIncluded = true;
+                        break;
+                    }
+                if(!isIncluded)
+                    throw new ValidateException(Msg.get("error.validator.useCaseNoActor").replaceAll("@USECASE", useCase.getName()));
+            }
             if(useCase.getMainEntity()==null || useCase.getMainEntity().isEmpty())
                 openMainEntityDialog(useCase);
         }

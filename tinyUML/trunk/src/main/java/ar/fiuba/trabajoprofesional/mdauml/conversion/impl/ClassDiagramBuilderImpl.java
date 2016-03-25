@@ -33,7 +33,7 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
     private static final double DIAGRAM_V_MARGIN = 20;
 
     @Override
-    public void buildClassDiagram(Map<Class<? extends UmlClass>,List<UmlClass>> classModel,String diagramName, ConversionModel conversionModel) {
+    public void buildClassDiagram(Map<Class<? extends UmlClass>, List<UmlClass>> classModel, String diagramName, ConversionModel conversionModel, ConverterImpl.ConversionTask conversionTask) {
         ApplicationState appState = AppFrame.get().getAppState();
         appState.openNewClassEditor();
         ClassDiagramEditor diagramEditor = (ClassDiagramEditor) appState.getCurrentEditor();
@@ -43,33 +43,43 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
         List<ClassElement> controls = toElements(classModel,conversionModel.getControls(),diagramEditor);
         List<ClassElement> entities = toElements(classModel,conversionModel.getEntities(),diagramEditor);
         List<ClassElement> boundaries = toElements(classModel,conversionModel.getBoundaries(),diagramEditor);
-        Map<ClassElement,List<ClassElement>> controlEntities = new HashMap<>();
-        Map<ClassElement,List<ClassElement>> controlBoundaries = new HashMap<>();
-        initControlMaps(controlBoundaries,controlEntities,controls,entities,boundaries,conversionModel.getRelations());
-        Map<ClassElement,Point2D> positions = calculatePositions(controlBoundaries,controls,controlEntities);
+        Map<ClassElement,List<ClassElement>> controlEntitiesMap = new HashMap<>();
+        Map<ClassElement,List<ClassElement>> controlBoundariesMap = new HashMap<>();
+        Map<ClassElement,List<ClassElement>> controlControlsMap = new HashMap<>();
+
+        initControlMaps(controlBoundariesMap,controlEntitiesMap,controlControlsMap,controls,entities,boundaries,conversionModel.getRelations());
+        controls = sortControls(controls,conversionModel.getRelations(),controlControlsMap);
+
+        conversionTask.step1();
+
+        Map<ClassElement,Point2D> positions = calculatePositions(controlBoundariesMap,controlControlsMap,controlEntitiesMap,controls);
+
+        conversionTask.step2();
+
         for(ClassElement element : positions.keySet()){
             Point2D pos = positions.get(element);
             ElementInserter.insert(element,diagramEditor,pos);
         }
         for(SimpleRelation relation:conversionModel.getRelations()){
-            SimpleClass noControl;
-            SimpleClass aControl;
-            if (relation.getClass1() instanceof Control) {
-                noControl = relation.getClass2();
-                aControl = relation.getClass1();
-            }
-            else {
-                noControl = relation.getClass1();
-                aControl  = relation.getClass2();
-            }
-            UmlNode source = findElement(controls,aControl.getName());
-            ClassElement elem;
-            if(noControl instanceof Boundary)
-                elem = findElement(boundaries,noControl.getName());
+            UmlNode source;
+            if (relation.getClass1() instanceof Control)
+                source = findElement(controls,relation.getClass1().getName());
+            else if (relation.getClass1() instanceof Boundary)
+                source = findElement(boundaries,relation.getClass1().getName());
             else
-                elem = findElement(entities,noControl.getName());
+                source = findElement(entities,relation.getClass1().getName());
+
+            ClassElement elem;
+            if (relation.getClass2() instanceof Control)
+                elem = findElement(controls,relation.getClass2().getName());
+            else if (relation.getClass1() instanceof Boundary)
+                elem = findElement(boundaries,relation.getClass2().getName());
+            else
+                elem = findElement(entities,relation.getClass2().getName());
+
             try {
                 ElementInserter.insertConnection(source,elem,diagramEditor,RelationType.ASSOCIATION,new Point2D.Double(source.getAbsCenterX(),source.getAbsCenterY()),new Point2D.Double(elem.getAbsCenterX(),elem.getAbsCenterY()));
+                conversionTask.step3(conversionModel.getRelations().size());
             } catch (AddConnectionException e) {
                     e.printStackTrace();
             }
@@ -77,34 +87,102 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
 
     }
 
-    private void initControlMaps(Map<ClassElement, List<ClassElement>> controlBoundaries,
-                                 Map<ClassElement, List<ClassElement>> controlEntities,
+    private List<ClassElement> sortControls(List<ClassElement> controls, final Set<SimpleRelation> relations, Map<ClassElement, List<ClassElement>> controlControlsMap) {
+        Collections.sort(controls, new Comparator<ClassElement>() {
+            @Override
+            public int compare(ClassElement c1, ClassElement c2) {
+                int c1Relations = 0;
+                int c2Relations = 0;
+                for(SimpleRelation relation: relations){
+                    if(relation.isControlControl()){
+                        if(c1.getLabelText().equals(relation.getClass1().getName()) ||
+                                c1.getLabelText().equals(relation.getClass2().getName()))
+                            c1Relations++;
+                        if(c2.getLabelText().equals(relation.getClass1().getName()) ||
+                                c2.getLabelText().equals(relation.getClass2().getName()))
+                            c2Relations++;
+                    }
+                }
+
+                return c2Relations-c1Relations;
+            }
+        });
+        Map<ClassElement, List<ClassElement>> controlControlsTree = new HashMap<>();
+        for(ClassElement control :controls) {
+            controlControlsTree.put(control,new ArrayList<ClassElement>());
+            for (ClassElement relatedControl : controlControlsMap.get(control)) {
+                if (controlControlsTree.containsKey(relatedControl) &&
+                        controlControlsTree.get(relatedControl).contains(control))
+                    continue;
+                controlControlsTree.get(control).add(relatedControl);
+            }
+        }
+        List<ClassElement> sortedControls = new ArrayList<>();
+        if(controls.isEmpty())
+            return sortedControls;
+        Stack<ClassElement> current = new Stack<>();
+        Stack<Integer> currentIndex = new Stack<>();
+        currentIndex.push(0);
+        int controlIndex =0;
+        while(sortedControls.size()!=controls.size()){
+            if(current.isEmpty()) {
+                while(sortedControls.contains(controls.get(controlIndex)))
+                    controlIndex++;
+                current.push(controls.get(controlIndex));
+            }
+            if(currentIndex.peek()==1 || controlControlsTree.get(current.peek()).isEmpty())
+                sortedControls.add(current.peek());
+            if(controlControlsTree.get(current.peek()).size()==currentIndex.peek()) {
+                current.pop();
+                currentIndex.pop();
+                if(currentIndex.isEmpty())
+                    currentIndex.push(0);
+                else
+                    currentIndex.push(currentIndex.pop()+1);
+            }else{
+
+                current.push(controlControlsTree.get(current.peek()).get(currentIndex.peek()));
+                currentIndex.push(0);
+            }
+        }
+
+        return sortedControls;
+    }
+
+    private void initControlMaps(Map<ClassElement, List<ClassElement>> controlBoundariesMap,
+                                 Map<ClassElement, List<ClassElement>> controlEntitiesMap,
+                                 Map<ClassElement, List<ClassElement>> controlControlsMap,
                                  List<ClassElement> controls,
                                  List<ClassElement> entities,
                                  List<ClassElement> boundaries,
-                                 Set<SimpleRelation> relations) {
+                                 final Set<SimpleRelation> relations) {
+
+
+
         for(ClassElement control:controls){
-            controlBoundaries.put(control,new ArrayList<ClassElement>());
-            List<ClassElement> boundaryList = controlBoundaries.get(control);
-            controlEntities.put(control,new ArrayList<ClassElement>());
-            List<ClassElement> entityList = controlEntities.get(control);
+            controlBoundariesMap.put(control,new ArrayList<ClassElement>());
+            List<ClassElement> boundaryList = controlBoundariesMap.get(control);
+            controlEntitiesMap.put(control,new ArrayList<ClassElement>());
+            List<ClassElement> entityList = controlEntitiesMap.get(control);
+            controlControlsMap.put(control,new ArrayList<ClassElement>());
+            List<ClassElement> controlList = controlControlsMap.get(control);
             for(SimpleRelation relation : relations) {
-                SimpleClass noControl;
-                SimpleClass aControl;
-                if (relation.getClass1() instanceof Control) {
-                    noControl = relation.getClass2();
-                    aControl = relation.getClass1();
-                }
-                else {
-                    noControl = relation.getClass1();
-                    aControl  = relation.getClass2();
-                }
-                if(! control.getLabelText().equals(aControl.getName()))
+                if(!control.getLabelText().equals(relation.getClass1().getName()) &&
+                        !control.getLabelText().equals(relation.getClass2().getName())) {
                     continue;
-                if (noControl instanceof Boundary)
-                    boundaryList.add(findElement(boundaries, noControl.getName()));
+                }SimpleClass theRelated;
+                if(control.getLabelText().equals(relation.getClass1().getName()) ){
+                    theRelated=relation.getClass2();
+                }else{
+                    theRelated=relation.getClass1();
+                }
+
+                if (theRelated instanceof Boundary)
+                    boundaryList.add(findElement(boundaries, theRelated.getName()));
+                else if(theRelated instanceof Entity)
+                    entityList.add(findElement(entities, theRelated.getName()));
                 else
-                    entityList.add(findElement(entities, noControl.getName()));
+                    controlList.add(findElement(controls,theRelated.getName()));
             }
         }
 
@@ -152,13 +230,16 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
         return elements;
     }
 
-    private Map<ClassElement,Point2D> calculatePositions(Map<ClassElement,List<ClassElement>> boundaryMap, List<ClassElement> controls, Map<ClassElement,List<ClassElement>> entityMap){
+    private Map<ClassElement,Point2D> calculatePositions(Map<ClassElement,List<ClassElement>> boundaryMap,
+                                                         Map<ClassElement,List<ClassElement>> controlMap,
+                                                         Map<ClassElement,List<ClassElement>> entityMap,
+                                                         List<ClassElement> controls){
 
         Map<ClassElement,Point2D> positions = new HashMap<>();
 
         Point2D boundaryOffset = new Point2D.Double(DIAGRAM_H_MARGIN,DIAGRAM_V_MARGIN);
-        Point2D controlOffset = new Point2D.Double(DIAGRAM_H_MARGIN,DIAGRAM_V_MARGIN);
-        Point2D entityOffset = new Point2D.Double(DIAGRAM_H_MARGIN,DIAGRAM_V_MARGIN);
+        Point2D controlOffset;
+        Point2D entityOffset;
 
         Set<ClassElement> allEntities = new HashSet<>();
         Set<ClassElement> allBoundaries = new HashSet<>();
@@ -169,20 +250,23 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
             allEntities.addAll(entities);
         }
         Dimension2D allBoundaryDimension = calculateDimension(allBoundaries);
-        controlOffset.setLocation(controlOffset.getX()+allBoundaryDimension.getWidth()+H_MARGIN,controlOffset.getY());
+        controlOffset = new Point2D.Double(boundaryOffset.getX()+allBoundaryDimension.getWidth()+H_MARGIN,DIAGRAM_V_MARGIN);
         Dimension2D allControlDimension = calculateDimension(controls);
-        entityOffset.setLocation(controlOffset.getX()+allControlDimension.getWidth()+H_MARGIN,entityOffset.getY());
+        entityOffset = new Point2D.Double (controlOffset.getX()+allControlDimension.getWidth() + H_MARGIN,DIAGRAM_V_MARGIN);
         Dimension2D allEntitiesDimension = calculateDimension(allEntities);
         for(ClassElement control : controls){
-            List<ClassElement> boundaries = boundaryMap.get(control);
-            List<ClassElement> entities = entityMap.get(control);
+            List<ClassElement> boundariesRelated = boundaryMap.get(control);
+            List<ClassElement> entitiesRelated = entityMap.get(control);
+            List<ClassElement> controlsRelated = controlMap.get(control);
+            //Remove the elements that have already been positioned
             for(ClassElement element : positions.keySet()){
-                boundaries.remove(element);
-                entities.remove(element);
+                boundariesRelated.remove(element);
+                entitiesRelated.remove(element);
+                controlsRelated.remove(element);
             }
             Dimension2D controlDimension = control.getSize();
-            Dimension2D boundariesDimension = calculateDimension(boundaries);
-            Dimension2D entitiesDimension = calculateDimension(entities);
+            Dimension2D boundariesDimension = calculateDimension(boundariesRelated);
+            Dimension2D entitiesDimension = calculateDimension(entitiesRelated);
             Dimension2D groupDimension = new DoubleDimension(0,0);
             double maxHeight = controlDimension.getHeight();
             if(boundariesDimension.getHeight() > maxHeight)
@@ -207,7 +291,7 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
             controlOffset.setLocation(controlOffset.getX(),controlOffset.getY()+controlDimension.getHeight()+controlVPadding+V_MARGIN);
 
             ////// Setting boundaries position
-            for(ClassElement boundary: boundaries){
+            for(ClassElement boundary: boundariesRelated){
                 Point2D boundaryPos = (Point2D) boundaryOffset.clone();
                 double boundaryHPadding =  (boundary.getSize().getWidth() - allBoundaryDimension.getWidth())/2.0;
                 boundaryPos.setLocation(boundaryPos.getX()+boundaryHPadding,boundaryPos.getY());
@@ -215,13 +299,13 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
                 boundaryOffset.setLocation(boundaryOffset.getX(),
                         boundaryOffset.getY()+boundary.getSize().getHeight()+V_MARGIN);
             }
-            if(!boundaries.isEmpty())
+            if(!boundariesRelated.isEmpty())
                 boundaryOffset.setLocation(boundaryOffset.getX(),boundaryOffset.getY() - V_MARGIN);
 
             boundaryOffset.setLocation(boundaryOffset.getX(),boundaryOffset.getY()+boundaryVPadding+V_MARGIN);
 
             ////// Setting entities position
-            for(ClassElement entity: entities){
+            for(ClassElement entity: entitiesRelated){
                 Point2D entityPos = (Point2D) entityOffset.clone();
                 double entityHPadding =  (entity.getSize().getWidth() - allEntitiesDimension.getWidth())/2.0;
                 entityPos.setLocation(entityPos.getX()+entityHPadding,entityPos.getY());
@@ -229,7 +313,7 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
                 entityOffset.setLocation(entityOffset.getX(),
                         entityOffset.getY()+entity.getSize().getHeight()+V_MARGIN);
             }
-            if(!entities.isEmpty())
+            if(!entitiesRelated.isEmpty())
                 entityOffset.setLocation(entityOffset.getX(),entityOffset.getY() - V_MARGIN);
 
             entityOffset.setLocation(entityOffset.getX(),entityOffset.getY()+entityVPadding+V_MARGIN);
@@ -248,6 +332,8 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
 
     private Dimension2D calculateDimension(Collection<ClassElement> elements) {
         Dimension2D dimension = new DoubleDimension(0,0);
+        if(elements.isEmpty())
+            return dimension;
         for(ClassElement element : elements){
             double elementWidth = element.getSize().getWidth();
             double elementHeight = element.getSize().getHeight();
@@ -260,8 +346,8 @@ public class ClassDiagramBuilderImpl implements ClassDiagramBuilder {
             dimension.setSize(dimension.getWidth(),dimensionHeight + elementHeight + V_MARGIN);
 
         }
-        if(!elements.isEmpty())
-            dimension.setSize(dimension.getWidth(),dimension.getHeight()-V_MARGIN);
+
+        dimension.setSize(dimension.getWidth(),dimension.getHeight()-V_MARGIN);
         return dimension;
     }
 }

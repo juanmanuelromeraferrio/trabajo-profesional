@@ -1,6 +1,8 @@
 package ar.fiuba.trabajoprofesional.mdauml.conversion.model;
 
 
+import ar.fiuba.trabajoprofesional.mdauml.umldraw.clazz.ClassElement;
+
 public class SimpleRelation {
 
     public SimpleClass class1;
@@ -39,5 +41,9 @@ public class SimpleRelation {
         SimpleRelation rel = (SimpleRelation) object;
         return  (rel.class1.equals(class1) && rel.class2.equals(class2)) ||
                 (rel.class1.equals(class2) && rel.class2.equals(class1));
+    }
+
+    public boolean isControlControl() {
+            return (class1 instanceof Control) && (class2 instanceof Control);
     }
 }
