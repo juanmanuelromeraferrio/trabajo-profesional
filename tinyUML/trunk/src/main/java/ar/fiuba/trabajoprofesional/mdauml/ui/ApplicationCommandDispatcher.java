@@ -19,6 +19,7 @@ package ar.fiuba.trabajoprofesional.mdauml.ui;
 
 import ar.fiuba.trabajoprofesional.mdauml.conversion.impl.ConverterImpl;
 import ar.fiuba.trabajoprofesional.mdauml.draw.DiagramElement;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionCanceledException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ObjectSerializerException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ProjectSerializerException;
@@ -231,21 +232,24 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
             fileChooser.addChoosableFileFilter(createModelFileFilter());
             fileChooser.setAcceptAllFileFilterUsed(false);
             if (fileChooser.showOpenDialog(getShellComponent()) == JFileChooser.APPROVE_OPTION) {
-                try {
-                    File currentFile = fileChooser.getSelectedFile();
-                    Project openProject = (Project) new XmlProjectSerializer(currentFile.getAbsolutePath())
-                        .read();
-                    appState.restoreFromProject(openProject);
-                    appState.setCurrentFile(currentFile);
-
-                } catch (ProjectSerializerException e) {
-                    JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
-                        Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
-                } catch (ObjectSerializerException e) {
-                    JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
-                            Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
-                }
+                openModelFromFile(fileChooser.getSelectedFile());
             }
+        }
+    }
+
+    public void openModelFromFile(File currentFile) {
+        try {
+            Project openProject = (Project) new XmlProjectSerializer(currentFile.getAbsolutePath())
+                    .read();
+            appState.restoreFromProject(openProject);
+            appState.setCurrentFile(currentFile);
+
+        } catch (ProjectSerializerException e) {
+            JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
+                    Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
+        } catch (ObjectSerializerException e) {
+            JOptionPane.showMessageDialog(getShellComponent(), e.getMessage(),
+                    Msg.get("error.loadproject.title"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -384,13 +388,24 @@ public class ApplicationCommandDispatcher implements AppCommandListener {
     }
 
     public void convert(){
+        save();
         try {
               new ConverterImpl().convert(appState.createProjectForWrite());
         } catch (ConversionException e) {
             e.printStackTrace();
+            Throwable cause = e;
+            while(cause != null ){
+                if(cause.getMessage()!= null && !cause.getMessage().isEmpty())
+                    break;
+                cause = e.getCause();
+            }
+
+            openModelFromFile(appState.getCurrentFile());
             JOptionPane
-                    .showMessageDialog(getShellComponent(), e.getMessage(),
+                    .showMessageDialog(getShellComponent(), cause.getMessage(),
                             Msg.get("error.conversion.title"), JOptionPane.ERROR_MESSAGE);
+        } catch (ConversionCanceledException e) {
+            openModelFromFile(appState.getCurrentFile());
         }
     }
 

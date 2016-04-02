@@ -132,7 +132,7 @@ public class MainEntityDialog extends JDialog {
     }
 
     public boolean hasCanceled() {
-        return false;
+        return canceled;
     }
 
     /**

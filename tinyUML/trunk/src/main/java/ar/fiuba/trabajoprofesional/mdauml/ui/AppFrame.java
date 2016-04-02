@@ -144,4 +144,6 @@ public class AppFrame extends JFrame implements ApplicationShell {
     public ApplicationState getAppState() {
         return appState;
     }
+
+
 }

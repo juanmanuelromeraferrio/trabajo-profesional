@@ -36,6 +36,7 @@ public class DiagramResolverDialog extends JDialog {
     private Map<String, DiagramBuilder> diagramMap;
     private List<String> mainEntities;
     private List<UmlPackage> packages;
+    private boolean canceled = false;
 
     public DiagramResolverDialog(Map<String, DiagramBuilder> diagramMap, List<String> mainEntities, List<UmlPackage> packages) {
         setContentPane(contentPane);
@@ -317,8 +318,12 @@ public class DiagramResolverDialog extends JDialog {
     }
 
     private void onCancel() {
-// add your code here if necessary
+        canceled = true;
         dispose();
+    }
+
+    public boolean hasCanceled() {
+        return canceled;
     }
 
     {

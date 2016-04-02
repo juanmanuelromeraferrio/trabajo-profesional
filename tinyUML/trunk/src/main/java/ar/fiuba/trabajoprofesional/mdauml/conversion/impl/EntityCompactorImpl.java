@@ -17,7 +17,7 @@ public class EntityCompactorImpl implements EntityCompactor {
 
 
     @Override
-    public UmlModel compact( UmlModel model) throws CompactorException {
+    public UmlModel compact( UmlModel model) throws CompactorException, ConversionCanceledException {
         Set<UmlUseCase> useCases = (Set<UmlUseCase>) model.getAll(UmlUseCase.class);
         Map<String,String> entities = new HashMap<>();
         for(UmlUseCase useCase: useCases){
@@ -36,10 +36,12 @@ public class EntityCompactorImpl implements EntityCompactor {
         }
     }
 
-    private void openCompactorDialog(Map<String, String> entities) {
+    private void openCompactorDialog(Map<String, String> entities) throws ConversionCanceledException {
         EntityCompactorDialog dialog = new EntityCompactorDialog(AppFrame.get(),entities);
         dialog.setLocationRelativeTo(AppFrame.get());
         dialog.setVisible(true);
+        if(dialog.hasCanceled())
+            throw new ConversionCanceledException();
 
     }
 }

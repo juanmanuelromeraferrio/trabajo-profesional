@@ -29,6 +29,7 @@ public class EntityCompactorDialog extends JDialog {
     private Map<String, String> mergingMap;
     private Map<String, String> originalMap;
     private List<String> entities;
+    private boolean canceled = false;
 
     public EntityCompactorDialog(Window parent, Map<String, String> mergingMap) {
         super(parent, ModalityType.APPLICATION_MODAL);
@@ -157,12 +158,17 @@ public class EntityCompactorDialog extends JDialog {
     private void onCancel() {
         mergingMap.clear();
         mergingMap.putAll(originalMap);
+        canceled = true;
         dispose();
     }
 
 
     private void createUIComponents() {
 
+    }
+
+    public boolean hasCanceled() {
+        return canceled;
     }
 
     /**

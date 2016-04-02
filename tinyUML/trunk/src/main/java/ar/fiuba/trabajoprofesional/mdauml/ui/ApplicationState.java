@@ -611,5 +611,7 @@ public class ApplicationState
         return treeModel;
     }
 
-
+    public ApplicationCommandDispatcher getAppCommandDispatcher() {
+        return appCommandDispatcher;
+    }
 }

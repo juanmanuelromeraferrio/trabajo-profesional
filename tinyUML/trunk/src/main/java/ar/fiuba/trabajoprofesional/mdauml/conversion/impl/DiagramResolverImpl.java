@@ -3,6 +3,7 @@ package ar.fiuba.trabajoprofesional.mdauml.conversion.impl;
 import ar.fiuba.trabajoprofesional.mdauml.conversion.DiagramResolver;
 import ar.fiuba.trabajoprofesional.mdauml.conversion.dialog.DiagramResolverDialog;
 import ar.fiuba.trabajoprofesional.mdauml.conversion.model.DiagramBuilder;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionCanceledException;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlPackage;
 import ar.fiuba.trabajoprofesional.mdauml.model.UmlUseCase;
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class DiagramResolverImpl implements DiagramResolver {
     @Override
-    public Map<String, DiagramBuilder> resolveEntitiesByDiagram(Map<String, List<UmlUseCase>> mainEntityMap , List<UmlPackage> packages) {
+    public Map<String, DiagramBuilder> resolveEntitiesByDiagram(Map<String, List<UmlUseCase>> mainEntityMap , List<UmlPackage> packages) throws ConversionCanceledException {
         Map<String, DiagramBuilder> diagramMap = new HashMap<>();
         UmlPackage rootPackage = UmlPackage.getPrototype();
         rootPackage.setName(Msg.get("conversion.defaultDiagram"));
@@ -62,10 +63,12 @@ public class DiagramResolverImpl implements DiagramResolver {
         return diagramMap;
     }
 
-    private void openDialog(Map<String, DiagramBuilder> diagramMap, List<String> mainEntities, List<UmlPackage>packages) {
+    private void openDialog(Map<String, DiagramBuilder> diagramMap, List<String> mainEntities, List<UmlPackage>packages) throws ConversionCanceledException {
         DiagramResolverDialog dialog = new DiagramResolverDialog(diagramMap,mainEntities,packages);
         dialog.setLocationRelativeTo(AppFrame.get());
         dialog.setVisible(true);
+        if(dialog.hasCanceled())
+            throw new ConversionCanceledException();
     }
 
 

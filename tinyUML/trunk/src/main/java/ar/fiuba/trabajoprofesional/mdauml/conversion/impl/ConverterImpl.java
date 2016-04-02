@@ -3,6 +3,7 @@ package ar.fiuba.trabajoprofesional.mdauml.conversion.impl;
 import ar.fiuba.trabajoprofesional.mdauml.conversion.*;
 import ar.fiuba.trabajoprofesional.mdauml.conversion.model.*;
 import ar.fiuba.trabajoprofesional.mdauml.exception.CompactorException;
+import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionCanceledException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ConversionException;
 import ar.fiuba.trabajoprofesional.mdauml.exception.ValidateException;
 import ar.fiuba.trabajoprofesional.mdauml.model.*;
@@ -31,9 +32,10 @@ public class ConverterImpl implements Converter, PropertyChangeListener {
     private Map<String, DiagramBuilder>  diagramMap;
     private Map<String, List<UmlUseCase>> mainEntityMap;
     private Map<Class<? extends UmlClass>, List<UmlClass>> umlModel;
+    private Thread taskThread;
 
     @Override
-    public void convert(Project project) throws ConversionException {
+    public void convert(Project project) throws ConversionException, ConversionCanceledException {
         try {
             taskOutput = new JTextArea(5, 20);
             taskOutput.setMargin(new Insets(5,5,5,5));
@@ -64,20 +66,16 @@ public class ConverterImpl implements Converter, PropertyChangeListener {
             Collections.sort(packagesList);
             diagramMap = resolver.resolveEntitiesByDiagram(mainEntityMap,packagesList);
 
-            progressMonitor = new ProgressMonitor(AppFrame.get(),
-                    Msg.get("converting.loading.message"),
-                    "", 0, 100);
-
-            progressMonitor.setProgress(0);
             task = new ConversionTask();
             task.addPropertyChangeListener(this);
-            progressMonitor.setMillisToPopup(0);
-            progressMonitor.setMillisToDecideToPopup(0);
-            task.execute();
+            taskThread = new Thread(task);
+            taskThread.start();
 
 
 
-        }catch(Exception e){
+        }catch(RuntimeException e){
+            if (e instanceof  ConversionCanceledException)
+                throw e;
             throw new ConversionException(Msg.get("error.conversion"+ e.getMessage()),e);
         }
     }
@@ -107,18 +105,35 @@ public class ConverterImpl implements Converter, PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if(progressMonitor==null)
+            return;
         if ("progress" == evt.getPropertyName() ) {
             int progress = (Integer) evt.getNewValue();
-            progressMonitor.setProgress(progress);
+                progressMonitor.setProgress(progress);
             String message =
                     String.format(Msg.get("conversion.loading.completed")+" %d%%.\n", progress);
-            progressMonitor.setNote(message);
+                progressMonitor.setNote(message);
             taskOutput.append(message);
-            if (progressMonitor.isCanceled() || task.isDone()) {
-                Toolkit.getDefaultToolkit().beep();
-                if (progressMonitor.isCanceled()) {
-                    task.cancel(true);
+
+            if (progressMonitor.isCanceled()) {
+                task.cancel(true);
+                try {
+
+                    taskThread.join();
+                    progressMonitor.close();
+
+                    AppFrame.get().getAppState().getAppCommandDispatcher().openModelFromFile(AppFrame.get().getAppState().getCurrentFile());
+
+
+                    progressMonitor.close();
+                    progressMonitor=null;
+                    AppFrame.get().repaint();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+
             }
 
         }
@@ -133,17 +148,32 @@ public class ConverterImpl implements Converter, PropertyChangeListener {
         @Override
         public Void doInBackground() {
             progress = 0;
+            progressMonitor = new ProgressMonitor(AppFrame.get(),
+                    Msg.get("converting.loading.message"),
+                    "", 0, 100);
+
+            progressMonitor.setMillisToPopup(0);
+            progressMonitor.setMillisToDecideToPopup(0);
+
             setProgress(0);
-            setProgress(1);
 
             diagrams = diagramMap.keySet().size();
-                for (String diagram : diagramMap.keySet()) {
-                    ConversionModel conversionDiagram = diagramMap.get(diagram).build(mainEntityMap);
-                    progress+= 10.0/diagrams;
-                    setProgress((int) progress);
-                    diagramBuilder.buildClassDiagram(umlModel, diagram, conversionDiagram,this);
+            for (String diagram : diagramMap.keySet()) {
+                if(isCancelled())
+                    break;
+                ConversionModel conversionDiagram = diagramMap.get(diagram).build(mainEntityMap);
+                if(isCancelled())
+                    break;
+                progress+= 10.0/diagrams;
+                setProgress((int) progress);
+                diagramBuilder.buildClassDiagram(umlModel, diagram, conversionDiagram,this);
+                if(isCancelled())
+                    break;
 
-                }
+            }
+
+            progressMonitor.close();
+
 
             return null;
         }
@@ -168,9 +198,12 @@ public class ConverterImpl implements Converter, PropertyChangeListener {
         @Override
         protected void done() {
             progressMonitor.close();
-            AppFrame.get().repaint();
+
 
             super.done();
+            if(!isCancelled()) {
+                AppFrame.get().repaint();
+            }
         }
     }
 }
