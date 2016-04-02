@@ -441,11 +441,18 @@ public abstract class GeneralDiagram extends AbstractCompositeNode
      * {@inheritDoc}
      */
     @Override public DiagramElement getChildAt(double x, double y) {
-        for (Connection conn : connections) {
-            if (conn.contains(x, y))
-                return conn;
+        DiagramElement child = super.getChildAt(x, y);
+
+        //Check for connections if no node is selected
+        if(child == NullElement.getInstance()){
+            for (Connection conn : connections) {
+                if (conn.contains(x, y))
+                    return conn;
+            }
+
         }
-        return super.getChildAt(x, y);
+
+        return child;
     }
 
     /**
