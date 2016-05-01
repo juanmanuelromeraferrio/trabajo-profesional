@@ -111,11 +111,12 @@ public class EditorFactory {
         EditorPanel editor = new EditorPanel(diagramEditor, toolbarManager);
         GeneralDiagram diagram = diagramEditor.getDiagram();
         final Component comp = tabbedPane.add(diagram.getLabelText(), editor);
-        final int index = tabbedPane.indexOfComponent(comp);
+        int index = tabbedPane.indexOfComponent(comp);
         tabbedPane.setToolTipTextAt(index, diagram.getLabelText());
         diagram.addNameChangeListener(new NameChangeListener() {
             /** {@inheritDoc} */
             public void nameChanged(NamedElement element) {
+                int index = tabbedPane.indexOfComponent(comp);
                 tabbedPane.setTitleAt(index, element.getName());
                 tabbedPane.setToolTipTextAt(index, element.getName());
             }
