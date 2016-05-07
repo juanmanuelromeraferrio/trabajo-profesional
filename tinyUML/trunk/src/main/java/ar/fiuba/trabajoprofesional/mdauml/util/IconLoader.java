@@ -81,6 +81,8 @@ public final class IconLoader {
         urlMap.put(IconType.REDO, "org/fife/plaf/Office2003/redo.gif");
         urlMap.put(IconType.ABOUT, "org/fife/plaf/Office2003/about.gif");
         urlMap.put(IconType.CONVERT, "ar/fiuba/trabajoprofesional/mdauml/ui/convert.png");
+
+        urlMap.put(IconType.APP, "ar/fiuba/trabajoprofesional/mdauml/ui/nilledom.png");
     }
 
     /**
@@ -128,6 +130,6 @@ public final class IconLoader {
         MOUSE_POINTER,
         CLASS, PACKAGE, DEPENDENCY, ASSOCIATION, AGGREGATION,
         COMPOSITION, INHERITANCE, INTERFACE_REALIZATION, NOTE, NOTE_CONNECTOR,
-        LIFELINE, MESSAGE, ACTOR, EXTEND, INCLUDE, USE_CASE, CONVERT, BOUNDARY, CONTROL, ENTITY, SYSTEM, NEST
+        LIFELINE, MESSAGE, ACTOR, EXTEND, INCLUDE, USE_CASE, CONVERT, BOUNDARY, CONTROL, ENTITY, SYSTEM, APP, NEST
     }
 }

@@ -20,6 +20,7 @@
 package ar.fiuba.trabajoprofesional.mdauml;
 
 import ar.fiuba.trabajoprofesional.mdauml.ui.AppFrame;
+import ar.fiuba.trabajoprofesional.mdauml.util.IconLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,7 @@ import java.awt.*;
  * @version 1.0
  */
 public final class Main {
+
 
     /**
      * Private constructor.
@@ -61,6 +63,8 @@ public final class Main {
                     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
                     JFrame frame = AppFrame.get();
+                    Image appIcon = ((ImageIcon)IconLoader.getInstance().getIcon(IconLoader.IconType.APP)).getImage();
+                    frame.setIconImage(appIcon);
                     frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     frame.setVisible(true);
 

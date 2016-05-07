@@ -154,7 +154,7 @@
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
 					<!-- PMD does not know 1.6 -->
-					<targetJdk>1.7</targetJdk>
+					<targetJdk>1.8</targetJdk>
 					<excludes>
 						<exclude>**/Edit*Dialog.java</exclude>
 					</excludes>
