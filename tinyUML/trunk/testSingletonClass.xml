@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XmlObjectSerializer>
+    <object class="test.mdauml.persistence.classes.SingletonClass" id="5">
+        <class id="6" name="test.mdauml.persistence.classes.SingletonClass">
+            <field modifiers="public static" name="instance" type="test.mdauml.persistence.classes.SingletonClass">
+                <object class="test.mdauml.persistence.classes.SingletonClass" id_ref="5"/>
+            </field>
+        </class>
+        <field modifiers="private" name="value" type="java.lang.String">
+            <string class="java.lang.String">hola</string>
+        </field>
+    </object>
+</XmlObjectSerializer>

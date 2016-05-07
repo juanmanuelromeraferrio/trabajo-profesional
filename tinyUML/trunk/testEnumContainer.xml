@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XmlObjectSerializer>
+    <object class="test.mdauml.persistence.classes.EnumContainer" id="9">
+        <class id="10" name="test.mdauml.persistence.classes.EnumContainer"/>
+        <field modifiers="private" name="type" type="ar.fiuba.trabajoprofesional.mdauml.model.StepType">
+            <enum>REGULAR</enum>
+        </field>
+    </object>
+</XmlObjectSerializer>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XmlObjectSerializer>
+    <object class="test.mdauml.persistence.classes.ListClass" id="5">
+        <class id="6" name="test.mdauml.persistence.classes.ListClass"/>
+        <field modifiers="" name="list" type="java.util.List">
+            <list class="java.util.ArrayList" id="7">
+                <string class="java.lang.String">this</string>
+                <string class="java.lang.String">is</string>
+                <string class="java.lang.String">a</string>
+                <string class="java.lang.String">list</string>
+            </list>
+        </field>
+    </object>
+</XmlObjectSerializer>
